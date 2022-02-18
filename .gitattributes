@@ -1,0 +1,9 @@
+/jdk/x86/jdk-18.0.2+9/Contents/Home/jmods/java.base.jmod filter=lfs diff=lfs merge=lfs -text
+/jdk/x86/jdk-18.0.2+9/Contents/Home/jmods/java.desktop.jmod filter=lfs diff=lfs merge=lfs -text
+/jdk/x86/jdk-18.0.2+9/Contents/Home/jmods/jdk.localedata.jmod filter=lfs diff=lfs merge=lfs -text
+/jdk/x86/jdk-18.0.2+9/Contents/Home/lib/server/libjvm.dylib filter=lfs diff=lfs merge=lfs -text
+/jfx/x86/javafx-jmods-18.0.2/javafx.web.jmod filter=lfs diff=lfs merge=lfs -text
+/jdk/x86/jdk-18.0.2.1+1/Contents/Home/jmods/java.base.jmod filter=lfs diff=lfs merge=lfs -text
+/jdk/x86/jdk-18.0.2.1+1/Contents/Home/jmods/java.desktop.jmod filter=lfs diff=lfs merge=lfs -text
+/jdk/x86/jdk-18.0.2.1+1/Contents/Home/jmods/jdk.localedata.jmod filter=lfs diff=lfs merge=lfs -text
+/jdk/x86/jdk-18.0.2.1+1/Contents/Home/lib/server/libjvm.dylib filter=lfs diff=lfs merge=lfs -text
