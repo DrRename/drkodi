@@ -20,7 +20,7 @@
 	<distributionManagement>
 		<repository>
 			<id>local-release-repo</id>
-			<name>alex-local</name>
+			<name>kerner-local</name>
 			<url>file://${user.home}/local-maven-repository</url>
 		</repository>
 	</distributionManagement>

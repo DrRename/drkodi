@@ -15,10 +15,17 @@ public abstract class AbstractRenamingStrategyTest {
 	@Before
 	public void setUp() throws Exception {
 
-		if((renamedFile != null) && renamedFile.toFile().exists())
+		if ((renamedFile != null) && renamedFile.toFile().exists())
 			FileUtils.deleteQuietly(renamedFile.toFile());
-		backupFile = new BackupCreator().makeBackup(getTestFile());
+		File testFile = getTestFile();
+		if (!testFile.exists()) {
+			if (!testFile.createNewFile())
+				throw new RuntimeException("Could not read and create test file " + testFile.getPath());
+		}
+
+		backupFile = new BackupCreator().makeBackup(testFile);
 		s = getStrategy();
+
 	}
 
 	@After
