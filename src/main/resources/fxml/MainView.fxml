@@ -20,7 +20,7 @@
 		<URL value="@/css/root.css" />
 	</stylesheets>
 	<children>
-		<MenuBar>
+		<MenuBar fx:id="menuBar">
 			<menus>
 				<Menu text="File">
 					<items>

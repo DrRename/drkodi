@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 
+import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +40,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -87,6 +83,8 @@ public class MainController2 implements Initializable {
 	private boolean working;
 	@FXML
 	private ProgressBar progressBar;
+	@FXML
+	MenuBar menuBar;
 	private String currentInputString;
 	private final SynchronousEventListener stategyListener = new AbstractSynchronousEventListener(AvailableRenamingStrategyEvent.EVENT_TOPIC) {
 
@@ -251,6 +249,10 @@ public class MainController2 implements Initializable {
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
+
+		final String os = System.getProperty("os.name");
+		if (os != null && os.startsWith("Mac"))
+			menuBar.useSystemMenuBarProperty().set(true);
 
 		textFieldStartDirectory.textProperty().addListener(textFieldChangeListener);
 		textFieldReplacementStringFrom.textProperty().addListener(replaceStringFromChangeListener);

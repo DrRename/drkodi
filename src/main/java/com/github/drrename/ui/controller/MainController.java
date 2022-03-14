@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +24,6 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 public class MainController implements Initializable {
@@ -51,6 +47,10 @@ public class MainController implements Initializable {
 	@FXML
 	private VBox tilePane;
 	private boolean working;
+
+	@FXML
+	MenuBar menuBar;
+
 	private final SynchronousEventListener stategyListener = new AbstractSynchronousEventListener(AvailableRenamingStrategyEvent.EVENT_TOPIC) {
 
 		@Override
@@ -90,6 +90,10 @@ public class MainController implements Initializable {
 
 	@Override
 	public void initialize(final URL location, final ResourceBundle resources) {
+
+		final String os = System.getProperty("os.name");
+		if (os != null && os.startsWith("Mac"))
+			menuBar.useSystemMenuBarProperty().set(true);
 
 		comboBoxRenamingStrategy.setItems(FXCollections.observableArrayList(getAvailableRenamingStrategies()));
 		comboBoxRenamingStrategy.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<RenamingStrategy>() {
