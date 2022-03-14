@@ -1,0 +1,1 @@
+/usr/bin/jpackage --name DrRename --input shade --main-jar DrRename-0.5.2-SNAPSHOT.jar --resource-dir src/main/resources/icons --type dmg --dest target
