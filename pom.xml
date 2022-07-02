@@ -169,7 +169,7 @@
 						<configuration>
 							<executable>zsh</executable>
 							<workingDirectory>${project.basedir}</workingDirectory>
-							<commandlineArgs>src/main/resources/build-dmg.sh</commandlineArgs>
+							<commandlineArgs>src/main/resources/build-dmg.sh ${project.build.finalName}</commandlineArgs>
 						</configuration>
 					</execution>
 				</executions>
