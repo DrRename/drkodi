@@ -187,14 +187,29 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		final String os = System.getProperty("os.name");
-		if (os != null && os.startsWith("Mac"))
-			menuBar.useSystemMenuBarProperty().set(true);
+		initAppMenu();
 		/* Make scrolling of both lists symmetrical */
 		Platform.runLater(() -> {
 			FXUtil.getListViewScrollBar(content1).valueProperty()
 					.bindBidirectional(FXUtil.getListViewScrollBar(content2).valueProperty());
 		});
+		initDragAndDropForLeftFileList();
+		comboBoxRenamingStrategy.getItems().add(new SimpleReplaceRenamingStrategy());
+		comboBoxRenamingStrategy.getItems().add(new ToLowerCaseRenamingStrategy());
+		comboBoxRenamingStrategy.getItems().add(new MediaMetadataRenamingStrategy());
+		comboBoxRenamingStrategy.getItems().add(new RegexReplaceRenamingStrategy());
+
+		comboBoxRenamingStrategy.getSelectionModel().selectFirst();
+
+		registerInputChangeListener();
+
+		if(buildProperties
+				.getVersion() != null && buildProperties.getVersion().contains("SNAPSHOT"))
+		applyRandomColors();
+
+	}
+
+	private void initDragAndDropForLeftFileList() {
 		content1.setOnDragOver(event -> {
 			if ((event.getGestureSource() != content1) && event.getDragboard().hasFiles()) {
 				/* allow for both copying and moving, whatever user chooses */
@@ -219,21 +234,13 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 			event.setDropCompleted(success);
 			event.consume();
 		});
-		comboBoxRenamingStrategy.getItems().add(new SimpleReplaceRenamingStrategy());
-		comboBoxRenamingStrategy.getItems().add(new ToLowerCaseRenamingStrategy());
-		comboBoxRenamingStrategy.getItems().add(new MediaMetadataRenamingStrategy());
-		comboBoxRenamingStrategy.getItems().add(new RegexReplaceRenamingStrategy());
-
-		comboBoxRenamingStrategy.getSelectionModel().selectFirst();
-
-		registerInputChangeListener();
-
-		if(buildProperties
-				.getVersion() != null && buildProperties.getVersion().contains("SNAPSHOT"))
-		applyRandomColors();
-
 	}
 
+	private void initAppMenu() {
+		final String os = System.getProperty("os.name");
+		if (os != null && os.startsWith("Mac"))
+			menuBar.useSystemMenuBarProperty().set(true);
+	}
 
 
 	@FXML
