@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:controller="com.kerner1000.drrename.MainController3">
+    <MenuBar fx:id="menuBar">
+        <Menu text="File">
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="Regex Tips" onAction="#handleMenuItemRegexTips" accelerator="Shortcut+T"/>
+        </Menu>
+        <Menu text="Settings">
+        </Menu>
+    </MenuBar>
+    <BorderPane fx:id="layer01" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="4" right="4" bottom="4" left="4"/>
+        </padding>
+        <top>
+            <HBox fx:id="layer02_1">
+                <padding>
+                    <Insets top="4" right="4" bottom="4" left="4"/>
+                </padding>
+                <TextField fx:id="textFieldStartDirectory"
+                           HBox.hgrow="ALWAYS"
+                           promptText="Enter/ Copy&amp;Paste start directory here">
+                    <tooltip>
+                        <Tooltip text="Enter/ Copy&amp;Paste start directory here."/>
+                    </tooltip>
+                </TextField>
+            </HBox>
+        </top>
+        <center>
+                <VBox fx:id="layer02_2">
+                    <padding>
+                        <Insets top="4" right="4" bottom="4" left="4"/>
+                    </padding>
+                    <SplitPane VBox.vgrow="always">
+                        <VBox spacing="4">
+                            <padding>
+                                <Insets top="4" right="4" bottom="4" left="4"/>
+                            </padding>
+                            <ListView fx:id="content1" maxWidth="Infinity"
+                                      stylesheets="@/css/dense-list.css" maxHeight="Infinity"
+                                      VBox.vgrow="ALWAYS"/>
+                        </VBox>
+                        <VBox spacing="4">
+                            <padding>
+                                <Insets top="4" right="4" bottom="4" left="4"/>
+                            </padding>
+                            <ListView fx:id="content2" maxWidth="Infinity"
+                                      stylesheets="@/css/dense-list.css" maxHeight="Infinity"
+                                      VBox.vgrow="ALWAYS"/>
+                        </VBox>
+                    </SplitPane>
+                </VBox>
+        </center>
+        <bottom>
+            <VBox fx:id="layer02_3">
+                <HBox fx:id="layer03_1">
+                    <padding>
+                        <Insets top="4" right="4" bottom="4" left="4"/>
+                    </padding>
+                    <TextField fx:id="textFieldReplacementStringFrom"
+                               promptText="Search and replace this string, if applicable"
+                               HBox.hgrow="ALWAYS" editable="true">
+                        <tooltip>
+                            <Tooltip
+                                    text="If applicable, search and replace this string."/>
+                        </tooltip>
+                    </TextField>
+                    <TextField fx:id="textFieldReplacementStringTo"
+                               promptText="Replace with this string, if applicable"
+                               HBox.hgrow="ALWAYS" editable="true">
+                        <tooltip>
+                            <Tooltip
+                                    text="If applicable, replace with this string."/>
+                        </tooltip>
+                    </TextField>
+                </HBox>
+                <VBox fx:id="layer03_2">
+                    <padding>
+                        <Insets top="4" right="4" bottom="4" left="4"/>
+                    </padding>
+                    <ComboBox fx:id="comboBoxRenamingStrategy"
+                              HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                        <tooltip>
+                            <Tooltip text="Renaming strategy to use."/>
+                        </tooltip>
+                    </ComboBox>
+                </VBox>
+                <HBox  fx:id="layer03_3">
+                    <padding>
+                        <Insets top="4" right="4" bottom="4" left="4"/>
+                    </padding>
+                    <BorderPane fx:id="layer04_2">
+                        <padding>
+                            <Insets top="4" right="4" bottom="4" left="4"/>
+                        </padding>
+                        <center>
+                            <ProgressBar fx:id="progressBar" prefHeight="25"
+                                         prefWidth="20000" visible="false"/>
+                        </center>
+                        <right>
+                            <HBox  HBox.hgrow="ALWAYS" fx:id="layer04_1">
+                                <padding>
+                                    <Insets top="4" right="4" bottom="4" left="4"/>
+                                </padding>
+                                <Button fx:id="buttonGo" prefWidth="180" minWidth="50"
+                                        onAction="#handleButtonActionGo" text="Go">
+                                    <tooltip>
+                                        <Tooltip text="Start renaming."/>
+                                    </tooltip>
+                                </Button>
+                            </HBox>
+                        </right>
+                    </BorderPane>
+                </HBox>
+            </VBox>
+        </bottom>
+    </BorderPane>
+</VBox>

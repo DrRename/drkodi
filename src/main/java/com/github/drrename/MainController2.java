@@ -1,4 +1,4 @@
-package com.github.drrename.ui.controller;
+package com.github.drrename;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,14 +13,14 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 
+import com.kerner1000.drrename.RenamingBean;
+import com.kerner1000.drrename.RenamingService2;
 import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.drrename.RenamingBean;
-import com.github.drrename.RenamingService2;
 import com.github.drrename.event.AvailableRenamingStrategyEvent;
-import com.github.drrename.strategy.RenamingStrategy;
+import com.kerner1000.drrename.RenamingStrategy;
 import com.github.events1000.api.Event;
 import com.github.events1000.api.Events;
 import com.github.events1000.listener.api.AbstractSynchronousEventListener;

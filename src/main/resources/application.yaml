@@ -1,0 +1,8 @@
+spring:
+  main:
+    web:
+      application-type: none
+
+logging:
+  level:
+    com.github.drrename: debug

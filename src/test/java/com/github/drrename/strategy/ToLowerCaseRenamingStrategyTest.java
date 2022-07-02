@@ -1,31 +1,22 @@
 package com.github.drrename.strategy;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import com.github.drrename.AbstractRenamingStrategyTest;
+import com.kerner1000.drrename.RenamingStrategy;
+import org.junit.jupiter.api.Test;
 
 public class ToLowerCaseRenamingStrategyTest extends AbstractRenamingStrategyTest {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
 
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-
-	}
 
 	@Override
 	protected RenamingStrategy getStrategy() {

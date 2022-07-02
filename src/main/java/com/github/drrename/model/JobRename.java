@@ -24,8 +24,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.drrename.strategy.RenamingStrategy;
-import com.github.drrename.ui.ConfirmDialogFactory;
+import com.kerner1000.drrename.RenamingStrategy;
+import com.github.drrename.ConfirmDialogFactory;
 
 import net.sf.kerner.utils.concurrent.Pipe;
 

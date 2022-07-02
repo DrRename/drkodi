@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.drrename.model.JobRename;
-import com.github.drrename.strategy.RenamingStrategy;
+import com.kerner1000.drrename.RenamingStrategy;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

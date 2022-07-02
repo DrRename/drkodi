@@ -1,6 +1,6 @@
 package com.github.drrename.event;
 
-import com.github.drrename.strategy.RenamingStrategy;
+import com.kerner1000.drrename.RenamingStrategy;
 import com.github.events1000.api.AbstractTransportingEvent;
 import com.github.events1000.api.EventTopic;
 import com.github.events1000.api.SynchronousEvent;

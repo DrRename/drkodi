@@ -1,4 +1,4 @@
-package com.github.drrename.ui.controller;
+package com.github.drrename;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,9 +9,8 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.drrename.RenamingService;
 import com.github.drrename.event.AvailableRenamingStrategyEvent;
-import com.github.drrename.strategy.RenamingStrategy;
+import com.kerner1000.drrename.RenamingStrategy;
 import com.github.events1000.api.Event;
 import com.github.events1000.api.Events;
 import com.github.events1000.listener.api.AbstractSynchronousEventListener;

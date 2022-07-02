@@ -1,9 +1,7 @@
-package com.github.drrename;
+package com.kerner1000.drrename;
 
 import java.util.List;
 import java.util.Objects;
-
-import com.github.drrename.strategy.RenamingStrategy;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;

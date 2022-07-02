@@ -1,4 +1,4 @@
-package com.github.drrename.ui;
+package com.github.drrename;
 
 import java.nio.file.Path;
 import java.util.Optional;

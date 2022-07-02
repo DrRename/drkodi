@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.github.drrename.event.AvailableRenamingStrategyEvent;
 import com.github.drrename.strategy.MediaMetadataRenamingStrategy;
 import com.github.drrename.strategy.RegexReplaceRenamingStrategy;
-import com.github.drrename.strategy.RenamingStrategy;
+import com.kerner1000.drrename.RenamingStrategy;
 import com.github.drrename.strategy.SimpleReplaceRenamingStrategy;
 import com.github.drrename.strategy.ToLowerCaseRenamingStrategy;
 import com.github.events1000.api.Events;

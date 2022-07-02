@@ -1,10 +1,8 @@
-package com.github.drrename;
-
-import java.util.List;
-
-import com.github.drrename.strategy.RenamingStrategy;
+package com.kerner1000.drrename;
 
 import javafx.concurrent.Task;
+
+import java.util.List;
 
 public class RenamingTask extends Task<Void> {
 
@@ -19,10 +17,12 @@ public class RenamingTask extends Task<Void> {
 	}
 
 	@Override
-	protected Void call() throws Exception {
+	protected Void call() {
 
-		for(final RenamingBean b : elements) {
-			b.apply(strategy);
+		for (final RenamingBean b : elements) {
+			if (!b.isFiltered() && b.willChange()) {
+				b.rename(strategy);
+			}
 		}
 		return null;
 	}

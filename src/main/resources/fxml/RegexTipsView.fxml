@@ -26,22 +26,18 @@
 	<children>
 		<GridPane hgap="8">
 			<padding>
-				<Insets top="4" right="4" bottom="4" left="4" />
+				<Insets top="4" right="4" bottom="4" left="4"/>
 			</padding>
 			<columnConstraints>
 				<ColumnConstraints hgrow="SOMETIMES"
-					minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+								   minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
 				<ColumnConstraints hgrow="SOMETIMES"
-					minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+								   minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
 			</columnConstraints>
-			<children>
-				<Label wrapText="true"  GridPane.rowIndex="0" GridPane.columnIndex="0"
-					text="Matches the filename without extension"></Label>
-				<TextField editable="false" GridPane.rowIndex="0"
-					GridPane.columnIndex="1" text="(.+?)(\.[^.]*$|$)"></TextField>
-			</children>
+			<Label wrapText="true" GridPane.rowIndex="0" GridPane.columnIndex="0"
+				   text="Matches the filename without extension"/>
+			<TextField editable="false" GridPane.rowIndex="0"
+					   GridPane.columnIndex="1" text="(.+?)(\.[^.]*$|$)"/>
 		</GridPane>
-
-
 	</children>
 </VBox>

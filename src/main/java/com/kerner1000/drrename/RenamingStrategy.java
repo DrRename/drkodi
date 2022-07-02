@@ -1,4 +1,4 @@
-package com.github.drrename.strategy;
+package com.kerner1000.drrename;
 
 import java.io.IOException;
 import java.nio.file.Path;

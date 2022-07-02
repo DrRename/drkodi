@@ -5,14 +5,15 @@ import java.nio.file.Path;
 
 import com.github.ktools1000.io.BackupCreator;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
 
-import com.github.drrename.strategy.RenamingStrategy;
+
+import com.kerner1000.drrename.RenamingStrategy;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractRenamingStrategyTest {
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 
 		if ((renamedFile != null) && renamedFile.toFile().exists())
@@ -28,7 +29,7 @@ public abstract class AbstractRenamingStrategyTest {
 
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 
 		new BackupCreator().restoreBackup(backupFile);

@@ -2,20 +2,22 @@ package com.github.drrename.strategy;
 
 import java.io.File;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
 
 import com.github.drrename.AbstractRenamingStrategyTest;
+import com.kerner1000.drrename.RenamingStrategy;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class MediaMetadataRenamingStrategyTest extends AbstractRenamingStrategyTest {
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 
 	}
