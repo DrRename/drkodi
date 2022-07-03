@@ -35,6 +35,7 @@ public class RenamingBean  implements ApplicationListener<FileModifiedEvent> {
         filtered.addListener((v, o, n) -> {
             if ((n != null) && n) {
                 willChange.set(false);
+                newPath.set(null);
             }
         });
     }

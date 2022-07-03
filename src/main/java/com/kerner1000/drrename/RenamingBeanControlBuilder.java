@@ -24,17 +24,14 @@ public class RenamingBeanControlBuilder {
         final StringBuilder sb = new StringBuilder();
 
         if (f.isFiltered()) {
-            sb.append(Styles.filteredStyle());
+            return Styles.filteredStyle();
         }
         if (f.willChange()) {
-            sb.append(Styles.changingStyle());
+            return Styles.changingStyle();
         }
         if (f.externalChanged()) {
-            sb.append(Styles.externalChangingStyle());
+            return Styles.externalChangingStyle();
         }
-
-        if (sb.toString().length() > 0)
-            return sb.toString();
 
         return Styles.defaultStyle();
 
@@ -53,26 +50,26 @@ public class RenamingBeanControlBuilder {
         return result;
     }
 
-    static Control buildRight(final RenamingBean f) {
+    static Control buildRight(final RenamingBean renamingBean) {
 
         final Label tRight = new Label();
         tRight.setPadding(new Insets(2, 2, 2, 2));
         tRight.setMaxWidth(Double.POSITIVE_INFINITY);
-        tRight.textProperty().bind(Bindings.createStringBinding(getNewPath(f), f.getException(), f.getNewPath()));
+        tRight.textProperty().bind(Bindings.createStringBinding(getNewPath(renamingBean), renamingBean.getException(), renamingBean.getNewPath()));
         tRight.styleProperty().bind(
-                Bindings.createObjectBinding(() -> calcStyleRight(f), f.willChangeProperty(), f.filteredProperty()));
+                Bindings.createObjectBinding(() -> calcStyleRight(renamingBean), renamingBean.willChangeProperty(), renamingBean.filteredProperty()));
         return tRight;
     }
 
-    static String calcStyleLeft(final RenamingBean f) {
+    static String calcStyleLeft(final RenamingBean renamingBean) {
         final StringBuilder sb = new StringBuilder();
-        if (f.isFiltered()) {
+        if (renamingBean.isFiltered()) {
             sb.append(Styles.filteredStyle());
         }
-        if(f.externalChanged()){
+        if(renamingBean.externalChanged()){
             sb.append(Styles.externalChangedStyle());
         }
-        if(f.getOldPath().toFile().isDirectory()){
+        if(renamingBean.getOldPath().toFile().isDirectory()){
             sb.append(Styles.directoryStyle());
         }
         if (sb.toString().length() > 0)
