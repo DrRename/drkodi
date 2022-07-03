@@ -34,6 +34,7 @@ public class PrimaryStageInitializer implements ApplicationListener<StageReadyEv
         }
         Stage stage = event.getStage();
         Scene scene = new Scene(fxWeaver.loadView(MainController3.class), 600, 600);
+        scene.getStylesheets().add("css/root.css");
         stage.setTitle("Dr.Rename " + s);
         stage.setScene(scene);
         stage.show();

@@ -72,9 +72,11 @@ public class RenamingBeanControlBuilder {
         if(f.externalChanged()){
             sb.append(Styles.externalChangedStyle());
         }
+        if(f.getOldPath().toFile().isDirectory()){
+            sb.append(Styles.directoryStyle());
+        }
         if (sb.toString().length() > 0)
             return sb.toString();
-
         return Styles.defaultStyle();
     }
 

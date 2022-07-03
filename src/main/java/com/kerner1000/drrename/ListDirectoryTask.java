@@ -42,7 +42,7 @@ public class ListDirectoryTask extends Task<Void> {
                     break;
                 }
                 final Path next = it.next();
-                if (Files.isRegularFile(next)) {
+
                     if (FilterTask.matches(next.getFileName().toString(), fileNameFilterRegex)) {
                         try {
                             applicationContext.publishEvent(new FileEntryEvent(new RenamingBean(next)));
@@ -52,7 +52,7 @@ public class ListDirectoryTask extends Task<Void> {
                             }
                         }
                     }
-                }
+
             }
         }
     }

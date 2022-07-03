@@ -12,6 +12,10 @@ public class Styles {
         return "-fx-text-fill: #a9a9a9;";
     }
 
+    static String directoryStyle() {
+        return "-fx-font-weight: bold;";
+    }
+
     static String externalChangedStyle() {
         // System.err.println("Return filtered style");
         // return "-fx-background-color: linear-gradient(#E4EAA2, #9CD672);";
