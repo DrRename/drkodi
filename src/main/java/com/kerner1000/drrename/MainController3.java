@@ -1,7 +1,10 @@
 package com.kerner1000.drrename;
 
-import com.github.drrename.*;
-import com.github.drrename.strategy.*;
+import com.github.drrename.FileEntryEvent;
+import com.github.drrename.strategy.MediaMetadataRenamingStrategy;
+import com.github.drrename.strategy.RegexReplaceRenamingStrategy;
+import com.github.drrename.strategy.SimpleReplaceRenamingStrategy;
+import com.github.drrename.strategy.ToLowerCaseRenamingStrategy;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -33,7 +36,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -240,10 +242,38 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
             if (db.hasFiles()) {
                 try {
                     updateInputView(filesToPathList(db.getFiles()));
+                    if(db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory())
+                    textFieldStartDirectory.setText(db.getFiles().iterator().next().getPath());
+                    else textFieldStartDirectory.setText(null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 success = true;
+            }
+            /*
+             * let the source know whether the string was successfully transferred and used
+             */
+            event.setDropCompleted(success);
+            event.consume();
+        });
+        textFieldStartDirectory.setOnDragOver(event -> {
+            if ((event.getGestureSource() != content1) && event.getDragboard().hasFiles()) {
+                /* allow for both copying and moving, whatever user chooses */
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
+        textFieldStartDirectory.setOnDragDropped(event -> {
+            final Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles() && db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory()) {
+                try {
+                    updateInputView(filesToPathList(db.getFiles()));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                success = true;
+                textFieldStartDirectory.setText(db.getFiles().iterator().next().getPath());
             }
             /*
              * let the source know whether the string was successfully transferred and used
