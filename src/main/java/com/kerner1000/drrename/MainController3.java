@@ -214,10 +214,10 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         });
         initDragAndDropForLeftFileList();
         comboBoxRenamingStrategy.getItems().add(new SimpleReplaceRenamingStrategy());
-        comboBoxRenamingStrategy.getItems().add(new ToLowerCaseRenamingStrategy());
         comboBoxRenamingStrategy.getItems().add(new MediaMetadataRenamingStrategy());
         comboBoxRenamingStrategy.getItems().add(new RegexReplaceRenamingStrategy());
-
+        comboBoxRenamingStrategy.getItems().add(new ToLowerCaseRenamingStrategy());
+        comboBoxRenamingStrategy.getItems().add(new SpaceToCamelCaseRenamingStrategy());
         comboBoxRenamingStrategy.getSelectionModel().selectFirst();
 
         registerInputChangeListener();
