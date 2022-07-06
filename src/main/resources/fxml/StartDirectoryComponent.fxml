@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.kerner1000.drrename.StartDirectoryComponentController"
+            >
+    <padding>
+        <Insets top="4" right="4" bottom="4" left="4"/>
+    </padding>
+    <center>
+        <TextField fx:id="textFieldDirectory"
+                   promptText="Enter/ Copy&amp;Paste start directory">
+            <tooltip>
+                <Tooltip text="Enter/ Copy&amp;Paste start directory"/>
+            </tooltip>
+        </TextField>
+    </center>
+</BorderPane>

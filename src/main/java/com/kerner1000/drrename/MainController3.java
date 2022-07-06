@@ -1,10 +1,7 @@
 package com.kerner1000.drrename;
 
 import com.github.drrename.FileEntryEvent;
-import com.github.drrename.strategy.MediaMetadataRenamingStrategy;
-import com.github.drrename.strategy.RegexReplaceRenamingStrategy;
-import com.github.drrename.strategy.SimpleReplaceRenamingStrategy;
-import com.github.drrename.strategy.ToLowerCaseRenamingStrategy;
+import com.github.drrename.strategy.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -22,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import net.sf.kerner.utils.pair.PairSame;
@@ -289,6 +287,22 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
             menuBar.useSystemMenuBarProperty().set(true);
     }
 
+    public void handleMenuItemDummyFileCreator(ActionEvent actionEvent) {
+        try {
+            final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/DummyFileCreator.fxml"));
+            final Parent root = loader.load();
+            final Stage stage = new Stage();
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setMinWidth(root.minWidth(-1));
+            stage.setMinHeight(root.minHeight(-1));
+            final Scene scene = new Scene(root);
+            stage.setTitle("Dummy File Creator");
+            stage.setScene(scene);
+            stage.show();
+        } catch (final IOException e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
+    }
 
     @FXML
     private void handleMenuItemRegexTips(final ActionEvent event) {

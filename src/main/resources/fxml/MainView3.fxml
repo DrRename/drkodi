@@ -6,8 +6,9 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:controller="com.kerner1000.drrename.MainController3">
-    <MenuBar fx:id="menuBar">
+    <MenuBar fx:id="menuBar" >
         <Menu text="File">
+            <MenuItem text="Dummy File Creator" onAction="#handleMenuItemDummyFileCreator" accelerator="Shortcut+D"/>
         </Menu>
         <Menu text="Help">
             <MenuItem text="Regex Tips" onAction="#handleMenuItemRegexTips" accelerator="Shortcut+T"/>
@@ -122,7 +123,8 @@
                             <BorderPane HBox.hgrow="ALWAYS" fx:id="layer05_3">
                                 <padding>
                                     <Insets top="4" right="4" bottom="4" left="4"/>
-                                </padding><center>
+                                </padding>
+                                <center>
                                 <Button fx:id="buttonGo" prefWidth="180" minWidth="50"
                                         onAction="#handleButtonActionGo" text="Go">
                                     <tooltip>
