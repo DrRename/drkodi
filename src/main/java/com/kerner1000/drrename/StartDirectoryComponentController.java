@@ -36,7 +36,7 @@ public class StartDirectoryComponentController implements Initializable, Applica
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ready = new SimpleBooleanProperty(false);
-        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> updateInput(Path.of(n)));
+        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> updateInput(n));
         textFieldDirectory.textProperty().addListener(textFieldChangeListener);
         textFieldDirectory.setOnDragOver(event -> {
             if ((event.getGestureSource() != textFieldDirectory) && event.getDragboard().hasFiles()) {
@@ -60,6 +60,12 @@ public class StartDirectoryComponentController implements Initializable, Applica
             event.setDropCompleted(success);
             event.consume();
         });
+    }
+
+    private void updateInput(String inputPath) {
+        if(inputPath != null){
+            updateInput(Path.of(inputPath));
+        }
     }
 
     private void updateInput(Path inputPath) {

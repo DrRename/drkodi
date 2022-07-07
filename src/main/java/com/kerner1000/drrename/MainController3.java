@@ -139,7 +139,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     private void registerInputChangeListener() {
         replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
         replaceStringToChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
-        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> updateInputView(Path.of(n)));
+        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> updateInputView(n));
         ignoreDirectoriesChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
         ignoreHiddenFilesChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
         textFieldReplacementStringFrom.textProperty().addListener(replaceStringFromChangeListener);
@@ -318,6 +318,11 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         initListFilesService(path);
 
         startService(listFilesService);
+    }
+
+    private void updateInputView(final String path) {
+        if(path != null)
+            updateInputView(Path.of(path));
     }
 
     private void initListFilesService(Path path) {

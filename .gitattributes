@@ -1,3 +1,5 @@
+dk/x86/jdk-18.0.2+9/Contents/Home/lib/* filter=lfs diff=lfs merge=lfs -text
+jdk/x86/jdk-18.0.2+9/Contents/Home/lib/* filter=lfs diff=lfs merge=lfs -text
 /jdk/x86/jdk-18.0.2+9/Contents/Home/jmods/java.base.jmod filter=lfs diff=lfs merge=lfs -text
 /jdk/x86/jdk-18.0.2+9/Contents/Home/jmods/java.desktop.jmod filter=lfs diff=lfs merge=lfs -text
 /jdk/x86/jdk-18.0.2+9/Contents/Home/jmods/jdk.localedata.jmod filter=lfs diff=lfs merge=lfs -text
