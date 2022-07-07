@@ -24,15 +24,10 @@ public class RegexReplaceRenamingStrategy extends RenamingStrategyProto {
 		if(Thread.currentThread().isInterrupted())
 			throw new InterruptedException("Cancelled");
 		try {
-			final Pattern pattern = Pattern.compile(getReplacementStringFrom());
-			final Matcher matcher = pattern.matcher(file.getFileName().toString());
-			if(matcher.matches() && (matcher.groupCount() > 0))
-				return file.getFileName().toString().replaceAll(matcher.group(1), getReplacementStringTo());
-			else
-				return file.getFileName().toString().replaceFirst(getReplacementStringFrom(), getReplacementStringTo());
+			return file.getFileName().toString().replaceAll(getReplacementStringFrom(),getReplacementStringTo());
 		} catch(final PatternSyntaxException e) {
-			if(logger.isErrorEnabled())
-				logger.error(e.getLocalizedMessage());
+			if(logger.isDebugEnabled())
+				logger.debug(e.getLocalizedMessage());
 		}
 		return file.getFileName().toString();
 	}
