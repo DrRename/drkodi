@@ -21,18 +21,7 @@
             <Insets top="4" right="4" bottom="4" left="4"/>
         </padding>
         <top>
-            <HBox fx:id="layer02_1">
-                <padding>
-                    <Insets top="4" right="4" bottom="4" left="4"/>
-                </padding>
-                <TextField fx:id="textFieldStartDirectory"
-                           HBox.hgrow="ALWAYS"
-                           promptText="Enter/ Copy&amp;Paste start directory here">
-                    <tooltip>
-                        <Tooltip text="Enter/ Copy&amp;Paste start directory here."/>
-                    </tooltip>
-                </TextField>
-            </HBox>
+            <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
         </top>
         <center>
             <VBox fx:id="layer02_2">

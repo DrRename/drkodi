@@ -53,7 +53,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     private final PreviewService previewService;
     private final ConfigurableApplicationContext applicationContext;
     private RenamingService2 renamingService;
-    public TextField textFieldStartDirectory;
+
     public ListView<Control> content1;
     public ListView<Control> content2;
 
@@ -118,7 +118,9 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
 
-    private static PseudoClass test = PseudoClass.getPseudoClass("test");
+    public StartDirectoryComponentController startDirectoryComponentController;
+
+
 
 
 
@@ -142,7 +144,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         ignoreHiddenFilesChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
         textFieldReplacementStringFrom.textProperty().addListener(replaceStringFromChangeListener);
         textFieldReplacementStringTo.textProperty().addListener(replaceStringToChangeListener);
-        textFieldStartDirectory.textProperty().addListener(textFieldChangeListener);
+        startDirectoryComponentController.textFieldDirectory.textProperty().addListener(textFieldChangeListener);
         ignoreDirectories.selectedProperty().addListener(ignoreDirectoriesChangeListener);
         ignoreHiddenFiles.selectedProperty().addListener(ignoreHiddenFilesChangeListener);
         comboBoxRenamingStrategy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -216,8 +218,8 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
                 try {
                     updateInputView(filesToPathList(db.getFiles()));
                     if(db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory())
-                    textFieldStartDirectory.setText(db.getFiles().iterator().next().getPath());
-                    else textFieldStartDirectory.setText(null);
+                        startDirectoryComponentController.textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
+                    else startDirectoryComponentController.textFieldDirectory.setText(null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -229,14 +231,14 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
             event.setDropCompleted(success);
             event.consume();
         });
-        textFieldStartDirectory.setOnDragOver(event -> {
+        startDirectoryComponentController.textFieldDirectory.setOnDragOver(event -> {
             if ((event.getGestureSource() != content1) && event.getDragboard().hasFiles()) {
                 /* allow for both copying and moving, whatever user chooses */
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
             event.consume();
         });
-        textFieldStartDirectory.setOnDragDropped(event -> {
+        startDirectoryComponentController.textFieldDirectory.setOnDragDropped(event -> {
             final Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasFiles() && db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory()) {
@@ -246,7 +248,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
                     throw new RuntimeException(e);
                 }
                 success = true;
-                textFieldStartDirectory.setText(db.getFiles().iterator().next().getPath());
+                startDirectoryComponentController.textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
             }
             /*
              * let the source know whether the string was successfully transferred and used

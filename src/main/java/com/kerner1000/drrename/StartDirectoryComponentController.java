@@ -25,8 +25,7 @@ import java.util.ResourceBundle;
 @FxmlView("/fxml/StartDirectoryComponent.fxml")
 public class StartDirectoryComponentController implements Initializable, ApplicationListener<ApplicationEvent> {
 
-    @FXML
-    private TextField textFieldDirectory;
+    public TextField textFieldDirectory;
 
     private Path inputPath;
 
