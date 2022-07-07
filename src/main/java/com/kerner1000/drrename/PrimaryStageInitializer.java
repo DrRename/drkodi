@@ -1,7 +1,6 @@
 package com.kerner1000.drrename;
 
-import com.kerner1000.drrename.MainController3;
-import com.kerner1000.drrename.StageReadyEvent;
+import com.kerner1000.drrename.event.StageReadyEvent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;

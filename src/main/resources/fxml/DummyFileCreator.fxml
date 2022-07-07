@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.kerner1000.drrename.filecreator.DummyFileCreatorController" minWidth="120" minHeight="120">
+            fx:id="root" fx:controller="com.kerner1000.drrename.filecreator.DummyFileCreatorController" minWidth="120" minHeight="120">
     <padding>
         <Insets top="4" right="4" bottom="4" left="4"/>
     </padding>
@@ -48,21 +48,7 @@
                 <ProgressBar fx:id="progressBar"/>
             </center>
             <right>
-                <HBox spacing="4">
-                    <Button fx:id="buttonGo" prefWidth="70" minWidth="50"
-                            onAction="#handleDummyFileCreatorButtonGo" text="Go">
-                        <tooltip>
-                            <Tooltip text="Create files"/>
-                        </tooltip>
-                    </Button>
-                    <Button fx:id="buttonCancel" prefWidth="70" minWidth="50"
-                            onAction="#handleDummyFileCreatorButtonCancel" text="Cancel">
-                        <tooltip>
-                            <Tooltip text="Create files"/>
-                        </tooltip>
-                    </Button>
-
-                </HBox>
+                <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>
             </right>
         </BorderPane>
     </bottom>

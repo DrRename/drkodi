@@ -2,6 +2,7 @@ package com.kerner1000.drrename;
 
 import com.github.drrename.FileEntryEvent;
 import com.github.drrename.strategy.*;
+import com.kerner1000.drrename.filecreator.DummyFileCreatorController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +22,7 @@ import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import net.sf.kerner.utils.pair.PairSame;
 import org.springframework.boot.info.BuildProperties;
@@ -107,14 +109,17 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     @FXML
     Node layer05_2;
 
+    private final FxWeaver fxWeaver;
+
     private final BuildProperties buildProperties;
 
     private static PseudoClass test = PseudoClass.getPseudoClass("test");
 
-    public MainController3(ListFilesService listFilesService, PreviewService previewService, ConfigurableApplicationContext applicationContext, BuildProperties buildProperties) {
+    public MainController3(ListFilesService listFilesService, PreviewService previewService, ConfigurableApplicationContext applicationContext, FxWeaver fxWeaver, BuildProperties buildProperties) {
         this.listFilesService = Objects.requireNonNull(listFilesService);
         this.previewService = Objects.requireNonNull(previewService);
         this.applicationContext = Objects.requireNonNull(applicationContext);
+        this.fxWeaver = fxWeaver;
         this.buildProperties = buildProperties;
         this.renamingService = new RenamingService2();
         this.entries = new ArrayList<>();
@@ -220,6 +225,8 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
         registerInputChangeListener();
 
+        progressBar.visibleProperty().bind(renamingService.runningProperty());
+
         if (buildProperties
                 .getVersion() != null && buildProperties.getVersion().contains("SNAPSHOT"))
             applyRandomColors();
@@ -288,20 +295,24 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     }
 
     public void handleMenuItemDummyFileCreator(ActionEvent actionEvent) {
-        try {
-            final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/DummyFileCreator.fxml"));
-            final Parent root = loader.load();
-            final Stage stage = new Stage();
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setMinWidth(root.minWidth(-1));
-            stage.setMinHeight(root.minHeight(-1));
-            final Scene scene = new Scene(root);
-            stage.setTitle("Dummy File Creator");
-            stage.setScene(scene);
-            stage.show();
-        } catch (final IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-        }
+
+        DummyFileCreatorController controller = fxWeaver.loadController(DummyFileCreatorController.class);
+        controller.show();
+
+//        try {
+//            final FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/DummyFileCreator.fxml"));
+//            final Parent root = loader.load();
+//            final Stage stage = new Stage();
+//            stage.initStyle(StageStyle.UTILITY);
+//            stage.setMinWidth(root.minWidth(-1));
+//            stage.setMinHeight(root.minHeight(-1));
+//            final Scene scene = new Scene(root);
+//            stage.setTitle("Dummy File Creator");
+//            stage.setScene(scene);
+//            stage.show();
+//        } catch (final IOException e) {
+//            log.error(e.getLocalizedMessage(), e);
+//        }
     }
 
     @FXML

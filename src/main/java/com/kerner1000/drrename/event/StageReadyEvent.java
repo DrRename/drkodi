@@ -1,4 +1,4 @@
-package com.kerner1000.drrename;
+package com.kerner1000.drrename.event;
 
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationEvent;

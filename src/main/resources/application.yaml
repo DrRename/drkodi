@@ -7,3 +7,9 @@ logging:
   level:
     com.github.drrename: debug
     com.kerner1000.drrename: debug
+
+app.filecreator:
+  word-cnt: 3
+  debug: true
+  loop-delay-ms: 500
+

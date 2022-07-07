@@ -6,7 +6,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:controller="com.kerner1000.drrename.MainController3">
-    <MenuBar fx:id="menuBar" >
+    <MenuBar fx:id="menuBar">
         <Menu text="File">
             <MenuItem text="Dummy File Creator" onAction="#handleMenuItemDummyFileCreator" accelerator="Shortcut+D"/>
         </Menu>
@@ -114,9 +114,11 @@
                             <BorderPane HBox.hgrow="ALWAYS" fx:id="layer05_2">
                                 <padding>
                                     <Insets top="4" right="4" bottom="4" left="4"/>
-                                </padding><center>
-                                <ProgressBar fx:id="progressBar" prefHeight="25"
-                                             prefWidth="20000" visible="true"/></center>
+                                </padding>
+                                <center>
+                                    <ProgressBar fx:id="progressBar" prefHeight="25"
+                                                 prefWidth="20000"/>
+                                </center>
                             </BorderPane>
                         </center>
                         <right>
@@ -125,12 +127,13 @@
                                     <Insets top="4" right="4" bottom="4" left="4"/>
                                 </padding>
                                 <center>
-                                <Button fx:id="buttonGo" prefWidth="180" minWidth="50"
-                                        onAction="#handleButtonActionGo" text="Go">
-                                    <tooltip>
-                                        <Tooltip text="Start renaming."/>
-                                    </tooltip>
-                                </Button></center>
+                                    <Button fx:id="buttonGo" prefWidth="180" minWidth="50"
+                                            onAction="#handleButtonActionGo" text="Go">
+                                        <tooltip>
+                                            <Tooltip text="Start renaming."/>
+                                        </tooltip>
+                                    </Button>
+                                </center>
                             </BorderPane>
                         </right>
                     </BorderPane>
