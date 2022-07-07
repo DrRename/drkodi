@@ -12,4 +12,6 @@ app.filecreator:
   word-cnt: 3
   debug: true
   loop-delay-ms: 500
+  mainview:
+    debug: false
 

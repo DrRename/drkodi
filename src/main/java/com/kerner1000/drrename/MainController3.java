@@ -3,6 +3,7 @@ package com.kerner1000.drrename;
 import com.github.drrename.FileEntryEvent;
 import com.github.drrename.strategy.*;
 import com.kerner1000.drrename.filecreator.DummyFileCreatorController;
+import com.kerner1000.drrename.mainview.MainViewConfig;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +22,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -39,15 +41,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@RequiredArgsConstructor
 @Slf4j
 @Component
 @FxmlView("/fxml/MainView3.fxml")
 public class MainController3 implements Initializable, ApplicationListener<ApplicationEvent> {
 
+    private final MainViewConfig config;
+
     private final ListFilesService listFilesService;
     private final PreviewService previewService;
     private final ConfigurableApplicationContext applicationContext;
-    private final RenamingService2 renamingService;
+    private RenamingService2 renamingService;
     public TextField textFieldStartDirectory;
     public ListView<Control> content1;
     public ListView<Control> content2;
@@ -65,9 +70,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     private ChangeListener<? super Boolean> ignoreDirectoriesChangeListener;
 
     private ChangeListener<? super Boolean> ignoreHiddenFilesChangeListener;
-    @FXML
-    private Button buttonGo;
-    private boolean working;
+
     private ChangeListener<? super String> textFieldChangeListener;
 
     @FXML
@@ -113,18 +116,11 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
     private final BuildProperties buildProperties;
 
+    public GoCancelButtonsComponentController goCancelButtonsComponentController;
+
     private static PseudoClass test = PseudoClass.getPseudoClass("test");
 
-    public MainController3(ListFilesService listFilesService, PreviewService previewService, ConfigurableApplicationContext applicationContext, FxWeaver fxWeaver, BuildProperties buildProperties) {
-        this.listFilesService = Objects.requireNonNull(listFilesService);
-        this.previewService = Objects.requireNonNull(previewService);
-        this.applicationContext = Objects.requireNonNull(applicationContext);
-        this.fxWeaver = fxWeaver;
-        this.buildProperties = buildProperties;
-        this.renamingService = new RenamingService2();
-        this.entries = new ArrayList<>();
-        initServices();
-    }
+
 
     private void applyRandomColors() {
         Stream.of(layer01, layer02_1, layer02_3, layer03_1, layer03_2, layer03_3, layer04_1, layer05_1, layer05_2).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
@@ -154,6 +150,9 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
             textFieldReplacementStringTo.setDisable(!newValue.isReplacing());
             updateOutputView();
         });
+       goCancelButtonsComponentController.buttonGo.disableProperty().bind(renamingService.runningProperty().or(previewService.runningProperty()));
+       goCancelButtonsComponentController.buttonCancel.disableProperty().bind(renamingService.runningProperty().not());
+
     }
 
     private void initServices() {
@@ -162,53 +161,22 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     }
 
     private void setPreviewServiceCallbacks() {
-        previewService.setOnRunning(e -> {
-            working = true;
-            buttonGo.setDisable(true);
-            log.debug("Running");
-        });
         previewService.setOnFailed(e -> {
             log.error(e.toString());
-        });
-        previewService.setOnSucceeded(e -> {
-            log.debug("Succeeded");
-            working = false;
-            buttonGo.setDisable(false);
-            buttonGo.setText("Go");
-        });
-        previewService.setOnReady(e -> {
-            working = false;
-            buttonGo.setDisable(false);
-            buttonGo.setText("Go");
-            log.debug("Ready");
         });
     }
 
     private void setRenamingServiceCallbacks() {
-        renamingService.setOnRunning(e -> {
-            working = true;
-            buttonGo.setDisable(true);
-            log.debug("Running");
-        });
         renamingService.setOnFailed(e -> {
             log.error(e.toString());
-        });
-        renamingService.setOnSucceeded(e -> {
-            log.debug("Succeeded");
-            working = false;
-            buttonGo.setDisable(false);
-            buttonGo.setText("Go");
-        });
-        renamingService.setOnReady(e -> {
-            working = false;
-            buttonGo.setDisable(false);
-            buttonGo.setText("Go");
-            log.debug("Ready");
         });
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.entries = new ArrayList<>();
+        renamingService = new RenamingService2();
+        initServices();
         initAppMenu();
         /* Make scrolling of both lists symmetrical */
         Platform.runLater(() -> {
@@ -225,10 +193,10 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
         registerInputChangeListener();
 
-        progressBar.visibleProperty().bind(renamingService.runningProperty());
+        progressBar.progressProperty().bind(listFilesService.progressProperty());
+        progressBar.visibleProperty().bind(listFilesService.runningProperty());
 
-        if (buildProperties
-                .getVersion() != null && buildProperties.getVersion().contains("SNAPSHOT"))
+        if (config.isDebug())
             applyRandomColors();
 
     }
@@ -338,8 +306,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         cancelCurrentOperation();
         clearView();
         initListFilesService(files);
-        progressBar.progressProperty().bind(listFilesService.progressProperty());
-        progressBar.visibleProperty().bind(listFilesService.runningProperty());
+
         startService(listFilesService);
     }
 
@@ -347,8 +314,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         cancelCurrentOperation();
         clearView();
         initListFilesService(path);
-        progressBar.progressProperty().bind(listFilesService.progressProperty());
-        progressBar.visibleProperty().bind(listFilesService.runningProperty());
+
         startService(listFilesService);
     }
 
@@ -362,8 +328,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
     private void updateOutputView() {
         initPreviewService();
-        progressBar.progressProperty().bind(previewService.progressProperty());
-        progressBar.visibleProperty().bind(previewService.runningProperty());
+
         startService(previewService);
     }
 

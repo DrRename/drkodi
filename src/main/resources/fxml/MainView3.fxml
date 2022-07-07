@@ -122,19 +122,7 @@
                             </BorderPane>
                         </center>
                         <right>
-                            <BorderPane HBox.hgrow="ALWAYS" fx:id="layer05_3">
-                                <padding>
-                                    <Insets top="4" right="4" bottom="4" left="4"/>
-                                </padding>
-                                <center>
-                                    <Button fx:id="buttonGo" prefWidth="180" minWidth="50"
-                                            onAction="#handleButtonActionGo" text="Go">
-                                        <tooltip>
-                                            <Tooltip text="Start renaming."/>
-                                        </tooltip>
-                                    </Button>
-                                </center>
-                            </BorderPane>
+                            <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>
                         </right>
                     </BorderPane>
                 </HBox>
