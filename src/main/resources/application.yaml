@@ -10,7 +10,7 @@ logging:
 
 app.filecreator:
   word-cnt: 3
-  debug: true
+  debug: false
   loop-delay-ms: 500
   mainview:
     debug: false

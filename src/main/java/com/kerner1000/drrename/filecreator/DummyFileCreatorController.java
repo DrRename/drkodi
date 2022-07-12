@@ -53,7 +53,12 @@ public class DummyFileCreatorController implements Initializable, ApplicationLis
         filesCnt.setTextFormatter(textFormatter);
         goCancelButtonsComponentController.buttonGo.disableProperty().bind(fileCreatorService.runningProperty().or(startDirectoryComponentController.readyProperty().not().or(filesCnt.textProperty().isEmpty())));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(fileCreatorService.runningProperty().not());
+        goCancelButtonsComponentController.setButtonCancelActionEventFactory( DummyFileCreatorButtonCancelEvent::new);
+        goCancelButtonsComponentController.setButtonGoActionEventFactory(DummyFileCreatorButtonGoEvent::new);
         progressBar.visibleProperty().bind(fileCreatorService.runningProperty());
+
+        log.debug("Input component: {}", startDirectoryComponentController);
+        log.debug("Buttons component: {}", goCancelButtonsComponentController);
     }
 
     public void show() {

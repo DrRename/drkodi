@@ -1,7 +1,6 @@
 package com.kerner1000.drrename;
 
-import com.kerner1000.drrename.event.DummyFileCreatorButtonCancelEvent;
-import com.kerner1000.drrename.event.DummyFileCreatorButtonGoEvent;
+import com.kerner1000.drrename.event.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,6 +10,7 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 @Slf4j
 @Component
+@Scope("prototype")
 @FxmlView("/fxml/GoCancelButtonsComponent.fxml")
 public class GoCancelButtonsComponentController implements Initializable, ApplicationListener<ApplicationEvent> {
 
@@ -26,6 +27,10 @@ public class GoCancelButtonsComponentController implements Initializable, Applic
 
     public Button buttonGo;
     public Button buttonCancel;
+
+    private JavaFXActionEventFactory buttonGoActionEventFactory;
+
+    private JavaFXActionEventFactory buttonCancelActionEventFactory;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -39,11 +44,19 @@ public class GoCancelButtonsComponentController implements Initializable, Applic
 
     }
 
+    public void setButtonCancelActionEventFactory(JavaFXActionEventFactory buttonCancelActionEventFactory) {
+        this.buttonCancelActionEventFactory = buttonCancelActionEventFactory;
+    }
+
+    public void setButtonGoActionEventFactory(JavaFXActionEventFactory buttonGoActionEventFactory) {
+        this.buttonGoActionEventFactory = buttonGoActionEventFactory;
+    }
+
     public void handleDummyFileCreatorButtonGo(ActionEvent actionEvent) {
-        applicationContext.publishEvent(new DummyFileCreatorButtonGoEvent(actionEvent));
+        applicationContext.publishEvent(buttonGoActionEventFactory.buildEvent(actionEvent));
     }
 
     public void handleDummyFileCreatorButtonCancel(ActionEvent actionEvent) {
-        applicationContext.publishEvent(new DummyFileCreatorButtonCancelEvent(actionEvent));
+        applicationContext.publishEvent(buttonCancelActionEventFactory.buildEvent(actionEvent));
     }
 }

@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -22,6 +23,7 @@ import java.util.ResourceBundle;
 
 @Slf4j
 @Component
+@Scope("prototype")
 @FxmlView("/fxml/StartDirectoryComponent.fxml")
 public class StartDirectoryComponentController implements Initializable, ApplicationListener<ApplicationEvent> {
 

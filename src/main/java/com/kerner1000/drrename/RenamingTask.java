@@ -17,9 +17,11 @@ public class RenamingTask extends Task<Void> {
 	}
 
 	@Override
-	protected Void call() {
+	protected Void call() throws InterruptedException {
 
 		for (final RenamingBean b : elements) {
+			if (Thread.currentThread().isInterrupted())
+				throw new InterruptedException("Cancelled");
 			if (!b.isFiltered() && b.willChange()) {
 				b.rename(strategy);
 			}

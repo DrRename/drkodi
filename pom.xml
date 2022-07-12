@@ -137,7 +137,7 @@
                         <configuration>
                             <executable>zsh</executable>
                             <workingDirectory>${project.basedir}</workingDirectory>
-                            <commandlineArgs>src/main/resources/build-dmg.sh ${project.build.finalName}
+                            <commandlineArgs>src/main/resources/build-dmg.sh ${project.build.finalName} ${project.version}
                             </commandlineArgs>
                         </configuration>
                     </execution>

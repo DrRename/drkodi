@@ -59,11 +59,9 @@ public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {
 				// System.out.println("---------------------");
 				final int i = 0;
 			}
-		} catch(final ImageProcessingException e) {
+		} catch(final Exception e) {
 			if(logger.isDebugEnabled())
 				logger.debug(e.getLocalizedMessage() + " for " + file.getFileName());
-		} catch(final Exception e) {
-			throw new IOException(e);
 		}
 		return file.getFileName().toString();
 	}

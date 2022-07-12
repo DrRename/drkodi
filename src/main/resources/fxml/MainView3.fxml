@@ -9,11 +9,7 @@
     <MenuBar fx:id="menuBar">
         <Menu text="File">
             <MenuItem text="Dummy File Creator" onAction="#handleMenuItemDummyFileCreator" accelerator="Shortcut+D"/>
-        </Menu>
-        <Menu text="Help">
-            <MenuItem text="Regex Tips" onAction="#handleMenuItemRegexTips" accelerator="Shortcut+T"/>
-        </Menu>
-        <Menu text="Settings">
+<!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
         </Menu>
     </MenuBar>
     <BorderPane fx:id="layer01" VBox.vgrow="ALWAYS">

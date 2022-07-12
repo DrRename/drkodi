@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationEvent;
 
-public class DummyFileCreatorButtonGoEvent extends ApplicationEvent {
+public class DummyFileCreatorButtonGoEvent extends JavaFXActionEvent {
 
     public DummyFileCreatorButtonGoEvent(ActionEvent actionEvent) {
         super(actionEvent);

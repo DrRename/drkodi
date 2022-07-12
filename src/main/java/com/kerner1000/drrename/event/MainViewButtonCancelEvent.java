@@ -1,11 +1,10 @@
 package com.kerner1000.drrename.event;
 
 import javafx.event.ActionEvent;
-import org.springframework.context.ApplicationEvent;
 
-public class DummyFileCreatorButtonCancelEvent extends JavaFXActionEvent {
+public class MainViewButtonCancelEvent extends JavaFXActionEvent {
 
-    public DummyFileCreatorButtonCancelEvent(ActionEvent actionEvent) {
+    public MainViewButtonCancelEvent(ActionEvent actionEvent) {
         super(actionEvent);
     }
 

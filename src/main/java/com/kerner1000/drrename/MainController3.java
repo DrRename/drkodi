@@ -2,6 +2,8 @@ package com.kerner1000.drrename;
 
 import com.github.drrename.FileEntryEvent;
 import com.github.drrename.strategy.*;
+import com.kerner1000.drrename.event.MainViewButtonCancelEvent;
+import com.kerner1000.drrename.event.MainViewButtonGoEvent;
 import com.kerner1000.drrename.filecreator.DummyFileCreatorController;
 import com.kerner1000.drrename.mainview.MainViewConfig;
 import javafx.application.Platform;
@@ -9,7 +11,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -179,7 +179,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         this.entries = new ArrayList<>();
         renamingService = new RenamingService2();
         initServices();
-        initAppMenu();
+        initAppMenu(menuBar);
         /* Make scrolling of both lists symmetrical */
         Platform.runLater(() -> {
             FXUtil.getListViewScrollBar(content1).valueProperty()
@@ -198,8 +198,15 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         progressBar.progressProperty().bind(listFilesService.progressProperty());
         progressBar.visibleProperty().bind(listFilesService.runningProperty());
 
+        goCancelButtonsComponentController.buttonGo.setTooltip(new Tooltip("Start renaming"));
+        goCancelButtonsComponentController.setButtonCancelActionEventFactory(MainViewButtonCancelEvent::new);
+        goCancelButtonsComponentController.setButtonGoActionEventFactory(MainViewButtonGoEvent::new);
+
         if (config.isDebug())
             applyRandomColors();
+
+        log.debug("Input component: {}", startDirectoryComponentController);
+        log.debug("Buttons component: {}", goCancelButtonsComponentController);
 
     }
 
@@ -258,10 +265,11 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         });
     }
 
-    private void initAppMenu() {
+    public static void initAppMenu(MenuBar menuBar) {
         final String os = System.getProperty("os.name");
-        if (os != null && os.startsWith("Mac"))
+        if (os != null && os.startsWith("Mac")) {
             menuBar.useSystemMenuBarProperty().set(true);
+        }
     }
 
     public void handleMenuItemDummyFileCreator(ActionEvent actionEvent) {
@@ -408,7 +416,6 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     private void cancelCurrentOperation() {
         previewService.cancel();
         listFilesService.cancel();
-
     }
 
     @Override
@@ -419,6 +426,12 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
             Platform.runLater(() -> addToContent((RenamingBean) event.getSource()));
         }
 //		entries.forEach(b -> b.onApplicationEvent(event));
+        else if(event instanceof MainViewButtonGoEvent){
+            handleButtonActionGo(((MainViewButtonGoEvent) event).getActionEvent());
+        }
+        else if(event instanceof MainViewButtonCancelEvent){
+            // TODO
+        }
     }
 
     private RenamingStrategy initAndGetStrategy() {
@@ -443,5 +456,8 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         } else {
             log.info("No renaming strategy selected");
         }
+    }
+
+    public void handleMenuItemAbout(ActionEvent actionEvent) {
     }
 }
