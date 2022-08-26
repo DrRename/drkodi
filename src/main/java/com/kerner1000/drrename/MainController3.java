@@ -1,5 +1,6 @@
 package com.kerner1000.drrename;
 
+import com.drrename.strategy.CapitalizeFirstStrategy;
 import com.github.drrename.FileEntryEvent;
 import com.github.drrename.strategy.*;
 import com.kerner1000.drrename.event.MainViewButtonCancelEvent;
@@ -191,6 +192,9 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         comboBoxRenamingStrategy.getItems().add(new RegexReplaceRenamingStrategy());
         comboBoxRenamingStrategy.getItems().add(new ToLowerCaseRenamingStrategy());
         comboBoxRenamingStrategy.getItems().add(new SpaceToCamelCaseRenamingStrategy());
+        comboBoxRenamingStrategy.getItems().add(new UnhideStrategy());
+        comboBoxRenamingStrategy.getItems().add(new ExtensionFromMimeStrategy());
+        comboBoxRenamingStrategy.getItems().add(new CapitalizeFirstStrategy());
         comboBoxRenamingStrategy.getSelectionModel().selectFirst();
 
         registerInputChangeListener();
@@ -256,6 +260,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
                 }
                 success = true;
                 startDirectoryComponentController.textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
+                updateOutputView();
             }
             /*
              * let the source know whether the string was successfully transferred and used
@@ -324,8 +329,8 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         cancelCurrentOperation();
         clearView();
         initListFilesService(path);
-
         startService(listFilesService);
+        updateOutputView();
     }
 
     private void updateInputView(final String path) {
@@ -343,7 +348,6 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
     private void updateOutputView() {
         initPreviewService();
-
         startService(previewService);
     }
 

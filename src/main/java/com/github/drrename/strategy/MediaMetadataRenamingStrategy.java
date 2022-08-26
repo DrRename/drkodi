@@ -31,7 +31,7 @@ public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {
 	@Override
 	public String getIdentifier() {
 
-		return "Date from Metadata";
+		return "Date From Metadata";
 	}
 
 	@Override
@@ -41,27 +41,34 @@ public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {
 			final Metadata metadata = ImageMetadataReader.readMetadata(file.toFile());
 			for(final Directory directory : metadata.getDirectories()) {
 				// System.out.println("---------------------");
-				for(final Tag tag : directory.getTags())
+				for(final Tag tag : directory.getTags()) {
 					// System.out.println(tag);
-					if(tag.toString().toLowerCase().contains("date"))
+					int tagType = tag.getTagType();
+					if (306 == tagType) {
 						// System.err.println(tag);
-						for(final DateTimeFormatter df : DATE_FORMATTERS_READ)
+						for (final DateTimeFormatter df : DATE_FORMATTERS_READ) {
 							// System.err.println(ZonedDateTime.now().format(df));
 							try {
 								final TemporalAccessor dt = df.parse(tag.getDescription());
 								final String result = DATE_FORMATTER_WRITE.format(dt) + "." + FilenameUtils.getExtension(file.toString());
 								return result;
-							} catch(final DateTimeParseException e) {
-								if(logger.isDebugEnabled())
+							} catch (final DateTimeParseException e) {
+								if (logger.isDebugEnabled())
 									logger.debug(e.toString());
 								final int i = 0;
 							}
-				// System.out.println("---------------------");
-				final int i = 0;
+						}
+					}
+					// System.out.println("---------------------");
+					final int i = 0;
+				}
 			}
 		} catch(final Exception e) {
 			if(logger.isDebugEnabled())
 				logger.debug(e.getLocalizedMessage() + " for " + file.getFileName());
+		}
+		if(logger.isDebugEnabled()){
+			logger.debug("Failed to read meta data from file.");
 		}
 		return file.getFileName().toString();
 	}
