@@ -100,19 +100,9 @@
                             <platform>mac</platform>
                             <name>DrRename</name>
                             <assetsDir>assets</assetsDir>
-                            <organizationEmail>support@drrename.app</organizationEmail>
-                            <organizationUrl>https://drrename.app</organizationUrl>
-                            <url>https://drrename.app</url>
                             <version>1.0.26</version>
                             <macConfig>
-                                <customLauncher>assets/mac/launcher</customLauncher>
-                                <entitlements>assets/mac/entitlements.plist</entitlements>
-<!--                                <customInfoPlist>assets/mac/Info.plist</customInfoPlist>-->
-                                <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
-                                <appId>com.drrename</appId>
-<!--                                <provisionProfile>assets/mac/drrename.provisionprofile</provisionProfile>-->
-                                <codesignApp>true</codesignApp>
-                                <!-- properties used for Info.plist file generation -->
+                                <codesignApp>false</codesignApp>
                                 <infoPlist>
                                     <bundlePackageType>APPL</bundlePackageType>
                                     <additionalEntries>
@@ -217,10 +207,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+<!--        For debugging the plugin-->
         <dependency>
             <groupId>io.github.fvarrui</groupId>
             <artifactId>javapackager</artifactId>
-            <version>1.6.8-SNAPSHOT</version>
+            <version>1.7.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
