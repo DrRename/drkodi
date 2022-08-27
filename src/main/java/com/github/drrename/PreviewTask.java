@@ -1,5 +1,6 @@
 package com.github.drrename;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class PreviewTask extends Task<Void> {
 
     public PreviewTask(final List<RenamingBean> beans, final RenamingStrategy renamingStrategy) {
 
-        this.beans = Objects.requireNonNull(beans);
+        this.beans = new ArrayList(Objects.requireNonNull(beans));
         this.renamingStrategy = Objects.requireNonNull(renamingStrategy);
     }
 
