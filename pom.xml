@@ -91,8 +91,8 @@
                             <additionalModules>java.base,java.logging,java.desktop,java.scripting,jdk.unsupported,javafx.controls,javafx.fxml</additionalModules>
                             <additionalModulePaths>jfx/x86/javafx-jmods-18.0.2</additionalModulePaths>
                             <bundleJre>true</bundleJre>
-                            <jdkPath>jdk/x86/jdk-18.0.2+9/Contents/Home</jdkPath>
-                            <packagingJdk>jdk/x86/jdk-18.0.2+9/Contents/Home</packagingJdk>
+                            <jdkPath>jdk/x86/jdk-18.0.2.1+1/Contents/Home</jdkPath>
+                            <packagingJdk>jdk/x86/jdk-18.0.2.1+1/Contents/Home</packagingJdk>
                             <runnableJar>${project.build.directory}/${project.artifactId}-${project.version}.jar</runnableJar>
                             <generateInstaller>false</generateInstaller>
                             <administratorRequired>false</administratorRequired>
