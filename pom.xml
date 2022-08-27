@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.1</version>
-        <relativePath /> <!-- lookup parent from repository -->
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.github.drrename</groupId>
     <artifactId>drrename</artifactId>
@@ -15,7 +16,7 @@
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
         <github-user>kerner1000</github-user>
         <github-repo>drrename</github-repo>
-        <main-class>com.kerner1000.drrename.Launcher</main-class>
+        <main-class>org.springframework.boot.loader.JarLauncher</main-class>
         <java.version>18</java.version>
         <javafx.version>18.0.1</javafx.version>
     </properties>
@@ -49,62 +50,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>${main-class}</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <detectJavaApiLink>false</detectJavaApiLink>
-                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-                    <doclint>none</doclint>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
             </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
-                <configuration>
-                    <mainClass>${main-class}</mainClass>
-                </configuration>
+<!--                <configuration>-->
+<!--                    <mainClass>${main-class}</mainClass>-->
+<!--                </configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -124,21 +77,54 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.7.0-SNAPSHOT</version>
                 <executions>
-                    <execution><!-- Run our version calculation script -->
-                        <id>build-dmg</id>
+                    <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>package</goal>
                         </goals>
                         <configuration>
-                            <executable>zsh</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <commandlineArgs>src/main/resources/build-dmg.sh ${project.build.finalName} ${project.version}
-                            </commandlineArgs>
+                            <mainClass>${main-class}</mainClass>
+                            <additionalModules>java.base,java.logging,java.desktop,java.scripting,jdk.unsupported,javafx.controls,javafx.fxml</additionalModules>
+                            <additionalModulePaths>jfx/x86/javafx-jmods-18.0.2</additionalModulePaths>
+                            <bundleJre>true</bundleJre>
+                            <jdkPath>jdk/x86/jdk-18.0.2+9/Contents/Home</jdkPath>
+                            <packagingJdk>jdk/x86/jdk-18.0.2+9/Contents/Home</packagingJdk>
+                            <runnableJar>${project.build.directory}/${project.artifactId}-${project.version}.jar</runnableJar>
+                            <generateInstaller>false</generateInstaller>
+                            <administratorRequired>false</administratorRequired>
+                            <copyDependencies>false</copyDependencies>
+                            <platform>mac</platform>
+                            <name>DrRename</name>
+                            <assetsDir>assets</assetsDir>
+                            <organizationEmail>support@drrename.app</organizationEmail>
+                            <organizationUrl>https://drrename.app</organizationUrl>
+                            <url>https://drrename.app</url>
+                            <version>1.0.26</version>
+                            <macConfig>
+                                <customLauncher>assets/mac/launcher</customLauncher>
+                                <entitlements>assets/mac/entitlements.plist</entitlements>
+<!--                                <customInfoPlist>assets/mac/Info.plist</customInfoPlist>-->
+                                <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
+                                <appId>com.drrename</appId>
+<!--                                <provisionProfile>assets/mac/drrename.provisionprofile</provisionProfile>-->
+                                <codesignApp>true</codesignApp>
+                                <!-- properties used for Info.plist file generation -->
+                                <infoPlist>
+                                    <bundlePackageType>APPL</bundlePackageType>
+                                    <additionalEntries>
+                                        <![CDATA[
+                <key>LSApplicationCategoryType</key>
+                <string>public.app-category.productivity</string>
+                 <key>LSMinimumSystemVersion</key>
+                <string>10.4</string>
+            ]]>
+                                    </additionalEntries>
+                                </infoPlist>
+                            </macConfig>
                         </configuration>
                     </execution>
                 </executions>
@@ -159,33 +145,33 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
+<!--            <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
+<!--            <scope>provided</scope>-->
         </dependency>
         <!-- Uncomment for cross-platform fat jar-->
-        <!--
-          <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>win</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>linux</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-            <classifier>mac</classifier>
-        </dependency>
-        -->
+<!--          <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-graphics</artifactId>-->
+<!--            <version>${javafx.version}</version>-->
+<!--            <classifier>win</classifier>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-graphics</artifactId>-->
+<!--            <version>${javafx.version}</version>-->
+<!--            <classifier>linux</classifier>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-graphics</artifactId>-->
+<!--            <version>${javafx.version}</version>-->
+<!--            <classifier>mac</classifier>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.github.kerner1000</groupId>
             <artifactId>events1000</artifactId>
@@ -212,6 +198,16 @@
             <version>1.9</version>
         </dependency>
         <dependency>
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-util</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>2.4.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
@@ -220,6 +216,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.fvarrui</groupId>
+            <artifactId>javapackager</artifactId>
+            <version>1.6.8-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
