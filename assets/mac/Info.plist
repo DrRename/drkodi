@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleGetInfoString</key>
+        <string>DrRename 1.0.25</string>
+        <key>CFBundleDevelopmentRegion</key>
+        <string>English</string>
+        <key>CFBundleExecutable</key>
+        <string>launcher</string>
+        <key>CFBundleIconFile</key>
+        <string>DrRename.icns</string>
+        <key>CFBundleIdentifier</key>
+        <string>com.drrename</string>
+        <key>CFBundleDisplayName</key>
+        <string>DrRename</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundleName</key>
+        <string>DrRename</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>1.0.25</string>
+        <key>CFBundleSignature</key>
+        <string>????</string>
+        <key>CFBundleVersion</key>
+        <string>1.0.25</string>
+        <key>NSHumanReadableCopyright</key>
+        <string>ACME</string>
+        <key>NSHighResolutionCapable</key>
+        <true/>
+        <key>NSSupportsAutomaticGraphicsSwitching</key>
+        <true/>
+        <key>AdministratorRequired</key>
+        <false/>
+        <key>LSEnvironment</key>
+        <dict/>
+        <key>JVMCapabilities</key>
+        <array>
+            <string>CommandLine</string>
+            <string>JNI</string>
+            <string>BundledApp</string>
+        </array>
+        <key>NSAppleEventsUsageDescription</key>
+        <string>There was an error while launching the application. Please
+			click OK to display a dialog with more information or cancel and view
+			the syslog for details.</string>
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.productivity</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>10.4</string>
+    </dict>
+</plist>
