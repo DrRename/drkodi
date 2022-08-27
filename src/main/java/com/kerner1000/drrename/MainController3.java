@@ -321,7 +321,6 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         cancelCurrentOperation();
         clearView();
         initListFilesService(files);
-
         startService(listFilesService);
     }
 
@@ -330,7 +329,6 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
         clearView();
         initListFilesService(path);
         startService(listFilesService);
-        updateOutputView();
     }
 
     private void updateInputView(final String path) {
@@ -344,6 +342,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
     private void initListFilesService(Collection<Path> files) throws IOException {
         listFilesService.setFiles(files);
+        listFilesService.setOnSucceeded((e)->updateOutputView());
     }
 
     private void updateOutputView() {
