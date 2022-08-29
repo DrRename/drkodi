@@ -2,6 +2,9 @@ package drrename.kodi;
 
 import com.kerner1000.drrename.GoCancelButtonsComponentController;
 import com.kerner1000.drrename.StartDirectoryComponentController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -49,6 +54,8 @@ public class KodiToolsController implements Initializable, ApplicationListener<A
 
     private TreeItem<Object> treeRoot;
 
+    private FilteredList<TreeItem<Object>> filteredList;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         stage = new Stage();
@@ -66,6 +73,17 @@ public class KodiToolsController implements Initializable, ApplicationListener<A
                 buttonExpandAll.setDisable(e.getList().isEmpty());
                 buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
+        this.filteredList = new FilteredList<>(FXCollections.observableArrayList());
+        filteredList.predicateProperty().bind(Bindings.createObjectBinding(this::func, checkBoxIgnoreMissingNfo.selectedProperty()));
+    }
+
+    private Predicate<? super Object> func() {
+        return e -> {
+            if(e instanceof KodiCheckResultElementNfoFile){
+                return !KodiCheckResultElementNfoFile.NfoFile.NO_FILE.equals(((KodiCheckResultElementNfoFile) e).getNfoFile());
+            }
+            return true;
+        };
     }
 
     public void show() {
@@ -97,22 +115,14 @@ public class KodiToolsController implements Initializable, ApplicationListener<A
     private void handleResult(WorkerStateEvent workerStateEvent) {
         if(service.getValue() != null){
             log.info("Result: {}", service.getValue().getElements().values().stream().filter(this::filterResults).map(Object::toString).collect(Collectors.joining("\n")));
-            treeRoot.getChildren().addAll(getFilterableList(transform(service.getValue())));
+//            this.filteredList.addAll(transform(service.getValue()));
+            this.filteredList = new FilteredList<>(FXCollections.observableList(transform(service.getValue())));
+            filteredList.predicateProperty().bind(Bindings.createObjectBinding(this::func, checkBoxIgnoreMissingNfo.selectedProperty()));
+            treeRoot.getChildren().addAll(filteredList);
         }
       else {
           log.info("Got no result. Cancelled?");
         }
-    }
-
-    private FilteredList<TreeItem<Object>> getFilterableList(List<TreeItem<Object>> transform) {
-        return new FilteredList<>(FXCollections.observableList(transform), this::filterResults2);
-    }
-
-    private <E> boolean filterResults2(E e) {
-        if(e instanceof KodiCheckResultElementNfoFile){
-            return KodiCheckResultElementNfoFile.NfoFile.NO_FILE.equals(((KodiCheckResultElementNfoFile) e).getNfoFile());
-        }
-        return true;
     }
 
     private boolean filterResults(KodiCheckResultElement kodiCheckResultElement) {
@@ -122,9 +132,9 @@ public class KodiToolsController implements Initializable, ApplicationListener<A
         return true;
     }
 
-    private List<TreeItem<Object>> transform(KodiCheckResult result) {
+    private List<TreeItem<Object>> transform(KodiCheckResult taskResult) {
         List<TreeItem<Object>> result2 = new ArrayList<>();
-        for(Map.Entry<String, KodiCheckResultElement> e : result.getElements().entrySet()){
+        for(Map.Entry<String, KodiCheckResultElement> e : taskResult.getElements().entrySet()){
             TreeItem<Object> item = new TreeItem<>(e.getKey());
             item.getChildren().addAll(transformChildren(e.getValue()));
             result2.add(item);
