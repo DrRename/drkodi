@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public abstract class RenamingStrategyProto implements RenamingStrategy {
 
 	private static final Logger logger = LoggerFactory.getLogger(RenamingStrategyProto.class);
-	private final static Pattern pattern = Pattern.compile(".*_(\\d*)$");
+	private final static Pattern pattern = Pattern.compile(".*_copy(\\d*)$");
 	private String replacementStringFrom = "";
 	private String replacementStringTo = "";
 
@@ -51,20 +51,25 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
 			}
 			return Files.move(file, file.resolveSibling(nameNew));
 		} catch(final FileAlreadyExistsException e) {
-			final String extension = FilenameUtils.getExtension(nameNew);
-			String baseName = FilenameUtils.getBaseName(nameNew);
-			final Matcher matcher = pattern.matcher(baseName);
-			if(matcher.matches()) {
-				final String group = matcher.group(1);
-				final int index = matcher.start(1);
-				baseName = baseName.substring(0, index - 1); // also omit '_'
-				// string
-				fileNameCounter = Integer.parseInt(group);
-			}
-			fileNameCounter++;
-			nameNew = baseName + "_" + fileNameCounter + "." + extension;
-			return doRename(file, nameNew);
+			logger.debug(e.getLocalizedMessage());
+			return doRename(file, getFileAlreadyExistsFileName(nameNew, fileNameCounter));
 		}
+	}
+
+	String getFileAlreadyExistsFileName(String nameNew, int fileNameCounter) {
+		final String extension = FilenameUtils.getExtension(nameNew);
+		String baseName = FilenameUtils.getBaseName(nameNew);
+		final Matcher matcher = pattern.matcher(baseName);
+		if(matcher.matches()) {
+			final String group = matcher.group(1);
+			final int index = matcher.start(1);
+			baseName = baseName.substring(0, index - 1); // also omit '_'
+			// string
+			fileNameCounter = Integer.parseInt(group);
+		}
+		fileNameCounter++;
+		nameNew = baseName + "_copy" + fileNameCounter + "." + extension;
+		return nameNew;
 	}
 
 	@Override
