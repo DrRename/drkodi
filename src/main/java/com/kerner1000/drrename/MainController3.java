@@ -7,6 +7,7 @@ import com.kerner1000.drrename.event.MainViewButtonCancelEvent;
 import com.kerner1000.drrename.event.MainViewButtonGoEvent;
 import com.kerner1000.drrename.filecreator.DummyFileCreatorController;
 import com.kerner1000.drrename.mainview.MainViewConfig;
+import drrename.kodi.KodiToolsController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -298,6 +299,11 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 //        }
     }
 
+    public void handleMenuItemKodiTools(ActionEvent actionEvent) {
+        KodiToolsController controller = fxWeaver.loadController(KodiToolsController.class);
+        controller.show();
+    }
+
     @FXML
     private void handleMenuItemRegexTips(final ActionEvent event) {
 
@@ -463,4 +469,6 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
     public void handleMenuItemAbout(ActionEvent actionEvent) {
     }
+
+
 }
