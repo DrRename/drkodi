@@ -1,9 +1,18 @@
 package drrename.kodi;
 
-public class KodiCheckResultElement {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Getter
+public class KodiCheckResultElement<T> {
+
+    protected final KodiCheckResult.Type type;
     protected final String movieName;
 
-    public KodiCheckResultElement(String movieName) {
-        this.movieName = movieName;
-    }
+    protected final T suggestion;
+
+
+
+
 }
