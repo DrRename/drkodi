@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="drrename.kodi.KodiToolsController" fx:id="root"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <padding>
+        <Insets top="4" right="4" bottom="4" left="4"/>
+    </padding>
+    <top>
+        <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
+    </top>
+
+    <center>
+        <BorderPane >
+            <padding>
+                <Insets top="4" right="4" bottom="4" left="4"/>
+            </padding>
+            <center>
+               <TreeView fx:id="warningsTree"></TreeView>
+            </center>
+            <bottom>
+                <BorderPane >
+                <padding>
+                    <Insets top="4" right="4" bottom="4" left="4"/>
+                </padding>
+                <center>
+                    <HBox spacing="4">
+                <Button fx:id="buttonExpandAll" prefWidth="120" minWidth="50"
+                        onAction="#handleButtonExpandAll" text="Expand all">
+                    <tooltip>
+                        <Tooltip text="Expand all"/>
+                    </tooltip>
+                </Button>
+                    <Button fx:id="buttonCollapseAll" prefWidth="120" minWidth="50"
+                            onAction="#handleButtonCollapseAll" text="Collapse all">
+                        <tooltip>
+                            <Tooltip text="Expand all"/>
+                        </tooltip>
+                    </Button>
+                        <CheckBox fx:id="checkBoxIgnoreMissingNfo" text="Ignore Missing NFO file"/>
+                </HBox>
+                </center>
+                </BorderPane>
+            </bottom>
+        </BorderPane>
+    </center>
+
+    <bottom>
+        <BorderPane >
+            <padding>
+                <Insets top="4" right="4" bottom="4" left="4"/>
+            </padding>
+            <center>
+                <ProgressBar fx:id="progressBar"/>
+            </center>
+            <right>
+                <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>
+            </right>
+        </BorderPane>
+    </bottom>
+
+</BorderPane>
