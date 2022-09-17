@@ -76,49 +76,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>io.github.fvarrui</groupId>
-                <artifactId>javapackager</artifactId>
-                <version>1.7.0-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>${main-class}</mainClass>
-                            <additionalModules>java.base,java.logging,java.desktop,java.scripting,jdk.unsupported,javafx.controls,javafx.fxml</additionalModules>
-                            <additionalModulePaths>jfx/x86/javafx-jmods-18.0.2</additionalModulePaths>
-                            <bundleJre>true</bundleJre>
-                            <jdkPath>jdk/x86/jdk-18.0.2.1+1/Contents/Home</jdkPath>
-                            <packagingJdk>jdk/x86/jdk-18.0.2.1+1/Contents/Home</packagingJdk>
-                            <runnableJar>${project.build.directory}/${project.artifactId}-${project.version}.jar</runnableJar>
-                            <generateInstaller>false</generateInstaller>
-                            <administratorRequired>false</administratorRequired>
-                            <copyDependencies>false</copyDependencies>
-                            <platform>mac</platform>
-                            <name>DrRename</name>
-                            <assetsDir>assets</assetsDir>
-                            <version>1.0.26</version>
-                            <macConfig>
-                                <codesignApp>false</codesignApp>
-                                <infoPlist>
-                                    <bundlePackageType>APPL</bundlePackageType>
-                                    <additionalEntries>
-                                        <![CDATA[
-                <key>LSApplicationCategoryType</key>
-                <string>public.app-category.productivity</string>
-                 <key>LSMinimumSystemVersion</key>
-                <string>10.4</string>
-            ]]>
-                                    </additionalEntries>
-                                </infoPlist>
-                            </macConfig>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <dependencies>
