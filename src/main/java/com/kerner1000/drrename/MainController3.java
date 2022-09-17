@@ -418,6 +418,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     }
 
     private void clearView() {
+        entries.clear();
         content1.getItems().clear();
         content2.getItems().clear();
     }
