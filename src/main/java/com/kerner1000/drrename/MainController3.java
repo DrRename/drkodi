@@ -200,8 +200,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
         registerInputChangeListener();
 
-        progressBar.progressProperty().bind(listFilesService.progressProperty());
-        progressBar.visibleProperty().bind(listFilesService.runningProperty());
+        progressBar.visibleProperty().bind(listFilesService.runningProperty().or(previewService.runningProperty().or(renamingService.runningProperty())));
 
         goCancelButtonsComponentController.buttonGo.setTooltip(new Tooltip("Start renaming"));
         goCancelButtonsComponentController.setButtonCancelActionEventFactory(MainViewButtonCancelEvent::new);
@@ -349,6 +348,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     private void initListFilesService(Collection<Path> files) throws IOException {
         listFilesService.setFiles(files);
         listFilesService.setOnSucceeded((e)->updateOutputView());
+        progressBar.progressProperty().bind(listFilesService.progressProperty());
     }
 
     private void updateOutputView() {
@@ -358,6 +358,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
     private void initPreviewService() {
         previewService.setFiles(entries);
+        progressBar.progressProperty().bind(previewService.progressProperty());
         var strat = initAndGetStrategy();
         if (strat != null)
             previewService.setRenamingStrategy(strat);
@@ -462,6 +463,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
             renamingService.reset();
             renamingService.setEvents(entries);
             renamingService.setStrategy(s);
+            progressBar.progressProperty().bind(renamingService.progressProperty());
             renamingService.start();
         } else {
             log.info("No renaming strategy selected");
