@@ -154,7 +154,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
             textFieldReplacementStringTo.setDisable(!newValue.isReplacing());
             updateOutputView();
         });
-       goCancelButtonsComponentController.buttonGo.disableProperty().bind(renamingService.runningProperty().or(previewService.runningProperty()));
+       goCancelButtonsComponentController.buttonGo.disableProperty().bind(renamingService.runningProperty().or(previewService.runningProperty()).or(listFilesService.runningProperty()));
        goCancelButtonsComponentController.buttonCancel.disableProperty().bind(renamingService.runningProperty().not());
 
     }
