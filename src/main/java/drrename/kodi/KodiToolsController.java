@@ -74,10 +74,11 @@ public class KodiToolsController implements Initializable, ApplicationListener<A
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        log.debug("Event received: {}", event);
         if(event instanceof KodiToolsButtonGoEvent){
+            log.debug("Event received: {}", event);
             startService();
         } else if(event instanceof KodiToolsButtonCancelEvent){
+            log.debug("Event received: {}", event);
             cancelService();
         }
     }
