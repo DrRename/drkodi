@@ -13,4 +13,8 @@ public class SubdirResult {
     private final Path movie;
 
     private final List<Path> subdirs;
+
+    public String toString(){
+        return subdirs.toString();
+    }
 }
