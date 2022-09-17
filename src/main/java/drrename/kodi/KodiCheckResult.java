@@ -8,10 +8,19 @@ import java.util.TreeMap;
 @Data
 public class KodiCheckResult {
 
-    private final Map<String, KodiCheckResultElement> elements = new TreeMap<>();
+    enum Type {
+        NFO_FILE_NAME, NFO_CONTENT, SUB_DIRS
+    }
+
+    private final Map<Type, Map<String, KodiCheckResultElement>> elements = new TreeMap<>();
 
     public KodiCheckResult addResult(KodiCheckResultElement kodiCheckResultElement){
-        this.elements.put(kodiCheckResultElement.movieName, kodiCheckResultElement);
+        var hans = elements.get(kodiCheckResultElement.type);
+        if(hans == null){
+            hans = new TreeMap<>();
+        }
+        hans.put(kodiCheckResultElement.movieName, kodiCheckResultElement);
+        elements.put(kodiCheckResultElement.type, hans);
         return this;
     }
 }
