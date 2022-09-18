@@ -1,4 +1,4 @@
-package com.kerner1000.drrename.filecreator;
+package drrename.filecreator;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;

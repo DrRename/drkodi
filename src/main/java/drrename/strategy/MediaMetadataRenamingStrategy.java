@@ -1,4 +1,4 @@
-package com.github.drrename.strategy;
+package drrename.strategy;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;

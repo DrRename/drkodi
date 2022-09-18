@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 
 import com.github.drrename.AbstractRenamingStrategyTest;
 import com.kerner1000.drrename.RenamingStrategy;
+import drrename.strategy.ToLowerCaseRenamingStrategy;
 import org.junit.jupiter.api.Test;
 
 public class ToLowerCaseRenamingStrategyTest extends AbstractRenamingStrategyTest {
