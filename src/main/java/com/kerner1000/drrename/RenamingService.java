@@ -6,12 +6,12 @@ import java.util.Objects;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class RenamingService2 extends Service<Void> {
+public class RenamingService extends Service<Void> {
 
 	private List<RenamingBean> events;
 	private RenamingStrategy strategy;
 
-	public RenamingService2() {
+	public RenamingService() {
 
 		super();
 	}
