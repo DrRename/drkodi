@@ -56,7 +56,7 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
 		}
 	}
 
-	String getFileAlreadyExistsFileName(String nameNew, int fileNameCounter) {
+	public String getFileAlreadyExistsFileName(String nameNew, int fileNameCounter) {
 		final String extension = FilenameUtils.getExtension(nameNew);
 		String baseName = FilenameUtils.getBaseName(nameNew);
 		final Matcher matcher = pattern.matcher(baseName);
