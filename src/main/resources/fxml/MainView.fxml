@@ -108,7 +108,7 @@
                                         <Insets top="4" right="4" bottom="4" left="4"/>
                                     </padding>
                                     <center>
-                                        <ProgressBar fx:id="progressBar"
+                                        <ProgressBar fx:id="progressBar" prefWidth="140"
                                         />
                                     </center>
                                     </BorderPane>

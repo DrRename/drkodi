@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,8 @@ public class MainController implements Initializable, ApplicationListener<Applic
     private final PreviewService previewService;
     private final ConfigurableApplicationContext applicationContext;
     public HBox goCancelButtonsComponent;
+    public BorderPane layer04_3;
+    public BorderPane layer04_2;
 
     private RenamingService renamingService;
 
@@ -131,7 +134,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
 
     private void applyRandomColors() {
-        Stream.of(layer01, layer02_3, layer03_1, layer03_2, layer04_1, layer05_1).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
+        Stream.of(layer01, layer02_3, layer03_1, layer03_2, layer04_1, layer04_2, layer04_3, layer05_1, goCancelButtonsComponent).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
     }
 
     private String getRandomColorString() {
