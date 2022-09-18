@@ -88,9 +88,6 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     Node layer01;
 
     @FXML
-    Node layer02_1;
-
-    @FXML
     Node layer02_2;
 
     @FXML
@@ -131,7 +128,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
 
     private void applyRandomColors() {
-        Stream.of(layer01, layer02_1, layer02_3, layer03_1, layer03_2, layer03_3, layer04_1, layer05_1, layer05_2).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
+        Stream.of(layer01, layer02_3, layer03_1, layer03_2, layer03_3, layer04_1, layer05_1, layer05_2).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
     }
 
     private String getRandomColorString() {
