@@ -12,6 +12,8 @@ import drrename.kodi.KodiToolsController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -24,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +43,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.sql.Array;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,6 +60,8 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     private final ListFilesService listFilesService;
     private final PreviewService previewService;
     private final ConfigurableApplicationContext applicationContext;
+    public HBox goCancelButtonsComponent;
+
     private RenamingService renamingService;
 
     public ListView<Control> content1;
@@ -128,7 +135,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
 
 
     private void applyRandomColors() {
-        Stream.of(layer01, layer02_3, layer03_1, layer03_2, layer03_3, layer04_1, layer05_1, layer05_2).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
+        Stream.of(layer01, layer02_3, layer03_1, layer03_2, layer04_1, layer05_1).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
     }
 
     private String getRandomColorString() {
