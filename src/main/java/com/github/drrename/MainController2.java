@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 
 import com.kerner1000.drrename.RenamingBean;
-import com.kerner1000.drrename.RenamingService2;
+import com.kerner1000.drrename.RenamingService;
 import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class MainController2 implements Initializable {
 	private TextField textFieldReplacementStringTo;
 	// @FXML
 	// private TextArea areaInputFiles;
-	private final RenamingService2 sr;
+	private final RenamingService sr;
 	// @FXML
 	// private TextArea areaOutputFiles;
 	@FXML
@@ -103,7 +103,7 @@ public class MainController2 implements Initializable {
 
 	public MainController2() {
 
-		sr = new RenamingService2();
+		sr = new RenamingService();
 		init();
 	}
 
