@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 
 import com.kerner1000.drrename.RenamingBean;
-import com.kerner1000.drrename.RenamingService;
+import drrename.RenamingService;
 import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -7,6 +7,7 @@ import com.kerner1000.drrename.event.MainViewButtonCancelEvent;
 import com.kerner1000.drrename.event.MainViewButtonGoEvent;
 import com.kerner1000.drrename.filecreator.DummyFileCreatorController;
 import com.kerner1000.drrename.mainview.MainViewConfig;
+import drrename.RenamingService;
 import drrename.kodi.KodiToolsController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
