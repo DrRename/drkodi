@@ -9,7 +9,7 @@ import java.nio.file.*;
 import java.util.Objects;
 
 @Slf4j
-public class RenamingBean  implements ApplicationListener<FileModifiedEvent> {
+public class RenamingBean   {
 
     private final ObjectProperty<Path> oldPath;
     private final StringProperty newPath;
@@ -62,26 +62,7 @@ public class RenamingBean  implements ApplicationListener<FileModifiedEvent> {
         }
     }
 
-    @Override
-    public void onApplicationEvent(FileModifiedEvent event) {
-//        log.debug(event.getFiles().getNewFile().getFileName().toString());
-//        log.debug(oldPath.get().getFileName().toString());
-            if(event.getFiles().getNewFile().getFileName().toString().equals(oldPath.get().getFileName().toString())){
-                Platform.runLater(() -> setExternalChanged(true));
-                if(event.getFiles().getOldFile() == StandardWatchEventKinds.ENTRY_DELETE){
-                    log.debug("deleted {}", event);
-                    Platform.runLater(() -> setOldPath(Paths.get("<deleted>")));
-                }else if(event.getFiles().getOldFile() == StandardWatchEventKinds.ENTRY_CREATE){
-                    log.debug("created {}", event);
-                    Platform.runLater(() -> setOldPath(event.getFiles().getNewFile()));
-                }
-            }else if(event.getFiles().getOldFile() == StandardWatchEventKinds.ENTRY_MODIFY){
-                log.debug("modified {}", event);
-                Platform.runLater(() -> setOldPath(event.getFiles().getNewFile()));
-            }
 
-
-    }
 
     @Override
     public String toString() {
