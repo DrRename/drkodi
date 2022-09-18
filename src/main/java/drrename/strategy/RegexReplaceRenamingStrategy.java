@@ -1,8 +1,6 @@
-package com.github.drrename.strategy;
+package drrename.strategy;
 
 import java.nio.file.Path;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.slf4j.Logger;

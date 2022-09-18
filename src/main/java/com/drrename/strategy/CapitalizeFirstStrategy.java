@@ -1,7 +1,6 @@
 package com.drrename.strategy;
 
-import com.github.drrename.strategy.RenamingStrategyProto;
-import org.apache.commons.text.CaseUtils;
+import drrename.strategy.RenamingStrategyProto;
 import org.apache.commons.text.WordUtils;
 
 import java.io.IOException;

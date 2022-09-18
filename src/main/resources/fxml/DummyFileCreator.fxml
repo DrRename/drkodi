@@ -9,7 +9,7 @@
 <?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:id="root" fx:controller="com.kerner1000.drrename.filecreator.DummyFileCreatorController" minWidth="120" minHeight="120">
+            fx:id="root" fx:controller="drrename.filecreator.DummyFileCreatorController" minWidth="120" minHeight="120">
     <padding>
         <Insets top="4" right="4" bottom="4" left="4"/>
     </padding>

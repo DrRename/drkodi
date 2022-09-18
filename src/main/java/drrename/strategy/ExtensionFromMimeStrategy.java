@@ -1,4 +1,4 @@
-package com.github.drrename.strategy;
+package drrename.strategy;
 
 import jodd.net.MimeTypes;
 import lombok.extern.slf4j.Slf4j;
