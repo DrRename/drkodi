@@ -54,7 +54,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     private final ListFilesService listFilesService;
     private final PreviewService previewService;
     private final ConfigurableApplicationContext applicationContext;
-    private RenamingService2 renamingService;
+    private RenamingService renamingService;
 
     public ListView<Control> content1;
     public ListView<Control> content2;
@@ -182,7 +182,7 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.entries = new ArrayList<>();
-        renamingService = new RenamingService2();
+        renamingService = new RenamingService();
         initServices();
         initAppMenu(menuBar);
         /* Make scrolling of both lists symmetrical */
