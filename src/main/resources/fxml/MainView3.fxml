@@ -9,7 +9,7 @@
     <MenuBar fx:id="menuBar">
         <Menu text="File">
             <MenuItem text="Dummy File Creator" onAction="#handleMenuItemDummyFileCreator" accelerator="Shortcut+D"/>
-<!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
+            <!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
             <MenuItem text="Kodi Tools" onAction="#handleMenuItemKodiTools" accelerator="Shortcut+K"/>
         </Menu>
     </MenuBar>
@@ -79,10 +79,6 @@
                         </tooltip>
                     </ComboBox>
                 </VBox>
-                <HBox fx:id="layer03_3">
-                    <padding>
-                        <Insets top="4" right="4" bottom="4" left="4"/>
-                    </padding>
                     <BorderPane fx:id="layer04_1">
                         <padding>
                             <Insets top="4" right="4" bottom="4" left="4"/>
@@ -94,24 +90,32 @@
                                 </padding>
                                 <CheckBox fx:id="ignoreHiddenFiles" text="Ignore hidden files" selected="true"/>
                                 <CheckBox fx:id="ignoreDirectories" text="Ignore directories" selected="false"/>
+
                             </VBox>
                         </left>
-                        <center>
-                            <BorderPane HBox.hgrow="ALWAYS" fx:id="layer05_2">
+                        <right>
+                            <BorderPane fx:id="layer04_2">
                                 <padding>
                                     <Insets top="4" right="4" bottom="4" left="4"/>
                                 </padding>
                                 <center>
-                                    <ProgressBar fx:id="progressBar" prefHeight="25"
-                                                 prefWidth="20000"/>
+                                    <fx:include fx:id="goCancelButtonsComponent"
+                                                source="GoCancelButtonsComponent.fxml"/>
                                 </center>
+                                <bottom>
+                                    <BorderPane fx:id="layer04_3">
+                                    <padding>
+                                        <Insets top="4" right="4" bottom="4" left="4"/>
+                                    </padding>
+                                    <center>
+                                        <ProgressBar fx:id="progressBar"
+                                        />
+                                    </center>
+                                    </BorderPane>
+                                </bottom>
                             </BorderPane>
-                        </center>
-                        <right>
-                            <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>
                         </right>
                     </BorderPane>
-                </HBox>
             </VBox>
         </bottom>
     </BorderPane>
