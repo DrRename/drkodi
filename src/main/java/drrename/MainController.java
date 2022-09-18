@@ -8,6 +8,7 @@ import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
 import drrename.mainview.MainViewConfig;
+import drrename.mainview.controller.FileListComponentController;
 import drrename.strategy.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -26,6 +27,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +62,8 @@ public class MainController implements Initializable, ApplicationListener<Applic
     public HBox goCancelButtonsComponent;
     public BorderPane layer04_3;
     public BorderPane layer04_2;
+    public VBox fileListComponent;
+    public BorderPane startDirectoryComponent;
 
     private RenamingService renamingService;
 
@@ -129,7 +133,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     public StartDirectoryComponentController startDirectoryComponentController;
 
-
+public FileListComponentController fileListComponentController;
 
 
 
@@ -185,6 +189,10 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        content1 = fileListComponentController.content1;
+        content2 = fileListComponentController.content2;
+
         this.entries = new ArrayList<>();
         renamingService = new RenamingService();
         initServices();
