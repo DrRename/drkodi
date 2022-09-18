@@ -12,8 +12,6 @@ import drrename.kodi.KodiToolsController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -43,17 +41,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.sql.Array;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Slf4j
 @Component
-@FxmlView("/fxml/MainView3.fxml")
-public class MainController3 implements Initializable, ApplicationListener<ApplicationEvent> {
+@FxmlView("/fxml/MainView.fxml")
+public class MainController implements Initializable, ApplicationListener<ApplicationEvent> {
 
     private final MainViewConfig config;
 
