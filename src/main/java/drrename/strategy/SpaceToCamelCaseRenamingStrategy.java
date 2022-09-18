@@ -1,4 +1,4 @@
-package com.github.drrename.strategy;
+package drrename.strategy;
 
 import org.apache.commons.text.CaseUtils;
 

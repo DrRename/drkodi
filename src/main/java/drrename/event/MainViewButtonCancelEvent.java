@@ -1,4 +1,4 @@
-package com.kerner1000.drrename.event;
+package drrename.event;
 
 import javafx.event.ActionEvent;
 
