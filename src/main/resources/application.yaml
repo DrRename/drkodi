@@ -14,5 +14,5 @@ app:
     word-cnt: 3
     loop-delay-ms: 500
   mainview:
-    debug: true
+    debug: false
 
