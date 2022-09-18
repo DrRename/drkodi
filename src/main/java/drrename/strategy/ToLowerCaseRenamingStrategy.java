@@ -1,4 +1,4 @@
-package com.github.drrename.strategy;
+package drrename.strategy;
 
 import java.nio.file.Path;
 

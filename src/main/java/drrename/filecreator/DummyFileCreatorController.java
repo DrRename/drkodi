@@ -1,9 +1,9 @@
-package com.kerner1000.drrename.filecreator;
+package drrename.filecreator;
 
 import com.kerner1000.drrename.GoCancelButtonsComponentController;
 import com.kerner1000.drrename.StartDirectoryComponentController;
-import com.kerner1000.drrename.event.DummyFileCreatorButtonCancelEvent;
-import com.kerner1000.drrename.event.DummyFileCreatorButtonGoEvent;
+import drrename.event.DummyFileCreatorButtonCancelEvent;
+import drrename.event.DummyFileCreatorButtonGoEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;

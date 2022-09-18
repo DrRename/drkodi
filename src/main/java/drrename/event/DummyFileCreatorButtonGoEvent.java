@@ -1,8 +1,6 @@
-package com.kerner1000.drrename.event;
+package drrename.event;
 
 import javafx.event.ActionEvent;
-import javafx.stage.Stage;
-import org.springframework.context.ApplicationEvent;
 
 public class DummyFileCreatorButtonGoEvent extends JavaFXActionEvent {
 

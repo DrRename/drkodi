@@ -1,12 +1,9 @@
 
-package com.github.drrename.strategy;
+package drrename.strategy;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.regex.PatternSyntaxException;
 
 @Slf4j
 public class UnhideStrategy extends RenamingStrategyProto {

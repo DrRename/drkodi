@@ -1,6 +1,6 @@
 package com.kerner1000.drrename;
 
-import com.kerner1000.drrename.event.StageReadyEvent;
+import drrename.event.StageReadyEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;

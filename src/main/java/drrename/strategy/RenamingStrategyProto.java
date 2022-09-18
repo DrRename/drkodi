@@ -1,4 +1,4 @@
-package com.github.drrename.strategy;
+package drrename.strategy;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
