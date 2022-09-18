@@ -1,8 +1,9 @@
-package com.kerner1000.drrename;
+package drrename;
 
 import com.drrename.strategy.CapitalizeFirstStrategy;
 import com.github.drrename.FileEntryEvent;
 import com.github.drrename.strategy.*;
+import com.kerner1000.drrename.*;
 import com.kerner1000.drrename.event.MainViewButtonCancelEvent;
 import com.kerner1000.drrename.event.MainViewButtonGoEvent;
 import com.kerner1000.drrename.filecreator.DummyFileCreatorController;
