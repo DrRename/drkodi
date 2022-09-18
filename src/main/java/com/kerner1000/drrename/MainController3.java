@@ -59,6 +59,9 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     public ListView<Control> content1;
     public ListView<Control> content2;
 
+    /**
+     * Internal list of renaming entries. Should always be in sync with {@link content1} and {@link content2}.
+     */
     private List<RenamingBean> entries;
     @FXML
     private ComboBox<RenamingStrategy> comboBoxRenamingStrategy;
@@ -139,11 +142,11 @@ public class MainController3 implements Initializable, ApplicationListener<Appli
     }
 
     private void registerInputChangeListener() {
-        replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
-        replaceStringToChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
+        replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
+        replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
         textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> updateInputView(n));
-        ignoreDirectoriesChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
-        ignoreHiddenFilesChangeListener = (e, o, n) -> Platform.runLater(() -> updateOutputView());
+        ignoreDirectoriesChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
+        ignoreHiddenFilesChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
         textFieldReplacementStringFrom.textProperty().addListener(replaceStringFromChangeListener);
         textFieldReplacementStringTo.textProperty().addListener(replaceStringToChangeListener);
         startDirectoryComponentController.textFieldDirectory.textProperty().addListener(textFieldChangeListener);
