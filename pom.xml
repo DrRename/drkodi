@@ -169,12 +169,5 @@
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.11.1</version>
         </dependency>
-<!--        For debugging the plugin-->
-        <dependency>
-            <groupId>io.github.fvarrui</groupId>
-            <artifactId>javapackager</artifactId>
-            <version>1.7.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>
