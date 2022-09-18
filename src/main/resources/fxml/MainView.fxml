@@ -21,29 +21,7 @@
             <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
         </top>
         <center>
-            <VBox fx:id="layer02_2">
-                <padding>
-                    <Insets top="4" right="4" bottom="4" left="4"/>
-                </padding>
-                <SplitPane VBox.vgrow="always">
-                    <VBox spacing="4">
-                        <padding>
-                            <Insets top="4" right="4" bottom="4" left="4"/>
-                        </padding>
-                        <ListView fx:id="content1" maxWidth="Infinity"
-                                  stylesheets="@/css/dense-list.css" maxHeight="Infinity"
-                                  VBox.vgrow="ALWAYS"/>
-                    </VBox>
-                    <VBox spacing="4">
-                        <padding>
-                            <Insets top="4" right="4" bottom="4" left="4"/>
-                        </padding>
-                        <ListView fx:id="content2" maxWidth="Infinity"
-                                  stylesheets="@/css/dense-list.css" maxHeight="Infinity"
-                                  VBox.vgrow="ALWAYS"/>
-                    </VBox>
-                </SplitPane>
-            </VBox>
+            <fx:include fx:id="fileListComponent" source="FileListComponent.fxml"/>
         </center>
         <bottom>
             <VBox fx:id="layer02_3">
