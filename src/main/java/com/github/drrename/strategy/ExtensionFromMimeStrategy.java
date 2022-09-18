@@ -4,14 +4,7 @@ import jodd.net.MimeTypes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
-import org.apache.tika.mime.MimeType;
-import org.bouncycastle.mime.BasicMimeParser;
-import org.bouncycastle.mime.MimeParser;
-import org.bouncycastle.mime.MimeParserContext;
-import org.springframework.util.MimeTypeUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
