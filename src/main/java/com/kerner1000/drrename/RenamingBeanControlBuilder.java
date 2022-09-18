@@ -37,7 +37,7 @@ public class RenamingBeanControlBuilder {
 
     }
 
-    static PairSame<Control> buildRenameEntryNode(final RenamingBean f) {
+    public static PairSame<Control> buildRenameEntryNode(final RenamingBean f) {
 
         final Control tLeft = buildLeft(f);
         final Control tRight = buildRight(f);

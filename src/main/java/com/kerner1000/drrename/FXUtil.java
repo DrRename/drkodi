@@ -6,7 +6,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollBar;
 
 public class FXUtil {
-    static ScrollBar getListViewScrollBar(final ListView<?> listView) {
+    public static ScrollBar getListViewScrollBar(final ListView<?> listView) {
 
         ScrollBar scrollbar = null;
         for (final Node node : listView.lookupAll(".scroll-bar")) {
