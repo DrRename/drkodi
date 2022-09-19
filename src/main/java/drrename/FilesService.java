@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import drrename.model.RenamingBean;
 import javafx.concurrent.Service;
 
 public abstract class FilesService<V> extends Service<V> {

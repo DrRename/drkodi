@@ -2,6 +2,7 @@ package drrename;
 
 import java.util.List;
 
+import drrename.model.RenamingBean;
 import javafx.concurrent.Task;
 
 public class FilterTask extends Task<Void> {

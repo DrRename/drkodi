@@ -1,5 +1,6 @@
 package drrename;
 
+import drrename.model.RenamingBean;
 import javafx.concurrent.Task;
 
 import java.util.List;
