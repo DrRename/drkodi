@@ -365,6 +365,8 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     private void initListFilesService(Path path) {
         listFilesService.setFiles(Collections.singleton(path));
+        listFilesService.setOnSucceeded((e) -> updateOutputView());
+        progressBar.progressProperty().bind(listFilesService.progressProperty());
     }
 
     private void initListFilesService(Collection<Path> files) throws IOException {

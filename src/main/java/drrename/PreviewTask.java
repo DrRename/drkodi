@@ -21,11 +21,13 @@ public class PreviewTask extends Task<Void> {
     @Override
     protected Void call() throws Exception {
 
+        long cnt = 0;
         for (final RenamingBean p : beans) {
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException("Cancelled");
             if (!p.isFiltered()) {
                 p.preview(renamingStrategy);
+                updateProgress(cnt++, beans.size());
             }
         }
         return null;

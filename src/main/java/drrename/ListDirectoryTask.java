@@ -42,17 +42,15 @@ public class ListDirectoryTask extends Task<Void> {
                     break;
                 }
                 final Path next = it.next();
-
-                    if (FilterTask.matches(next.getFileName().toString(), fileNameFilterRegex)) {
-                        try {
-                            applicationContext.publishEvent(new FileEntryEvent(new RenamingBean(next)));
-                        } catch (final Exception e) {
-                            if (log.isErrorEnabled()) {
-                                log.error(e.getLocalizedMessage(), e);
-                            }
+                if (FilterTask.matches(next.getFileName().toString(), fileNameFilterRegex)) {
+                    try {
+                        applicationContext.publishEvent(new FileEntryEvent(new RenamingBean(next)));
+                    } catch (final Exception e) {
+                        if (log.isErrorEnabled()) {
+                            log.error(e.getLocalizedMessage(), e);
                         }
                     }
-
+                }
             }
         }
     }
