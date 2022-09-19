@@ -25,27 +25,7 @@
         </center>
         <bottom>
             <VBox fx:id="layer02_3">
-                <HBox fx:id="layer03_1">
-                    <padding>
-                        <Insets top="4" right="4" bottom="4" left="4"/>
-                    </padding>
-                    <TextField fx:id="textFieldReplacementStringFrom"
-                               promptText="Search and replace this string, if applicable"
-                               HBox.hgrow="ALWAYS">
-                        <tooltip>
-                            <Tooltip
-                                    text="If applicable, search and replace this string."/>
-                        </tooltip>
-                    </TextField>
-                    <TextField fx:id="textFieldReplacementStringTo"
-                               promptText="Replace with this string, if applicable"
-                               HBox.hgrow="ALWAYS">
-                        <tooltip>
-                            <Tooltip
-                                    text="If applicable, replace with this string."/>
-                        </tooltip>
-                    </TextField>
-                </HBox>
+                <fx:include fx:id="replacementStringComponent" source="ReplacementStringComponent.fxml"/>
                 <VBox fx:id="layer03_2">
                     <padding>
                         <Insets top="4" right="4" bottom="4" left="4"/>
@@ -68,7 +48,6 @@
                                 </padding>
                                 <CheckBox fx:id="ignoreHiddenFiles" text="Ignore hidden files" selected="true"/>
                                 <CheckBox fx:id="ignoreDirectories" text="Ignore directories" selected="false"/>
-
                             </VBox>
                         </left>
                         <right>
