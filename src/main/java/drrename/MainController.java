@@ -1,6 +1,7 @@
 package drrename;
 
 import drrename.mainview.GoCancelButtonsComponentController;
+import drrename.mainview.ReplacementStringComponentController;
 import drrename.mainview.StartDirectoryComponentController;
 import drrename.model.RenamingBean;
 import drrename.strategy.CapitalizeFirstStrategy;
@@ -66,6 +67,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
     public BorderPane layer04_2;
     public VBox fileListComponent;
     public BorderPane startDirectoryComponent;
+    public HBox replacementStringComponent;
 
     private RenamingService renamingService;
 
@@ -135,12 +137,12 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     public StartDirectoryComponentController startDirectoryComponentController;
 
-public FileListComponentController fileListComponentController;
+    public FileListComponentController fileListComponentController;
 
-
+    public ReplacementStringComponentController replacementStringComponentController;
 
     private void applyRandomColors() {
-        Stream.of(layer01, layer02_3, layer03_1, layer03_2, layer04_1, layer04_2, layer04_3, layer05_1, goCancelButtonsComponent).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
+        Stream.of(layer01, layer02_3, layer03_2, layer04_1, layer04_2, layer04_3, layer05_1, goCancelButtonsComponent).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
     }
 
     private String getRandomColorString() {
@@ -167,8 +169,8 @@ public FileListComponentController fileListComponentController;
             textFieldReplacementStringTo.setDisable(!newValue.isReplacing());
             updateOutputView();
         });
-       goCancelButtonsComponentController.buttonGo.disableProperty().bind(renamingService.runningProperty().or(previewService.runningProperty()).or(listFilesService.runningProperty()));
-       goCancelButtonsComponentController.buttonCancel.disableProperty().bind(renamingService.runningProperty().not());
+        goCancelButtonsComponentController.buttonGo.disableProperty().bind(renamingService.runningProperty().or(previewService.runningProperty()).or(listFilesService.runningProperty()));
+        goCancelButtonsComponentController.buttonCancel.disableProperty().bind(renamingService.runningProperty().not());
 
     }
 
@@ -194,6 +196,9 @@ public FileListComponentController fileListComponentController;
 
         content1 = fileListComponentController.content1;
         content2 = fileListComponentController.content2;
+
+        textFieldReplacementStringTo = replacementStringComponentController.textFieldReplacementStringTo;
+        textFieldReplacementStringFrom = replacementStringComponentController.textFieldReplacementStringFrom;
 
         this.entries = new ArrayList<>();
         renamingService = new RenamingService();
@@ -245,7 +250,7 @@ public FileListComponentController fileListComponentController;
             if (db.hasFiles()) {
                 try {
                     updateInputView(filesToPathList(db.getFiles()));
-                    if(db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory())
+                    if (db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory())
                         startDirectoryComponentController.textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
                     else startDirectoryComponentController.textFieldDirectory.setText(null);
                 } catch (IOException e) {
@@ -354,7 +359,7 @@ public FileListComponentController fileListComponentController;
     }
 
     private void updateInputView(final String path) {
-        if(path != null)
+        if (path != null)
             updateInputView(Path.of(path));
     }
 
@@ -364,7 +369,7 @@ public FileListComponentController fileListComponentController;
 
     private void initListFilesService(Collection<Path> files) throws IOException {
         listFilesService.setFiles(files);
-        listFilesService.setOnSucceeded((e)->updateOutputView());
+        listFilesService.setOnSucceeded((e) -> updateOutputView());
         progressBar.progressProperty().bind(listFilesService.progressProperty());
     }
 
@@ -383,7 +388,7 @@ public FileListComponentController fileListComponentController;
 
     private void addToContent(final RenamingBean renamingBean) {
 
-        renamingBean.filteredProperty().bind(Bindings.createBooleanBinding(()-> calcIsFiltered(renamingBean), ignoreDirectories.selectedProperty(), ignoreHiddenFiles.selectedProperty()));
+        renamingBean.filteredProperty().bind(Bindings.createBooleanBinding(() -> calcIsFiltered(renamingBean), ignoreDirectories.selectedProperty(), ignoreHiddenFiles.selectedProperty()));
         final PairSame<Control> entry = RenamingBeanControlBuilder.buildRenameEntryNode(renamingBean);
         content1.getItems().add(entry.getFirst());
         content2.getItems().add(entry.getSecond());
@@ -454,10 +459,9 @@ public FileListComponentController fileListComponentController;
             Platform.runLater(() -> addToContent((RenamingBean) event.getSource()));
         }
 //		entries.forEach(b -> b.onApplicationEvent(event));
-        else if(event instanceof MainViewButtonGoEvent){
+        else if (event instanceof MainViewButtonGoEvent) {
             handleButtonActionGo(((MainViewButtonGoEvent) event).getActionEvent());
-        }
-        else if(event instanceof MainViewButtonCancelEvent){
+        } else if (event instanceof MainViewButtonCancelEvent) {
             // TODO
         }
     }
