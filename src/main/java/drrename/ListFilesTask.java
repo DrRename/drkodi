@@ -1,8 +1,7 @@
 package drrename;
 
-import drrename.RenamingBean;
+import drrename.model.RenamingBean;
 import drrename.event.FileEntryEvent;
-import drrename.FilterTask;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ConfigurableApplicationContext;

@@ -1,6 +1,8 @@
 package drrename;
 
+import drrename.mainview.GoCancelButtonsComponentController;
 import drrename.mainview.StartDirectoryComponentController;
+import drrename.model.RenamingBean;
 import drrename.strategy.CapitalizeFirstStrategy;
 import drrename.event.FileEntryEvent;
 import drrename.event.MainViewButtonCancelEvent;
