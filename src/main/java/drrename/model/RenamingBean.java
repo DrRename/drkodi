@@ -1,5 +1,6 @@
-package drrename;
+package drrename.model;
 
+import drrename.RenamingStrategy;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import lombok.extern.slf4j.Slf4j;

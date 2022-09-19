@@ -1,6 +1,6 @@
 package drrename.filecreator;
 
-import drrename.GoCancelButtonsComponentController;
+import drrename.mainview.GoCancelButtonsComponentController;
 import drrename.mainview.StartDirectoryComponentController;
 import drrename.event.DummyFileCreatorButtonCancelEvent;
 import drrename.event.DummyFileCreatorButtonGoEvent;
