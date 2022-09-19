@@ -1,6 +1,7 @@
-package com.kerner1000.drrename;
+package drrename;
 
-import com.github.drrename.FilesService;
+import drrename.FilesService;
+import drrename.RenamingStrategy;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 

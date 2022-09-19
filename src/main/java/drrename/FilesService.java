@@ -1,10 +1,9 @@
-package com.github.drrename;
+package drrename;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.kerner1000.drrename.RenamingBean;
 import javafx.concurrent.Service;
 
 public abstract class FilesService<V> extends Service<V> {

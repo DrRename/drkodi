@@ -1,7 +1,5 @@
-package com.kerner1000.drrename;
+package drrename;
 
-import com.github.drrename.PreviewTask;
-import com.kerner1000.drrename.StrategyService;
 import javafx.concurrent.Task;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.kerner1000.drrename;
+package drrename;
 
 import javafx.concurrent.Task;
 

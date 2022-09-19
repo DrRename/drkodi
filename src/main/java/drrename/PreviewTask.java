@@ -1,12 +1,9 @@
-package com.github.drrename;
+package drrename;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.kerner1000.drrename.RenamingStrategy;
-
-import com.kerner1000.drrename.RenamingBean;
 import javafx.concurrent.Task;
 
 public class PreviewTask extends Task<Void> {
