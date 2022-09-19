@@ -1,9 +1,8 @@
-package com.kerner1000.drrename;
+package drrename;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationListener;
 
 import java.nio.file.*;
 import java.util.Objects;

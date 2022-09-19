@@ -1,4 +1,4 @@
-package com.drrename.strategy;
+package drrename.strategy;
 
 import drrename.strategy.RenamingStrategyProto;
 import org.apache.commons.text.WordUtils;

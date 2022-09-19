@@ -1,4 +1,4 @@
-package com.github.drrename;
+package drrename;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;

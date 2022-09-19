@@ -3,9 +3,6 @@ package drrename;
 import java.util.List;
 import java.util.Objects;
 
-import com.kerner1000.drrename.RenamingBean;
-import com.kerner1000.drrename.RenamingStrategy;
-import com.kerner1000.drrename.RenamingTask;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 

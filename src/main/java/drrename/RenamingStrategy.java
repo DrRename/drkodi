@@ -1,4 +1,4 @@
-package com.kerner1000.drrename;
+package drrename;
 
 import java.io.IOException;
 import java.nio.file.Path;

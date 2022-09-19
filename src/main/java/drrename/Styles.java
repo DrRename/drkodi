@@ -1,4 +1,4 @@
-package com.kerner1000.drrename;
+package drrename;
 
 public class Styles {
     static String defaultStyle() {

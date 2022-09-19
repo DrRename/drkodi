@@ -1,8 +1,7 @@
-package com.github.drrename;
+package drrename;
 
 import java.util.List;
 
-import com.kerner1000.drrename.RenamingBean;
 import javafx.concurrent.Task;
 
 public class FilterTask extends Task<Void> {
