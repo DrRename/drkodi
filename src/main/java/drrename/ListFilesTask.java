@@ -33,12 +33,14 @@ public class ListFilesTask extends Task<Void> {
     }
 
     void getEntries(final Collection<Path> files) {
+        long cnt = 0;
         for (final Path f : files) {
             if (Thread.interrupted()) {
                 break;
             }
             if (FilterTask.matches(f.toFile().getName(), fileNameFilterRegex)) {
                 applicationContext.publishEvent(new FileEntryEvent(new RenamingBean(f)));
+                updateProgress(cnt++, files.size());
             }
         }
     }
