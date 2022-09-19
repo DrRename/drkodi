@@ -1,4 +1,4 @@
-package com.kerner1000.drrename;
+package drrename.mainview;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

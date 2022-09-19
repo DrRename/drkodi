@@ -1,4 +1,4 @@
-package com.kerner1000.drrename;
+package drrename;
 
 import com.github.ktools1000.AnotherThreadFactory;
 import lombok.extern.slf4j.Slf4j;

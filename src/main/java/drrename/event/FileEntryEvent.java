@@ -1,6 +1,6 @@
-package com.github.drrename;
+package drrename.event;
 
-import com.kerner1000.drrename.RenamingBean;
+import drrename.RenamingBean;
 import org.springframework.context.ApplicationEvent;
 
 public class FileEntryEvent extends ApplicationEvent {

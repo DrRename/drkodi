@@ -1,10 +1,12 @@
-package com.kerner1000.drrename;
+package drrename;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
+import drrename.ListDirectoryTask;
+import drrename.ListFilesTask;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.springframework.context.ConfigurableApplicationContext;

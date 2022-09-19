@@ -1,8 +1,8 @@
 package drrename;
 
-import com.drrename.strategy.CapitalizeFirstStrategy;
-import com.github.drrename.FileEntryEvent;
-import com.kerner1000.drrename.*;
+import drrename.mainview.StartDirectoryComponentController;
+import drrename.strategy.CapitalizeFirstStrategy;
+import drrename.event.FileEntryEvent;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;

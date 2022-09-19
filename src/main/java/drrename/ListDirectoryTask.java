@@ -1,7 +1,8 @@
-package com.kerner1000.drrename;
+package drrename;
 
-import com.github.drrename.FileEntryEvent;
-import com.github.drrename.FilterTask;
+import drrename.RenamingBean;
+import drrename.event.FileEntryEvent;
+import drrename.FilterTask;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ConfigurableApplicationContext;
