@@ -1,6 +1,6 @@
 package drrename.kodi;
 
-import drrename.GoCancelButtonsComponentController;
+import drrename.mainview.GoCancelButtonsComponentController;
 import drrename.mainview.StartDirectoryComponentController;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;

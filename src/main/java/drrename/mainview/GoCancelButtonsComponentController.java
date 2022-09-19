@@ -1,4 +1,4 @@
-package drrename;
+package drrename.mainview;
 
 import drrename.event.JavaFXActionEventFactory;
 import javafx.event.ActionEvent;
