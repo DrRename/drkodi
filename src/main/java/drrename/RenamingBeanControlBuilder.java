@@ -1,5 +1,7 @@
-package com.kerner1000.drrename;
+package drrename;
 
+import drrename.RenamingBean;
+import drrename.Styles;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
