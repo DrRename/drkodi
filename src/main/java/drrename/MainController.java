@@ -10,7 +10,6 @@ import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
-import drrename.mainview.MainViewConfig;
 import drrename.mainview.controller.FileListComponentController;
 import drrename.strategy.*;
 import javafx.application.Platform;
@@ -57,7 +56,7 @@ import java.util.stream.Stream;
 @FxmlView("/fxml/MainView.fxml")
 public class MainController implements Initializable, ApplicationListener<ApplicationEvent> {
 
-    private final MainViewConfig config;
+    private final AppConfig config;
 
     private final ListFilesService listFilesService;
     private final PreviewService previewService;
@@ -69,7 +68,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
     public BorderPane startDirectoryComponent;
     public HBox replacementStringComponent;
 
-    private RenamingService renamingService;
+    private final RenamingService renamingService;
 
     public ListView<Control> content1;
     public ListView<Control> content2;
@@ -201,7 +200,6 @@ public class MainController implements Initializable, ApplicationListener<Applic
         textFieldReplacementStringFrom = replacementStringComponentController.textFieldReplacementStringFrom;
 
         this.entries = new ArrayList<>();
-        renamingService = new RenamingService();
         initServices();
         initAppMenu(menuBar);
         /* Make scrolling of both lists symmetrical */
