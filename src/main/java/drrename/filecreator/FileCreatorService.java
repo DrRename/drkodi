@@ -1,5 +1,6 @@
 package drrename.filecreator;
 
+import drrename.AppConfig;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import java.util.Random;
 @Component
 public class FileCreatorService extends Service<Void> {
 
-    private final FileCreatorConfig config;
+    private final AppConfig config;
 
     private String wordSeparator;
     private long fileCnt;
