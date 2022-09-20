@@ -1,21 +1,26 @@
 package drrename;
 
-import java.util.List;
-import java.util.Objects;
-
 import drrename.model.RenamingBean;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
-public class RenamingService extends Service<Void> {
+import java.util.List;
+import java.util.Objects;
+
+@RequiredArgsConstructor
+@Component
+@Slf4j
+public class RenamingService extends Service<Void>  {
+
+	private final AppConfig appConfig;
 
 	private List<RenamingBean> events;
 	private RenamingStrategy strategy;
 
-	public RenamingService() {
 
-		super();
-	}
 
 	public List<RenamingBean> getEvents() {
 
@@ -40,6 +45,6 @@ public class RenamingService extends Service<Void> {
 	@Override
 	protected Task<Void> createTask() {
 
-		return new RenamingTask(Objects.requireNonNull(events), Objects.requireNonNull(strategy));
+		return new RenamingTask(Objects.requireNonNull(events), Objects.requireNonNull(strategy), appConfig);
 	}
 }
