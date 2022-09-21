@@ -1,7 +1,7 @@
 # Dr.Rename
 
-[![Build Status](https://travis-ci.org/kerner1000/drrename.svg?branch=master)](https://travis-ci.org/kerner1000/drrename)
-[![codecov](https://codecov.io/gh/kerner1000/drrename/branch/master/graph/badge.svg)](https://codecov.io/gh/kerner1000/drrename)
+[![Build](https://github.com/kerner1000/drrename/actions/workflows/build.yml/badge.svg)](https://github.com/kerner1000/drrename/actions/workflows/build.yml)
+[![Latest Release](https://img.shields.io/github/release/kerner1000/drrename.svg)](https://github.com/kerner1000/drrename/releases/latest)
 
 ## Minimalistic Batch-Renamer
 
