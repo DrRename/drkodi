@@ -2,17 +2,15 @@ spring:
   main:
     web:
       application-type: none
+    banner-mode: off
 
 logging:
   level:
-    com.github.drrename: debug
-    com.kerner1000.drrename: debug
+    root: info
     drrename: debug
 
-app.filecreator:
+app:
   word-cnt: 3
-  debug: false
   loop-delay-ms: 500
-  mainview:
-    debug: false
+  debug: false
 
