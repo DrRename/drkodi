@@ -447,8 +447,13 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void cancelCurrentOperation() {
-        previewService.cancel();
-        listFilesService.cancel();
+        log.info("Cancelling current operation");
+//        cannot be cancelled
+//        previewService.cancel();
+        renamingService.cancel();
+        //        cannot be cancelled
+//        listFilesService.cancel();
+
     }
 
     @Override
@@ -462,9 +467,10 @@ public class MainController implements Initializable, ApplicationListener<Applic
         else if (event instanceof MainViewButtonGoEvent) {
             handleButtonActionGo(((MainViewButtonGoEvent) event).getActionEvent());
         } else if (event instanceof MainViewButtonCancelEvent) {
-            // TODO
+            handleButtonActionCancel(((MainViewButtonCancelEvent) event).getActionEvent());
         }
     }
+
 
     private RenamingStrategy initAndGetStrategy() {
 
@@ -489,6 +495,10 @@ public class MainController implements Initializable, ApplicationListener<Applic
         } else {
             log.info("No renaming strategy selected");
         }
+    }
+
+    private void handleButtonActionCancel(ActionEvent actionEvent) {
+        cancelCurrentOperation();
     }
 
     public void handleMenuItemAbout(ActionEvent actionEvent) {
