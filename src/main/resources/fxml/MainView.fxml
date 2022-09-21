@@ -1,122 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.cell.*?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.ScrollPane?>
-
-<VBox styleClass="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-	fx:controller="com.github.drrename.MainController">
-	<stylesheets>
-		<URL value="@/css/root.css" />
-	</stylesheets>
-	<children>
-		<MenuBar fx:id="menuBar">
-			<menus>
-				<Menu text="File">
-					<items>
-
-
-					</items>
-				</Menu>
-				<Menu text="View">
-					<items>
-
-
-					</items>
-				</Menu>
-				<Menu text="Settings">
-					<items>
-
-					</items>
-				</Menu>
-			</menus>
-		</MenuBar>
-		<HBox>
-			<padding>
-				<Insets top="4" right="4" bottom="4" left="4" />
-			</padding>
-			<children>
-				<TextField fx:id="textFieldStartDirectory" editable="true"
-					HBox.hgrow="ALWAYS" promptText="Enter/ Copy+Paste start directory here">
-					<tooltip>
-						<Tooltip text="Enter/ Copy+Paste start directory here." />
-					</tooltip>
-				</TextField>
-			</children>
-		</HBox>
-		<HBox>
-			<padding>
-				<Insets top="4" right="4" bottom="4" left="4" />
-			</padding>
-			<children>
-				<ComboBox fx:id="comboBoxRenamingStrategy" HBox.hgrow="ALWAYS"
-					maxWidth="Infinity">
-					<tooltip>
-						<Tooltip text="Renaming strategy to use." />
-					</tooltip>
-				</ComboBox>
-			</children>
-
-		</HBox>
-
-		<HBox spacing="4" alignment="CENTER">
-			<padding>
-				<Insets top="4" right="4" bottom="4" left="4" />
-			</padding>
-			<children>
-				<TextField fx:id="textFieldReplacementStringFrom"
-					promptText="Search and replace this string, if applicable"
-					HBox.hgrow="ALWAYS" editable="true">
-					<tooltip>
-						<Tooltip text="If applicable, search and replace this string." />
-					</tooltip>
-				</TextField>
-				<TextField fx:id="textFieldReplacementStringTo"
-					promptText="Replace with this string, if applicable" HBox.hgrow="ALWAYS"
-					editable="true">
-					<tooltip>
-						<Tooltip text="If applicable, replace with this string." />
-					</tooltip>
-				</TextField>
-				<CheckBox fx:id="checkBox" prefWidth="120" text="Recursive"
-					HBox.hgrow="SOMETIMES">
-					<tooltip>
-						<Tooltip text="Descend into subdirectories?" />
-					</tooltip>
-				</CheckBox>
-			</children>
-
-		</HBox>
-
-		<HBox spacing="4" alignment="CENTER_RIGHT">
-			<padding>
-				<Insets top="4" right="4" bottom="4" left="4" />
-			</padding>
-			<ProgressBar fx:id="progressBar" HBox.hgrow="ALWAYS"
-				maxWidth="Infinity" visible="false"></ProgressBar>
-			<Button fx:id="buttonGo" prefWidth="100" onAction="#handleButtonActionGo"
-				text="Go">
-				<tooltip>
-					<Tooltip text="Start renaming." />
-				</tooltip>
-			</Button>
-		</HBox>
-		<ScrollPane prefHeight="140">
-			<padding>
-				<Insets top="4" right="4" bottom="4" left="4" />
-			</padding>
-			<VBox fx:id="tilePane" spacing="2">
-			</VBox>
-		</ScrollPane>
-	</children>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:controller="drrename.MainController">
+    <MenuBar fx:id="menuBar">
+        <Menu text="File">
+            <MenuItem text="Dummy File Creator" onAction="#handleMenuItemDummyFileCreator" accelerator="Shortcut+D"/>
+            <!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
+            <MenuItem text="Kodi Tools" onAction="#handleMenuItemKodiTools" accelerator="Shortcut+K"/>
+        </Menu>
+    </MenuBar>
+    <BorderPane fx:id="layer01" VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets top="4" right="4" bottom="4" left="4"/>
+        </padding>
+        <top>
+            <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
+        </top>
+        <center>
+            <fx:include fx:id="fileListComponent" source="FileListComponent.fxml"/>
+        </center>
+        <bottom>
+            <VBox fx:id="layer02_3">
+                <fx:include fx:id="replacementStringComponent" source="ReplacementStringComponent.fxml"/>
+                <VBox fx:id="layer03_2">
+                    <padding>
+                        <Insets top="4" right="4" bottom="4" left="4"/>
+                    </padding>
+                    <ComboBox fx:id="comboBoxRenamingStrategy"
+                              HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                        <tooltip>
+                            <Tooltip text="Renaming strategy to use."/>
+                        </tooltip>
+                    </ComboBox>
+                </VBox>
+                    <BorderPane fx:id="layer04_1">
+                        <padding>
+                            <Insets top="4" right="4" bottom="4" left="4"/>
+                        </padding>
+                        <left>
+                            <VBox HBox.hgrow="ALWAYS" fx:id="layer05_1">
+                                <padding>
+                                    <Insets top="4" right="4" bottom="4" left="4"/>
+                                </padding>
+                                <CheckBox fx:id="ignoreHiddenFiles" text="Ignore hidden files" selected="true"/>
+                                <CheckBox fx:id="ignoreDirectories" text="Ignore directories" selected="false"/>
+                            </VBox>
+                        </left>
+                        <right>
+                            <BorderPane fx:id="layer04_2">
+                                <padding>
+                                    <Insets top="4" right="4" bottom="4" left="4"/>
+                                </padding>
+                                <center>
+                                    <fx:include fx:id="goCancelButtonsComponent"
+                                                source="GoCancelButtonsComponent.fxml"/>
+                                </center>
+                                <bottom>
+                                    <BorderPane fx:id="layer04_3">
+                                    <padding>
+                                        <Insets top="4" right="4" bottom="4" left="4"/>
+                                    </padding>
+                                    <center>
+                                        <ProgressBar fx:id="progressBar" prefWidth="140"
+                                        />
+                                    </center>
+                                    </BorderPane>
+                                </bottom>
+                            </BorderPane>
+                        </right>
+                    </BorderPane>
+            </VBox>
+        </bottom>
+    </BorderPane>
 </VBox>
