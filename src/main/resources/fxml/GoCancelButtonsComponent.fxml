@@ -3,9 +3,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.kerner1000.drrename.GoCancelButtonsComponentController" spacing="4">
+      fx:controller="drrename.mainview.GoCancelButtonsComponentController" spacing="4">
+    <padding>
+        <Insets top="4" right="4" bottom="4" left="4"/>
+    </padding>
     <Button fx:id="buttonGo" prefWidth="70" minWidth="50"
             onAction="#handleDummyFileCreatorButtonGo" text="Go">
         <tooltip>

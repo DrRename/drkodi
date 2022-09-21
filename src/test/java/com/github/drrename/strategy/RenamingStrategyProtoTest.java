@@ -1,5 +1,6 @@
 package com.github.drrename.strategy;
 
+import drrename.strategy.RenamingStrategyProto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

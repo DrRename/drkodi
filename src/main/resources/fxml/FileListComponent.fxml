@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<VBox fx:controller="drrename.mainview.controller.FileListComponentController" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" >
+        <padding>
+            <Insets top="4" right="4" bottom="4" left="4"/>
+        </padding>
+        <SplitPane VBox.vgrow="always">
+            <VBox spacing="4">
+                <padding>
+                    <Insets top="4" right="4" bottom="4" left="4"/>
+                </padding>
+                <ListView fx:id="content1" maxWidth="Infinity"
+                          stylesheets="@/css/dense-list.css" maxHeight="Infinity"
+                          VBox.vgrow="ALWAYS"/>
+            </VBox>
+            <VBox spacing="4">
+                <padding>
+                    <Insets top="4" right="4" bottom="4" left="4"/>
+                </padding>
+                <ListView fx:id="content2" maxWidth="Infinity"
+                          stylesheets="@/css/dense-list.css" maxHeight="Infinity"
+                          VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </SplitPane>
+    </VBox>
+
