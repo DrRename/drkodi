@@ -1,6 +1,7 @@
 # Dr.Rename
 
 [![Build](https://github.com/kerner1000/drrename/actions/workflows/build.yml/badge.svg)](https://github.com/kerner1000/drrename/actions/workflows/build.yml)
+[![Latest Release](https://img.shields.io/github/release/kerner1000/drrename.svg)](https://github.com/kerner1000/drrename/releases/latest)
 
 ## Minimalistic Batch-Renamer
 
