@@ -6,8 +6,7 @@ spring:
 
 logging:
   level:
-    com.github.drrename: debug
-    com.kerner1000.drrename: debug
+    root: info
     drrename: debug
 
 app:
