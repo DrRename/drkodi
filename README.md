@@ -1,6 +1,6 @@
 # Dr.Rename
 
-[![Build][(https://github.com/kerner1000/drrename/workflows/build/badge.svg)](https://github.com/kerner1000/drrename/actions?query=workflow%build)](https://github.com/<OWNER>/<REPOSITORY>/actions/workflows/<WORKFLOW_FILE>/badge.svg)
+[![Build](https://github.com/github/kerner1000/actions/workflows/build.yml/badge.svg)](https://github.com/github/kerner1000/actions/workflows/build.yml/badge.svg)
 
 Minimalistic Batch-Renamer
 
