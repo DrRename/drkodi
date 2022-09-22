@@ -19,6 +19,8 @@
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
         <java.version>18</java.version>
         <javafx.version>18.0.1</javafx.version>
+        <sonar.organization>drrename</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/${github-user}/${github-repo}.git</connection>
