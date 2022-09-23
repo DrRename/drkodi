@@ -1,6 +1,5 @@
 package drrename;
 
-import drrename.event.FileEntryEvent;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
@@ -13,10 +12,8 @@ import drrename.model.RenamingBean;
 import drrename.strategy.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -37,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
-import net.sf.kerner.utils.pair.PairSame;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -71,13 +67,15 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     private final RenamingService renamingService;
 
-    public ListView<Control> content1;
-    public ListView<Control> content2;
-
     /**
      * Internal list of renaming entries. Should always be in sync with {@link content1} and {@link content2}.
      */
-    private ListProperty<RenamingBean> entries;
+    private final EntriesService entriesService;
+
+    public ListView<Control> content1;
+    public ListView<Control> content2;
+
+
     @FXML
     private ComboBox<RenamingStrategy> comboBoxRenamingStrategy;
     @FXML
@@ -198,7 +196,6 @@ public class MainController implements Initializable, ApplicationListener<Applic
         textFieldReplacementStringTo = replacementStringComponentController.textFieldReplacementStringTo;
         textFieldReplacementStringFrom = replacementStringComponentController.textFieldReplacementStringFrom;
 
-        this.entries = new SimpleListProperty<>(FXCollections.observableArrayList());
         initServices();
         initAppMenu(menuBar);
         /* Make scrolling of both lists symmetrical */
@@ -228,9 +225,25 @@ public class MainController implements Initializable, ApplicationListener<Applic
         if (config.isDebug())
             applyRandomColors();
 
-        log.debug("Input component: {}", startDirectoryComponentController);
-        log.debug("Buttons component: {}", goCancelButtonsComponentController);
+        entriesService.getEntries().addListener((ListChangeListener<RenamingBean>) c -> {
+            while(c.next()){
+                if(c.wasAdded()){
+                    Platform.runLater(() -> addToContent(c.getAddedSubList()));
+                }
+            }
+        });
 
+    }
+
+    private void addToContent(final Collection<? extends RenamingBean> renamingBeans) {
+        renamingBeans.forEach(this::addToContent);
+    }
+
+    private void addToContent(final RenamingBean renamingBean) {
+
+        renamingBean.filteredProperty().bind(Bindings.createBooleanBinding(() -> calcIsFiltered(renamingBean), ignoreDirectories.selectedProperty(), ignoreHiddenFiles.selectedProperty()));
+        content1.getItems().add(RenamingBeanControlBuilder.buildLeft(renamingBean));
+        content2.getItems().add(RenamingBeanControlBuilder.buildRight(renamingBean));
     }
 
     private void initDragAndDropForLeftFileList() {
@@ -378,19 +391,11 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void initPreviewService() {
-        previewService.setFiles(entries);
+        previewService.setFiles(entriesService.getEntries());
         progressBar.progressProperty().bind(previewService.progressProperty());
         var strat = initAndGetStrategy();
         if (strat != null)
             previewService.setRenamingStrategy(strat);
-    }
-
-    private void addToContent(final RenamingBean renamingBean) {
-
-        renamingBean.filteredProperty().bind(Bindings.createBooleanBinding(() -> calcIsFiltered(renamingBean), ignoreDirectories.selectedProperty(), ignoreHiddenFiles.selectedProperty()));
-        final PairSame<Control> entry = RenamingBeanControlBuilder.buildRenameEntryNode(renamingBean);
-        content1.getItems().add(entry.getFirst());
-        content2.getItems().add(entry.getSecond());
     }
 
     private boolean calcIsFiltered(RenamingBean renamingBean) {
@@ -440,7 +445,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void clearView() {
-        entries.clear();
+        entriesService.getEntries().clear();
         content1.getItems().clear();
         content2.getItems().clear();
     }
@@ -457,13 +462,8 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-//		log.debug("Event received: {}", event);
-        if (event instanceof FileEntryEvent) {
-            entries.add((RenamingBean) event.getSource());
-            Platform.runLater(() -> addToContent((RenamingBean) event.getSource()));
-        }
 //		entries.forEach(b -> b.onApplicationEvent(event));
-        else if (event instanceof MainViewButtonGoEvent) {
+        if (event instanceof MainViewButtonGoEvent) {
             handleButtonActionGo(((MainViewButtonGoEvent) event).getActionEvent());
         } else if (event instanceof MainViewButtonCancelEvent) {
             handleButtonActionCancel(((MainViewButtonCancelEvent) event).getActionEvent());
@@ -487,7 +487,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
         if (s != null) {
             renamingService.cancel();
             renamingService.reset();
-            renamingService.setEvents(entries);
+            renamingService.setEvents(entriesService.getEntries());
             renamingService.setStrategy(s);
             progressBar.progressProperty().bind(renamingService.progressProperty());
             renamingService.start();
