@@ -11,15 +11,9 @@
         <Insets top="4" right="4" bottom="4" left="4"/>
     </padding>
     <Button fx:id="buttonGo" prefWidth="70" minWidth="50"
-            onAction="#handleDummyFileCreatorButtonGo" text="%button.go">
-        <tooltip>
-            <Tooltip text="Create files"/>
-        </tooltip>
+            onAction="#handleDummyFileCreatorButtonGo" text="%button.go.text">
     </Button>
     <Button fx:id="buttonCancel" prefWidth="70" minWidth="50"
-            onAction="#handleDummyFileCreatorButtonCancel" text="Cancel">
-        <tooltip>
-            <Tooltip text="Create files"/>
-        </tooltip>
+            onAction="#handleDummyFileCreatorButtonCancel" text="%button.cancel.text">
     </Button>
 </HBox>
