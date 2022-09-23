@@ -1,8 +1,15 @@
 package drrename.model;
 
+import drrename.RenamingBeanControlBuilder;
 import drrename.RenamingStrategy;
+import drrename.Styles;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.*;
@@ -16,7 +23,6 @@ public class RenamingBean   {
     private final ObjectProperty<Throwable> exception;
     private final BooleanProperty filtered;
     private final BooleanProperty willChange;
-
     private final BooleanProperty externalChanged;
 
     public RenamingBean(final Path path) {

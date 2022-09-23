@@ -1,22 +1,22 @@
 package drrename;
 
 public class Styles {
-    static String defaultStyle() {
+    public static String defaultStyle() {
         // System.err.println("Return default style");
         return null;
     }
 
-    static String filteredStyle() {
+    public static String filteredStyle() {
         // System.err.println("Return filtered style");
         // return "-fx-background-color: linear-gradient(#E4EAA2, #9CD672);";
         return "-fx-text-fill: #a9a9a9;";
     }
 
-    static String directoryStyle() {
+    public static String directoryStyle() {
         return "-fx-font-weight: bold;";
     }
 
-    static String externalChangedStyle() {
+    public static String externalChangedStyle() {
         // System.err.println("Return filtered style");
         // return "-fx-background-color: linear-gradient(#E4EAA2, #9CD672);";
         return "-fx-text-fill: red;";

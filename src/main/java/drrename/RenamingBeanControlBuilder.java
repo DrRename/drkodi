@@ -6,8 +6,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import net.sf.kerner.utils.pair.PairSame;
-import net.sf.kerner.utils.pair.PairSameImpl;
 
 import java.util.concurrent.Callable;
 
@@ -21,8 +19,11 @@ public class RenamingBeanControlBuilder {
         };
     }
 
+    static String calculateOldPath(final RenamingBean f) {
+        return f.getOldPath().getFileName().toString();
+    }
+
     static String calcStyleRight(final RenamingBean f) {
-        final StringBuilder sb = new StringBuilder();
 
         if (f.isFiltered()) {
             return Styles.filteredStyle();
@@ -38,20 +39,7 @@ public class RenamingBeanControlBuilder {
 
     }
 
-    public static PairSame<Control> buildRenameEntryNode(final RenamingBean f) {
-
-        final Control tLeft = buildLeft(f);
-        final Control tRight = buildRight(f);
-        return new PairSameImpl<>(tLeft, tRight);
-    }
-
-    static String calcJohn(final RenamingBean f) {
-        var result = f.getOldPath().getFileName().toString();
-//		log.debug("Recalculate text property for left label, new value is {}", result);
-        return result;
-    }
-
-    static Control buildRight(final RenamingBean renamingBean) {
+    public static Control buildRight(final RenamingBean renamingBean) {
 
         final Label tRight = new Label();
         tRight.setPadding(new Insets(2, 2, 2, 2));
@@ -79,14 +67,14 @@ public class RenamingBeanControlBuilder {
     }
 
     static ObservableValue<String> buildTextBindingLeft(RenamingBean f) {
-        return Bindings.createObjectBinding(() -> calcJohn(f), f.oldPathProperty());
+        return Bindings.createObjectBinding(() -> calculateOldPath(f), f.oldPathProperty());
     }
 
     static ObservableValue<String> buildStyleBindingLeft(RenamingBean f) {
         return Bindings.createObjectBinding(() -> calcStyleLeft(f), f.filteredProperty(), f.externalChangedProperty());
     }
 
-    static Control buildLeft(final RenamingBean f) {
+    public static Control buildLeft(final RenamingBean f) {
 
         final Label tLeft = new Label();
         tLeft.setPadding(new Insets(2, 2, 2, 2));
