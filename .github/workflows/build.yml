@@ -34,10 +34,14 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Build and analyze
+    - name: Sonar Scanner
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DrRename_drrename
+    - name: Coveralls Coverage Report
+      env:
+        repoToken: ${{ secrets.COVERALL_REPO_SECRET }}
+      run: mvn coveralls:report --file pom.xml
     - name: Build with Maven
       run: mvn -B package --file pom.xml
