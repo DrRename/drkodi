@@ -10,6 +10,10 @@ logging:
     drrename: debug
 
 app:
+  ui:
+    appTitle: "Dr.Rename"
+    initialWidth: 600
+    initialHeight: 600
   word-cnt: 3
   loop-delay-ms: 500
   debug: false
