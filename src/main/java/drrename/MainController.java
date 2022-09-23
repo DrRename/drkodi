@@ -130,8 +130,6 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     private final FxWeaver fxWeaver;
 
-    private final BuildProperties buildProperties;
-
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
 
     public StartDirectoryComponentController startDirectoryComponentController;
