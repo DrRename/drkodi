@@ -11,7 +11,7 @@
         <Insets top="4" right="4" bottom="4" left="4"/>
     </padding>
     <Button fx:id="buttonGo" prefWidth="70" minWidth="50"
-            onAction="#handleDummyFileCreatorButtonGo" text="Go">
+            onAction="#handleDummyFileCreatorButtonGo" text="%button.go">
         <tooltip>
             <Tooltip text="Create files"/>
         </tooltip>
