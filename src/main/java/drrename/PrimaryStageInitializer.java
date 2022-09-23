@@ -1,15 +1,15 @@
 package drrename;
 
 import drrename.event.StageReadyEvent;
-import drrename.MainController;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+
+import java.util.ResourceBundle;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -20,10 +20,12 @@ public class PrimaryStageInitializer implements ApplicationListener<StageReadyEv
 
     private final UiConfig uiConfig;
 
+    private final ResourceBundle resourceBundle;
+
     @Override
     public void onApplicationEvent(StageReadyEvent event) {
         Stage stage = event.getStage();
-        Scene scene = new Scene(fxWeaver.loadView(MainController.class), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
+        Scene scene = new Scene(fxWeaver.loadView(MainController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
         scene.getStylesheets().add("css/root.css");
         stage.setTitle(uiConfig.getAppTitle());
         stage.setScene(scene);
