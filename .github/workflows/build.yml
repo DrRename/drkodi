@@ -40,8 +40,6 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DrRename_drrename
     - name: Coveralls Coverage Report
-      env:
-        repoToken: ${{ secrets.COVERALL_REPO_SECRET }}
-      run: mvn test coveralls:report --file pom.xml
+      run: mvn test coveralls:report --define repoToken=${{ secrets.COVERALL_REPO_SECRET }} --file pom.xml
     - name: Build with Maven
       run: mvn -B package --file pom.xml
