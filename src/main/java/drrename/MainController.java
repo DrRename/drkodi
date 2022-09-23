@@ -1,20 +1,22 @@
 package drrename;
 
-import drrename.mainview.GoCancelButtonsComponentController;
-import drrename.mainview.ReplacementStringComponentController;
-import drrename.mainview.StartDirectoryComponentController;
-import drrename.model.RenamingBean;
-import drrename.strategy.CapitalizeFirstStrategy;
 import drrename.event.FileEntryEvent;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
+import drrename.mainview.GoCancelButtonsComponentController;
+import drrename.mainview.ReplacementStringComponentController;
+import drrename.mainview.StartDirectoryComponentController;
 import drrename.mainview.controller.FileListComponentController;
+import drrename.model.RenamingBean;
 import drrename.strategy.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -36,10 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import net.sf.kerner.utils.pair.PairSame;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -60,7 +60,8 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     private final ListFilesService listFilesService;
     private final PreviewService previewService;
-    private final ConfigurableApplicationContext applicationContext;
+
+    private final ResourceBundle resourceBundle;
     public HBox goCancelButtonsComponent;
     public BorderPane layer04_3;
     public BorderPane layer04_2;
@@ -76,7 +77,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
     /**
      * Internal list of renaming entries. Should always be in sync with {@link content1} and {@link content2}.
      */
-    private List<RenamingBean> entries;
+    private ListProperty<RenamingBean> entries;
     @FXML
     private ComboBox<RenamingStrategy> comboBoxRenamingStrategy;
     @FXML
@@ -197,7 +198,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
         textFieldReplacementStringTo = replacementStringComponentController.textFieldReplacementStringTo;
         textFieldReplacementStringFrom = replacementStringComponentController.textFieldReplacementStringFrom;
 
-        this.entries = new ArrayList<>();
+        this.entries = new SimpleListProperty<>(FXCollections.observableArrayList());
         initServices();
         initAppMenu(menuBar);
         /* Make scrolling of both lists symmetrical */
@@ -220,7 +221,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
         progressBar.visibleProperty().bind(listFilesService.runningProperty().or(previewService.runningProperty().or(renamingService.runningProperty())));
 
-        goCancelButtonsComponentController.buttonGo.setTooltip(new Tooltip("Start renaming"));
+        goCancelButtonsComponentController.buttonGo.setTooltip(new Tooltip(resourceBundle.getString("mainview.button.go.tooltip")));
         goCancelButtonsComponentController.setButtonCancelActionEventFactory(MainViewButtonCancelEvent::new);
         goCancelButtonsComponentController.setButtonGoActionEventFactory(MainViewButtonGoEvent::new);
 
@@ -297,7 +298,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     public void handleMenuItemDummyFileCreator(ActionEvent actionEvent) {
 
-        DummyFileCreatorController controller = fxWeaver.loadController(DummyFileCreatorController.class);
+        DummyFileCreatorController controller = fxWeaver.loadController(DummyFileCreatorController.class, resourceBundle);
         controller.show();
 
 //        try {
