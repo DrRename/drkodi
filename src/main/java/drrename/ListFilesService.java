@@ -5,13 +5,15 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
-import drrename.ListDirectoryTask;
-import drrename.ListFilesTask;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.springframework.context.ConfigurableApplicationContext;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class ListFilesService extends Service<Void> {
 
@@ -19,24 +21,20 @@ public class ListFilesService extends Service<Void> {
 
     private String fileNameFilterRegex;
 
-    private final ConfigurableApplicationContext applicationContext;
-
-    public ListFilesService(ConfigurableApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     protected Task<Void> createTask(){
         // If 'files' is one entry only, and its a directory, use ListDirectoryTask, otherwise use ListFilesTask.
-        if(Objects.requireNonNull(files).size() == 1 && Files.isDirectory(files.iterator().next())){
-            return new ListDirectoryTask(files.iterator().next(), fileNameFilterRegex, applicationContext);
+        if(files != null && files.size() == 1 && Files.isDirectory(files.iterator().next())){
+            return new ListDirectoryTask(files.iterator().next(), fileNameFilterRegex, eventPublisher);
         }
-        return new ListFilesTask(files, fileNameFilterRegex, applicationContext);
+        return new ListFilesTask(files, fileNameFilterRegex, eventPublisher);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " files:" + files.size();
+        return getClass().getSimpleName() + " file cnt: " + (files == null ? 0 : files.size());
     }
 
     // Getter / Setter //
@@ -47,6 +45,12 @@ public class ListFilesService extends Service<Void> {
 
     public void setFiles(final Collection<Path> files) {
         this.files = files;
+    }
+
+    @Override
+    public boolean cancel() {
+        this.files = null;
+        return super.cancel();
     }
 
     public String getFileNameFilterRegex() {
