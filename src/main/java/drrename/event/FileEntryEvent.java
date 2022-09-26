@@ -1,15 +1,18 @@
 package drrename.event;
 
 import drrename.model.RenamingBean;
+import lombok.Data;
 import org.springframework.context.ApplicationEvent;
 
-public class FileEntryEvent extends ApplicationEvent {
-    public FileEntryEvent(RenamingBean bean) {
-        super(bean);
-    }
+import java.util.UUID;
 
-    @Override
-    public RenamingBean getSource() {
-        return (RenamingBean) super.getSource();
-    }
+
+@Data
+public class FileEntryEvent {
+
+   private final UUID uuid;
+
+   private final RenamingBean renamingBean;
+
+
 }

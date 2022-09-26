@@ -37,30 +37,46 @@
                         </tooltip>
                     </ComboBox>
                 </VBox>
-                    <BorderPane fx:id="layer04_1">
-                        <padding>
-                            <Insets top="4" right="4" bottom="4" left="4"/>
-                        </padding>
-                        <left>
-                            <VBox HBox.hgrow="ALWAYS" fx:id="layer05_1">
-                                <padding>
-                                    <Insets top="4" right="4" bottom="4" left="4"/>
-                                </padding>
-                                <CheckBox fx:id="ignoreHiddenFiles" text="Ignore hidden files" selected="true"/>
-                                <CheckBox fx:id="ignoreDirectories" text="Ignore directories" selected="false"/>
-                            </VBox>
-                        </left>
-                        <right>
-                            <BorderPane fx:id="layer04_2">
-                                <padding>
-                                    <Insets top="4" right="4" bottom="4" left="4"/>
-                                </padding>
-                                <center>
-                                    <fx:include fx:id="goCancelButtonsComponent"
-                                                source="GoCancelButtonsComponent.fxml"/>
-                                </center>
-                                <bottom>
-                                    <BorderPane fx:id="layer04_3">
+                <BorderPane fx:id="layer04_1">
+                    <padding>
+                        <Insets top="4" right="4" bottom="4" left="4"/>
+                    </padding>
+                    <left>
+                        <VBox HBox.hgrow="ALWAYS" fx:id="layer05_1">
+                            <padding>
+                                <Insets top="4" right="4" bottom="4" left="4"/>
+                            </padding>
+                            <CheckBox fx:id="ignoreHiddenFiles" text="Ignore hidden files" selected="true"/>
+                            <CheckBox fx:id="ignoreDirectories" text="Ignore directories" selected="false"/>
+                        </VBox>
+                    </left>
+                    <center>
+                        <VBox alignment="CENTER">
+                            <Label fx:id="statusLabelLoaded">
+                            </Label>
+                            <Label fx:id="statusLabelLoadedFileTypes">
+                            </Label>
+                            <Label fx:id="statusLabelFilesWillRename">
+                            </Label>
+                            <Label fx:id="statusLabelFilesWillRenameFileTypes">
+                            </Label>
+                            <Label fx:id="statusLabelRenamed">
+                            </Label>
+                            <Label fx:id="statusLabelRenamedFileTypes">
+                            </Label>
+                        </VBox>
+                    </center>
+                    <right>
+                        <BorderPane fx:id="layer04_2">
+                            <padding>
+                                <Insets top="4" right="4" bottom="4" left="4"/>
+                            </padding>
+                            <center>
+                                <fx:include fx:id="goCancelButtonsComponent"
+                                            source="GoCancelButtonsComponent.fxml"/>
+                            </center>
+                            <bottom>
+                                <BorderPane fx:id="layer04_3">
                                     <padding>
                                         <Insets top="4" right="4" bottom="4" left="4"/>
                                     </padding>
@@ -68,11 +84,11 @@
                                         <ProgressBar fx:id="progressBar" prefWidth="140"
                                         />
                                     </center>
-                                    </BorderPane>
-                                </bottom>
-                            </BorderPane>
-                        </right>
-                    </BorderPane>
+                                </BorderPane>
+                            </bottom>
+                        </BorderPane>
+                    </right>
+                </BorderPane>
             </VBox>
         </bottom>
     </BorderPane>

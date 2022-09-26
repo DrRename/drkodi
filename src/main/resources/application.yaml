@@ -16,5 +16,6 @@ app:
     initialHeight: 600
   word-cnt: 3
   loop-delay-ms: 500
-  debug: false
+  reset-delay-ms: 2000
+  debug: true
 

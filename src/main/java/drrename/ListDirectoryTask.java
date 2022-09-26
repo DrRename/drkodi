@@ -1,10 +1,13 @@
 package drrename;
 
+import drrename.event.StartingListFilesEvent;
 import drrename.model.RenamingBean;
 import drrename.event.FileEntryEvent;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.ApplicationEventMulticaster;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -19,11 +22,11 @@ public class ListDirectoryTask extends Task<Void> {
 
     private final String fileNameFilterRegex;
 
-    private final ConfigurableApplicationContext applicationContext;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public ListDirectoryTask(final Path dir, final String fileNameFilterRegex, ConfigurableApplicationContext applicationContext) {
+    public ListDirectoryTask(final Path dir, final String fileNameFilterRegex, ApplicationEventPublisher eventPublisher) {
         this.dir = Objects.requireNonNull(dir);
-        this.applicationContext = Objects.requireNonNull(applicationContext);
+        this.eventPublisher = Objects.requireNonNull(eventPublisher);
         if (!Files.isDirectory(dir))
             throw new IllegalArgumentException(dir + " not a directory");
         this.fileNameFilterRegex = fileNameFilterRegex;
@@ -36,6 +39,8 @@ public class ListDirectoryTask extends Task<Void> {
     }
 
     void getEntries(final Path dir) throws IOException {
+        UUID uuid = UUID.randomUUID();
+        eventPublisher.publishEvent(new StartingListFilesEvent(uuid));
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (final Iterator<Path> it = stream.iterator(); it.hasNext(); ) {
                 if (Thread.interrupted()) {
@@ -44,7 +49,7 @@ public class ListDirectoryTask extends Task<Void> {
                 final Path next = it.next();
                 if (FilterTask.matches(next.getFileName().toString(), fileNameFilterRegex)) {
                     try {
-                        applicationContext.publishEvent(new FileEntryEvent(new RenamingBean(next)));
+                        eventPublisher.publishEvent(new FileEntryEvent(uuid, new RenamingBean(next)));
                     } catch (final Exception e) {
                         if (log.isErrorEnabled()) {
                             log.error(e.getLocalizedMessage(), e);
