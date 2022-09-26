@@ -1,9 +1,6 @@
 package drrename;
 
-import drrename.event.FileEntryEvent;
-import drrename.event.FilePreviewEvent;
-import drrename.event.FileRenamedEvent;
-import drrename.event.StartingListFilesEvent;
+import drrename.event.*;
 import drrename.model.RenamingBean;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -83,10 +79,21 @@ public class EntriesService {
             return renamedCount.incrementAndGet();
         }
 
-        synchronized void reset() {
-            loadedCount.set(0);
-            willRenameCount.set(0);
-            renamedCount.set(0);
+        synchronized void resetAllCounters(ResetType resetType) {
+            switch (resetType){
+                case LOAD -> {
+                    loadedCount.set(0);
+                    willRenameCount.set(0);
+                    renamedCount.set(0);
+                }
+                case PREVIEW -> {
+                    willRenameCount.set(0);
+                    renamedCount.set(0);
+                }
+                case RENAME -> {
+                    renamedCount.set(0);
+                }
+            }
         }
     }
 
@@ -115,54 +122,89 @@ public class EntriesService {
         Platform.runLater(() -> statusProperty.setValue(String.format(resourceBundle.getString(text), number)));
     }
 
-    private void resetAll() {
+    private enum ResetType {
+        LOAD, PREVIEW, RENAME
+    }
+
+    private void reset(ResetType resetType)  {
         if (appConfig.isDebug()) {
-            log.debug("Reset all called on thread {}, waiting..", Thread.currentThread());
+            log.debug("Reset called on thread {}, waiting..", Thread.currentThread());
             try {
                 Thread.sleep(appConfig.getResetDelayMs());
             } catch (InterruptedException e) {
-                log.debug(e.getLocalizedMessage(), e);
+                // ignore 'sleep interrupted'
             }
         }
-//        Platform.runLater(this::cancelServices);
         for (Future<?> f : runningAsyncTask) {
             f.cancel(true);
             try {
                 // wait for completion
                 f.get();
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 // ignore
+            } catch (ExecutionException e) {
+                log.error(e.getLocalizedMessage(), e);
             }
         }
         runningAsyncTask.clear();
         asyncEntriesService.reset();
-        counterLock.reset();
-        Platform.runLater(this::resetStati);
+        counterLock.resetAllCounters(resetType);
+        Platform.runLater(() -> resetStati(resetType));
         if (appConfig.isDebug()) {
-            log.debug("Reset all on thread {} finished, waiting..", Thread.currentThread());
+            log.debug("Reset called on thread {} finished, waiting..", Thread.currentThread());
             try {
                 Thread.sleep(appConfig.getResetDelayMs());
             } catch (InterruptedException e) {
-                log.error(e.getLocalizedMessage(), e);
+                // ignore 'sleep interrupted'
             }
         }
     }
 
-    private void resetStati() {
-        statusLoaded.set(null);
-        statusLoadedFileTypes.set(null);
-        statusWillRename.set(null);
-        statusWillRenameFileTypes.set(null);
-        statusRenamed.set(null);
-        statusRenamedFileTypes.set(null);
+    private void resetStati(ResetType resetType) {
+        switch (resetType){
+            case LOAD -> {
+                statusLoaded.set(null);
+                statusLoadedFileTypes.set(null);
+                statusWillRename.set(null);
+                statusWillRenameFileTypes.set(null);
+                statusRenamed.set(null);
+                statusRenamedFileTypes.set(null);
+            }
+            case PREVIEW -> {
+                statusWillRename.set(null);
+                statusWillRenameFileTypes.set(null);
+                statusRenamed.set(null);
+                statusRenamedFileTypes.set(null);
+            }
+            case RENAME -> {
+                statusRenamed.set(null);
+                statusRenamedFileTypes.set(null);
+            }
+        }
     }
 
     @EventListener
     public void onLoadingStartEvent(StartingListFilesEvent event) {
+        log.debug("New loading on thread {}", Thread.currentThread());
         synchronized (counterLock){
-            resetAll();
+            reset(ResetType.LOAD);
         }
+    }
 
+    @EventListener
+    public void onPreviewStartEvent(StartingPreviewEvent event) {
+        log.debug("New preview on thread {}", Thread.currentThread());
+        synchronized (counterLock){
+            reset(ResetType.PREVIEW);
+        }
+    }
+
+    @EventListener
+    public void onRenameStartEvent(StartingRenameEvent event) {
+        log.debug("New rename on thread {}", Thread.currentThread());
+        synchronized (counterLock){
+            reset(ResetType.RENAME);
+        }
     }
 
     @EventListener

@@ -366,15 +366,12 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void updateInputView(final Collection<Path> files) throws IOException {
-
-        cancelCurrentOperation();
         clearView();
         initListFilesService(files);
         startService(listFilesService);
     }
 
     private void updateInputView(final Path path) {
-        cancelCurrentOperation();
         clearView();
         initListFilesService(path);
         startService(listFilesService);
@@ -469,7 +466,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
         renamingService.cancel();
         //        cannot be cancelled
 //        listFilesService.cancel();
-
+        updateInputView(startDirectoryComponentController.textFieldDirectory.getText().trim());
     }
 
     @Override
