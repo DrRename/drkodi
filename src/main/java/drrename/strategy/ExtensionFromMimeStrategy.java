@@ -31,21 +31,20 @@ public class ExtensionFromMimeStrategy extends RenamingStrategyProto {
 				return FilenameUtils.getBaseName(file.getFileName().toString()) + ".heic";
 			}
 			String[] type = MimeTypes.findExtensionsByMimeTypes(mimeType, false);
-			if(type.length > 1 && Arrays.stream(type).anyMatch(s -> "jpg".equals(s))){
-				return FilenameUtils.getBaseName(file.getFileName().toString()) + ".jpg";
+			if(type != null && type.length > 0) {
+				if (Arrays.stream(type).anyMatch(s -> "jpg".equals(s))) {
+					return FilenameUtils.getBaseName(file.getFileName().toString()) + ".jpg";
+				}
+				if (Arrays.stream(type).anyMatch(s -> "mov".equals(s))) {
+					return FilenameUtils.getBaseName(file.getFileName().toString()) + ".mov";
+				} else {
+					return FilenameUtils.getBaseName(file.getFileName().toString()) + "." + type[0];
+				}
 			}
-			if(type.length > 1 && Arrays.stream(type).anyMatch(s -> "mov".equals(s))){
-				return FilenameUtils.getBaseName(file.getFileName().toString()) + ".mov";
-			}
-			else {
-				return FilenameUtils.getBaseName(file.getFileName().toString()) + "." + type[0];
-			}
-
-
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage(), e);
-			return file.getFileName().toString();
 		}
+		return file.getFileName().toString();
 	}
 
 	@Override
