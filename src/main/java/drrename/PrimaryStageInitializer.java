@@ -1,6 +1,7 @@
 package drrename;
 
 import drrename.event.StageReadyEvent;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,14 @@ public class PrimaryStageInitializer implements ApplicationListener<StageReadyEv
 
     @Override
     public void onApplicationEvent(StageReadyEvent event) {
-        Stage stage = event.getStage();
-        Scene scene = new Scene(fxWeaver.loadView(MainController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
-        scene.getStylesheets().add("css/root.css");
-        stage.setTitle(uiConfig.getAppTitle());
-        stage.setScene(scene);
-        stage.show();
+        Platform.runLater(() -> {
+            Stage stage = event.getStage();
+            Scene scene = new Scene(fxWeaver.loadView(MainController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
+            scene.getStylesheets().add("css/root.css");
+            stage.setTitle(uiConfig.getAppTitle());
+            stage.setScene(scene);
+            stage.show();
+        });
+
     }
 }

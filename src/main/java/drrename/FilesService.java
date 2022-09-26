@@ -23,12 +23,17 @@ public abstract class FilesService<V> extends Service<V> {
 
     public void setFiles(final List<RenamingBean> events) {
 
-        this.files = Objects.requireNonNull(events);
+        this.files = new ArrayList<>(events);
+    }
+
+    @Override
+    public boolean cancel() {
+        this.files = null;
+        return super.cancel();
     }
 
     @Override
     public String toString() {
-
-        return getClass().getSimpleName() + " [" + files.size() + "]";
+        return getClass().getSimpleName() + " file cnt: " + (files == null ? 0 : files.size());
     }
 }

@@ -46,25 +46,28 @@ public class RenamingBean   {
         });
     }
 
-    public void preview(final RenamingStrategy strategy) {
+    public String preview(final RenamingStrategy strategy) {
 
         try {
             final String s = strategy.getNameNew(getOldPath());
             Platform.runLater(() -> newPath.set(s));
+            return s;
         } catch (final Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug(e.getLocalizedMessage(), e);
             }
             Platform.runLater(() -> this.exception.set(e));
+            return getOldPath().getFileName().toString();
         }
     }
 
-    public void rename(final RenamingStrategy strategy) {
+    public Path rename(final RenamingStrategy strategy) {
 
         try {
-            final Path s = strategy.rename(getOldPath(), null);
+            return strategy.rename(getOldPath(), null);
         } catch (final Exception e) {
             Platform.runLater(() -> this.exception.set(e));
+            return getOldPath();
         }
     }
 

@@ -67,13 +67,17 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     private final RenamingService renamingService;
 
-    /**
-     * Internal list of renaming entries. Should always be in sync with {@link content1} and {@link content2}.
-     */
+
     private final EntriesService entriesService;
 
     public ListView<Control> content1;
     public ListView<Control> content2;
+    public Label statusLabelLoaded;
+    public Label statusLabelLoadedFileTypes;
+    public Label statusLabelFilesWillRename;
+    public Label statusLabelFilesWillRenameFileTypes;
+    public Label statusLabelRenamed;
+    public Label statusLabelRenamedFileTypes;
 
 
     @FXML
@@ -228,10 +232,18 @@ public class MainController implements Initializable, ApplicationListener<Applic
         entriesService.getEntries().addListener((ListChangeListener<RenamingBean>) c -> {
             while(c.next()){
                 if(c.wasAdded()){
-                    Platform.runLater(() -> addToContent(c.getAddedSubList()));
+                    var list = new ArrayList<>(c.getAddedSubList());
+                    Platform.runLater(() -> addToContent(list));
                 }
             }
         });
+
+        statusLabelLoaded.textProperty().bind(entriesService.statusLoadedProperty());
+        statusLabelLoadedFileTypes.textProperty().bind(entriesService.statusLoadedFileTypesProperty());
+        statusLabelFilesWillRename.textProperty().bind((entriesService.statusWillRenameProperty()));
+        statusLabelFilesWillRenameFileTypes.textProperty().bind(entriesService.statusWillRenameFileTypesProperty());
+        statusLabelRenamed.textProperty().bind(entriesService.statusRenamedProperty());
+        statusLabelRenamedFileTypes.textProperty().bind(entriesService.statusRenamedFileTypesProperty());
 
     }
 

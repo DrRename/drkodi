@@ -13,5 +13,7 @@ public class AppConfig {
 
     private long loopDelayMs;
 
+    private long resetDelayMs;
+
     private long wordCnt;
 }

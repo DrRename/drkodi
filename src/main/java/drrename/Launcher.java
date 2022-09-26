@@ -1,6 +1,5 @@
 package drrename;
 
-import com.github.ktools1000.AnotherThreadFactory;
 import javafx.scene.Node;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -13,12 +12,14 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Executor;
 
+@EnableAsync
 @Slf4j
 @ComponentScan(basePackages = {"drrename", "com"})
 @SpringBootApplication
@@ -60,10 +61,15 @@ public class Launcher {
                 .resolve(injectionPoint);
     }
 
-    @Bean("low-priority-executor")
-    public ExecutorService getLowPriorityExecutor() {
-        return Executors.newFixedThreadPool(1,
-                new AnotherThreadFactory(Thread.MIN_PRIORITY));
-    }
+//    @Bean("taskExecutor")
+//    public Executor taskExecutor() {
+//        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//        executor.setCorePoolSize(1);
+//        executor.setMaxPoolSize(Math.max(Runtime.getRuntime().availableProcessors() / 3, 1));
+//        executor.setThreadNamePrefix("taskExecutor-");
+//        executor.setThreadPriority(3);
+//        executor.initialize();
+//        return executor;
+//    }
 
 }

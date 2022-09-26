@@ -5,10 +5,13 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+
 
 @RequiredArgsConstructor
 @Component
@@ -17,8 +20,11 @@ public class RenamingService extends Service<Void>  {
 
 	private final AppConfig appConfig;
 
+	private final ApplicationEventPublisher applicationEventPublisher;
+
 	private List<RenamingBean> events;
 	private RenamingStrategy strategy;
+
 
 
 
@@ -45,6 +51,6 @@ public class RenamingService extends Service<Void>  {
 	@Override
 	protected Task<Void> createTask() {
 
-		return new RenamingTask(Objects.requireNonNull(events), Objects.requireNonNull(strategy), appConfig);
+		return new RenamingTask(Objects.requireNonNull(events), Objects.requireNonNull(strategy), appConfig, applicationEventPublisher);
 	}
 }
