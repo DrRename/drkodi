@@ -461,11 +461,9 @@ public class MainController implements Initializable, ApplicationListener<Applic
 
     private void cancelCurrentOperation() {
         log.info("Cancelling current operation");
-//        cannot be cancelled
-//        previewService.cancel();
+        previewService.cancel();
         renamingService.cancel();
-        //        cannot be cancelled
-//        listFilesService.cancel();
+        listFilesService.cancel();
         updateInputView(startDirectoryComponentController.textFieldDirectory.getText().trim());
     }
 
