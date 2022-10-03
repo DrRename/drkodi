@@ -8,14 +8,16 @@ import drrename.mainview.GoCancelButtonsComponentController;
 import drrename.mainview.ReplacementStringComponentController;
 import drrename.mainview.StartDirectoryComponentController;
 import drrename.mainview.controller.FileListComponentController;
-import drrename.model.RenamingBean;
+import drrename.model.RenamingEntry;
+import drrename.service.EntriesService;
 import drrename.strategy.*;
+import drrename.ui.service.FileTypeService;
+import drrename.ui.service.ListFilesService;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
-import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,6 +45,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,7 +60,11 @@ public class MainController implements Initializable, ApplicationListener<Applic
     private final ListFilesService listFilesService;
     private final PreviewService previewService;
 
+    private final FileTypeService fileTypeService;
+
     private final ResourceBundle resourceBundle;
+
+    private final Executor executor;
     public HBox goCancelButtonsComponent;
     public BorderPane layer04_3;
     public BorderPane layer04_2;
@@ -78,6 +85,11 @@ public class MainController implements Initializable, ApplicationListener<Applic
     public Label statusLabelFilesWillRenameFileTypes;
     public Label statusLabelRenamed;
     public Label statusLabelRenamedFileTypes;
+    public Label loadingFilesStatusLabel;
+    public Label previewFilesStatusLabel;
+    public Label renameFilesStatusLabel;
+    public VBox statusBox;
+    public Label fileTypeStatusLabel;
 
 
     @FXML
@@ -104,19 +116,10 @@ public class MainController implements Initializable, ApplicationListener<Applic
     Node layer01;
 
     @FXML
-    Node layer02_2;
-
-    @FXML
     Node layer02_3;
 
     @FXML
-    Node layer03_1;
-
-    @FXML
-    Node layer03_2;
-
-    @FXML
-    Node layer03_3;
+    Node comboboxBox;
 
     @FXML
     Node layer04_1;
@@ -142,7 +145,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
     public ReplacementStringComponentController replacementStringComponentController;
 
     private void applyRandomColors() {
-        Stream.of(layer01, layer02_3, layer03_2, layer04_1, layer04_2, layer04_3, layer05_1, goCancelButtonsComponent).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
+        Stream.of(layer01, layer02_3, comboboxBox, layer04_1, layer04_2, layer05_1, goCancelButtonsComponent, statusLabelLoaded, statusLabelLoadedFileTypes, statusLabelFilesWillRename, statusLabelFilesWillRename, statusBox).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
     }
 
     private String getRandomColorString() {
@@ -175,8 +178,60 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void initServices() {
+        setLoadingServiceCallbacks();
         setRenamingServiceCallbacks();
         setPreviewServiceCallbacks();
+        registerStateChangeListeners();
+    }
+
+    private void registerStateChangeListeners() {
+        listFilesService.runningProperty().addListener((observable, oldValue, newValue) -> listFilesServiceStateChange(newValue));
+        previewService.runningProperty().addListener((observable, oldValue, newValue) -> previewFilesServiceStateChanged(newValue));
+        fileTypeService.runningProperty().addListener((observable, oldValue, newValue) -> fileTypeServiceStateChanged(newValue));
+        renamingService.runningProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                renamingServiceStatusChange(newValue);
+            }
+        });
+    }
+
+    private void renamingServiceStatusChange(Boolean newValue) {
+        if (newValue)
+            renameFilesStatusLabel.setText("Renaming files..");
+        else {
+            renameFilesStatusLabel.setText(null);
+        }
+    }
+
+    private void fileTypeServiceStateChanged(Boolean newValue) {
+        if (newValue)
+            fileTypeStatusLabel.setText("Loading file types..");
+        else {
+            fileTypeStatusLabel.setText(null);
+        }
+    }
+
+    private void previewFilesServiceStateChanged(Boolean newValue) {
+        if (newValue)
+            previewFilesStatusLabel.setText("Loading previews..");
+        else {
+            previewFilesStatusLabel.setText(null);
+        }
+    }
+
+    private void listFilesServiceStateChange(Boolean newValue) {
+        if (newValue)
+            renameFilesStatusLabel.setText("Loading files..");
+        else {
+            renameFilesStatusLabel.setText(null);
+        }
+    }
+
+    private void setLoadingServiceCallbacks() {
+        listFilesService.setOnFailed(e -> {
+            log.error(e.toString());
+        });
     }
 
     private void setPreviewServiceCallbacks() {
@@ -229,11 +284,11 @@ public class MainController implements Initializable, ApplicationListener<Applic
         if (config.isDebug())
             applyRandomColors();
 
-        entriesService.getEntries().addListener((ListChangeListener<RenamingBean>) c -> {
-            while(c.next()){
-                if(c.wasAdded()){
+        entriesService.getEntries().addListener((ListChangeListener<RenamingEntry>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
                     var list = new ArrayList<>(c.getAddedSubList());
-                    Platform.runLater(() -> addToContent(list));
+                    executor.execute(() -> addToContent(list));
                 }
             }
         });
@@ -245,17 +300,21 @@ public class MainController implements Initializable, ApplicationListener<Applic
         statusLabelRenamed.textProperty().bind(entriesService.statusRenamedProperty());
         statusLabelRenamedFileTypes.textProperty().bind(entriesService.statusRenamedFileTypesProperty());
 
+        statusLabelLoadedFileTypes.visibleProperty().bind(statusLabelLoadedFileTypes.textProperty().isNotEmpty());
+
+
     }
 
-    private void addToContent(final Collection<? extends RenamingBean> renamingBeans) {
+    private void addToContent(final Collection<? extends RenamingEntry> renamingBeans) {
         renamingBeans.forEach(this::addToContent);
     }
 
-    private void addToContent(final RenamingBean renamingBean) {
+    private void addToContent(final RenamingEntry renamingEntry) {
+        var left = RenamingBeanControlBuilder.buildLeft(renamingEntry);
+        var right = RenamingBeanControlBuilder.buildRight(renamingEntry);
+        Platform.runLater(() -> content1.getItems().add(left));
+        Platform.runLater(() -> content2.getItems().add(right));
 
-        renamingBean.filteredProperty().bind(Bindings.createBooleanBinding(() -> calcIsFiltered(renamingBean), ignoreDirectories.selectedProperty(), ignoreHiddenFiles.selectedProperty()));
-        content1.getItems().add(RenamingBeanControlBuilder.buildLeft(renamingBean));
-        content2.getItems().add(RenamingBeanControlBuilder.buildRight(renamingBean));
     }
 
     private void initDragAndDropForLeftFileList() {
@@ -270,14 +329,12 @@ public class MainController implements Initializable, ApplicationListener<Applic
             final Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasFiles()) {
-                try {
-                    updateInputView(filesToPathList(db.getFiles()));
-                    if (db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory())
-                        startDirectoryComponentController.textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
-                    else startDirectoryComponentController.textFieldDirectory.setText(null);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+
+//                    updateInputView(filesToPathList(db.getFiles()));
+                if (db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory())
+                    startDirectoryComponentController.textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
+                else startDirectoryComponentController.textFieldDirectory.setText(null);
+
                 success = true;
             }
             /*
@@ -297,14 +354,11 @@ public class MainController implements Initializable, ApplicationListener<Applic
             final Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasFiles() && db.getFiles().size() == 1 && db.getFiles().iterator().next().isDirectory()) {
-                try {
-                    updateInputView(filesToPathList(db.getFiles()));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+
+//                    updateInputView(filesToPathList(db.getFiles()));
+
                 success = true;
                 startDirectoryComponentController.textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
-                updateOutputView();
             }
             /*
              * let the source know whether the string was successfully transferred and used
@@ -366,14 +420,16 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void updateInputView(final Collection<Path> files) throws IOException {
+        log.debug("Updating input view");
         clearView();
-        initListFilesService(files);
+        initLoadService(files);
         startService(listFilesService);
     }
 
     private void updateInputView(final Path path) {
+        log.debug("Updating input view");
         clearView();
-        initListFilesService(path);
+        initLoadService(path);
         startService(listFilesService);
     }
 
@@ -382,34 +438,54 @@ public class MainController implements Initializable, ApplicationListener<Applic
             updateInputView(Path.of(path));
     }
 
-    private void initListFilesService(Path path) {
-        listFilesService.setFiles(Collections.singleton(path));
-        listFilesService.setOnSucceeded((e) -> updateOutputView());
-        progressBar.progressProperty().bind(listFilesService.progressProperty());
+    private void initLoadService(Path path) {
+        initLoadService(Collections.singleton(path));
     }
 
-    private void initListFilesService(Collection<Path> files) throws IOException {
+    private void initLoadService(Collection<Path> files) {
+        listFilesService.cancel();
+        listFilesService.reset();
         listFilesService.setFiles(files);
-        listFilesService.setOnSucceeded((e) -> updateOutputView());
+        listFilesService.setOnSucceeded((e) -> {
+            initFileTypeService(entriesService.getEntries());
+            startService(fileTypeService);
+            updateOutputView();
+
+        });
         progressBar.progressProperty().bind(listFilesService.progressProperty());
     }
 
     private void updateOutputView() {
+        log.debug("Updating output view");
         initPreviewService();
         startService(previewService);
     }
 
+    private void initFileTypeService(Collection<RenamingEntry> renamingEntries) {
+        fileTypeService.cancel();
+        fileTypeService.reset();
+        fileTypeService.setRenamingEntries(renamingEntries);
+        var typeProvider = initAndGetFileTypeStrategy();
+        fileTypeService.setFileTypeProvider(typeProvider);
+    }
+
+    private FileTypeProvider initAndGetFileTypeStrategy() {
+        return new FileTypeByMimeProvider();
+    }
+
     private void initPreviewService() {
-        previewService.setFiles(entriesService.getEntries());
+        previewService.cancel();
+        previewService.reset();
+        previewService.setRenamingEntries(entriesService.getEntries());
         progressBar.progressProperty().bind(previewService.progressProperty());
         var strat = initAndGetStrategy();
         if (strat != null)
             previewService.setRenamingStrategy(strat);
     }
 
-    private boolean calcIsFiltered(RenamingBean renamingBean) {
-        return (renamingBean.getOldPath().toFile().isDirectory() && ignoreDirectories.isSelected()) ||
-                (renamingBean.getOldPath().toFile().isHidden() && ignoreHiddenFiles.isSelected());
+    private boolean calcIsFiltered(RenamingEntry renamingEntry) {
+        return (renamingEntry.getOldPath().toFile().isDirectory() && ignoreDirectories.isSelected()) ||
+                (renamingEntry.getOldPath().toFile().isHidden() && ignoreHiddenFiles.isSelected());
     }
 
 
@@ -419,20 +495,9 @@ public class MainController implements Initializable, ApplicationListener<Applic
      * @param service Service to start
      */
     private void startService(Service<?> service) {
-        if ((service.getState() == Worker.State.RUNNING) || (service.getState() == Worker.State.SCHEDULED)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Still busy, waiting for cancel " + service);
-            }
-            service.setOnCancelled(e -> {
-                if (log.isDebugEnabled()) {
-                    log.debug("Cancelled " + service);
-                }
-                startService(service);
-            });
-            service.cancel();
-            return;
-        }
-        service.reset();
+
+        log.debug("Starting service {}", service);
+
         service.setOnRunning(e -> {
             if (log.isDebugEnabled()) {
                 log.debug("Service running " + service);
@@ -450,7 +515,10 @@ public class MainController implements Initializable, ApplicationListener<Applic
 				log.debug("Service succeeded {} ", service);
 			}
 		});*/
+        log.debug("Starting service {}", service);
         service.start();
+
+
     }
 
     private void clearView() {
@@ -460,7 +528,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void cancelCurrentOperation() {
-        log.info("Cancelling current operation");
+        log.debug("Cancelling current operation");
         previewService.cancel();
         renamingService.cancel();
         listFilesService.cancel();

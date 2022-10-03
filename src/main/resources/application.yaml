@@ -8,6 +8,9 @@ logging:
   level:
     root: info
     drrename: debug
+  pattern:
+    console: "%d{dd-MM-yyyy HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
+
 
 app:
   ui:
@@ -16,6 +19,6 @@ app:
     initialHeight: 600
   word-cnt: 3
   loop-delay-ms: 500
-  reset-delay-ms: 2000
-  debug: true
+  reset-delay-ms: 1000
+  debug: false
 
