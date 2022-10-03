@@ -1,18 +1,16 @@
 package drrename.event;
 
-import drrename.model.RenamingBean;
+import drrename.model.RenamingEntry;
 import org.springframework.context.ApplicationEvent;
-
-import java.nio.file.Path;
 
 public class FilePreviewEvent extends ApplicationEvent {
 
-    public FilePreviewEvent(RenamingBean source) {
+    public FilePreviewEvent(RenamingEntry source) {
         super(source);
     }
 
     @Override
-    public RenamingBean getSource() {
-        return (RenamingBean) super.getSource();
+    public RenamingEntry getSource() {
+        return (RenamingEntry) super.getSource();
     }
 }

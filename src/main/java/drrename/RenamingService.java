@@ -1,11 +1,10 @@
 package drrename;
 
-import drrename.model.RenamingBean;
+import drrename.model.RenamingEntry;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -22,18 +21,18 @@ public class RenamingService extends Service<Void>  {
 
 	private final ApplicationEventPublisher applicationEventPublisher;
 
-	private List<RenamingBean> events;
+	private List<RenamingEntry> events;
 	private RenamingStrategy strategy;
 
 
 
 
-	public List<RenamingBean> getEvents() {
+	public List<RenamingEntry> getEvents() {
 
 		return events;
 	}
 
-	public void setEvents(final List<RenamingBean> events) {
+	public void setEvents(final List<RenamingEntry> events) {
 
 		this.events = events;
 	}

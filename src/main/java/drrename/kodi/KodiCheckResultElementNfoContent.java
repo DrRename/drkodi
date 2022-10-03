@@ -1,6 +1,5 @@
 package drrename.kodi;
 
-import com.ctc.wstx.exc.WstxUnexpectedCharException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
