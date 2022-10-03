@@ -1,9 +1,8 @@
 package drrename;
 
 import drrename.event.FileRenamedEvent;
-import drrename.event.StartingListFilesEvent;
 import drrename.event.StartingRenameEvent;
-import drrename.model.RenamingBean;
+import drrename.model.RenamingEntry;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -15,7 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RenamingTask extends Task<Void> {
 
-	private final List<RenamingBean> elements;
+	private final List<RenamingEntry> elements;
 	private final RenamingStrategy strategy;
 	private final AppConfig config;
 	private final ApplicationEventPublisher applicationEventPublisher;
@@ -26,20 +25,18 @@ public class RenamingTask extends Task<Void> {
 		long cnt = 0;
 		UUID uuid = UUID.randomUUID();
 		applicationEventPublisher.publishEvent(new StartingRenameEvent(uuid));
-		for (final RenamingBean b : elements) {
+		for (final RenamingEntry b : elements) {
 			if (Thread.currentThread().isInterrupted())
 				throw new InterruptedException("Cancelled");
-			if (!b.isFiltered() && b.willChange()) {
+			if (b.willChange()) {
 				Path p = b.rename(strategy);
 				if(!b.getOldPath().equals(p)){
-					applicationEventPublisher.publishEvent(new FileRenamedEvent(b));
-				} else {
-					int wait = 0;
+					applicationEventPublisher.publishEvent(new FileRenamedEvent(uuid, b));
 				}
-				updateProgress(cnt++, elements.size());
-				if (config.isDebug())
-					Thread.sleep(config.getLoopDelayMs());
 			}
+			if (config.isDebug())
+				Thread.sleep(config.getLoopDelayMs());
+			updateProgress(cnt++, elements.size());
 		}
 		return null;
 	}

@@ -1,18 +1,25 @@
 package drrename.event;
 
-import drrename.model.RenamingBean;
-import org.springframework.context.ApplicationEvent;
+import drrename.model.RenamingEntry;
+import lombok.Data;
 
-import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
-public class FileRenamedEvent extends ApplicationEvent {
+@Data
+public class FileRenamedEvent  {
 
-    public FileRenamedEvent(RenamingBean source) {
-        super(source);
+    private final UUID uuid;
+
+    private final List<RenamingEntry> renamedEntries;
+
+    public FileRenamedEvent(UUID uuid, List<RenamingEntry> renamedEntries) {
+        this.uuid = uuid;
+        this.renamedEntries = renamedEntries;
     }
 
-    @Override
-    public RenamingBean getSource() {
-        return (RenamingBean) super.getSource();
+    public FileRenamedEvent(UUID uuid, RenamingEntry renamedEntries) {
+        this(uuid, Collections.singletonList(renamedEntries));
     }
 }

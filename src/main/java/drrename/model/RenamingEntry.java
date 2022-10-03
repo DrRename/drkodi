@@ -1,48 +1,33 @@
 package drrename.model;
 
-import drrename.RenamingBeanControlBuilder;
 import drrename.RenamingStrategy;
-import drrename.Styles;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Insets;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.*;
 import java.util.Objects;
 
 @Slf4j
-public class RenamingBean   {
+public class RenamingEntry {
 
     private final ObjectProperty<Path> oldPath;
     private final StringProperty newPath;
     private final ObjectProperty<Throwable> exception;
-    private final BooleanProperty filtered;
     private final BooleanProperty willChange;
-    private final BooleanProperty externalChanged;
+    private  final BooleanProperty filtered;
+    private final StringProperty fileType;
 
-    public RenamingBean(final Path path) {
+    public RenamingEntry(final Path path) {
 
         this.oldPath = new SimpleObjectProperty<>(Objects.requireNonNull(path));
-        if (!Files.isReadable(path))
-            throw new IllegalArgumentException("Cannot read " + path);
         this.newPath = new SimpleStringProperty();
         exception = new SimpleObjectProperty<>();
-        this.filtered = new SimpleBooleanProperty();
         this.willChange = new SimpleBooleanProperty();
-        this.externalChanged = new SimpleBooleanProperty();
+        this.fileType = new SimpleStringProperty();
+        this.filtered = new SimpleBooleanProperty();
         newPath.addListener((v, o, n) -> {
             willChange.set(!getOldPath().getFileName().toString().equals(n));
-        });
-        filtered.addListener((v, o, n) -> {
-            if ((n != null) && n) {
-                willChange.set(false);
-                newPath.set(null);
-            }
         });
     }
 
@@ -80,26 +65,51 @@ public class RenamingBean   {
 
     // Getter / Setter //
 
+
+    public BooleanProperty filteredProperty() {
+        return filtered;
+    }
+
+    public boolean isFiltered() {
+        return filtered.get();
+    }
+
+    public void setFiltered(boolean filtered){
+        this.filtered.set(filtered);
+    }
+
+    public StringProperty fileTypeProperty() {
+        return fileType;
+    }
+
+    public String getFileType() {
+        return fileType.get();
+    }
+
+    public void setFileType(String fileType){
+        fileTypeProperty().set(fileType);
+    }
+
+    public void setNewPath(String newPath) {
+        this.newPath.set(newPath);
+    }
+
     public StringProperty getNewPath() {
 
+        return newPath;
+    }
+
+    public ObjectProperty<Throwable> exceptionProperty() {
+        return exception;
+    }
+
+    public StringProperty newPathProperty() {
         return newPath;
     }
 
     public ObjectProperty<Throwable> getException() {
 
         return exception;
-    }
-
-    public BooleanProperty filteredProperty() {
-        return this.filtered;
-    }
-
-    public boolean isFiltered() {
-        return this.filteredProperty().get();
-    }
-
-    public void setFiltered(final boolean filtered) {
-        this.filteredProperty().set(filtered);
     }
 
     public BooleanProperty willChangeProperty() {
@@ -124,18 +134,5 @@ public class RenamingBean   {
 
     public void setOldPath(final Path oldPath) {
         this.oldPathProperty().set(oldPath);
-    }
-
-
-    public boolean externalChanged() {
-        return externalChanged.get();
-    }
-
-    public BooleanProperty externalChangedProperty() {
-        return externalChanged;
-    }
-
-    public void setExternalChanged(boolean externalChanged) {
-        this.externalChanged.set(externalChanged);
     }
 }

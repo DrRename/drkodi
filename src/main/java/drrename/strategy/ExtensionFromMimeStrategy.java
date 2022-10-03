@@ -32,10 +32,10 @@ public class ExtensionFromMimeStrategy extends RenamingStrategyProto {
 			}
 			String[] type = MimeTypes.findExtensionsByMimeTypes(mimeType, false);
 			if(type != null && type.length > 0) {
-				if (Arrays.stream(type).anyMatch(s -> "jpg".equals(s))) {
+				if (Arrays.asList(type).contains("jpg")) {
 					return FilenameUtils.getBaseName(file.getFileName().toString()) + ".jpg";
 				}
-				if (Arrays.stream(type).anyMatch(s -> "mov".equals(s))) {
+				if (Arrays.asList(type).contains("mov")) {
 					return FilenameUtils.getBaseName(file.getFileName().toString()) + ".mov";
 				} else {
 					return FilenameUtils.getBaseName(file.getFileName().toString()) + "." + type[0];
