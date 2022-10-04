@@ -1,14 +1,15 @@
-package drrename;
+package drrename.ui.service;
 
-import drrename.ui.service.PreviewTask;
+import drrename.model.RenamingEntry;
 import javafx.concurrent.Task;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 
 @Service
-public class PreviewService extends StrategyService<Void> {
+public class PreviewService extends StrategyService<List<RenamingEntry>> {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -18,7 +19,7 @@ public class PreviewService extends StrategyService<Void> {
     }
 
     @Override
-    protected Task<Void> createTask() {
+    protected Task<List<RenamingEntry>> createTask() {
 
         return new PreviewTask(getRenamingEntries(), getRenamingStrategy(), applicationEventPublisher);
     }

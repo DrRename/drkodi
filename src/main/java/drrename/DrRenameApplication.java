@@ -1,6 +1,5 @@
 package drrename;
 
-import drrename.Launcher;
 import drrename.event.StageReadyEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,7 +9,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @Slf4j
-public class DrRenameApplication3 extends Application {
+public class DrRenameApplication extends Application {
 
     private ConfigurableApplicationContext applicationContext;
 
@@ -22,7 +21,7 @@ public class DrRenameApplication3 extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         applicationContext.publishEvent(new StageReadyEvent(stage));
     }
 

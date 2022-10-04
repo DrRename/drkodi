@@ -1,18 +1,22 @@
-package drrename;
+package drrename.ui;
 
+import drrename.*;
+import drrename.config.AppConfig;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
-import drrename.mainview.GoCancelButtonsComponentController;
-import drrename.mainview.ReplacementStringComponentController;
-import drrename.mainview.StartDirectoryComponentController;
-import drrename.mainview.controller.FileListComponentController;
+import drrename.ui.mainview.GoCancelButtonsComponentController;
+import drrename.ui.mainview.ReplacementStringComponentController;
+import drrename.ui.mainview.StartDirectoryComponentController;
+import drrename.ui.mainview.controller.FileListComponentController;
 import drrename.model.RenamingEntry;
 import drrename.service.EntriesService;
 import drrename.strategy.*;
 import drrename.ui.service.FileTypeService;
 import drrename.ui.service.ListFilesService;
+import drrename.ui.service.PreviewService;
+import drrename.ui.service.RenamingService;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -38,6 +42,7 @@ import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -53,8 +58,12 @@ import java.util.stream.Stream;
 @Slf4j
 @Component
 @FxmlView("/fxml/MainView.fxml")
-public class MainController implements Initializable, ApplicationListener<ApplicationEvent> {
+public class MainController implements Initializable {
 
+    private static final String RENAMING_FILES = "mainview.status.renaming_files";
+    private static final String LOADING_FILES = "mainview.status.loading_files";
+    private static final String LOADING_PREVIEVS = "mainview.status.loading_previews";
+    private static final String LOADING_FILE_TYPES = "mainview.status.loading_filetypes";
     private final AppConfig config;
 
     private final ListFilesService listFilesService;
@@ -185,7 +194,7 @@ public class MainController implements Initializable, ApplicationListener<Applic
     }
 
     private void registerStateChangeListeners() {
-        listFilesService.runningProperty().addListener((observable, oldValue, newValue) -> listFilesServiceStateChange(newValue));
+        listFilesService.runningProperty().addListener((observable, oldValue, newValue) -> loadingFilesServiceStausChanged(newValue));
         previewService.runningProperty().addListener((observable, oldValue, newValue) -> previewFilesServiceStateChanged(newValue));
         fileTypeService.runningProperty().addListener((observable, oldValue, newValue) -> fileTypeServiceStateChanged(newValue));
         renamingService.runningProperty().addListener(new ChangeListener<Boolean>() {
@@ -196,37 +205,32 @@ public class MainController implements Initializable, ApplicationListener<Applic
         });
     }
 
-    private void renamingServiceStatusChange(Boolean newValue) {
-        if (newValue)
-            renameFilesStatusLabel.setText("Renaming files..");
-        else {
-            renameFilesStatusLabel.setText(null);
-        }
-    }
 
-    private void fileTypeServiceStateChanged(Boolean newValue) {
-        if (newValue)
-            fileTypeStatusLabel.setText("Loading file types..");
-        else {
-            fileTypeStatusLabel.setText(null);
-        }
+    private void loadingFilesServiceStausChanged(Boolean newValue) {
+        if (newValue) loadingFilesStatusLabel.setText(String.format(resourceBundle.getString(LOADING_FILES)));
+        else loadingFilesStatusLabel.setText(null);
     }
 
     private void previewFilesServiceStateChanged(Boolean newValue) {
-        if (newValue)
-            previewFilesStatusLabel.setText("Loading previews..");
-        else {
-            previewFilesStatusLabel.setText(null);
-        }
+        if (newValue) previewFilesStatusLabel.setText(String.format(resourceBundle.getString(LOADING_PREVIEVS)));
+        else previewFilesStatusLabel.setText(null);
     }
 
-    private void listFilesServiceStateChange(Boolean newValue) {
-        if (newValue)
-            renameFilesStatusLabel.setText("Loading files..");
-        else {
-            renameFilesStatusLabel.setText(null);
-        }
+    private void fileTypeServiceStateChanged(Boolean newValue) {
+        if (newValue) fileTypeStatusLabel.setText(String.format(resourceBundle.getString(LOADING_FILE_TYPES)));
+        else fileTypeStatusLabel.setText(null);
     }
+
+    private void renamingServiceStatusChange(Boolean newValue) {
+        if (newValue) renameFilesStatusLabel.setText(String.format(resourceBundle.getString(RENAMING_FILES)));
+        else renameFilesStatusLabel.setText(null);
+    }
+
+
+
+
+
+
 
     private void setLoadingServiceCallbacks() {
         listFilesService.setOnFailed(e -> {
@@ -535,16 +539,15 @@ public class MainController implements Initializable, ApplicationListener<Applic
         updateInputView(startDirectoryComponentController.textFieldDirectory.getText().trim());
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationEvent event) {
-//		entries.forEach(b -> b.onApplicationEvent(event));
-        if (event instanceof MainViewButtonGoEvent) {
-            handleButtonActionGo(((MainViewButtonGoEvent) event).getActionEvent());
-        } else if (event instanceof MainViewButtonCancelEvent) {
-            handleButtonActionCancel(((MainViewButtonCancelEvent) event).getActionEvent());
-        }
+    @EventListener
+    public void onButtonGoEvent(MainViewButtonGoEvent event){
+        handleButtonActionGo(event.getActionEvent());
     }
 
+    @EventListener
+    public void onButtonCancelEvent(MainViewButtonCancelEvent event){
+        handleButtonActionCancel(event.getActionEvent());
+    }
 
     private RenamingStrategy initAndGetStrategy() {
 
