@@ -1,4 +1,4 @@
-package drrename;
+package drrename.ui;
 
 public class Styles {
     public static String defaultStyle() {

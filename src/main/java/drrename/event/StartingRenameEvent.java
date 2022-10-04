@@ -2,6 +2,12 @@ package drrename.event;
 
 import java.util.UUID;
 
-public record StartingRenameEvent(UUID uuid) implements SynchronousEvent {
+public class StartingRenameEvent extends SynchronousUuidEvent {
 
+    public StartingRenameEvent(UUID uuid) {
+        super(uuid);
+    }
+
+    public StartingRenameEvent() {
+    }
 }

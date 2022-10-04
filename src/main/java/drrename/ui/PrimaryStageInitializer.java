@@ -1,5 +1,6 @@
-package drrename;
+package drrename.ui;
 
+import drrename.ui.config.UiConfig;
 import drrename.event.StageReadyEvent;
 import javafx.application.Platform;
 import javafx.scene.Scene;

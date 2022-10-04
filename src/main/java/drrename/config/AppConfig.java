@@ -17,17 +17,22 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.event;
+package drrename.config;
 
-import java.util.UUID;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
-public class ListFilesFinishedEvent extends SynchronousUuidEvent {
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "app")
+public class AppConfig {
 
-    public ListFilesFinishedEvent(UUID uuid) {
-        super(uuid);
-    }
+    private boolean debug;
 
-    public ListFilesFinishedEvent() {
-        this(UUID.randomUUID());
-    }
+    private long loopDelayMs;
+
+    private long resetDelayMs;
+
+    private long wordCnt;
 }

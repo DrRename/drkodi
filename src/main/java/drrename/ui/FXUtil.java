@@ -1,4 +1,4 @@
-package drrename;
+package drrename.ui;
 
 import javafx.geometry.Orientation;
 import javafx.scene.Node;

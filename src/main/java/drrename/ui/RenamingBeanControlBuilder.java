@@ -1,6 +1,7 @@
-package drrename;
+package drrename.ui;
 
 import drrename.model.RenamingEntry;
+import drrename.ui.Styles;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
