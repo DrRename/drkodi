@@ -15,14 +15,12 @@ public class RenamingBeanControlBuilder {
 
         return () -> {
             if (f.getException().get() != null)
-                return f.getException().get().getLocalizedMessage();
+                return f.getException().getValue().toString();
             return f.getNewPath().getValue() == null ? null : f.getNewPath().getValue();
         };
     }
 
-    static String calculateOldPath(final RenamingEntry f) {
-        return f.getOldPath().getFileName().toString();
-    }
+
 
     static String calcStyleRight(final RenamingEntry f) {
 
@@ -69,6 +67,10 @@ public class RenamingBeanControlBuilder {
 
     static ObservableValue<String> buildTextBindingLeft(RenamingEntry f) {
         return Bindings.createObjectBinding(() -> calculateOldPath(f), f.oldPathProperty());
+    }
+
+    static String calculateOldPath(final RenamingEntry f) {
+        return f.getOldPath().getFileName().toString();
     }
 
     static ObservableValue<String> buildStyleBindingLeft(RenamingEntry f) {

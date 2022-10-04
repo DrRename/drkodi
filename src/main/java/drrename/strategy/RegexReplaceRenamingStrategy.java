@@ -17,10 +17,8 @@ public class RegexReplaceRenamingStrategy extends RenamingStrategyProto {
 	}
 
 	@Override
-	public String getNameNew(final Path file) throws InterruptedException {
+	public String getNameNew(final Path file)  {
 
-		if(Thread.currentThread().isInterrupted())
-			throw new InterruptedException("Cancelled");
 		try {
 			return file.getFileName().toString().replaceAll(getReplacementStringFrom(),getReplacementStringTo());
 		} catch(final PatternSyntaxException e) {

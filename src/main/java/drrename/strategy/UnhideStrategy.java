@@ -15,10 +15,8 @@ public class UnhideStrategy extends RenamingStrategyProto {
 	}
 
 	@Override
-	public String getNameNew(final Path file) throws InterruptedException {
+	public String getNameNew(final Path file) {
 
-		if(Thread.currentThread().isInterrupted())
-			throw new InterruptedException("Cancelled");
 		if(file.getFileName().toString().matches(".+\\~\\d+\\~")){
 			return file.getFileName().toString().substring(0, file.getFileName().toString().indexOf("~") - 1);
 		}

@@ -18,6 +18,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
@@ -77,6 +79,16 @@ public class EntriesService {
 
     private final static Predicate<RenamingEntry> isVideo = e -> e.getFileType() != null && e.getFileType().contains("video");
 
+    private final static Predicate<RenamingEntry> isHidden = e -> {
+        try {
+            return Files.isHidden(e.getOldPath());
+        } catch (IOException ex) {
+            log.error(ex.getLocalizedMessage(), ex);
+            Platform.runLater(() -> e.exceptionProperty().set(ex));
+            return false;
+        }
+    };
+
     public EntriesService(ResourceBundle resourceBundle, AppConfig appConfig, Executor executor) {
         this.resourceBundle = resourceBundle;
         this.appConfig = appConfig;
@@ -119,7 +131,9 @@ public class EntriesService {
         renamedVideosEntries.addListener((ListChangeListener<RenamingEntry>) c -> updateRenamedFileTypesLabel());
     }
 
-
+    public void reset(){
+        entriesRenamed.clear();
+    }
 
     private void updateLoadedFileTypesLabel() {
         statusLoadedFileTypes.set(String.format(resourceBundle.getString(LOADED_TYPES), loadedImageEntries.size(), loadedVideosEntries.size()));
@@ -134,42 +148,14 @@ public class EntriesService {
     }
 
 
-    @EventListener
-    public void onLoadingStartEvent(StartingListFilesEvent event) {
-        log.debug("New loading on thread {}", Thread.currentThread());
-
-    }
-
-    @EventListener
-    public void onPreviewStartEvent(StartingPreviewEvent event) {
-        log.debug("New preview on thread {}", Thread.currentThread());
 
 
-    }
 
-    @EventListener
-    public void onRenameStartEvent(StartingRenameEvent event) {
-        log.debug("New rename on thread {}", Thread.currentThread());
-
-
-    }
 
     @EventListener
     public void onFileEntryEvent(NewRenamingEntryEvent event) {
         var hans = new ArrayList<>(event.getRenamingEntries());
         Platform.runLater(() -> entriesProperty.addAll(hans));
-    }
-
-    @EventListener
-    public void onLoadingFinishedEvent(ListFilesFinishedEvent event){
-//        log.debug("Loading finished, triggering tasks..");
-
-    }
-
-    @EventListener
-    public void onFilePreviewEvent(FilePreviewEvent event) {
-
-
     }
 
     @EventListener

@@ -1,6 +1,7 @@
 package drrename.ui.mainview.controller;
 
 import javafx.fxml.Initializable;
+import javafx.scene.control.Control;
 import javafx.scene.control.ListView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,18 +17,13 @@ import java.util.ResourceBundle;
 @Slf4j
 @Component
 @FxmlView("/fxml/FileListComponent.fxml")
-public class FileListComponentController implements Initializable, ApplicationListener<ApplicationEvent> {
+public class FileListComponentController implements Initializable {
 
-    public ListView content1;
-    public ListView content2;
+    public ListView<Control> content1;
+    public ListView<Control> content2;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
-
-    @Override
-    public void onApplicationEvent(ApplicationEvent event) {
 
     }
 }

@@ -34,7 +34,7 @@ public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {
 	}
 
 	@Override
-	public String getNameNew(final Path file) throws IOException {
+	public String getNameNew(final Path file) {
 
 		try {
 			final Metadata metadata = ImageMetadataReader.readMetadata(file.toFile());

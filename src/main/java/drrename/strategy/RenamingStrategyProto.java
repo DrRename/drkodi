@@ -31,12 +31,9 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
 	 *            the new file name
 	 * @return
 	 * @throws IOException
-	 * @throws InterruptedException
 	 */
-	protected Path doRename(final Path file, String nameNew) throws IOException, InterruptedException {
+	protected Path doRename(final Path file, String nameNew) throws IOException {
 
-		if(Thread.currentThread().isInterrupted())
-			throw new InterruptedException("Cancelled");
 		int fileNameCounter = 1;
 		try {
 			final String nameOld = getNameOld(file);
