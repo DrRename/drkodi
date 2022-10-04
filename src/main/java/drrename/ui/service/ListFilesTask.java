@@ -1,4 +1,4 @@
-package drrename;
+package drrename.ui.service;
 
 import drrename.event.StartingListFilesEvent;
 import drrename.model.RenamingEntry;

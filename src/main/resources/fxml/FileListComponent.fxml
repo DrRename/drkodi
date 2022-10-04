@@ -5,7 +5,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<VBox fx:controller="drrename.mainview.controller.FileListComponentController" xmlns="http://javafx.com/javafx"
+<VBox fx:controller="drrename.ui.mainview.controller.FileListComponentController" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" >
         <padding>
             <Insets top="4" right="4" bottom="4" left="4"/>

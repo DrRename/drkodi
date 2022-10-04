@@ -1,4 +1,4 @@
-package drrename.mainview;
+package drrename.ui.mainview;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

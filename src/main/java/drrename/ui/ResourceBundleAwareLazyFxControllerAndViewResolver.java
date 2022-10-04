@@ -1,4 +1,4 @@
-package drrename;
+package drrename.ui;
 
 import javafx.scene.Node;
 import net.rgielen.fxweaver.core.FxControllerAndView;

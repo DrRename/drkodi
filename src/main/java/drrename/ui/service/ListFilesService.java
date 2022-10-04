@@ -1,6 +1,5 @@
 package drrename.ui.service;
 
-import drrename.ListFilesTask;
 import drrename.model.RenamingEntry;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
