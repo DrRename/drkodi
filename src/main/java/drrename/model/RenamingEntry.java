@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.FileNotFoundException;
 import java.nio.file.*;
 import java.util.Objects;
 
@@ -15,7 +16,7 @@ public class RenamingEntry {
     private final StringProperty newPath;
     private final ObjectProperty<Throwable> exception;
     private final BooleanProperty willChange;
-    private  final BooleanProperty filtered;
+    private final BooleanProperty filtered;
     private final StringProperty fileType;
 
     public RenamingEntry(final Path path) {
@@ -26,37 +27,38 @@ public class RenamingEntry {
         this.willChange = new SimpleBooleanProperty();
         this.fileType = new SimpleStringProperty();
         this.filtered = new SimpleBooleanProperty();
-        newPath.addListener((v, o, n) -> {
-            willChange.set(!getOldPath().getFileName().toString().equals(n));
-        });
+        newPath.addListener((v, o, n) -> willChange.set(!getOldPath().getFileName().toString().equals(n)));
     }
 
     public String preview(final RenamingStrategy strategy) {
 
-        try {
+        if (Files.exists(getOldPath())) {
             final String s = strategy.getNameNew(getOldPath());
             Platform.runLater(() -> newPath.set(s));
             return s;
-        } catch (final Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug(e.getLocalizedMessage(), e);
-            }
-            Platform.runLater(() -> this.exception.set(e));
-            return getOldPath().getFileName().toString();
         }
+        var exception = new FileNotFoundException(getOldPath().getFileName().toString());
+        Platform.runLater(() -> exceptionProperty().set(exception));
+        return null;
     }
 
     public Path rename(final RenamingStrategy strategy) {
-
-        try {
-            return strategy.rename(getOldPath(), null);
+        try{
+        Path newPath = strategy.rename(getOldPath(), null);
+        Platform.runLater(() -> commitRename(newPath));
+        return newPath;
         } catch (final Exception e) {
+            log.debug(e.getLocalizedMessage(), e);
             Platform.runLater(() -> this.exception.set(e));
             return getOldPath();
         }
     }
 
-
+    public void commitRename(Path newPath) {
+        setOldPath(newPath);
+        setWillChange(false);
+        exceptionProperty().set(null);
+    }
 
     @Override
     public String toString() {
@@ -74,7 +76,7 @@ public class RenamingEntry {
         return filtered.get();
     }
 
-    public void setFiltered(boolean filtered){
+    public void setFiltered(boolean filtered) {
         this.filtered.set(filtered);
     }
 
@@ -86,7 +88,7 @@ public class RenamingEntry {
         return fileType.get();
     }
 
-    public void setFileType(String fileType){
+    public void setFileType(String fileType) {
         fileTypeProperty().set(fileType);
     }
 
@@ -135,4 +137,6 @@ public class RenamingEntry {
     public void setOldPath(final Path oldPath) {
         this.oldPathProperty().set(oldPath);
     }
+
+
 }
