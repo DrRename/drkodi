@@ -2,7 +2,7 @@ package drrename;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
-import lombok.RequiredArgsConstructor;
+import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Slf4j
 @Component
 public class GeneralExceptionHandler {
@@ -26,14 +25,23 @@ public class GeneralExceptionHandler {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(String.format(resourceBundle.getString(ALERT_TITLE)));
             alert.setHeaderText(e.toString());
-            alert.setContentText(Arrays.stream(e.getStackTrace())
+
+            TextArea area = new TextArea(Arrays.stream(e.getStackTrace())
                     .map(StackTraceElement::toString)
                     .collect(Collectors.joining("\n")));
+
+            alert.getDialogPane().setContent(area);
+            area.setWrapText(true);
+            area.setEditable(false);
+            alert.setResizable(true);
+
+
             Platform.runLater(alert::showAndWait);
         }
     }
 
-    public GeneralExceptionHandler() {
+    public GeneralExceptionHandler(ResourceBundle resourceBundle) {
+        this.resourceBundle = resourceBundle;
         Thread.setDefaultUncaughtExceptionHandler(new Handler());
     }
 }

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @FxmlView("/fxml/KodiTools.fxml")
-public class KodiToolsController implements Initializable, ApplicationListener<ApplicationEvent> {
+public class KodiToolsController implements Initializable {
 
     public BorderPane root;
 
@@ -86,15 +87,14 @@ public class KodiToolsController implements Initializable, ApplicationListener<A
         stage.show();
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationEvent event) {
-        if(event instanceof KodiToolsButtonGoEvent){
-            log.debug("Event received: {}", event);
-            startService();
-        } else if(event instanceof KodiToolsButtonCancelEvent){
-            log.debug("Event received: {}", event);
-            cancelService();
-        }
+    @EventListener
+    public void onButtonGoEvent(KodiToolsButtonGoEvent event){
+        startService();
+    }
+
+    @EventListener
+    public void onButtonCancelEvent(KodiToolsButtonCancelEvent event){
+        cancelService();
     }
 
     private void startService() {

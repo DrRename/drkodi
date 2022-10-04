@@ -10,7 +10,7 @@ public interface RenamingStrategy {
 
 	String getIdentifier();
 
-	String getNameNew(Path file) throws IOException, InterruptedException;
+	String getNameNew(Path file);
 
 	boolean isReplacing();
 

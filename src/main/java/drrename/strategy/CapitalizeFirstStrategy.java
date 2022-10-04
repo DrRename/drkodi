@@ -13,9 +13,7 @@ public class CapitalizeFirstStrategy extends RenamingStrategyProto {
     }
 
     @Override
-    public String getNameNew(Path file) throws IOException, InterruptedException {
-        if(Thread.currentThread().isInterrupted())
-            throw new InterruptedException("Cancelled");
+    public String getNameNew(Path file)  {
         return WordUtils.capitalize(file.getFileName().toString(), ' ', '_','-');
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @org.springframework.stereotype.Service
-public class ListFilesService extends Service<List<RenamingEntry>> {
+public class LoadPathsService extends Service<List<RenamingEntry>> {
 
     private Collection<Path> files;
 
