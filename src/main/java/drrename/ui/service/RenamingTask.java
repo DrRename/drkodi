@@ -5,6 +5,7 @@ import drrename.config.AppConfig;
 import drrename.event.FileRenamedEvent;
 import drrename.event.StartingRenameEvent;
 import drrename.model.RenamingEntry;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,8 +35,10 @@ public class RenamingTask extends Task<List<RenamingEntry>> {
 			if (b.willChange()) {
 				Path p = b.rename(strategy);
 				if(!b.getOldPath().equals(p)){
-					applicationEventPublisher.publishEvent(new FileRenamedEvent(event.getUuid(), b));
 					result.add(b);
+					applicationEventPublisher.publishEvent(new FileRenamedEvent(event.getUuid(), b));
+
+
 				}
 			}
 			if (config.isDebug())

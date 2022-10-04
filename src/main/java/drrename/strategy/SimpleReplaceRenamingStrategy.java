@@ -11,10 +11,8 @@ public class SimpleReplaceRenamingStrategy extends RenamingStrategyProto {
 	}
 
 	@Override
-	public String getNameNew(final Path file) throws InterruptedException {
+	public String getNameNew(final Path file) {
 
-		if(Thread.currentThread().isInterrupted())
-			throw new InterruptedException("Cancelled");
 		return file.getFileName().toString().replace(getReplacementStringFrom(), getReplacementStringTo());
 	}
 

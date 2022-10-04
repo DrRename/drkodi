@@ -21,7 +21,7 @@ public class SynchronousUuidEvent implements SynchronousEvent {
 
     @Override
     public String toString() {
-        return "SynchronousUuidEvent{" +
+        return getClass().getSimpleName()+"{" +
                 "uuid=" + uuid +
                 '}';
     }

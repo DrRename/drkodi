@@ -31,6 +31,7 @@ public class ListFilesTask extends Task<List<RenamingEntry>> {
     List<RenamingEntry> getEntries(final Collection<Path> files) {
         List<RenamingEntry> result = new ArrayList<>();
         var event = new StartingListFilesEvent();
+        log.debug("Publishing event {}", event);
         eventPublisher.publishEvent(event);
         for (final Path f : files) {
             if (Thread.interrupted()) {

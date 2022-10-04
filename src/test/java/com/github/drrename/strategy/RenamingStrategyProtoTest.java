@@ -23,7 +23,7 @@ class RenamingStrategyProtoTest {
             }
 
             @Override
-            public String getNameNew(Path file) throws IOException, InterruptedException {
+            public String getNameNew(Path file) {
                 return null;
             }
 
