@@ -1,7 +1,7 @@
 package drrename.filecreator;
 
-import drrename.mainview.GoCancelButtonsComponentController;
-import drrename.mainview.StartDirectoryComponentController;
+import drrename.ui.mainview.GoCancelButtonsComponentController;
+import drrename.ui.mainview.StartDirectoryComponentController;
 import drrename.event.DummyFileCreatorButtonCancelEvent;
 import drrename.event.DummyFileCreatorButtonGoEvent;
 import javafx.event.ActionEvent;
@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -29,7 +30,7 @@ import java.util.ResourceBundle;
 @Slf4j
 @Component
 @FxmlView("/fxml/DummyFileCreator.fxml")
-public class DummyFileCreatorController implements Initializable, ApplicationListener<ApplicationEvent> {
+public class DummyFileCreatorController implements Initializable {
 
     public StartDirectoryComponentController startDirectoryComponentController;
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
@@ -68,13 +69,14 @@ public class DummyFileCreatorController implements Initializable, ApplicationLis
     private void updateInput(Path inputPath) {
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationEvent event) {
-        if(event instanceof DummyFileCreatorButtonGoEvent){
-            handleDummyFileCreatorButtonGo((ActionEvent) event.getSource());
-        } else if(event instanceof DummyFileCreatorButtonCancelEvent){
-            handleDummyFileCreatorButtonGo((ActionEvent) event.getSource());
-        }
+    @EventListener
+    public void onButtonGo(DummyFileCreatorButtonGoEvent event){
+        handleDummyFileCreatorButtonGo(event.getActionEvent());
+    }
+
+    @EventListener
+    public void onButtonCancel(DummyFileCreatorButtonCancelEvent event){
+        handleDummyFileCreatorButtonCancel(event.getActionEvent());
     }
 
     public void handleDummyFileCreatorButtonGo(ActionEvent actionEvent) {

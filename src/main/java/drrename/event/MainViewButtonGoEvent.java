@@ -8,7 +8,4 @@ public class MainViewButtonGoEvent extends JavaFXActionEvent {
         super(actionEvent);
     }
 
-    public ActionEvent getActionEvent() {
-        return ((ActionEvent) getSource());
-    }
 }

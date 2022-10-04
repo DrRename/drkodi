@@ -1,6 +1,6 @@
 package drrename.filecreator;
 
-import drrename.AppConfig;
+import drrename.config.AppConfig;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.Getter;

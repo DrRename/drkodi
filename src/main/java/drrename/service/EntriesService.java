@@ -1,10 +1,8 @@
 package drrename.service;
 
-import drrename.*;
+import drrename.config.AppConfig;
 import drrename.event.*;
 import drrename.model.RenamingEntry;
-import drrename.ui.service.FileTypeService;
-import drrename.ui.service.ListFilesService;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
@@ -41,19 +39,9 @@ public class EntriesService {
 
     static final String RENAMED_TYPES = "mainview.status.renamed.filetypes.text";
 
-    private final ListFilesService listFilesService;
-
-    private final PreviewService previewService;
-
-    private final RenamingService renamingService;
-
-    private final FileTypeService fileTypeService;
-
     private final ResourceBundle resourceBundle;
 
     private final AppConfig appConfig;
-
-    private final Executor executor;
 
     private final ListProperty<RenamingEntry> entriesProperty;
 
@@ -85,21 +73,13 @@ public class EntriesService {
 
     private final StringProperty statusRenamedFileTypes = new SimpleStringProperty();
 
-    private final FileTypeProvider fileTypeProvider;
-
     private final static Predicate<RenamingEntry> isImage = e -> e.getFileType() != null && e.getFileType().contains("image");
 
     private final static Predicate<RenamingEntry> isVideo = e -> e.getFileType() != null && e.getFileType().contains("video");
 
-    public EntriesService(ListFilesService listFilesService, PreviewService previewService, RenamingService renamingService, FileTypeService fileTypeService, ResourceBundle resourceBundle, AppConfig appConfig, Executor executor) {
-        this.listFilesService = listFilesService;
-        this.previewService = previewService;
-        this.renamingService = renamingService;
-        this.fileTypeService = fileTypeService;
+    public EntriesService(ResourceBundle resourceBundle, AppConfig appConfig, Executor executor) {
         this.resourceBundle = resourceBundle;
         this.appConfig = appConfig;
-        this.executor = executor;
-        this.fileTypeProvider = new FileTypeByMimeProvider();
         entriesProperty = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{item.newPathProperty(), item.exceptionProperty(), item.fileTypeProperty(), item.filteredProperty(), item.willChangeProperty()}));
         entriesRenamed = new SimpleListProperty<>(FXCollections.observableArrayList());
         entriesWillRename = new FilteredList<>(entriesProperty, RenamingEntry::willChange);

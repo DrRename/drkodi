@@ -10,7 +10,7 @@
 <?import javafx.geometry.Insets?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="drrename.mainview.ReplacementStringComponentController">
+      fx:controller="drrename.ui.mainview.ReplacementStringComponentController">
         <padding>
             <Insets top="4" right="4" bottom="4" left="4"/>
         </padding>
