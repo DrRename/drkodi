@@ -1,3 +1,22 @@
+/*
+ *     Dr.Rename - A Minimalistic Batch Renamer
+ *
+ *     Copyright (C) 2022
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package drrename.filecreator;
 
 import drrename.config.AppConfig;
@@ -58,13 +77,10 @@ public class FileCreatorService extends Service<Void> {
             sb.append(word);
             if (i < wordCnt - 1) {
                 int numSeparators = random.nextInt(4);
-//                log.debug("Number of separators: {}", numSeparators);
-                for (int j = 0; j < numSeparators; j++) {
-                    sb.append(wordSeparator);
-                }
+                sb.append(String.valueOf(wordSeparator).repeat(numSeparators));
             }
         }
-        sb.append("." + generateRandomFileExtension());
+        sb.append(".").append(generateRandomFileExtension());
         return sb.toString();
     }
 
@@ -76,5 +92,13 @@ public class FileCreatorService extends Service<Void> {
     private String generateRandomFileExtension() {
         return RandomStringUtils.randomAlphabetic(3, 4).toLowerCase();
 
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        this.fileCnt = 0;
+        this.directory = null;
+        this.wordSeparator = null;
     }
 }

@@ -13,9 +13,9 @@
     </padding>
     <center>
         <TextField fx:id="textFieldDirectory"
-                   promptText="Enter/ Copy&amp;Paste start directory">
+                   promptText="%startdirectory.button.text">
             <tooltip>
-                <Tooltip text="Enter/ Copy&amp;Paste start directory"/>
+                <Tooltip text="%startdirectory.button.tooltip"/>
             </tooltip>
         </TextField>
     </center>
