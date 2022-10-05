@@ -36,7 +36,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -205,13 +204,13 @@ public class MainController implements Initializable {
 
         entriesService.getEntriesFiltered().addListener((ListChangeListener<RenamingEntry>) c -> {
             while (c.next()) {
-                if(c.wasRemoved()){
+                if (c.wasRemoved()) {
                     var list = new ArrayList<>(c.getRemoved());
-                    executor.execute(()->removeFromContent(list));
+                    removeFromContent(list);
                 }
                 if (c.wasAdded()) {
                     var list = new ArrayList<>(c.getAddedSubList());
-                    executor.execute(()->addToContent(list));
+                    addToContent(list);
                 }
             }
         });
@@ -249,14 +248,14 @@ public class MainController implements Initializable {
             event.acceptTransferModes(TransferMode.ANY);
         } else if (DragEvent.DRAG_DROPPED.equals(event.getEventType()) && event.getGestureSource() == null && event.getDragboard().hasFiles()) {
 
-            if(event.getDragboard().getFiles().size() == 1 && event.getDragboard().getFiles().iterator().next().isDirectory()){
-               // Only update the input field, this will trigger a loading
-               startDirectoryComponentController.textFieldDirectory.setText(event.getDragboard().getFiles().iterator().next().toString());
+            if (event.getDragboard().getFiles().size() == 1 && event.getDragboard().getFiles().iterator().next().isDirectory()) {
+                // Only update the input field, this will trigger a loading
+                startDirectoryComponentController.textFieldDirectory.setText(event.getDragboard().getFiles().iterator().next().toString());
             } else {
                 Set<Path> vaultPaths = event.getDragboard().getFiles().stream().map(File::toPath).collect(Collectors.toSet());
                 loadedPaths.setAll(vaultPaths);
                 startDirectoryComponentController.textFieldDirectory.setText(null);
-               Platform.runLater(this::updateInputView);
+                Platform.runLater(this::updateInputView);
             }
             event.setDropCompleted(true);
             event.consume();
@@ -293,10 +292,12 @@ public class MainController implements Initializable {
     }
 
     private void registerInputChangeListener() {
-        replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
-        replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
-        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> {if(n != null)loadedPaths.setAll(Path.of(n));
-        Platform.runLater(this::updateInputView);});
+        replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(this::updatePreview);
+        replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updatePreview);
+        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> {
+            if (n != null) loadedPaths.setAll(Path.of(n));
+            updateInputView();
+        });
         ignoreDirectoriesChangeListener = (e, o, n) -> entriesService.setFilterDirectories(n);
         ignoreHiddenFilesChangeListener = (e, o, n) -> entriesService.setFilterHiddenFiles(n);
         showOnlyChangingChangeListener = (e, o, n) -> entriesService.setShowOnlyChainging(n);
@@ -309,7 +310,7 @@ public class MainController implements Initializable {
         comboBoxRenamingStrategy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             textFieldReplacementStringFrom.setDisable(!newValue.isReplacing());
             textFieldReplacementStringTo.setDisable(!newValue.isReplacing());
-            updateOutputView();
+            updatePreview();
         });
         goCancelButtonsComponentController.buttonGo.disableProperty().bind(renamingService.runningProperty().or(previewService.runningProperty()).or(loadPathsService.runningProperty()));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(renamingService.runningProperty().not());
@@ -387,30 +388,30 @@ public class MainController implements Initializable {
     }
 
     private void removeFromContent(final Collection<? extends RenamingEntry> renamingBeans) {
-        if(leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()){
+        if (leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()) {
             return;
         }
         renamingBeans.forEach(this::removeFromContent);
     }
 
     private void addToContent(final RenamingEntry renamingEntry) {
-        Platform.runLater(()->leftContent.getItems().add(renamingEntry.getLeftControl()));
-        Platform.runLater(()->rightContent.getItems().add(renamingEntry.getRightControl()));
+        leftContent.getItems().add(renamingEntry.getLeftControl());
+        rightContent.getItems().add(renamingEntry.getRightControl());
     }
 
     private void removeFromContent(final RenamingEntry renamingEntry) {
-        if(leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()){
+        if (leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()) {
             return;
         }
-        Platform.runLater(() -> {
 
-            if(!leftContent.getItems().remove(renamingEntry.getLeftControl())) {
+
+            if (!leftContent.getItems().remove(renamingEntry.getLeftControl())) {
                 log.warn("Failed to remove {} from left content", renamingEntry.getLeftControl());
             }
-            if(!rightContent.getItems().remove(renamingEntry.getRightControl())) {
+            if (!rightContent.getItems().remove(renamingEntry.getRightControl())) {
                 log.warn("Failed to remove {} from right content", renamingEntry.getRightControl());
             }
-        });
+
     }
 
     public static void initAppMenu(MenuBar menuBar) {
@@ -444,9 +445,8 @@ public class MainController implements Initializable {
         loadPathsService.reset();
         loadPathsService.setFiles(loadedPaths/*.stream().filter(Files::exists).toList()*/);
         loadPathsService.setOnSucceeded((e) -> {
-            initFileTypeService(entriesService.getEntriesFiltered());
-            startService(fileTypeService);
-            updateOutputView();
+            updateFileTypeInfo();
+            updatePreview();
 
         });
         progressBar.progressProperty().bind(loadPathsService.progressProperty());
@@ -463,10 +463,14 @@ public class MainController implements Initializable {
             previewService.setRenamingStrategy(strat);
     }
 
-    private void updateOutputView() {
-        log.debug("Updating output view");
+    private void updatePreview() {
         initPreviewService();
         startService(previewService);
+    }
+
+    private void updateFileTypeInfo() {
+        initFileTypeService(entriesService.getEntriesFiltered());
+        startService(fileTypeService);
     }
 
     private void initFileTypeService(Collection<RenamingEntry> renamingEntries) {
@@ -480,8 +484,6 @@ public class MainController implements Initializable {
     private FileTypeProvider initAndGetFileTypeStrategy() {
         return new FileTypeByMimeProvider();
     }
-
-
 
 
     /**
