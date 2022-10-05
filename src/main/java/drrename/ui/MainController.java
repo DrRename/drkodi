@@ -28,19 +28,15 @@ import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -49,11 +45,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
@@ -98,9 +91,9 @@ public class MainController implements Initializable {
 
     private final EntriesService entriesService;
 
-    public ListView<Control> content1;
+    public ListView<Control> leftContent;
 
-    public ListView<Control> content2;
+    public ListView<Control> rightContent;
 
     public Label statusLabelLoaded;
 
@@ -139,6 +132,8 @@ public class MainController implements Initializable {
     private ChangeListener<? super Boolean> ignoreDirectoriesChangeListener;
 
     private ChangeListener<? super Boolean> ignoreHiddenFilesChangeListener;
+
+    private ChangeListener<? super Boolean> showOnlyChangingChangeListener;
 
     private ChangeListener<? super String> textFieldChangeListener;
 
@@ -183,8 +178,8 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        content1 = fileListComponentController.content1;
-        content2 = fileListComponentController.content2;
+        leftContent = fileListComponentController.content1;
+        rightContent = fileListComponentController.content2;
 
         textFieldReplacementStringTo = replacementStringComponentController.textFieldReplacementStringTo;
         textFieldReplacementStringFrom = replacementStringComponentController.textFieldReplacementStringFrom;
@@ -208,21 +203,27 @@ public class MainController implements Initializable {
         if (config.isDebug())
             applyRandomColors();
 
-        entriesService.getEntries().addListener((ListChangeListener<RenamingEntry>) c -> {
+        entriesService.getEntriesFiltered().addListener((ListChangeListener<RenamingEntry>) c -> {
             while (c.next()) {
+                if(c.wasRemoved()){
+                    var list = new ArrayList<>(c.getRemoved());
+                    executor.execute(()->removeFromContent(list));
+                }
                 if (c.wasAdded()) {
                     var list = new ArrayList<>(c.getAddedSubList());
-                    executor.execute(() -> addToContent(list));
+                    executor.execute(()->addToContent(list));
                 }
             }
         });
 
         /* Make scrolling of both lists symmetrical */
         Platform.runLater(() -> {
-            FXUtil.getListViewScrollBar(content1).valueProperty()
-                    .bindBidirectional(FXUtil.getListViewScrollBar(content2).valueProperty());
+            FXUtil.getListViewScrollBar(leftContent).valueProperty()
+                    .bindBidirectional(FXUtil.getListViewScrollBar(rightContent).valueProperty());
         });
 
+        leftContent.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        rightContent.setEditable(false);
 
 
     }
@@ -234,11 +235,11 @@ public class MainController implements Initializable {
         startDirectoryComponentController.textFieldDirectory.setOnDragDropped(this::handleDragEvent);
         startDirectoryComponentController.textFieldDirectory.setOnDragExited(this::handleDragEvent);
 
-        content1.setOnDragEntered(this::handleDragEvent);
-        content1.setOnDragEntered(this::handleDragEvent);
-        content1.setOnDragOver(this::handleDragEvent);
-        content1.setOnDragDropped(this::handleDragEvent);
-        content1.setOnDragExited(this::handleDragEvent);
+        leftContent.setOnDragEntered(this::handleDragEvent);
+        leftContent.setOnDragEntered(this::handleDragEvent);
+        leftContent.setOnDragOver(this::handleDragEvent);
+        leftContent.setOnDragDropped(this::handleDragEvent);
+        leftContent.setOnDragExited(this::handleDragEvent);
     }
 
     private void handleDragEvent(DragEvent event) {
@@ -295,13 +296,15 @@ public class MainController implements Initializable {
         replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
         textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> {loadedPaths.setAll(Path.of(n));
         Platform.runLater(this::updateInputView);});
-        ignoreDirectoriesChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
-        ignoreHiddenFilesChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
+        ignoreDirectoriesChangeListener = (e, o, n) -> entriesService.setFilterDirectories(n);
+        ignoreHiddenFilesChangeListener = (e, o, n) -> entriesService.setFilterHiddenFiles(n);
+        showOnlyChangingChangeListener = (e, o, n) -> entriesService.setShowOnlyChainging(n);
         textFieldReplacementStringFrom.textProperty().addListener(replaceStringFromChangeListener);
         textFieldReplacementStringTo.textProperty().addListener(replaceStringToChangeListener);
         startDirectoryComponentController.textFieldDirectory.textProperty().addListener(textFieldChangeListener);
         ignoreDirectories.selectedProperty().addListener(ignoreDirectoriesChangeListener);
         ignoreHiddenFiles.selectedProperty().addListener(ignoreHiddenFilesChangeListener);
+        showOnlyChanging.selectedProperty().addListener(showOnlyChangingChangeListener);
         comboBoxRenamingStrategy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             textFieldReplacementStringFrom.setDisable(!newValue.isReplacing());
             textFieldReplacementStringTo.setDisable(!newValue.isReplacing());
@@ -382,11 +385,31 @@ public class MainController implements Initializable {
         renamingBeans.forEach(this::addToContent);
     }
 
+    private void removeFromContent(final Collection<? extends RenamingEntry> renamingBeans) {
+        if(leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()){
+            return;
+        }
+        renamingBeans.forEach(this::removeFromContent);
+    }
+
     private void addToContent(final RenamingEntry renamingEntry) {
-        var left = RenamingBeanControlBuilder.buildLeft(renamingEntry);
-        var right = RenamingBeanControlBuilder.buildRight(renamingEntry);
-        Platform.runLater(() -> content1.getItems().add(left));
-        Platform.runLater(() -> content2.getItems().add(right));
+        Platform.runLater(()->leftContent.getItems().add(renamingEntry.getLeftControl()));
+        Platform.runLater(()->rightContent.getItems().add(renamingEntry.getRightControl()));
+    }
+
+    private void removeFromContent(final RenamingEntry renamingEntry) {
+        if(leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()){
+            return;
+        }
+        Platform.runLater(() -> {
+
+            if(!leftContent.getItems().remove(renamingEntry.getLeftControl())) {
+                log.warn("Failed to remove {} from left content", renamingEntry.getLeftControl());
+            }
+            if(!rightContent.getItems().remove(renamingEntry.getRightControl())) {
+                log.warn("Failed to remove {} from right content", renamingEntry.getRightControl());
+            }
+        });
     }
 
     public static void initAppMenu(MenuBar menuBar) {
@@ -420,13 +443,23 @@ public class MainController implements Initializable {
         loadPathsService.reset();
         loadPathsService.setFiles(loadedPaths/*.stream().filter(Files::exists).toList()*/);
         loadPathsService.setOnSucceeded((e) -> {
-            initFileTypeService(entriesService.getEntries());
+            initFileTypeService(entriesService.getEntriesFiltered());
             startService(fileTypeService);
             updateOutputView();
 
         });
         progressBar.progressProperty().bind(loadPathsService.progressProperty());
 
+    }
+
+    private void initPreviewService() {
+        previewService.cancel();
+        previewService.reset();
+        previewService.setRenamingEntries(entriesService.getEntriesFiltered());
+        progressBar.progressProperty().bind(previewService.progressProperty());
+        var strat = initAndGetStrategy();
+        if (strat != null)
+            previewService.setRenamingStrategy(strat);
     }
 
     private void updateOutputView() {
@@ -447,15 +480,7 @@ public class MainController implements Initializable {
         return new FileTypeByMimeProvider();
     }
 
-    private void initPreviewService() {
-        previewService.cancel();
-        previewService.reset();
-        previewService.setRenamingEntries(entriesService.getEntries());
-        progressBar.progressProperty().bind(previewService.progressProperty());
-        var strat = initAndGetStrategy();
-        if (strat != null)
-            previewService.setRenamingStrategy(strat);
-    }
+
 
 
     /**
@@ -489,9 +514,6 @@ public class MainController implements Initializable {
     }
 
     private void clearView() {
-        entriesService.getEntries().clear();
-        content1.getItems().clear();
-        content2.getItems().clear();
         entriesService.reset();
     }
 
@@ -531,7 +553,7 @@ public class MainController implements Initializable {
             entriesService.reset();
             renamingService.cancel();
             renamingService.reset();
-            renamingService.setEvents(entriesService.getEntries());
+            renamingService.setEvents(entriesService.getEntriesFiltered());
             renamingService.setStrategy(s);
             renamingService.setOnSucceeded(e -> {
 
