@@ -1,3 +1,22 @@
+/*
+ *     Dr.Rename - A Minimalistic Batch Renamer
+ *
+ *     Copyright (C) 2022
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Affero General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package drrename.filecreator;
 
 import drrename.ui.mainview.GoCancelButtonsComponentController;
@@ -33,15 +52,20 @@ import java.util.ResourceBundle;
 public class DummyFileCreatorController implements Initializable {
 
     public StartDirectoryComponentController startDirectoryComponentController;
+
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
+
     public TextField filesCnt;
+
     public TextField wordSeparator;
+
     public ProgressBar progressBar;
+
     public BorderPane root;
+
     private final FileCreatorService fileCreatorService;
+
     private Stage stage;
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -66,9 +90,6 @@ public class DummyFileCreatorController implements Initializable {
         stage.show(); //(3)
     }
 
-    private void updateInput(Path inputPath) {
-    }
-
     @EventListener
     public void onButtonGo(DummyFileCreatorButtonGoEvent event){
         handleDummyFileCreatorButtonGo(event.getActionEvent());
@@ -89,6 +110,7 @@ public class DummyFileCreatorController implements Initializable {
 
     private void startService() {
         log.debug("Starting service {}" ,fileCreatorService);
+        fileCreatorService.cancel();
         fileCreatorService.reset();
         fileCreatorService.setFileCnt((long) filesCnt.getTextFormatter().getValue());
         fileCreatorService.setDirectory(startDirectoryComponentController.getInputPath());
