@@ -22,7 +22,7 @@ public class Styles {
         return "-fx-text-fill: red;";
     }
 
-    static String changingStyle() {
+    public static String changingStyle() {
         // System.err.println("Return filtered style");
         // return "-fx-background-color: linear-gradient(#E4EAA2, #9CD672);";
         return "-fx-background-color: limegreen; -fx-font-weight: bold;";
