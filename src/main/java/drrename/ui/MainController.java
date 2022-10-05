@@ -255,6 +255,7 @@ public class MainController implements Initializable {
             } else {
                 Set<Path> vaultPaths = event.getDragboard().getFiles().stream().map(File::toPath).collect(Collectors.toSet());
                 loadedPaths.setAll(vaultPaths);
+                startDirectoryComponentController.textFieldDirectory.setText(null);
                Platform.runLater(this::updateInputView);
             }
             event.setDropCompleted(true);
@@ -294,7 +295,7 @@ public class MainController implements Initializable {
     private void registerInputChangeListener() {
         replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
         replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updateOutputView);
-        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> {loadedPaths.setAll(Path.of(n));
+        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> {if(n != null)loadedPaths.setAll(Path.of(n));
         Platform.runLater(this::updateInputView);});
         ignoreDirectoriesChangeListener = (e, o, n) -> entriesService.setFilterDirectories(n);
         ignoreHiddenFilesChangeListener = (e, o, n) -> entriesService.setFilterHiddenFiles(n);
