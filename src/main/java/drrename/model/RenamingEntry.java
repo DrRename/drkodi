@@ -1,13 +1,20 @@
 package drrename.model;
 
 import drrename.RenamingStrategy;
+import drrename.ui.Styles;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
 import java.nio.file.*;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
 @Slf4j
 public class RenamingEntry {
@@ -19,6 +26,10 @@ public class RenamingEntry {
     private final BooleanProperty filtered;
     private final StringProperty fileType;
 
+    private final Control leftControl;
+
+    private final Control rightControl;
+
     public RenamingEntry(final Path path) {
 
         this.oldPath = new SimpleObjectProperty<>(Objects.requireNonNull(path));
@@ -28,6 +39,8 @@ public class RenamingEntry {
         this.fileType = new SimpleStringProperty();
         this.filtered = new SimpleBooleanProperty();
         newPath.addListener((v, o, n) -> willChange.set(!getOldPath().getFileName().toString().equals(n)));
+        leftControl = buildLeft();
+        rightControl = buildRight();
     }
 
     public String preview(final RenamingStrategy strategy) {
@@ -62,7 +75,65 @@ public class RenamingEntry {
 
     @Override
     public String toString() {
-        return getOldPath().toString();
+        return getClass().getSimpleName() + "{" + getOldPath().toString() + "}";
+    }
+
+    protected Control buildLeft() {
+
+        final Label tLeft = new Label();
+        tLeft.setPadding(new Insets(2, 2, 2, 2));
+        tLeft.textProperty().bind(buildTextBindingLeft());
+        tLeft.styleProperty().bind(buildStyleBindingLeft());
+
+        return tLeft;
+    }
+
+    protected ObservableValue<String> buildStyleBindingLeft() {
+        return Bindings.createObjectBinding(this::calcStyleLeft);
+    }
+
+    protected ObservableValue<String> buildTextBindingLeft() {
+        return Bindings.createObjectBinding(this::calculateOldPath, oldPathProperty());
+    }
+
+    protected String calculateOldPath() {
+        return getOldPath().getFileName().toString();
+    }
+
+    protected String calcStyleLeft() {
+        final StringBuilder sb = new StringBuilder();
+        if(getOldPath().toFile().isDirectory()){
+            sb.append(Styles.directoryStyle());
+        }
+        if (sb.toString().length() > 0)
+            return sb.toString();
+        return Styles.defaultStyle();
+    }
+
+    protected Control buildRight() {
+
+        final Label tRight = new Label();
+        tRight.setPadding(new Insets(2, 2, 2, 2));
+        tRight.setMaxWidth(Double.POSITIVE_INFINITY);
+        tRight.textProperty().bind(Bindings.createStringBinding(buildTextRight(), exceptionProperty(), newPathProperty()));
+        tRight.styleProperty().bind(
+                Bindings.createObjectBinding(() -> calcStyleRight(), willChangeProperty(), exceptionProperty()));
+        return tRight;
+    }
+
+    protected Callable<String> buildTextRight() {
+            return () -> {
+                if (getException() != null)
+                    return getException().toString();
+                return getNewPath() == null ? null : getNewPath();
+            };
+    }
+
+    protected String calcStyleRight() {
+        if (willChange()) {
+            return Styles.changingStyle();
+        }
+        return Styles.defaultStyle();
     }
 
     // Getter / Setter //
@@ -96,9 +167,12 @@ public class RenamingEntry {
         this.newPath.set(newPath);
     }
 
-    public StringProperty getNewPath() {
+    public String getNewPath() {
+        return newPath.get();
+    }
 
-        return newPath;
+    public Throwable getException() {
+        return exception.get();
     }
 
     public ObjectProperty<Throwable> exceptionProperty() {
@@ -107,11 +181,6 @@ public class RenamingEntry {
 
     public StringProperty newPathProperty() {
         return newPath;
-    }
-
-    public ObjectProperty<Throwable> getException() {
-
-        return exception;
     }
 
     public BooleanProperty willChangeProperty() {
@@ -138,5 +207,11 @@ public class RenamingEntry {
         this.oldPathProperty().set(oldPath);
     }
 
+    public Control getLeftControl() {
+        return leftControl;
+    }
 
+    public Control getRightControl() {
+        return rightControl;
+    }
 }
