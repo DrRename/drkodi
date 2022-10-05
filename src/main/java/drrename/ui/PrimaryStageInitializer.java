@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.ResourceBundle;
@@ -16,7 +17,7 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class PrimaryStageInitializer implements ApplicationListener<StageReadyEvent> {
+public class PrimaryStageInitializer {
 
     private final FxWeaver fxWeaver;
 
@@ -24,10 +25,10 @@ public class PrimaryStageInitializer implements ApplicationListener<StageReadyEv
 
     private final ResourceBundle resourceBundle;
 
-    @Override
+    @EventListener
     public void onApplicationEvent(StageReadyEvent event) {
         Platform.runLater(() -> {
-            Stage stage = event.getStage();
+            Stage stage = event.stage();
             Scene scene = new Scene(fxWeaver.loadView(MainController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
             scene.getStylesheets().add("css/root.css");
             stage.setTitle(uiConfig.getAppTitle());
