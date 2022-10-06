@@ -34,4 +34,11 @@ public class SynchronousUuidEvent implements SynchronousEvent {
     SynchronousUuidEvent(){
         this(UUID.randomUUID());
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+"{" +
+                "uuid=" + uuid +
+                '}';
+    }
 }

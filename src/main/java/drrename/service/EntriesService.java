@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -164,11 +165,6 @@ public class EntriesService {
         return resultPredicate == null ? entriesFilteredDefaultPredicate : resultPredicate;
     }
 
-    public void reset(){
-        getEntries().clear();
-        entriesRenamed.clear();
-    }
-
     private void updateLoadedFileTypesLabel() {
         statusLoadedFileTypes.set(String.format(resourceBundle.getString(LOADED_TYPES), loadedImageEntries.size(), loadedVideosEntries.size()));
     }
@@ -285,5 +281,9 @@ public class EntriesService {
 
     public void setShowOnlyChainging(boolean showOnlyChainging) {
         this.showOnlyChainging.set(showOnlyChainging);
+    }
+
+    public List<RenamingEntry> getEntriesRenamed() {
+        return entriesRenamed;
     }
 }
