@@ -12,7 +12,8 @@ import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
@@ -39,6 +40,7 @@ public class RenamingEntry {
         this.fileType = new SimpleStringProperty();
         this.filtered = new SimpleBooleanProperty();
         newPath.addListener((v, o, n) -> willChange.set(!getOldPath().getFileName().toString().equals(n)));
+        oldPath.addListener((observable, oldValue, newValue) -> willChange.set(!getOldPath().getFileName().toString().equals(getNewPath())));
         leftControl = buildLeft();
         rightControl = buildRight();
     }
@@ -56,10 +58,14 @@ public class RenamingEntry {
     }
 
     public Path rename(final RenamingStrategy strategy) {
-        try{
-        Path newPath = strategy.rename(getOldPath(), null);
-        Platform.runLater(() -> commitRename(newPath));
-        return newPath;
+        if (isFiltered()) {
+            log.warn("Rename called on filtered entry, skipping {}", this);
+            return getOldPath();
+        }
+        try {
+            Path newPath = strategy.rename(getOldPath(), null);
+            Platform.runLater(() -> commitRename(newPath));
+            return newPath;
         } catch (final Exception e) {
             log.debug(e.getLocalizedMessage(), e);
             Platform.runLater(() -> this.exception.set(e));
@@ -69,7 +75,6 @@ public class RenamingEntry {
 
     public void commitRename(Path newPath) {
         setOldPath(newPath);
-        setWillChange(false);
         exceptionProperty().set(null);
     }
 
@@ -102,7 +107,7 @@ public class RenamingEntry {
 
     protected String calcStyleLeft() {
         final StringBuilder sb = new StringBuilder();
-        if(getOldPath().toFile().isDirectory()){
+        if (getOldPath().toFile().isDirectory()) {
             sb.append(Styles.directoryStyle());
         }
         if (sb.toString().length() > 0)
@@ -122,11 +127,11 @@ public class RenamingEntry {
     }
 
     protected Callable<String> buildTextRight() {
-            return () -> {
-                if (getException() != null)
-                    return getException().toString();
-                return getNewPath() == null ? null : getNewPath();
-            };
+        return () -> {
+            if (getException() != null)
+                return getException().toString();
+            return getNewPath() == null ? null : getNewPath();
+        };
     }
 
     protected String calcStyleRight() {
