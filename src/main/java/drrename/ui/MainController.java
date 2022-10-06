@@ -1,18 +1,20 @@
 package drrename.ui;
 
-import drrename.*;
+import drrename.FileTypeByMimeProvider;
+import drrename.FileTypeProvider;
+import drrename.RenamingStrategy;
 import drrename.config.AppConfig;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
+import drrename.model.RenamingEntry;
+import drrename.service.EntriesService;
+import drrename.strategy.*;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.ReplacementStringComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
 import drrename.ui.mainview.controller.FileListComponentController;
-import drrename.model.RenamingEntry;
-import drrename.service.EntriesService;
-import drrename.strategy.*;
 import drrename.ui.service.FileTypeService;
 import drrename.ui.service.LoadPathsService;
 import drrename.ui.service.PreviewService;
@@ -204,14 +206,16 @@ public class MainController implements Initializable {
 
         entriesService.getEntriesFiltered().addListener((ListChangeListener<RenamingEntry>) c -> {
             while (c.next()) {
-                if (c.wasRemoved()) {
-                    var list = new ArrayList<>(c.getRemoved());
-                    removeFromContent(list);
-                }
-                if (c.wasAdded()) {
-                    var list = new ArrayList<>(c.getAddedSubList());
-                    addToContent(list);
-                }
+                executor.execute(() -> {
+                    Collection<RenamingEntry> removeFinal = new LinkedHashSet<>(c.getRemoved());
+                    c.getAddedSubList().forEach(removeFinal::remove);
+                    Collection<RenamingEntry> addFinal = new LinkedHashSet<>(c.getAddedSubList());
+                    c.getRemoved().forEach(addFinal::remove);
+                    Platform.runLater(() -> {
+                        removeFromContent(removeFinal);
+                        addToContent(addFinal);
+                    });
+                });
             }
         });
 
@@ -456,7 +460,8 @@ public class MainController implements Initializable {
     private void initPreviewService() {
         previewService.cancel();
         previewService.reset();
-        previewService.setRenamingEntries(entriesService.getEntriesFiltered());
+        // Set all entries, filter-state might have changed
+        previewService.setRenamingEntries(entriesService.getEntries());
         progressBar.progressProperty().bind(previewService.progressProperty());
         var strat = initAndGetStrategy();
         if (strat != null)
@@ -517,7 +522,7 @@ public class MainController implements Initializable {
     }
 
     private void clearView() {
-        entriesService.reset();
+        entriesService.getEntries().clear();
     }
 
     private void cancelCurrentOperation() {
@@ -553,7 +558,7 @@ public class MainController implements Initializable {
 
         final RenamingStrategy s = initAndGetStrategy();
         if (s != null) {
-            entriesService.reset();
+            entriesService.getEntriesRenamed().clear();
             renamingService.cancel();
             renamingService.reset();
             renamingService.setEvents(entriesService.getEntriesFiltered());
