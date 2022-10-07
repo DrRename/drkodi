@@ -37,12 +37,12 @@
                         </tooltip>
                     </ComboBox>
                 </VBox>
-                <BorderPane fx:id="layer04_1">
+                <BorderPane fx:id="filterAndButtonPane">
                     <padding>
                         <Insets top="4" right="4" bottom="4" left="4"/>
                     </padding>
                     <left>
-                        <VBox HBox.hgrow="ALWAYS" fx:id="layer05_1">
+                        <VBox HBox.hgrow="ALWAYS" fx:id="filterBox">
                             <padding>
                                 <Insets top="4" right="4" bottom="4" left="4"/>
                             </padding>
@@ -68,7 +68,7 @@
                         </VBox>
                     </center>
                     <right>
-                        <BorderPane fx:id="layer04_2">
+                        <BorderPane fx:id="buttonPane">
                             <padding>
                                 <Insets top="4" right="4" bottom="4" left="4"/>
                             </padding>
@@ -77,15 +77,6 @@
                                             source="GoCancelButtonsComponent.fxml"/>
                             </center>
                             <bottom>
-<!--                                <BorderPane fx:id="layer04_3">-->
-<!--                                    <padding>-->
-<!--                                        <Insets top="4" right="4" bottom="4" left="4"/>-->
-<!--                                    </padding>-->
-<!--                                    <center>-->
-<!--                                        <ProgressBar fx:id="progressBar" prefWidth="140"-->
-<!--                                        />-->
-<!--                                    </center>-->
-<!--                                </BorderPane>-->
                             </bottom>
                         </BorderPane>
                     </right>
