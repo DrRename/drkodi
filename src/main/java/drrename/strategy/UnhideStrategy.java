@@ -4,14 +4,20 @@ package drrename.strategy;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Path;
+import java.util.ResourceBundle;
 
 @Slf4j
 public class UnhideStrategy extends RenamingStrategyProto {
 
-	@Override
-	public String getIdentifier() {
+	private static final String IDENTIFIER = "strategy.unhide";
 
-		return "Unhide";
+	public UnhideStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+    }
+
+	@Override
+	protected String getInternalId() {
+		return IDENTIFIER;
 	}
 
 	@Override

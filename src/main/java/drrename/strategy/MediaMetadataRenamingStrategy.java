@@ -1,12 +1,12 @@
 package drrename.strategy;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -22,15 +22,20 @@ public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {
 	private static final Logger logger = LoggerFactory.getLogger(MediaMetadataRenamingStrategy.class);
 	public static final DateTimeFormatter DATE_FORMATTER_WRITE = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
 	public static final List<DateTimeFormatter> DATE_FORMATTERS_READ = new ArrayList<>();
+	private static final String IDENTIFIER = "strategy.metadata.date-to-name";
+
 	static {
 		DATE_FORMATTERS_READ.add(DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss"));
 		DATE_FORMATTERS_READ.add(DateTimeFormatter.ofPattern("EE MMM dd HH:mm:ss XXX yyyy"));
 	}
 
-	@Override
-	public String getIdentifier() {
+    public MediaMetadataRenamingStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+    }
 
-		return "Date From Metadata";
+	@Override
+	protected String getInternalId() {
+		return IDENTIFIER;
 	}
 
 	@Override

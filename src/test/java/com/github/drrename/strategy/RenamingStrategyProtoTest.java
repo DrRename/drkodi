@@ -16,7 +16,7 @@ class RenamingStrategyProtoTest {
 
     @BeforeEach
     void setUp() {
-        strat = new RenamingStrategyProto() {
+        strat = new RenamingStrategyProto(resourceBundle) {
             @Override
             public String getIdentifier() {
                 return null;
