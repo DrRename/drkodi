@@ -354,19 +354,19 @@ public class MainController implements Initializable {
 
     private void setLoadingServiceCallbacks() {
         loadPathsService.setOnFailed(e -> {
-            log.error(e.toString());
+            log.error(e + ", " + renamingService.getException());
         });
     }
 
     private void setPreviewServiceCallbacks() {
         previewService.setOnFailed(e -> {
-            log.error(e.toString());
+            log.error(e + ", " + renamingService.getException());
         });
     }
 
     private void setRenamingServiceCallbacks() {
         renamingService.setOnFailed(e -> {
-            log.error(e.toString());
+            log.error(e + ", " + renamingService.getException());
         });
     }
 
