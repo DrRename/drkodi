@@ -82,7 +82,7 @@ public class MainController implements Initializable {
 
     public HBox goCancelButtonsComponent;
 
-    public BorderPane layer04_2;
+    public BorderPane buttonPane;
 
     public VBox fileListComponent;
 
@@ -155,14 +155,14 @@ public class MainController implements Initializable {
     Node comboboxBox;
 
     @FXML
-    Node layer04_1;
+    Node filterAndButtonPane;
     @FXML
     CheckBox ignoreHiddenFiles;
     @FXML
     CheckBox ignoreDirectories;
 
     @FXML
-    Node layer05_1;
+    Node filterBox;
 
     private final FxWeaver fxWeaver;
 
@@ -371,7 +371,7 @@ public class MainController implements Initializable {
     }
 
     private void applyRandomColors() {
-        Stream.of(layer01, layer02_3, comboboxBox, layer04_1, layer04_2, layer05_1, goCancelButtonsComponent, statusLabelLoaded, statusLabelLoadedFileTypes, statusLabelFilesWillRename, statusLabelFilesWillRename, statusBox).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
+        Stream.of(layer01, layer02_3, comboboxBox, filterAndButtonPane, buttonPane, filterBox, goCancelButtonsComponent, statusLabelLoaded, statusLabelLoadedFileTypes, statusLabelFilesWillRename, statusLabelFilesWillRename, statusBox).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
     }
 
     private String getRandomColorString() {
