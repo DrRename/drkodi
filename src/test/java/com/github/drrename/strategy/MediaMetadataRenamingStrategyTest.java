@@ -1,7 +1,8 @@
 package com.github.drrename.strategy;
 
 import java.io.File;
-
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 import com.github.drrename.AbstractRenamingStrategyTest;
@@ -23,10 +24,12 @@ public class MediaMetadataRenamingStrategyTest extends AbstractRenamingStrategyT
 
 	}
 
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+
 	@Override
 	protected RenamingStrategy getStrategy() {
 
-		return new MediaMetadataRenamingStrategy();
+		return new MediaMetadataRenamingStrategy(bundle);
 	}
 
 	@Override

@@ -7,23 +7,25 @@ import org.apache.tika.Tika;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
 @Slf4j
 public class ExtensionFromMimeStrategy extends RenamingStrategyProto {
 
-	@Override
-	public String getIdentifier() {
+	private static final String IDENTIFIER = "strategy.mime.file-extension";
 
-		return "File Extension From MIME Type";
+	public ExtensionFromMimeStrategy(ResourceBundle resourceBundle) {
+		super(resourceBundle);
+	}
+
+	@Override
+	protected String getInternalId() {
+		return IDENTIFIER;
 	}
 
 	@Override
 	public String getNameNew(final Path file) {
 
-//		if("heic".equalsIgnoreCase(FilenameUtils.getExtension(file.getFileName().toString()))){
-//			// this does not seem to work properly, igore such files
-//			return file.getFileName().toString();
-//		}
 		try {
 			Tika tika = new Tika();
 			String mimeType = tika.detect(file);

@@ -3,13 +3,19 @@ package drrename.strategy;
 import org.apache.commons.text.CaseUtils;
 
 import java.nio.file.Path;
+import java.util.ResourceBundle;
 
 public class SpaceToCamelCaseRenamingStrategy extends RenamingStrategyProto {
 
-	@Override
-	public String getIdentifier() {
+	private static final String IDENTIFIER = "strategy.space-to-camel-case";
 
-		return "Space to Camel Case";
+	public SpaceToCamelCaseRenamingStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+    }
+
+	@Override
+	protected String getInternalId() {
+		return IDENTIFIER;
 	}
 
 	@Override

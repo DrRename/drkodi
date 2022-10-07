@@ -2,6 +2,7 @@ package drrename.ui;
 
 import drrename.FileTypeByMimeProvider;
 import drrename.FileTypeProvider;
+import drrename.RenamingStrategies;
 import drrename.RenamingStrategy;
 import drrename.config.AppConfig;
 import drrename.event.MainViewButtonCancelEvent;
@@ -10,7 +11,6 @@ import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
 import drrename.model.RenamingEntry;
 import drrename.service.EntriesService;
-import drrename.strategy.*;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.ReplacementStringComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
@@ -75,6 +75,8 @@ public class MainController implements Initializable {
     private final FileTypeService fileTypeService;
 
     private final ResourceBundle resourceBundle;
+
+    private final RenamingStrategies renamingStrategies;
 
     private final Executor executor;
 
@@ -284,14 +286,7 @@ public class MainController implements Initializable {
     }
 
     private void initRenamingStrategies() {
-        comboBoxRenamingStrategy.getItems().add(new SimpleReplaceRenamingStrategy());
-        comboBoxRenamingStrategy.getItems().add(new MediaMetadataRenamingStrategy());
-        comboBoxRenamingStrategy.getItems().add(new RegexReplaceRenamingStrategy());
-        comboBoxRenamingStrategy.getItems().add(new ToLowerCaseRenamingStrategy());
-        comboBoxRenamingStrategy.getItems().add(new SpaceToCamelCaseRenamingStrategy());
-        comboBoxRenamingStrategy.getItems().add(new UnhideStrategy());
-        comboBoxRenamingStrategy.getItems().add(new ExtensionFromMimeStrategy());
-        comboBoxRenamingStrategy.getItems().add(new CapitalizeFirstStrategy());
+        renamingStrategies.forEach(e -> comboBoxRenamingStrategy.getItems().add(e));
         comboBoxRenamingStrategy.getSelectionModel().selectFirst();
     }
 
@@ -408,13 +403,12 @@ public class MainController implements Initializable {
             return;
         }
 
-
-            if (!leftContent.getItems().remove(renamingEntry.getLeftControl())) {
-                log.warn("Failed to remove {} from left content", renamingEntry.getLeftControl());
-            }
-            if (!rightContent.getItems().remove(renamingEntry.getRightControl())) {
-                log.warn("Failed to remove {} from right content", renamingEntry.getRightControl());
-            }
+        if (!leftContent.getItems().remove(renamingEntry.getLeftControl())) {
+            log.warn("Failed to remove {} from left content", renamingEntry.getLeftControl());
+        }
+        if (!rightContent.getItems().remove(renamingEntry.getRightControl())) {
+            log.warn("Failed to remove {} from right content", renamingEntry.getRightControl());
+        }
 
     }
 
@@ -474,7 +468,7 @@ public class MainController implements Initializable {
     }
 
     private void updateFileTypeInfo() {
-        initFileTypeService(entriesService.getEntriesFiltered());
+        initFileTypeService(entriesService.getEntries());
         startService(fileTypeService);
     }
 
@@ -564,7 +558,7 @@ public class MainController implements Initializable {
             renamingService.setEvents(entriesService.getEntriesFiltered());
             renamingService.setStrategy(s);
             renamingService.setOnSucceeded(e -> {
-
+                updatePreview();
             });
             progressBar.progressProperty().bind(renamingService.progressProperty());
             renamingService.start();
