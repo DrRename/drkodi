@@ -1,15 +1,21 @@
 package drrename.strategy;
 
-import drrename.strategy.RenamingStrategyProto;
 import org.apache.commons.text.WordUtils;
 
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ResourceBundle;
 
 public class CapitalizeFirstStrategy extends RenamingStrategyProto {
+
+    private static final String IDENTIFIER = "strategy.capitalize-first-letter";
+
+    public CapitalizeFirstStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+    }
+
     @Override
-    public String getIdentifier() {
-        return "Capitalize First Letter";
+    protected String getInternalId() {
+        return IDENTIFIER;
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,8 +19,27 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
 
 	private static final Logger logger = LoggerFactory.getLogger(RenamingStrategyProto.class);
 	private final static Pattern pattern = Pattern.compile(".*_copy(\\d*)$");
+
+	private  final ResourceBundle resourceBundle;
+
 	private String replacementStringFrom = "";
 	private String replacementStringTo = "";
+
+	public RenamingStrategyProto(ResourceBundle resourceBundle) {
+		this.resourceBundle = resourceBundle;
+	}
+
+	protected ResourceBundle getResourceBundle(){
+		return  resourceBundle;
+	}
+
+	@Override
+	public String getIdentifier() {
+
+		return String.format(String.format(getResourceBundle().getString(getInternalId())));
+	}
+
+	protected abstract String getInternalId();
 
 	/**
 	 * Performs the rename. Does not override existing files, but creates

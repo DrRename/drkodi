@@ -108,9 +108,9 @@ public class EntriesService {
         entries = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{item.newPathProperty(), item.exceptionProperty(), item.fileTypeProperty(), item.filteredProperty(), item.willChangeProperty()}));
         entriesFiltered = new SimpleListProperty<>(new FilteredList<>(entries, entriesFilteredDefaultPredicate));
         entriesRenamed = new SimpleListProperty<>(FXCollections.observableArrayList());
-        entriesWillRename = new FilteredList<>(entriesFiltered, RenamingEntry::willChange);
-        loadedImageEntries = new FilteredList<>(entriesFiltered, isImage);
-        loadedVideosEntries = new FilteredList<>(entriesFiltered, isVideo);
+        entriesWillRename = new FilteredList<>(entries, RenamingEntry::willChange);
+        loadedImageEntries = new FilteredList<>(entries, isImage);
+        loadedVideosEntries = new FilteredList<>(entries, isVideo);
         willRenameImageEntries = new FilteredList<>(entriesWillRename, isImage);
         willRenameVideosEntries = new FilteredList<>(entriesWillRename, isVideo);
         renamedImageEntries = new FilteredList<>(entriesRenamed , isImage);
@@ -128,7 +128,7 @@ public class EntriesService {
 
     private void initListeners() {
 
-        entriesFiltered.sizeProperty().addListener((observable, oldValue, newValue) -> statusLoaded.setValue(String.format(resourceBundle.getString(LOADED), newValue)));
+        entries.sizeProperty().addListener((observable, oldValue, newValue) -> statusLoaded.setValue(String.format(resourceBundle.getString(LOADED), newValue)));
 
         entriesWillRename.addListener((ListChangeListener<RenamingEntry>) c -> statusWillRename.setValue(String.format(resourceBundle.getString(WILL_RENAME), c.getList().size())));
 

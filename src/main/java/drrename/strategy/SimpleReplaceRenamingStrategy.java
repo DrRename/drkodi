@@ -1,13 +1,19 @@
 package drrename.strategy;
 
 import java.nio.file.Path;
+import java.util.ResourceBundle;
 
 public class SimpleReplaceRenamingStrategy extends RenamingStrategyProto {
 
-	@Override
-	public String getIdentifier() {
+	private static final String IDENTIFIER = "strategy.simple-replace";
 
-		return "Simple Replace";
+	public SimpleReplaceRenamingStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+    }
+
+	@Override
+	protected String getInternalId() {
+		return IDENTIFIER;
 	}
 
 	@Override

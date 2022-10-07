@@ -46,9 +46,9 @@
                             <padding>
                                 <Insets top="4" right="4" bottom="4" left="4"/>
                             </padding>
-                            <CheckBox fx:id="ignoreHiddenFiles" text="Ignore hidden files" selected="false"/>
-                            <CheckBox fx:id="ignoreDirectories" text="Ignore directories" selected="false"/>
-                            <CheckBox fx:id="showOnlyChanging" text="Show only changing" selected="false"/>
+                            <CheckBox fx:id="ignoreHiddenFiles" text="%filter.ignore-hidden" selected="false"/>
+                            <CheckBox fx:id="ignoreDirectories" text="%filter.directories" selected="false"/>
+                            <CheckBox fx:id="showOnlyChanging" text="%filter.only-changing" selected="false"/>
                         </VBox>
                     </left>
                     <center>

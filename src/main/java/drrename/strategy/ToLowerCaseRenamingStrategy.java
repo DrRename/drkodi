@@ -1,13 +1,19 @@
 package drrename.strategy;
 
 import java.nio.file.Path;
+import java.util.ResourceBundle;
 
 public class ToLowerCaseRenamingStrategy extends RenamingStrategyProto {
 
-	@Override
-	public String getIdentifier() {
+	private static final String IDENTIFIER = "strategy.to-lower-case";
 
-		return "To Lower Case";
+	public ToLowerCaseRenamingStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+    }
+
+	@Override
+	protected String getInternalId() {
+		return IDENTIFIER;
 	}
 
 	@Override
