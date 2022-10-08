@@ -7,7 +7,7 @@ import com.github.ktools1000.io.BackupCreator;
 import org.apache.commons.io.FileUtils;
 
 
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 

@@ -9,25 +9,25 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import com.github.drrename.AbstractRenamingStrategyTest;
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import drrename.strategy.ToLowerCaseRenamingStrategy;
 import org.junit.jupiter.api.Test;
 
 public class ToLowerCaseRenamingStrategyTest extends AbstractRenamingStrategyTest {
 
-
+	ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
 
 	@Override
 	protected RenamingStrategy getStrategy() {
-
-		return new ToLowerCaseRenamingStrategy();
+		return new ToLowerCaseRenamingStrategy(bundle);
 	}
 
 	@Override
 	protected File getTestFile() {
-
 		return testFile01;
 	}
 

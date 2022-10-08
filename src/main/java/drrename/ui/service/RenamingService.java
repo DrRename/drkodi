@@ -1,9 +1,8 @@
 package drrename.ui.service;
 
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import drrename.config.AppConfig;
 import drrename.model.RenamingEntry;
-import drrename.ui.service.RenamingTask;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +22,17 @@ public class RenamingService extends Service<List<RenamingEntry>> {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    private List<RenamingEntry> events;
+    private List<RenamingEntry> renamingEntries;
     private RenamingStrategy strategy;
 
-    public List<RenamingEntry> getEvents() {
+    public List<RenamingEntry> getRenamingEntries() {
 
-        return events;
+        return renamingEntries;
     }
 
-    public void setEvents(final List<RenamingEntry> events) {
+    public void setRenamingEntries(final List<RenamingEntry> renamingEntries) {
 
-        this.events = events;
+        this.renamingEntries = renamingEntries;
     }
 
     public RenamingStrategy getStrategy() {
@@ -49,6 +48,6 @@ public class RenamingService extends Service<List<RenamingEntry>> {
     @Override
     protected Task<List<RenamingEntry>> createTask() {
 
-        return new RenamingTask(events, strategy, appConfig, applicationEventPublisher);
+        return new RenamingTask(renamingEntries, strategy, appConfig, applicationEventPublisher);
     }
 }
