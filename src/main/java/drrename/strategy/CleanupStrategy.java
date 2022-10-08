@@ -1,36 +1,38 @@
 package drrename.strategy;
 
-import lombok.RequiredArgsConstructor;
-
 import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 public class CleanupStrategy extends RenamingStrategyProto {
 
-	private final static String IDENTIFIER = "strategy.cleanup";
+    private final static String name_identifier = "strategy.cleanup.name";
 
-	private final ExtensionFromMimeStrategy extensionFromMimeStrategy;
+    private final static String help_text_identifier = "strategy.cleanup.help";
 
-	public CleanupStrategy(ResourceBundle resourceBundle) {
-		super(resourceBundle);
-		extensionFromMimeStrategy = new ExtensionFromMimeStrategy(resourceBundle);
-	}
+    private final ExtensionFromMimeStrategy extensionFromMimeStrategy;
 
-	@Override
-	protected String getInternalId() {
-		return IDENTIFIER;
-	}
+    public CleanupStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+        extensionFromMimeStrategy = new ExtensionFromMimeStrategy(resourceBundle);
+    }
 
-	@Override
-	public String getNameNew(final Path file) {
+    @Override
+    protected String getNameId() {
+        return name_identifier;
+    }
 
-		return extensionFromMimeStrategy.getNameNew(file).replaceAll("(?i)\\(case conflict\\)", "");
+    @Override
+    protected String getHelpTextId() {
+        return help_text_identifier;
+    }
 
-	}
+    @Override
+    public String getNameNew(final Path file) {
+        return extensionFromMimeStrategy.getNameNew(file).replaceAll("(?i)\\(case conflict\\)", "");
+    }
 
-	@Override
-	public boolean isReplacing() {
-
-		return false;
-	}
+    @Override
+    public boolean isReplacing() {
+        return false;
+    }
 }

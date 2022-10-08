@@ -12,46 +12,52 @@ import java.util.ResourceBundle;
 @Slf4j
 public class ExtensionFromMimeStrategy extends RenamingStrategyProto {
 
-	private static final String IDENTIFIER = "strategy.mime.file-extension";
+    private static final String name_identifier = "strategy.mime.file-extension.name";
 
-	public ExtensionFromMimeStrategy(ResourceBundle resourceBundle) {
-		super(resourceBundle);
-	}
+    private static final String help_identifier = "strategy.mime.file-extension.help";
 
-	@Override
-	protected String getInternalId() {
-		return IDENTIFIER;
-	}
+    public ExtensionFromMimeStrategy(ResourceBundle resourceBundle) {
+        super(resourceBundle);
+    }
 
-	@Override
-	public String getNameNew(final Path file) {
+    @Override
+    protected String getNameId() {
+        return name_identifier;
+    }
 
-		try {
-			Tika tika = new Tika();
-			String mimeType = tika.detect(file);
-			if("image/heic".equalsIgnoreCase(mimeType)){
-				return FilenameUtils.getBaseName(file.getFileName().toString()) + ".heic";
-			}
-			String[] type = MimeTypes.findExtensionsByMimeTypes(mimeType, false);
-			if(type != null && type.length > 0) {
-				if (Arrays.asList(type).contains("jpg")) {
-					return FilenameUtils.getBaseName(file.getFileName().toString()) + ".jpg";
-				}
-				if (Arrays.asList(type).contains("mov")) {
-					return FilenameUtils.getBaseName(file.getFileName().toString()) + ".mov";
-				} else {
-					return FilenameUtils.getBaseName(file.getFileName().toString()) + "." + type[0];
-				}
-			}
-		} catch (Exception e) {
-			log.error(e.getLocalizedMessage(), e);
-		}
-		return file.getFileName().toString();
-	}
+    @Override
+    protected String getHelpTextId() {
+        return help_identifier;
+    }
 
-	@Override
-	public boolean isReplacing() {
+    @Override
+    public String getNameNew(final Path file) {
 
-		return false;
-	}
+        try {
+            Tika tika = new Tika();
+            String mimeType = tika.detect(file);
+            if ("image/heic".equalsIgnoreCase(mimeType)) {
+                return FilenameUtils.getBaseName(file.getFileName().toString()) + ".heic";
+            }
+            String[] type = MimeTypes.findExtensionsByMimeTypes(mimeType, false);
+            if (type != null && type.length > 0) {
+                if (Arrays.asList(type).contains("jpg")) {
+                    return FilenameUtils.getBaseName(file.getFileName().toString()) + ".jpg";
+                }
+                if (Arrays.asList(type).contains("mov")) {
+                    return FilenameUtils.getBaseName(file.getFileName().toString()) + ".mov";
+                } else {
+                    return FilenameUtils.getBaseName(file.getFileName().toString()) + "." + type[0];
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
+        return file.getFileName().toString();
+    }
+
+    @Override
+    public boolean isReplacing() {
+        return false;
+    }
 }
