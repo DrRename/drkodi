@@ -1,6 +1,6 @@
 package drrename.ui.service;
 
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import drrename.event.FilePreviewEvent;
 import drrename.event.StartingPreviewEvent;
 import drrename.model.RenamingEntry;

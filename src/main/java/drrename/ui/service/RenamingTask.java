@@ -1,11 +1,10 @@
 package drrename.ui.service;
 
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import drrename.config.AppConfig;
 import drrename.event.FileRenamedEvent;
 import drrename.event.StartingRenameEvent;
 import drrename.model.RenamingEntry;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

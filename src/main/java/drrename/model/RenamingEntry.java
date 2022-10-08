@@ -1,6 +1,6 @@
 package drrename.model;
 
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import drrename.ui.Styles;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -76,6 +76,8 @@ public class RenamingEntry {
     public void commitRename(Path newPath) {
         setOldPath(newPath);
         exceptionProperty().set(null);
+        // for now set to false to see an immediate effect, preview service should be triggered and should update this any time soon again.
+        setWillChange(false);
     }
 
     @Override
@@ -122,7 +124,7 @@ public class RenamingEntry {
         tRight.setMaxWidth(Double.POSITIVE_INFINITY);
         tRight.textProperty().bind(Bindings.createStringBinding(buildTextRight(), exceptionProperty(), newPathProperty()));
         tRight.styleProperty().bind(
-                Bindings.createObjectBinding(() -> calcStyleRight(), willChangeProperty(), exceptionProperty()));
+                Bindings.createObjectBinding(this::calcStyleRight, willChangeProperty(), exceptionProperty(), newPathProperty()));
         return tRight;
     }
 
