@@ -9,15 +9,22 @@ import java.util.ResourceBundle;
 @Slf4j
 public class UnhideStrategy extends RenamingStrategyProto {
 
-	private static final String IDENTIFIER = "strategy.unhide";
+	private static final String name_identifier = "strategy.unhide.name";
+
+	private static final String help_identifier = "strategy.unhide.help";
 
 	public UnhideStrategy(ResourceBundle resourceBundle) {
         super(resourceBundle);
     }
 
 	@Override
-	protected String getInternalId() {
-		return IDENTIFIER;
+	protected String getNameId() {
+		return name_identifier;
+	}
+
+	@Override
+	protected String getHelpTextId() {
+		return help_identifier;
 	}
 
 	@Override

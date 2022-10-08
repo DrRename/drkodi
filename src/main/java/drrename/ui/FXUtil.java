@@ -3,6 +3,7 @@ package drrename.ui;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollBar;
 
 public class FXUtil {
@@ -18,5 +19,12 @@ public class FXUtil {
             }
         }
         return scrollbar;
+    }
+
+    public static void initAppMenu(MenuBar menuBar) {
+        final String os = System.getProperty("os.name");
+        if (os != null && os.startsWith("Mac")) {
+            menuBar.useSystemMenuBarProperty().set(true);
+        }
     }
 }

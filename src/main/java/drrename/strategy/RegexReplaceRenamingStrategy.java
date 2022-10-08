@@ -5,38 +5,42 @@ import java.util.ResourceBundle;
 import java.util.regex.PatternSyntaxException;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Slf4j
 public class RegexReplaceRenamingStrategy extends RenamingStrategyProto {
 
-	private static final String IDENTIFIER = "strategy.regex-replace";
+    private static final String name_identifier = "strategy.regex-replace.name";
 
-	public RegexReplaceRenamingStrategy(ResourceBundle resourceBundle) {
+    private static final String help_identifier = "strategy.regex-replace.help";
+
+    public RegexReplaceRenamingStrategy(ResourceBundle resourceBundle) {
         super(resourceBundle);
     }
 
-	@Override
-	protected String getInternalId() {
-		return IDENTIFIER;
-	}
+    @Override
+    protected String getNameId() {
+        return name_identifier;
+    }
 
-	@Override
-	public String getNameNew(final Path file)  {
+    @Override
+    protected String getHelpTextId() {
+        return help_identifier;
+    }
 
-		try {
-			return file.getFileName().toString().replaceAll(getReplacementStringFrom(),getReplacementStringTo());
-		} catch(final PatternSyntaxException e) {
+    @Override
+    public String getNameNew(final Path file) {
 
-				log.debug(e.getLocalizedMessage());
-		}
-		return file.getFileName().toString();
-	}
+        try {
+            return file.getFileName().toString().replaceAll(getReplacementStringFrom(), getReplacementStringTo());
+        } catch (final PatternSyntaxException e) {
 
-	@Override
-	public boolean isReplacing() {
+            log.debug(e.getLocalizedMessage());
+        }
+        return file.getFileName().toString();
+    }
 
-		return true;
-	}
+    @Override
+    public boolean isReplacing() {
+        return true;
+    }
 }

@@ -7,15 +7,22 @@ import java.util.ResourceBundle;
 
 public class SpaceToCamelCaseRenamingStrategy extends RenamingStrategyProto {
 
-	private static final String IDENTIFIER = "strategy.space-to-camel-case";
+	private static final String name_identifier = "strategy.space-to-camel-case.name";
+
+	private static final String help_identifier = "strategy.space-to-camel-case.help";
 
 	public SpaceToCamelCaseRenamingStrategy(ResourceBundle resourceBundle) {
         super(resourceBundle);
     }
 
 	@Override
-	protected String getInternalId() {
-		return IDENTIFIER;
+	protected String getNameId() {
+		return name_identifier;
+	}
+
+	@Override
+	protected String getHelpTextId() {
+		return help_identifier;
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 
 import com.github.drrename.AbstractRenamingStrategyTest;
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import drrename.strategy.MediaMetadataRenamingStrategy;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

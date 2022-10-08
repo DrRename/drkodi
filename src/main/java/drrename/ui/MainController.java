@@ -3,7 +3,7 @@ package drrename.ui;
 import drrename.FileTypeByMimeProvider;
 import drrename.FileTypeProvider;
 import drrename.RenamingStrategies;
-import drrename.RenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import drrename.config.AppConfig;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
@@ -127,6 +127,7 @@ public class MainController implements Initializable {
     public TextField textFieldReplacementStringTo;
 
     public CheckBox showOnlyChanging;
+    public Label selectedStrategyLabel;
 
     private ChangeListener<? super String> replaceStringFromChangeListener;
 
@@ -187,7 +188,7 @@ public class MainController implements Initializable {
         textFieldReplacementStringTo = replacementStringComponentController.textFieldReplacementStringTo;
         textFieldReplacementStringFrom = replacementStringComponentController.textFieldReplacementStringFrom;
 
-        initAppMenu(menuBar);
+        FXUtil.initAppMenu(menuBar);
 
         initRenamingStrategies();
 
@@ -287,6 +288,13 @@ public class MainController implements Initializable {
 
     private void initRenamingStrategies() {
         renamingStrategies.forEach(e -> comboBoxRenamingStrategy.getItems().add(e));
+        selectedStrategyLabel.setLabelFor(comboBoxRenamingStrategy);
+        comboBoxRenamingStrategy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue == null)
+                selectedStrategyLabel.setText(null);
+            else
+            selectedStrategyLabel.setText(newValue.getHelpText());
+        });
         comboBoxRenamingStrategy.getSelectionModel().selectFirst();
     }
 
@@ -374,12 +382,8 @@ public class MainController implements Initializable {
         Stream.of(layer01, layer02_3, comboboxBox, filterAndButtonPane, buttonPane, filterBox, goCancelButtonsComponent, statusLabelLoaded, statusLabelLoadedFileTypes, statusLabelFilesWillRename, statusLabelFilesWillRename, statusBox).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
     }
 
-    private String getRandomColorString() {
+    public static String getRandomColorString() {
         return String.format("#%06x", new Random().nextInt(256 * 256 * 256));
-    }
-
-    public static List<Path> filesToPathList(Collection<File> files) {
-        return files.stream().map(File::toPath).collect(Collectors.toList());
     }
 
     private void addToContent(final Collection<? extends RenamingEntry> renamingBeans) {
@@ -412,22 +416,14 @@ public class MainController implements Initializable {
 
     }
 
-    public static void initAppMenu(MenuBar menuBar) {
-        final String os = System.getProperty("os.name");
-        if (os != null && os.startsWith("Mac")) {
-            menuBar.useSystemMenuBarProperty().set(true);
-        }
-    }
-
     public void handleMenuItemDummyFileCreator(ActionEvent actionEvent) {
-
         DummyFileCreatorController controller = fxWeaver.loadController(DummyFileCreatorController.class, resourceBundle);
         controller.show();
 
     }
 
     public void handleMenuItemKodiTools(ActionEvent actionEvent) {
-        KodiToolsController controller = fxWeaver.loadController(KodiToolsController.class);
+        KodiToolsController controller = fxWeaver.loadController(KodiToolsController.class, resourceBundle);
         controller.show();
     }
 
@@ -441,7 +437,7 @@ public class MainController implements Initializable {
     private void initLoadService() {
         loadPathsService.cancel();
         loadPathsService.reset();
-        loadPathsService.setFiles(loadedPaths/*.stream().filter(Files::exists).toList()*/);
+        loadPathsService.setFiles(new ArrayList<>(loadedPaths));
         loadPathsService.setOnSucceeded((e) -> {
             updateFileTypeInfo();
             updatePreview();
@@ -455,7 +451,7 @@ public class MainController implements Initializable {
         previewService.cancel();
         previewService.reset();
         // Set all entries, filter-state might have changed
-        previewService.setRenamingEntries(entriesService.getEntries());
+        previewService.setRenamingEntries(new ArrayList<>(entriesService.getEntries()));
         progressBar.progressProperty().bind(previewService.progressProperty());
         var strat = initAndGetStrategy();
         if (strat != null)
@@ -517,6 +513,7 @@ public class MainController implements Initializable {
 
     private void clearView() {
         entriesService.getEntries().clear();
+        entriesService.getEntriesRenamed().clear();
     }
 
     private void cancelCurrentOperation() {
@@ -555,7 +552,7 @@ public class MainController implements Initializable {
             entriesService.getEntriesRenamed().clear();
             renamingService.cancel();
             renamingService.reset();
-            renamingService.setEvents(entriesService.getEntriesFiltered());
+            renamingService.setRenamingEntries(new ArrayList<>(entriesService.getEntriesFiltered()));
             renamingService.setStrategy(s);
             renamingService.setOnSucceeded(e -> {
                 updatePreview();

@@ -1,7 +1,6 @@
 package drrename.ui.service;
 
-import drrename.RenamingStrategy;
-import drrename.ui.service.FilesService;
+import drrename.strategy.RenamingStrategy;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 

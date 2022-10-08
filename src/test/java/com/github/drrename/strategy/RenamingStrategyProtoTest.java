@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,11 +16,13 @@ class RenamingStrategyProtoTest {
 
     private RenamingStrategyProto strat;
 
+    ResourceBundle bundle = ResourceBundle.getBundle("i18n/messages", Locale.ENGLISH);
+
     @BeforeEach
     void setUp() {
-        strat = new RenamingStrategyProto(resourceBundle) {
+        strat = new RenamingStrategyProto(bundle) {
             @Override
-            public String getIdentifier() {
+            public String getName() {
                 return null;
             }
 
@@ -27,6 +31,14 @@ class RenamingStrategyProtoTest {
                 return null;
             }
 
+            @Override
+            protected String getNameId() {
+                return null;
+            }
+            @Override
+            protected String getHelpTextId() {
+                return null;
+            }
             @Override
             public boolean isReplacing() {
                 return false;
