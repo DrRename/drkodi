@@ -1,11 +1,12 @@
 package drrename.kodi;
 
+import drrename.ui.FilterableTreeItem;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
+import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -16,8 +17,6 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -40,18 +39,24 @@ public class KodiToolsController implements Initializable {
     public ProgressBar progressBar;
 
     public TreeView<Object> warningsTree;
+
     public Button buttonExpandAll;
+
     public Button buttonCollapseAll;
+
     public CheckBox checkBoxIgnoreMissingNfo;
 
+    public CheckBox checkBoxHideEmpty;
+
     private Stage stage;
+
     public StartDirectoryComponentController startDirectoryComponentController;
+
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
+
     private final KodiService service;
 
-    private TreeItem<Object> treeRoot;
-
-    private FilteredList<TreeItem<Object>> filteredList;
+    private FilterableTreeItem<Object> treeRoot;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,23 +68,50 @@ public class KodiToolsController implements Initializable {
         goCancelButtonsComponentController.setButtonCancelActionEventFactory( KodiToolsButtonCancelEvent::new);
         goCancelButtonsComponentController.setButtonGoActionEventFactory(KodiToolsButtonGoEvent::new);
         progressBar.visibleProperty().bind(service.runningProperty());
-        treeRoot = new TreeItem<>();
+        treeRoot = new FilterableTreeItem<>("Movies"){
+            @Override
+            protected Observable[] getCallback() {
+                return super.getCallback();
+            }
+        };
         warningsTree.setRoot(treeRoot);
         buttonExpandAll.setDisable(true);
+        buttonCollapseAll.setDisable(true);
         treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<Object>>) e -> {
                 buttonExpandAll.setDisable(e.getList().isEmpty());
                 buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
-        this.filteredList = new FilteredList<>(FXCollections.observableArrayList());
-        filteredList.predicateProperty().bind(Bindings.createObjectBinding(this::func, checkBoxIgnoreMissingNfo.selectedProperty()));
+        checkBoxHideEmpty.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                updateTreeRootPredicate();
+            }
+        });
+
     }
 
-    private Predicate<? super Object> func() {
-        return e -> {
-            if(e instanceof KodiCheckResultElementNfoFileName){
-                return !KodiCheckResultElementNfoFileName.NfoFileNameType.NO_FILE.equals(((KodiCheckResultElementNfoFileName) e).getSuggestion());
+    private void updateTreeRootPredicate() {
+        treeRoot.setPredicate(buildHideEmptyPredicate());
+
+    }
+
+    private static Predicate<Object> buildHideEmptyPredicate(){
+        return new Predicate<Object>() {
+            @Override
+            public boolean test(Object item) {
+                if(item instanceof TreeItem<?>){
+                    var children = ((TreeItem<?>) item).getChildren();
+                } else if(item instanceof KodiCheckResultElementSubDirs){
+                    var subdirs = ((KodiCheckResultElementSubDirs) item).getSuggestion().getSubdirs();
+                    if(subdirs.isEmpty()){
+                        return false;
+                    } else {
+                        var wait = 0;
+                    }
+
+                }
+                return true;
             }
-            return true;
         };
     }
 
@@ -105,46 +137,43 @@ public class KodiToolsController implements Initializable {
         service.setOnSucceeded(this::handleResult);
         service.setOnFailed(this::handleFailed);
         service.setOnCancelled(this::handleResult);
-        treeRoot.getChildren().clear();
+        treeRoot.getSourceChildren().clear();
         service.start();
     }
 
     private void handleResult(WorkerStateEvent workerStateEvent) {
         if(service.getValue() != null){
             log.info("Result: {}", service.getValue().getElements().values().stream().map(Object::toString).collect(Collectors.joining("\n")));
-//            this.filteredList.addAll(transform(service.getValue()));
-            this.filteredList = new FilteredList<>(FXCollections.observableList(transform(service.getValue())));
-            filteredList.predicateProperty().bind(Bindings.createObjectBinding(this::func, checkBoxIgnoreMissingNfo.selectedProperty()));
-            treeRoot.getChildren().addAll(filteredList);
+            treeRoot.getSourceChildren().addAll(transform(service.getValue()));
         }
       else {
           log.info("Got no result. Cancelled?");
         }
     }
 
-    private List<TreeItem<Object>> transform(KodiCheckResult taskResult) {
-        List<TreeItem<Object>> result2 = new ArrayList<>();
+    private List<FilterableTreeItem<Object>> transform(KodiCheckResult taskResult) {
+        List<FilterableTreeItem<Object>> result2 = new ArrayList<>();
         for(Map.Entry<KodiCheckResult.Type, Map<String, KodiCheckResultElement>> e : taskResult.getElements().entrySet()){
-            TreeItem<Object> root = new TreeItem<>(e.getKey());
-            root.getChildren().addAll(transformChildren(e.getValue()));
+            FilterableTreeItem<Object> root = new FilterableTreeItem<>(e.getKey());
+            root.getSourceChildren().addAll(transformChildren(e.getValue()));
             result2.add(root);
         }
         return result2;
     }
 
-    private List<TreeItem<Object>> transformChildren(Map<String, KodiCheckResultElement> value) {
-        List<TreeItem<Object>> result = new ArrayList<>();
+    private List<FilterableTreeItem<Object>> transformChildren(Map<String, KodiCheckResultElement> value) {
+        List<FilterableTreeItem<Object>> result = new ArrayList<>();
         for(Map.Entry<String, KodiCheckResultElement> e : value.entrySet()){
-            TreeItem<Object> root = new TreeItem<>(e.getKey());
-            root.getChildren().addAll(transformChildren2(e.getValue()));
+            FilterableTreeItem<Object> root = new FilterableTreeItem<>(e.getKey());
+            root.getSourceChildren().addAll(transformChildren2(e.getValue()));
             result.add(root);
         }
         return result;
     }
 
-    private List<TreeItem<Object>> transformChildren2(KodiCheckResultElement value) {
-        List<TreeItem<Object>> result = new ArrayList<>();
-        result.add(new TreeItem<>(value.getSuggestion()));
+    private List<FilterableTreeItem<Object>> transformChildren2(KodiCheckResultElement value) {
+        List<FilterableTreeItem<Object>> result = new ArrayList<>();
+        result.add(new FilterableTreeItem<>(value.getSuggestion()));
         return result;
     }
 

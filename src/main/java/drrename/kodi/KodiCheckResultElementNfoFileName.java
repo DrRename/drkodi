@@ -26,19 +26,19 @@ public class KodiCheckResultElementNfoFileName extends KodiCheckResultElement<Ko
 
     static NfoFileNameType parse2(Path path) throws IOException {
         String movieName = path.getFileName().toString();
-        NfoFileNameType result = null;
+        NfoFileNameType result = NfoFileNameType.NO_FILE;
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
             for (Path child : ds) {
                 String extension = FilenameUtils.getExtension(child.getFileName().toString());
                 if (Files.isRegularFile(child) && "nfo".equalsIgnoreCase(extension)) {
-                    if(result != null){
+                    if(result != NfoFileNameType.NO_FILE){
                         return NfoFileNameType.MULTIPLE_FILES;
                     }
                     result = handleFile(movieName, child);
                 }
             }
         }
-        return NfoFileNameType.NO_FILE;
+       return result;
     }
 
     private static NfoFileNameType handleFile(String movieName, Path child) {
