@@ -82,10 +82,11 @@
                                 <Insets top="4" right="4" bottom="4" left="4"/>
                             </padding>
                             <center>
-                                <fx:include fx:id="goCancelButtonsComponent"
-                                            source="GoCancelButtonsComponent.fxml"/>
+
                             </center>
                             <bottom>
+                                <fx:include fx:id="goCancelButtonsComponent"
+                                            source="GoCancelButtonsComponent.fxml"/>
                             </bottom>
                         </BorderPane>
                     </right>
