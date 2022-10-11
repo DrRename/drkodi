@@ -39,7 +39,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DrRename_drrename
-    - name: Build with Maven
+    - name: Jacoco Report
       run: mvn -B test jacoco:report --file pom.xml
-    - name: Coveralls Coverage Report
+    - name: Coveralls Report
       run: mvn -B test coveralls:report --define repoToken=${{ secrets.COVERALL_REPO_SECRET }} --file pom.xml
