@@ -47,6 +47,7 @@
                         </tooltip>
                     </Button>
                         <CheckBox fx:id="checkBoxIgnoreMissingNfo" text="Ignore Missing NFO file"/>
+                        <CheckBox fx:id="checkBoxHideEmpty" text="Hide empty"/>
                 </HBox>
                 </center>
                 </BorderPane>
