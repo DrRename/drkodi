@@ -28,41 +28,49 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.TreeItem;
+import javafx.util.Callback;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.function.Predicate;
 
 public class FilterableTreeItem<T> extends TreeItem<T> {
-    private final ObservableList<TreeItem<T>> sourceChildren;
+    protected final ObservableList<TreeItem<T>> sourceChildren;
 
     // Do not convert this to a local variable. Thinks will break.
-    private final FilteredList<TreeItem<T>> filteredChildren;
-    private final ObjectProperty<Predicate<T>> predicate = new SimpleObjectProperty<>();
+    protected final FilteredList<TreeItem<T>> filteredChildren;
+    protected final ObjectProperty<Predicate<T>> predicate = new SimpleObjectProperty<>();
 
     public FilterableTreeItem(T value) {
         super(value);
 
-         sourceChildren = FXCollections.observableArrayList(item -> getCallback());
-         filteredChildren = new FilteredList<>(sourceChildren);
+        sourceChildren = FXCollections.observableArrayList(item -> getExtractorCallback());
+        filteredChildren = new FilteredList<>(sourceChildren);
 
         filteredChildren.predicateProperty().bind(Bindings.createObjectBinding(this::buildFilterableListPredicate, predicate));
 
         filteredChildren.addListener((ListChangeListener<TreeItem<T>>) c -> {
             while (c.next()) {
-                if(c.wasRemoved()) {
-                    getChildren().removeAll(c.getRemoved());
-                }
-                if(c.wasAdded()) {
-                    getChildren().addAll(c.getAddedSubList());
-                }
+                Collection<TreeItem<T>> removeFinal = new LinkedHashSet<>(c.getRemoved());
+                c.getAddedSubList().forEach(removeFinal::remove);
+                Collection<TreeItem<T>> addFinal = new LinkedHashSet<>(c.getAddedSubList());
+                c.getRemoved().forEach(addFinal::remove);
+                getChildren().removeAll(removeFinal);
+                getChildren().addAll(addFinal);
             }
         });
     }
 
-    protected Observable[] getCallback() {
+    /**
+     * Override to add callbacks to the {@link #sourceChildren} collection.
+     * See {@link FXCollections#observableArrayList(Callback)}
+     * @return callbacks that are passed to the observable source list
+     */
+    protected Observable[] getExtractorCallback() {
         return new Observable[]{};
     }
 
-    private Predicate<? super TreeItem<T>> buildFilterableListPredicate() {
+    protected Predicate<? super TreeItem<T>> buildFilterableListPredicate() {
         return child -> {
             if (child instanceof FilterableTreeItem) {
                 ((FilterableTreeItem<T>) child).predicateProperty().set(predicate.get());
@@ -73,6 +81,8 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
             return predicate.get().test(child.getValue());
         };
     }
+
+    // Getter / Setter //
 
     public ObservableList<TreeItem<T>> getSourceChildren() {
         return sourceChildren;
