@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
-class KodiTask extends Task<KodiCheckResult> {
+class KodiTask extends Task<List<Path>> {
     private Path directory;
 
     public KodiTask(Path directory) {
@@ -26,8 +28,8 @@ class KodiTask extends Task<KodiCheckResult> {
     }
 
     @Override
-    protected KodiCheckResult call() throws Exception {
-        KodiCheckResult result = new KodiCheckResult();
+    protected List<Path> call() throws Exception {
+        List<Path> result = new ArrayList<>();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
             for (Path path : ds) {
                 if (Thread.interrupted()) {
@@ -40,12 +42,19 @@ class KodiTask extends Task<KodiCheckResult> {
                         log.info("Ignoring {}", path);
                         continue;
                     }
-                    result.addResult(KodiCheckResultElementSubDirs.parse(path));
-                    result.addResult(KodiCheckResultElementNfoFileName.parse(path));
-                    result.addResult(KodiCheckResultElementNfoContent.parse(path));
+                    result.add(path);
                 }
             }
         }
         return result;
     }
+
+    public Path getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(Path directory) {
+        this.directory = directory;
+    }
+
 }

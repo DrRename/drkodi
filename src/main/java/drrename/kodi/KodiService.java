@@ -8,20 +8,21 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.*;
+import java.nio.file.Path;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
 @Getter
 @Setter
 @Component
-public class KodiService extends Service<KodiCheckResult> {
+public class KodiService extends Service<List<Path>> {
 
     private Path directory;
 
     @Override
-    protected Task<KodiCheckResult> createTask() {
-        return new KodiTask( directory);
+    protected Task<List<Path>> createTask() {
+        return new KodiTask(directory);
     }
 
 }

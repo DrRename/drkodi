@@ -1,18 +1,20 @@
 package drrename.kodi;
 
-import drrename.ui.FilterableTreeItem;
+import drrename.RenameUtil;
+import drrename.ui.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +22,16 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,21 +39,23 @@ import java.util.stream.Collectors;
 @FxmlView("/fxml/KodiTools.fxml")
 public class KodiToolsController implements Initializable {
 
+    public static final int imageStageXOffset = 600;
+
     public BorderPane root;
 
     public ProgressBar progressBar;
 
-    public TreeView<Object> warningsTree;
+    public TreeView<KodiTreeItemContent> treeView;
 
     public Button buttonExpandAll;
 
     public Button buttonCollapseAll;
 
-    public CheckBox checkBoxIgnoreMissingNfo;
-
     public CheckBox checkBoxHideEmpty;
 
-    private Stage stage;
+    private Stage mainStage;
+
+    Stage imageStage;
 
     public StartDirectoryComponentController startDirectoryComponentController;
 
@@ -56,71 +63,141 @@ public class KodiToolsController implements Initializable {
 
     private final KodiService service;
 
-    private FilterableTreeItem<Object> treeRoot;
+    private final Executor executor;
+
+    private KodiTreeRootItem treeRoot;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("Kodi Tools");
+        mainStage = new Stage();
+        imageStage = new Stage();
+        mainStage.setScene(new Scene(root));
+        mainStage.setTitle("Kodi Tools");
         goCancelButtonsComponentController.buttonGo.disableProperty().bind(service.runningProperty().or(startDirectoryComponentController.readyProperty().not()));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(service.runningProperty().not());
-        goCancelButtonsComponentController.setButtonCancelActionEventFactory( KodiToolsButtonCancelEvent::new);
+        goCancelButtonsComponentController.setButtonCancelActionEventFactory(KodiToolsButtonCancelEvent::new);
         goCancelButtonsComponentController.setButtonGoActionEventFactory(KodiToolsButtonGoEvent::new);
         progressBar.visibleProperty().bind(service.runningProperty());
-        treeRoot = new FilterableTreeItem<>("Movies"){
-            @Override
-            protected Observable[] getCallback() {
-                return super.getCallback();
-            }
-        };
-        warningsTree.setRoot(treeRoot);
+
+        treeRoot = new KodiTreeRootItem();
+        treeView.setRoot(treeRoot);
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
-        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<Object>>) e -> {
-                buttonExpandAll.setDisable(e.getList().isEmpty());
-                buttonCollapseAll.setDisable(e.getList().isEmpty());
+        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemContent>>) e -> {
+            buttonExpandAll.setDisable(e.getList().isEmpty());
+            buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
-        checkBoxHideEmpty.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                updateTreeRootPredicate();
+        checkBoxHideEmpty.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate(newValue));
+        startDirectoryComponentController.inputPathProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                onButtonGoEvent(null);
             }
         });
+        treeView.setCellFactory(tv -> new TreeCell<>() {
 
-    }
-
-    private void updateTreeRootPredicate() {
-        treeRoot.setPredicate(buildHideEmptyPredicate());
-
-    }
-
-    private static Predicate<Object> buildHideEmptyPredicate(){
-        return new Predicate<Object>() {
             @Override
-            public boolean test(Object item) {
-                if(item instanceof TreeItem<?>){
-                    var children = ((TreeItem<?>) item).getChildren();
-                } else if(item instanceof KodiCheckResultElementSubDirs){
-                    var subdirs = ((KodiCheckResultElementSubDirs) item).getSuggestion().getSubdirs();
-                    if(subdirs.isEmpty()){
-                        return false;
+            protected void updateItem(KodiTreeItemContent item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null) {
+                    setText(null);
+                    setStyle(null);
+                } else {
+                    setText(item.toString());
+                    List<String> styles = new ArrayList<>();
+                    if (item.hasWarning()) {
+                        styles.add("-fx-font-weight: bold;");
+                        if (item instanceof KodiLevel1TreeItemContent) {
+                            styles.add("-fx-background-color: wheat;");
+                        } else if (item instanceof KodiLevel2TreeItemContent) {
+                            styles.add("-fx-background-color: wheat;");
+                        } else {
+                            styles.add("-fx-background-color: wheat;");
+                        }
+                        var joinedStylesString = String.join(" ", styles);
+                        setStyle(joinedStylesString);
                     } else {
-                        var wait = 0;
+                        setStyle(null);
                     }
-
                 }
-                return true;
             }
+        });
+
+        treeView.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<Integer>) c -> {
+            imageStage.close();
+            while (c.next()) {
+                if (c.getAddedSubList().isEmpty()) {
+                    continue;
+                }
+                var hans = treeView.getTreeItem(c.getAddedSubList().get(0)).getValue();
+                log.debug("Selection changed: {}", hans);
+                if (hans instanceof KodiLevel3TreeItemContent peter) {
+                    log.debug("Handling {}", hans);
+                    if (peter.getCheckResult() instanceof NfoFileContentCheckResult) {
+                        Path nfoFile = ((NfoFileContentCheckResult) peter.getCheckResult()).getNfoFile();
+                        executor.execute(() -> showImage(nfoFile));
+                    } else if (peter.getCheckResult() instanceof NfoFileCheckResult) {
+                        if (!((NfoFileCheckResult) peter.getCheckResult()).getNfoFiles().isEmpty()) {
+                            Path nfoFile = ((NfoFileCheckResult) peter.getCheckResult()).getNfoFiles().get(0);
+                            executor.execute(() -> showImage(nfoFile));
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void showImage(Path nfoFile) {
+        if (nfoFile != null && Files.exists(nfoFile) && Files.isReadable(nfoFile)) {
+            try {
+                Path imagePath = RenameUtil.getImagePathFromNfo(nfoFile);
+                if (imagePath != null && Files.exists(imagePath) && Files.isReadable(imagePath)) {
+                    log.debug("Taking a look at {}", imagePath);
+                    Image image = new Image(imagePath.toFile().toURI().toString(), false);
+                    image.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null)
+                            log.error(newValue.getLocalizedMessage(), newValue);
+                    });
+                    ImageView imageView = new ImageView();
+                    imageView.setImage(image);
+                    imageView.setPreserveRatio(true);
+                    Platform.runLater(() -> showImageStage(imageView, imagePath.toString()));
+                }
+            } catch (FileNotFoundException e) {
+                log.debug("Ignoring {}", e.getLocalizedMessage());
+            } catch (IOException e) {
+                log.error(e.getLocalizedMessage(), e);
+            }
+        } else {
+            log.debug("Cannot access {}", nfoFile);
+        }
+    }
+
+
+    private void showImageStage(ImageView imageView, String title) {
+        imageStage.setScene(new Scene(new VBox(imageView)));
+        imageStage.setTitle(title);
+        imageStage.setX(mainStage.getX() + imageStageXOffset);
+        imageStage.show();
+    }
+
+    private void updateTreeRootPredicate(boolean onlyWarnings) {
+        treeRoot.setPredicate(buildHideEmptyPredicate(onlyWarnings));
+    }
+
+    private static Predicate<KodiTreeItemContent> buildHideEmptyPredicate(boolean onlyWarnings) {
+        return item -> {
+            if (onlyWarnings)
+                return item.hasWarning();
+            return true;
         };
     }
 
     public void show() {
-        stage.show();
+        mainStage.show();
     }
 
     @EventListener
-    public void onButtonGoEvent(KodiToolsButtonGoEvent event){
+    public void onButtonGoEvent(KodiToolsButtonGoEvent event) {
         startService();
     }
 
@@ -130,7 +207,11 @@ public class KodiToolsController implements Initializable {
     }
 
     private void startService() {
-        log.debug("Starting service {}" ,service);
+        if (startDirectoryComponentController.getInputPath() == null) {
+            log.warn("Cannot start, input path is null");
+            return;
+        }
+        log.debug("Starting service {}", service);
         service.reset();
         service.setDirectory(startDirectoryComponentController.getInputPath());
         progressBar.progressProperty().bind(service.progressProperty());
@@ -142,38 +223,33 @@ public class KodiToolsController implements Initializable {
     }
 
     private void handleResult(WorkerStateEvent workerStateEvent) {
-        if(service.getValue() != null){
-            log.info("Result: {}", service.getValue().getElements().values().stream().map(Object::toString).collect(Collectors.joining("\n")));
-            treeRoot.getSourceChildren().addAll(transform(service.getValue()));
-        }
-      else {
-          log.info("Got no result. Cancelled?");
+        if (service.getValue() != null) {
+            treeRoot.getSourceChildren().clear();
+            treeRoot.getSourceChildren().addAll(buildAndFillLevel1Items(service.getValue()));
+        } else {
+            log.info("Got no result. Cancelled?");
         }
     }
 
-    private List<FilterableTreeItem<Object>> transform(KodiCheckResult taskResult) {
-        List<FilterableTreeItem<Object>> result2 = new ArrayList<>();
-        for(Map.Entry<KodiCheckResult.Type, Map<String, KodiCheckResultElement>> e : taskResult.getElements().entrySet()){
-            FilterableTreeItem<Object> root = new FilterableTreeItem<>(e.getKey());
-            root.getSourceChildren().addAll(transformChildren(e.getValue()));
-            result2.add(root);
-        }
-        return result2;
-    }
+    private List<KodiLevel1TreeItem> buildAndFillLevel1Items(List<Path> movieFolders) {
+        List<KodiLevel1TreeItem> result = new ArrayList<>();
 
-    private List<FilterableTreeItem<Object>> transformChildren(Map<String, KodiCheckResultElement> value) {
-        List<FilterableTreeItem<Object>> result = new ArrayList<>();
-        for(Map.Entry<String, KodiCheckResultElement> e : value.entrySet()){
-            FilterableTreeItem<Object> root = new FilterableTreeItem<>(e.getKey());
-            root.getSourceChildren().addAll(transformChildren2(e.getValue()));
-            result.add(root);
-        }
-        return result;
-    }
+        // base/ level 1 items
+        var nfoFileNameLevel1TreeItem = new NfoFileNameLevel1TreeItem();
+        var nfoFileContentLevel1TreeItem = new NfoFileContentLevel1TreeItem();
+        var subdirsLevel1TreeItem = new SubdirsLevel1TreeItem();
+        // add level 1 items to return list
+        result.add(nfoFileNameLevel1TreeItem);
+        result.add(nfoFileContentLevel1TreeItem);
+        result.add(subdirsLevel1TreeItem);
 
-    private List<FilterableTreeItem<Object>> transformChildren2(KodiCheckResultElement value) {
-        List<FilterableTreeItem<Object>> result = new ArrayList<>();
-        result.add(new FilterableTreeItem<>(value.getSuggestion()));
+        // fill level 1 items with level 2 items
+        for (Path movieFolder : movieFolders) {
+            nfoFileNameLevel1TreeItem.add(new NfoFileNameLevel2TreeItem(movieFolder, executor));
+            nfoFileContentLevel1TreeItem.add(new NfoFileContentLevel2TreeItem(movieFolder, executor));
+            subdirsLevel1TreeItem.add(new SubdirsLevel2TreeItem(movieFolder, executor));
+        }
+
         return result;
     }
 
@@ -186,19 +262,10 @@ public class KodiToolsController implements Initializable {
     }
 
     public void handleButtonExpandAll(ActionEvent actionEvent) {
-        expandTreeView(warningsTree.getRoot(), true);
-    }
-
-    private void expandTreeView(TreeItem<?> item, boolean expand){
-        if(item != null && !item.isLeaf()){
-            item.setExpanded(expand);
-            for(TreeItem<?> child:item.getChildren()){
-                expandTreeView(child, expand);
-            }
-        }
+        FXUtil.expandTreeView(treeView.getRoot(), true);
     }
 
     public void handleButtonCollapseAll(ActionEvent actionEvent) {
-        expandTreeView(warningsTree.getRoot(), false);
+        FXUtil.expandTreeView(treeView.getRoot(), false);
     }
 }

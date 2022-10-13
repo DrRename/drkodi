@@ -2,9 +2,10 @@ package drrename.ui.mainview;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Dragboard;
@@ -29,15 +30,17 @@ public class StartDirectoryComponentController implements Initializable, Applica
 
     public TextField textFieldDirectory;
 
-    private Path inputPath;
+    private ObjectProperty<Path> inputPath;
 
     private BooleanProperty ready;
 
+    @SuppressWarnings("")
     private ChangeListener<? super String> textFieldChangeListener;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ready = new SimpleBooleanProperty(false);
+        inputPath = new SimpleObjectProperty<>();
         textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> updateInput(n));
         textFieldDirectory.textProperty().addListener(textFieldChangeListener);
         textFieldDirectory.setOnDragOver(event -> {
@@ -74,7 +77,7 @@ public class StartDirectoryComponentController implements Initializable, Applica
         if (Files.isReadable(inputPath)) {
             if (Files.isDirectory(inputPath)) {
                 if (Files.isWritable(inputPath)) {
-                    this.inputPath = inputPath;
+                    this.inputPath.set(inputPath);
                     ready.set(true);
                 } else {
                     log.debug("cannot write to {}", inputPath);
@@ -97,9 +100,19 @@ public class StartDirectoryComponentController implements Initializable, Applica
     }
 
     public Path getInputPath() {
+        return inputPath.get();
+    }
+
+    public ObjectProperty<Path> inputPathProperty() {
         return inputPath;
     }
 
+    @SuppressWarnings("unused")
+    public void setInputPath(Path inputPath) {
+        this.inputPath.set(inputPath);
+    }
+
+    @SuppressWarnings("unused")
     public boolean isReady() {
         return ready.get();
     }
