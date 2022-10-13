@@ -10,7 +10,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="drrename.kodi.KodiToolsController" fx:id="root"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="600.0" stylesheets="@/css/root.css">
 
     <padding>
         <Insets top="4" right="4" bottom="4" left="4"/>
@@ -25,7 +25,7 @@
                 <Insets top="4" right="4" bottom="4" left="4"/>
             </padding>
             <center>
-               <TreeView fx:id="warningsTree"></TreeView>
+               <TreeView fx:id="treeView"></TreeView>
             </center>
             <bottom>
                 <BorderPane >
@@ -33,7 +33,7 @@
                     <Insets top="4" right="4" bottom="4" left="4"/>
                 </padding>
                 <center>
-                    <HBox spacing="4">
+                    <HBox spacing="4" alignment="CENTER_LEFT">
                 <Button fx:id="buttonExpandAll" prefWidth="120" minWidth="50"
                         onAction="#handleButtonExpandAll" text="Expand all">
                     <tooltip>
@@ -46,8 +46,7 @@
                             <Tooltip text="Expand all"/>
                         </tooltip>
                     </Button>
-                        <CheckBox fx:id="checkBoxIgnoreMissingNfo" text="Ignore Missing NFO file"/>
-                        <CheckBox fx:id="checkBoxHideEmpty" text="Hide empty"/>
+                        <CheckBox fx:id="checkBoxHideEmpty" text="Show only warnings"/>
                 </HBox>
                 </center>
                 </BorderPane>

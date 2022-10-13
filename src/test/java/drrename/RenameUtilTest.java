@@ -2,7 +2,6 @@ package drrename;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class RenameUtilTest {
 
@@ -14,8 +13,5 @@ class RenameUtilTest {
     void tearDown() {
     }
 
-    @Test
-    public void testIncrementChar(){
-        System.out.println(RenameUtil.iterateLetter('a'));
-    }
+
 }
