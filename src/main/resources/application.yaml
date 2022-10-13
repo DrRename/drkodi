@@ -17,6 +17,7 @@ app:
     appTitle: "Dr.Rename"
     initialWidth: 600
     initialHeight: 600
+    override-locale: de
   word-cnt: 3
   loop-delay-ms: 500
   reset-delay-ms: 1000

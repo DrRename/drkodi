@@ -13,7 +13,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 @Slf4j
@@ -31,17 +30,6 @@ public class Launcher {
         return new SpringFxWeaver(applicationContext);
     }
 
-    @Bean
-    public ResourceBundle bundle() {
-        // My default is "ENGLISH". Instead of changing my computer's timezone for testing,
-        // I'm programmatically setting it here. In live code, I imagine one would set
-        // Locale locale = Locale.getDefault()
-
-        Locale locale = Locale.GERMAN;
-        log.debug("Locale: {}", locale);
-        return ResourceBundle.getBundle("i18n/messages", locale);
-    }
-
     /**
      * See {@link net.rgielen.fxweaver.samples.springboot.controller.DialogController#DialogController(FxControllerAndView)}
      * for an example usage.
@@ -51,8 +39,8 @@ public class Launcher {
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public <C, V extends Node> FxControllerAndView<C, V> controllerAndView(FxWeaver fxWeaver,
-                                                                           InjectionPoint injectionPoint) {
-        return new ResourceBundleAwareLazyFxControllerAndViewResolver(fxWeaver, bundle())
+                                                                           InjectionPoint injectionPoint, ResourceBundle bundle) {
+        return new ResourceBundleAwareLazyFxControllerAndViewResolver(fxWeaver, bundle)
                 .resolve(injectionPoint);
     }
 }
