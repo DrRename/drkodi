@@ -14,4 +14,6 @@ public class UiConfig {
     private int initialWidth;
 
     private int initialHeight;
+
+    private String overrideLocale;
 }
