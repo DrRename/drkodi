@@ -13,11 +13,11 @@
     <description>Minimalistic Batch-Rename Tool.</description>
     <properties>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-        <github-user>kerner1000</github-user>
+        <github-user>drrename</github-user>
         <github-repo>drrename</github-repo>
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
         <java.version>18</java.version>
-        <javafx.version>18.0.1</javafx.version>
+        <javafx.version>18.0.2</javafx.version>
         <sonar.organization>drrename</sonar.organization>
         <sonar.projectKey>DrRename_drrename</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -58,9 +58,6 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
-<!--                <configuration>-->
-<!--                    <mainClass>${main-class}</mainClass>-->
-<!--                </configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -107,7 +104,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
                 <configuration>
                     <doclint>none</doclint>
                 </configuration>
@@ -155,25 +151,6 @@
             <version>${javafx.version}</version>
 <!--            <scope>provided</scope>-->
         </dependency>
-        <!-- Uncomment for cross-platform fat jar-->
-<!--          <dependency>-->
-<!--            <groupId>org.openjfx</groupId>-->
-<!--            <artifactId>javafx-graphics</artifactId>-->
-<!--            <version>${javafx.version}</version>-->
-<!--            <classifier>win</classifier>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.openjfx</groupId>-->
-<!--            <artifactId>javafx-graphics</artifactId>-->
-<!--            <version>${javafx.version}</version>-->
-<!--            <classifier>linux</classifier>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.openjfx</groupId>-->
-<!--            <artifactId>javafx-graphics</artifactId>-->
-<!--            <version>${javafx.version}</version>-->
-<!--            <classifier>mac</classifier>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.github.kerner1000</groupId>
             <artifactId>tools1000</artifactId>
