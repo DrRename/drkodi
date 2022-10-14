@@ -25,6 +25,6 @@ import java.util.concurrent.Executor;
 public class NfoFileContentLevel2TreeItem extends KodiLevel2TreeItem {
 
     public NfoFileContentLevel2TreeItem(Path moviePath, Executor executor) {
-        super(moviePath, new NfoFileConentCheckService(moviePath), executor);
+        super(moviePath, new NfoFileContentCheckService(moviePath), executor);
     }
 }

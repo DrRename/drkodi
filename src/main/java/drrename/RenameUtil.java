@@ -17,6 +17,7 @@ public class RenameUtil {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
             NfoFileXmlModel xmlFileContent = mapper.readValue(nfoFile.toFile(), NfoFileXmlModel.class);
+            if(xmlFileContent.getArt() != null && xmlFileContent.getArt().getPoster() != null)
             return nfoFile.getParent().resolve(xmlFileContent.getArt().getPoster());
         } catch (JsonParseException e) {
             log.debug("Failed to deserialize {} ({})", nfoFile, e.toString());
