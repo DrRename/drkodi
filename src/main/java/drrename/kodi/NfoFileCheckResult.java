@@ -31,14 +31,19 @@ import java.util.stream.Collectors;
 public class NfoFileCheckResult extends CheckResult {
 
     private final ListProperty<Path> nfoFiles;
+    private final NfoFileNameType type;
 
-    public NfoFileCheckResult(String result, boolean warning, Collection<Path> nfoFiles) {
-        super(result, warning);
+    public NfoFileCheckResult(NfoFileNameType result, boolean warning, Collection<Path> nfoFiles) {
+        super(result.toString(), warning);
+        this.type = result;
         this.nfoFiles = new SimpleListProperty<>(FXCollections.observableArrayList(nfoFiles));
     }
 
     @Override
     public String toString() {
+        if(NfoFileNameType.MOVIE_NAME.equals(type) || NfoFileNameType.DEFAULT_NAME.equals(type)){
+            return getResult();
+        }
         return getResult() + ": " + getNfoFiles().stream().map(e -> e.getFileName().toString()).collect(Collectors.joining(", "));
     }
 
