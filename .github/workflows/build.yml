@@ -51,7 +51,8 @@ jobs:
         run: mvn -B test jacoco:report --file pom.xml
       - name: Coveralls Report
         run: mvn -B test coveralls:report --define repoToken=${{ secrets.COVERALL_REPO_SECRET }} --file pom.xml
-  update_release_draft:
+  create_release_draft:
+    name: Create Release Draft
     permissions:
       # write permission is required to create a github release
       contents: write
@@ -66,7 +67,7 @@ jobs:
       #    echo "GHE_HOST=${GITHUB_SERVER_URL##https:\/\/}" >> $GITHUB_ENV
 
       # Drafts your next Release notes as Pull Requests are merged into "master"
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v5.21.0
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         # with:
         #   config-name: my-config.yml
