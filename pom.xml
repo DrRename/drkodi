@@ -16,11 +16,8 @@
         <github-user>drrename</github-user>
         <github-repo>drrename</github-repo>
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
-        <java.version>18</java.version>
+        <java.version>17</java.version>
         <javafx.version>18.0.2</javafx.version>
-        <sonar.organization>drrename</sonar.organization>
-        <sonar.projectKey>DrRename_drrename</sonar.projectKey>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.coverage.exclusions>src/main/java/drrename/PrimaryStageInitializer.java</sonar.coverage.exclusions>
     </properties>
     <scm>
