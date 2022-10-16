@@ -21,7 +21,8 @@ package drrename.kodi;
 
 import javafx.scene.control.TreeItem;
 
-public class KodiTreeItemContent {
+
+public abstract class KodiTreeItemContent {
 
     private TreeItem<KodiTreeItemContent> treeItem;
 
@@ -30,7 +31,6 @@ public class KodiTreeItemContent {
     }
 
     // Getter / Setter //
-
 
     @SuppressWarnings("unused")
     public TreeItem<KodiTreeItemContent> getTreeItem() {

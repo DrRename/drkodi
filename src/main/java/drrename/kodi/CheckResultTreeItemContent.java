@@ -19,9 +19,19 @@
 
 package drrename.kodi;
 
-public class SubdirsLevel1TreeItem extends KodiLevel1TreeItem {
+import lombok.RequiredArgsConstructor;
 
-    public SubdirsLevel1TreeItem() {
-        super(new KodiLevel1TreeItemContent("Subdirs"));
+@RequiredArgsConstructor
+public class CheckResultTreeItemContent<T extends CheckResult> extends KodiTreeItemContent {
+
+    private final T checkResult;
+
+    public T getCheckResult() {
+        return checkResult;
+    }
+
+    @Override
+    public String toString() {
+        return checkResult.toString();
     }
 }

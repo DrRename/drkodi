@@ -19,22 +19,26 @@
 
 package drrename.kodi;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import org.springframework.stereotype.Service;
 
-@ToString
-@Getter
-@Setter
-public class NfoFileXmlModel {
-    @ToString
-    @Getter
-    @Setter
-    public static class Art {
-        String poster;
+import java.util.Arrays;
+import java.util.List;
+
+
+@Service
+public class CheckServiceProvider {
+
+    private final List<CheckService<?>> checkServices;
+
+    public CheckServiceProvider(){
+        this.checkServices = Arrays.asList(
+                new NfoFileNameCheckService(),
+                new NfoFileContentCheckService(),
+                new SubdirsCheckService()
+        );
     }
 
-    Art art;
-    String year;
-    String title;
+    public List<CheckService<?>> getCheckServices() {
+        return checkServices;
+    }
 }
