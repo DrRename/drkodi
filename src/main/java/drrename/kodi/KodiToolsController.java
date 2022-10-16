@@ -67,6 +67,8 @@ public class KodiToolsController implements Initializable {
 
     private KodiTreeRootItem treeRoot;
 
+    private final MovieTreeItemFactory movieTreeItemFactory;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         mainStage = new Stage();
@@ -135,9 +137,9 @@ public class KodiToolsController implements Initializable {
                     if (peter.getCheckResult() instanceof NfoFileContentCheckResult) {
                         Path nfoFile = ((NfoFileContentCheckResult) peter.getCheckResult()).getNfoFile();
                         executor.execute(() -> showImage(nfoFile));
-                    } else if (peter.getCheckResult() instanceof NfoFileCheckResult) {
-                        if (!((NfoFileCheckResult) peter.getCheckResult()).getNfoFiles().isEmpty()) {
-                            Path nfoFile = ((NfoFileCheckResult) peter.getCheckResult()).getNfoFiles().get(0);
+                    } else if (peter.getCheckResult() instanceof NfoFileNameCheckResult) {
+                        if (!((NfoFileNameCheckResult) peter.getCheckResult()).getNfoFiles().isEmpty()) {
+                            Path nfoFile = ((NfoFileNameCheckResult) peter.getCheckResult()).getNfoFiles().get(0);
                             executor.execute(() -> showImage(nfoFile));
                         }
                     }
@@ -231,23 +233,12 @@ public class KodiToolsController implements Initializable {
         }
     }
 
-    private List<KodiLevel1TreeItem> buildAndFillLevel1Items(List<Path> movieFolders) {
-        List<KodiLevel1TreeItem> result = new ArrayList<>();
+    private List<TreeItem<KodiTreeItemContent>> buildAndFillLevel1Items(List<Path> movieFolders) {
+        List<TreeItem<KodiTreeItemContent>> result = new ArrayList<>();
 
-        // base/ level 1 items
-        var nfoFileNameLevel1TreeItem = new NfoFileNameLevel1TreeItem();
-        var nfoFileContentLevel1TreeItem = new NfoFileContentLevel1TreeItem();
-        var subdirsLevel1TreeItem = new SubdirsLevel1TreeItem();
-        // add level 1 items to return list
-        result.add(nfoFileNameLevel1TreeItem);
-        result.add(nfoFileContentLevel1TreeItem);
-        result.add(subdirsLevel1TreeItem);
-
-        // fill level 1 items with level 2 items
-        for (Path movieFolder : movieFolders) {
-            nfoFileNameLevel1TreeItem.add(new NfoFileNameLevel2TreeItem(movieFolder, executor));
-            nfoFileContentLevel1TreeItem.add(new NfoFileContentLevel2TreeItem(movieFolder, executor));
-            subdirsLevel1TreeItem.add(new SubdirsLevel2TreeItem(movieFolder, executor));
+        for(Path moviePath : movieFolders){
+            var item = movieTreeItemFactory.buildNew(moviePath);
+            result.add(item);
         }
 
         return result;

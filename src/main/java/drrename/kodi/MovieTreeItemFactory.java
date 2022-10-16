@@ -19,12 +19,28 @@
 
 package drrename.kodi;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import java.nio.file.Path;
 import java.util.concurrent.Executor;
 
-public class NfoFileContentLevel2TreeItem extends KodiLevel2TreeItem {
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class MovieTreeItemFactory {
 
-    public NfoFileContentLevel2TreeItem(Path moviePath, Executor executor) {
-        super(moviePath, new NfoFileContentCheckService(moviePath), executor);
+    private final Executor executor;
+
+    private final CheckServiceProvider checkServiceProvider;
+
+    public MovieTreeItem buildNew(Path moviePath){
+        return triggerNfoFileNameCheck(new MovieTreeItem(moviePath));
+    }
+
+    private MovieTreeItem triggerNfoFileNameCheck(MovieTreeItem movieTreeItem) {
+        executor.execute(() -> checkServiceProvider.getCheckServices().forEach(e -> e.addChildItem(movieTreeItem)));
+        return movieTreeItem;
     }
 }

@@ -17,40 +17,24 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-public class CheckResult {
-
-    protected final StringProperty result;
-
-    protected final String prefix;
-
-    public CheckResult(String prefix, String result) {
-        this.prefix = prefix;
-        this.result = new SimpleStringProperty(result);
+@ToString
+@Getter
+@Setter
+public class NfoFileXmlModel {
+    @ToString
+    @Getter
+    @Setter
+    public static class Art {
+        String poster;
     }
 
-    @Override
-    public String toString() {
-        return getValue();
-    }
-
-    // Getter / Setter //
-
-    public String getValue() {
-        return result.get();
-    }
-
-    public StringProperty resultProperty() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result.set(result);
-    }
-
-
+    Art art;
+    String year;
+    String title;
 }

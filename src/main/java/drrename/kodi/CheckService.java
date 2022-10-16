@@ -19,9 +19,26 @@
 
 package drrename.kodi;
 
+import javafx.application.Platform;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 import java.nio.file.Path;
 
-public interface CheckService {
+@Slf4j
+public abstract class CheckService<R extends CheckResult> {
 
-    CheckResult calculate(Path path);
+    public void addChildItem(MovieTreeItem treeItem) {
+        try {
+            R checkResult = checkPath(treeItem.getMoviePath());
+            var childItem = buildChildItem(checkResult);
+            Platform.runLater(() -> treeItem.add(childItem));
+        }catch (IOException e){
+            log.error(e.getLocalizedMessage(), e);
+        }
+    }
+
+    public abstract R checkPath(Path path) throws IOException;
+
+    public abstract KodiTreeItem<R> buildChildItem(R checkResult);
 }
