@@ -31,19 +31,18 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class SubdirsCheckService implements CheckService {
+public class SubdirsCheckService extends CheckService<CheckResult> {
 
     @Override
-    public CheckResult calculate(Path path) {
-        try {
-            var subdirs = getSubdirs(path);
-            if(subdirs.isEmpty())
-                return new CheckResult("no subdirs", false);
-            return new CheckResult("has subdirs", true);
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-        }
-       return null;
+    public CheckResult checkPath(Path path) throws IOException {
+        if (getSubdirs(path).isEmpty())
+            return new CheckResult("Subdirs", "no");
+        return new CheckResult("Subdirs","yes");
+    }
+
+    @Override
+    public KodiTreeItem<CheckResult> buildChildItem(CheckResult checkResult) {
+        return new KodiTreeItem<>(new GenericTreeItemContent(checkResult));
     }
 
     static List<Path> getSubdirs(Path path) throws IOException {
