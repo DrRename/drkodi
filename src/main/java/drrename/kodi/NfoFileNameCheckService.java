@@ -21,7 +21,6 @@ package drrename.kodi;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -31,19 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Service
-public class NfoFileNameCheckService implements CheckService {
+public class NfoFileNameCheckService extends CheckService<NfoFileNameCheckResult> {
 
-    public CheckResult calculate(Path path){
-        try {
-            return checkDir(path);
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-        }
-        return null;
-    }
-
-    static NfoFileCheckResult checkDir(Path path) throws IOException {
+    @Override
+    public NfoFileNameCheckResult checkPath(Path path) throws IOException {
         if(!Files.isDirectory(path)){
             throw new IllegalArgumentException(path.getFileName().toString() + " is not a directory");
         }
@@ -63,7 +53,12 @@ public class NfoFileNameCheckService implements CheckService {
                 }
             }
         }
-        return new NfoFileCheckResult(type, !(type.equals(NfoFileNameType.DEFAULT_NAME) || type.equals(NfoFileNameType.MOVIE_NAME)), childString);
+        return new NfoFileNameCheckResult(type, childString);
+    }
+
+    @Override
+    public NfoFileNameTreeItem buildChildItem(NfoFileNameCheckResult checkResult) {
+        return new NfoFileNameTreeItem(new NfoFileNameTreeItemContent(checkResult));
     }
 
      static NfoFileNameType checkFile(String movieName, Path child) {
@@ -79,4 +74,6 @@ public class NfoFileNameCheckService implements CheckService {
             return NfoFileNameType.INVALID_NAME;
         }
     }
+
+
 }

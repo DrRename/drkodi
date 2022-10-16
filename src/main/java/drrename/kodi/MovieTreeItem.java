@@ -19,38 +19,19 @@
 
 package drrename.kodi;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import java.nio.file.Path;
 
-public class CheckResult {
+public class MovieTreeItem extends KodiTreeItem<CheckResult> {
 
-    protected final StringProperty result;
-
-    protected final String prefix;
-
-    public CheckResult(String prefix, String result) {
-        this.prefix = prefix;
-        this.result = new SimpleStringProperty(result);
+    public MovieTreeItem(MovieTreeItemContent content) {
+        super(content);
     }
 
-    @Override
-    public String toString() {
-        return getValue();
+    public MovieTreeItem(Path moviePath) {
+        this(new MovieTreeItemContent(moviePath));
     }
 
-    // Getter / Setter //
-
-    public String getValue() {
-        return result.get();
+    public Path getMoviePath(){
+        return ((MovieTreeItemContent)getValue()).getMoviePath();
     }
-
-    public StringProperty resultProperty() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result.set(result);
-    }
-
-
 }
