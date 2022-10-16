@@ -19,12 +19,14 @@
 
 package drrename.kodi;
 
-import java.nio.file.Path;
-import java.util.concurrent.Executor;
+public class NfoFileContentTreeItemContent extends GenericKodiTreeItemContent<NfoFileContentCheckResult> {
 
-public class SubdirsLevel2TreeItem extends KodiLevel2TreeItem {
+    public NfoFileContentTreeItemContent(NfoFileContentCheckResult value) {
+       super(value);
+    }
 
-    public SubdirsLevel2TreeItem(Path moviePath, Executor executor) {
-        super(moviePath, new SubdirsCheckService(), executor);
+    @Override
+    protected boolean hasWarning() {
+        return getCheckResult().isWarning();
     }
 }

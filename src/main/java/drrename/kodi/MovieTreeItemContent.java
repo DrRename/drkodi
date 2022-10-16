@@ -19,9 +19,22 @@
 
 package drrename.kodi;
 
-public class NfoFileNameLevel1TreeItem extends KodiLevel1TreeItem {
+import java.nio.file.Path;
 
-    public NfoFileNameLevel1TreeItem() {
-        super(new KodiLevel1TreeItemContent("NFO file name"));
+public class MovieTreeItemContent extends KodiTreeItemContent {
+
+    private final Path moviePath;
+
+    public MovieTreeItemContent(Path moviePath) {
+        this.moviePath = moviePath;
+    }
+
+    @Override
+    public String toString() {
+        return moviePath.getFileName().toString();
+    }
+
+    public Path getMoviePath() {
+        return moviePath;
     }
 }

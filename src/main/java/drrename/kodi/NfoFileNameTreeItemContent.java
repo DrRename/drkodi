@@ -19,11 +19,24 @@
 
 package drrename.kodi;
 
-import java.nio.file.Path;
-import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
-public class NfoFileNameLevel2TreeItem extends KodiLevel2TreeItem {
-    public NfoFileNameLevel2TreeItem(Path movieFolder, Executor executor) {
-        super(movieFolder, new NfoFileNameCheckService(), executor);
+public class NfoFileNameTreeItemContent extends CheckResultTreeItemContent<NfoFileNameCheckResult> {
+
+    public NfoFileNameTreeItemContent(NfoFileNameCheckResult checkResult) {
+        super(checkResult);
+    }
+
+    @Override
+    protected boolean hasWarning() {
+        return !NfoFileNameType.MOVIE_NAME.equals(getCheckResult().getType()) && !NfoFileNameType.DEFAULT_NAME.equals(getCheckResult().getType());
+    }
+
+    @Override
+    public String toString() {
+        if(hasWarning()){
+            return super.toString() + " " + getCheckResult().getNfoFiles().stream().map(e -> e.getFileName().toString()).collect(Collectors.joining(", "));
+        }
+        return super.toString();
     }
 }

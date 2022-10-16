@@ -19,38 +19,9 @@
 
 package drrename.kodi;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+public class NfoFileNameTreeItem extends KodiTreeItem<NfoFileNameCheckResult> {
 
-public class CheckResult {
-
-    protected final StringProperty result;
-
-    protected final String prefix;
-
-    public CheckResult(String prefix, String result) {
-        this.prefix = prefix;
-        this.result = new SimpleStringProperty(result);
+    public NfoFileNameTreeItem(NfoFileNameTreeItemContent value) {
+        super(value);
     }
-
-    @Override
-    public String toString() {
-        return getValue();
-    }
-
-    // Getter / Setter //
-
-    public String getValue() {
-        return result.get();
-    }
-
-    public StringProperty resultProperty() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result.set(result);
-    }
-
-
 }

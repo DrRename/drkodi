@@ -19,17 +19,27 @@
 
 package drrename.kodi;
 
-import drrename.ui.FilterableTreeItem;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-public class KodiLevel1TreeItem extends FilterableTreeItem<KodiTreeItemContent> {
+@AllArgsConstructor
+public class GenericTreeItemContent extends KodiTreeItemContent {
 
-    public KodiLevel1TreeItem(KodiLevel1TreeItemContent value) {
-        super(value);
-        getValue().setTreeItem(this);
+    private Object value;
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 
-    public void add(KodiLevel2TreeItem level2TreeItem) {
-        // add level 2 tree item to level 1 children
-        getSourceChildren().add(level2TreeItem);
+    // Getter / Setter //
+
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 }

@@ -19,4 +19,17 @@
 
 package drrename.kodi;
 
-public enum NfoFileNameType {NO_FILE, MOVIE_NAME, DEFAULT_NAME, MULTIPLE_FILES, INVALID_NAME}
+public enum NfoFileNameType {
+    NO_FILE("No NFO file"), MOVIE_NAME("Matching movie name"), DEFAULT_NAME("Default"), MULTIPLE_FILES("Multiple files"), INVALID_NAME("Invalid name");
+
+    private final String name;
+
+    NfoFileNameType(String name){
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
