@@ -34,7 +34,7 @@ import java.nio.file.Path;
 
 @RequiredArgsConstructor
 @Slf4j
-public class NfoFileConentCheckService implements CheckService {
+public class NfoFileContentCheckService implements CheckService {
 
     private final Path moviePath;
 
@@ -50,7 +50,6 @@ public class NfoFileConentCheckService implements CheckService {
                     // we look only at the first file found
                     try {
                         NfoFileXmlModel xmlFileContent = mapper.readValue(child.toFile(), NfoFileXmlModel.class);
-                        log.debug("XML content: {}", xmlFileContent);
                         if(!verifyTitle(xmlFileContent)){
                             return new NfoFileContentCheckResult("NFO title mismatch", true, child);
                         }
@@ -62,21 +61,19 @@ public class NfoFileConentCheckService implements CheckService {
                         }
                         return new NfoFileContentCheckResult("XML NFO", false, child);
                     } catch (JsonParseException e) {
-                        log.debug("Not an XML file, check only one line for URL");
                         try {
                             String content = Files.readString(child);
                             if (content == null) {
                                 return new NfoFileContentCheckResult("Empty NFO", true, child);
                             }
-                            log.debug("File content: {}", content);
                             if (content.contains("imdb")) {
                                 return new NfoFileContentCheckResult("Single line NFO (imdb)", false, child);
                             } else {
-                                return new NfoFileContentCheckResult("Unknown NFO content (" + content + ")", true, child);
+                                return new NfoFileContentCheckResult("Unknown NFO content", true, child);
                             }
                         } catch (MalformedInputException ee) {
-                            log.debug(ee.getLocalizedMessage(), ee);
-                            log.error("Invalid nfo file {}", child);
+                            log.debug("{} for path {}", ee.getLocalizedMessage(), path);
+                            return new NfoFileContentCheckResult("Invalid NFO content", true, child);
                         }
                     }
                 }
@@ -99,6 +96,9 @@ public class NfoFileConentCheckService implements CheckService {
     }
 
     private boolean verifyCoverFront(NfoFileXmlModel xmlFileContent) {
+        if(xmlFileContent.art == null || xmlFileContent.art.poster == null){
+            return false;
+        }
         Path coverFront = moviePath.resolve(xmlFileContent.art.poster);
         return Files.isRegularFile(coverFront) && Files.isReadable(coverFront);
     }
