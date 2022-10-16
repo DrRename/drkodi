@@ -28,11 +28,6 @@ public class KodiLevel3TreeItemContent extends KodiTreeItemContent {
         this.checkResult = checkResult;
     }
 
-    @Override
-    protected boolean hasWarning() {
-        return checkResult != null && checkResult.isWarning();
-    }
-
     public CheckResult getCheckResult() {
         return checkResult;
     }

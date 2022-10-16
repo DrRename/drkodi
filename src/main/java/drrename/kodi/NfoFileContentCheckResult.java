@@ -25,9 +25,24 @@ public class NfoFileContentCheckResult extends CheckResult {
 
     private final Path nfoFile;
 
-    public NfoFileContentCheckResult(String result, boolean warning, Path nfoFile) {
-        super(result, warning);
+    private final boolean warning;
+
+    public NfoFileContentCheckResult(String result, Path nfoFile, boolean hasWarning) {
+        super("NFO File Content: ", result);
         this.nfoFile = nfoFile;
+        this.warning = hasWarning;
+    }
+
+    @Override
+    public String toString() {
+//        if(isWarning()){
+//            return super.toString() + (nfoFile != null ? " " + nfoFile.getFileName().toString() : "");
+//        }
+        return super.toString();
+    }
+
+    public boolean isWarning() {
+        return warning;
     }
 
     public Path getNfoFile() {

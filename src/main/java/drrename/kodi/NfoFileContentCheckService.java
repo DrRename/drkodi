@@ -22,6 +22,7 @@ package drrename.kodi;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import drrename.model.NfoFileXmlModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -34,12 +35,14 @@ import java.nio.file.Path;
 
 @RequiredArgsConstructor
 @Slf4j
-public class NfoFileContentCheckService implements CheckService {
-
-    private final Path moviePath;
+public class NfoFileContentCheckService extends CheckService<NfoFileContentCheckResult> {
 
     @Override
-    public NfoFileContentCheckResult calculate(Path path) {
+    public KodiTreeItem<NfoFileContentCheckResult> buildChildItem(NfoFileContentCheckResult checkResult) {
+        return new KodiTreeItem<>(new NfoFileContentTreeItemContent(checkResult));
+    }
+
+    public NfoFileContentCheckResult checkPath(Path path) throws IOException {
         XmlMapper mapper = new XmlMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
@@ -50,56 +53,52 @@ public class NfoFileContentCheckService implements CheckService {
                     // we look only at the first file found
                     try {
                         NfoFileXmlModel xmlFileContent = mapper.readValue(child.toFile(), NfoFileXmlModel.class);
-                        if(!verifyTitle(xmlFileContent)){
-                            return new NfoFileContentCheckResult("NFO title mismatch", true, child);
+                        if (!verifyTitle(path, xmlFileContent)) {
+                            return new NfoFileContentCheckResult("NFO title mismatch", child, true);
                         }
-                        if(!verifyYear(xmlFileContent)){
-                            return new NfoFileContentCheckResult("NFO year mismatch", true, child);
+                        if (!verifyYear(path, xmlFileContent)) {
+                            return new NfoFileContentCheckResult("NFO year mismatch", child, true);
                         }
-                        if(!verifyCoverFront(xmlFileContent)){
-                            return new NfoFileContentCheckResult("NFO front-cover not readable", true, child);
+                        if (!verifyCoverFront(path, xmlFileContent)) {
+                            return new NfoFileContentCheckResult("NFO front-cover not readable", child, true);
                         }
-                        return new NfoFileContentCheckResult("XML NFO", false, child);
+                        return new NfoFileContentCheckResult("XML NFO", child, false);
                     } catch (JsonParseException e) {
                         try {
                             String content = Files.readString(child);
                             if (content == null) {
-                                return new NfoFileContentCheckResult("Empty NFO", true, child);
+                                return new NfoFileContentCheckResult("Empty NFO", child, true);
                             }
                             if (content.contains("imdb")) {
-                                return new NfoFileContentCheckResult("Single line NFO (imdb)", false, child);
+                                return new NfoFileContentCheckResult("Single line NFO (imdb)", child, false);
                             } else {
-                                return new NfoFileContentCheckResult("Unknown NFO content", true, child);
+                                return new NfoFileContentCheckResult("Unknown NFO content", child, true);
                             }
                         } catch (MalformedInputException ee) {
                             log.debug("{} for path {}", ee.getLocalizedMessage(), path);
-                            return new NfoFileContentCheckResult("Invalid NFO content", true, child);
+                            return new NfoFileContentCheckResult("Invalid NFO content", child, true);
                         }
                     }
                 }
             }
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-            return new NfoFileContentCheckResult(e.getLocalizedMessage(), true, null);
+            return new NfoFileContentCheckResult("No NFO file", null, true);
         }
-        return new NfoFileContentCheckResult("No NFO file", true, null);
     }
 
 
-
-    private boolean verifyYear(NfoFileXmlModel xmlFileContent) {
-        return xmlFileContent.year != null && moviePath.getFileName().toString().endsWith("(" + xmlFileContent.year + ")");
+    private boolean verifyYear(Path moviePath, NfoFileXmlModel xmlFileContent) {
+        return xmlFileContent.getYear() != null && moviePath.getFileName().toString().endsWith("(" + xmlFileContent.getYear() + ")");
     }
 
-    private boolean verifyTitle(NfoFileXmlModel xmlFileContent) {
-        return xmlFileContent.title != null && moviePath.getFileName().toString().startsWith(xmlFileContent.title);
+    private boolean verifyTitle(Path moviePath, NfoFileXmlModel xmlFileContent) {
+        return xmlFileContent.getTitle() != null && moviePath.getFileName().toString().startsWith(xmlFileContent.getTitle());
     }
 
-    private boolean verifyCoverFront(NfoFileXmlModel xmlFileContent) {
-        if(xmlFileContent.art == null || xmlFileContent.art.poster == null){
+    private boolean verifyCoverFront(Path moviePath, NfoFileXmlModel xmlFileContent) {
+        if (xmlFileContent.getArt() == null || xmlFileContent.getArt().getPoster() == null) {
             return false;
         }
-        Path coverFront = moviePath.resolve(xmlFileContent.art.poster);
+        Path coverFront = moviePath.resolve(xmlFileContent.getArt().getPoster());
         return Files.isRegularFile(coverFront) && Files.isReadable(coverFront);
     }
 }

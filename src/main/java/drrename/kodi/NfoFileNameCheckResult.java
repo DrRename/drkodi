@@ -26,25 +26,22 @@ import javafx.collections.ObservableList;
 
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-public class NfoFileCheckResult extends CheckResult {
+public class NfoFileNameCheckResult extends CheckResult {
 
     private final ListProperty<Path> nfoFiles;
     private final NfoFileNameType type;
 
-    public NfoFileCheckResult(NfoFileNameType result, boolean warning, Collection<Path> nfoFiles) {
-        super(result.toString(), warning);
+    public NfoFileNameCheckResult(NfoFileNameType result, Collection<Path> nfoFiles) {
+        super("NFO File Name: ", result.toString());
         this.type = result;
         this.nfoFiles = new SimpleListProperty<>(FXCollections.observableArrayList(nfoFiles));
     }
 
-    @Override
-    public String toString() {
-        if(NfoFileNameType.MOVIE_NAME.equals(type) || NfoFileNameType.DEFAULT_NAME.equals(type)){
-            return getResult();
-        }
-        return getResult() + ": " + getNfoFiles().stream().map(e -> e.getFileName().toString()).collect(Collectors.joining(", "));
+    // Getter / Setter //
+
+    public NfoFileNameType getType() {
+        return type;
     }
 
     public ObservableList<Path> getNfoFiles() {
