@@ -63,7 +63,7 @@ public class NfoFileNameCheckService implements CheckService {
                 }
             }
         }
-        return new NfoFileCheckResult(type.toString(), !type.equals(NfoFileNameType.DEFAULT_NAME), childString);
+        return new NfoFileCheckResult(type, !(type.equals(NfoFileNameType.DEFAULT_NAME) || type.equals(NfoFileNameType.MOVIE_NAME)), childString);
     }
 
      static NfoFileNameType checkFile(String movieName, Path child) {
