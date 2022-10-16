@@ -19,9 +19,16 @@
 
 package drrename.kodi;
 
-public class NfoFileContentLevel1TreeItem extends KodiLevel1TreeItem {
+import drrename.ui.FilterableTreeItem;
 
-    public NfoFileContentLevel1TreeItem() {
-        super(new KodiLevel1TreeItemContent("NFO File Content"));
+public class KodiTreeItem<T extends CheckResult> extends FilterableTreeItem<KodiTreeItemContent> {
+
+    public KodiTreeItem(KodiTreeItemContent value) {
+        super(value);
+        getValue().setTreeItem(this);
+    }
+
+    public void add(KodiTreeItem<?> childItem) {
+        getSourceChildren().add(childItem);
     }
 }

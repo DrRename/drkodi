@@ -19,38 +19,28 @@
 
 package drrename.kodi;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-public class CheckResult {
+@AllArgsConstructor
+@NoArgsConstructor
+public class GenericKodiTreeItemContent<T extends CheckResult> extends KodiTreeItemContent {
 
-    protected final StringProperty result;
-
-    protected final String prefix;
-
-    public CheckResult(String prefix, String result) {
-        this.prefix = prefix;
-        this.result = new SimpleStringProperty(result);
-    }
+    private T checkResult;
 
     @Override
     public String toString() {
-        return getValue();
+        return checkResult.toString();
     }
 
     // Getter / Setter //
 
-    public String getValue() {
-        return result.get();
+
+    public T getCheckResult() {
+        return checkResult;
     }
 
-    public StringProperty resultProperty() {
-        return result;
+    public void setCheckResult(T checkResult) {
+        this.checkResult = checkResult;
     }
-
-    public void setResult(String result) {
-        this.result.set(result);
-    }
-
-
 }
