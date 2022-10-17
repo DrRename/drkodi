@@ -19,19 +19,19 @@
 
 package drrename.kodi;
 
-import java.nio.file.Path;
+public class NfoCheckResultTreeItemContent<T extends NfoCheckResult> extends CheckResultTreeItemContent<T>{
 
-public class MovieTreeItem extends KodiTreeItem {
+    private boolean missingNfoIsAWarning;
 
-    public MovieTreeItem(MovieTreeItemContent content) {
-        super(content);
+    public NfoCheckResultTreeItemContent(T checkResult) {
+        super(checkResult);
     }
 
-    public MovieTreeItem(Path moviePath) {
-        this(new MovieTreeItemContent(moviePath));
+    public boolean isMissingNfoIsAWarning() {
+        return missingNfoIsAWarning;
     }
 
-    public Path getMoviePath(){
-        return ((MovieTreeItemContent)getValue()).getMoviePath();
+    public void setMissingNfoIsAWarning(boolean missingNfoIsAWarning) {
+        this.missingNfoIsAWarning = missingNfoIsAWarning;
     }
 }
