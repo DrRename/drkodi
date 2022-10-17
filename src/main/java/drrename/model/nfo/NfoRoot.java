@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.model;
+package drrename.model.nfo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,15 +26,9 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class NfoFileXmlModel {
-    @ToString
-    @Getter
-    @Setter
-    public static class Art {
-        String poster;
-    }
+public class NfoRoot {
 
-    Art art;
-    String year;
-    String title;
+    public NfoFileXmlModel movie;
+
+    public String url;
 }
