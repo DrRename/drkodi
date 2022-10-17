@@ -107,18 +107,18 @@ public class KodiToolsController implements Initializable {
                     setText(item.toString());
                     List<String> styles = new ArrayList<>();
                     if (item.hasWarning()) {
-                        styles.add("-fx-font-weight: bold;");
-                        if (item instanceof KodiLevel1TreeItemContent) {
-                            styles.add("-fx-background-color: wheat;");
-                        } else if (item instanceof KodiLevel2TreeItemContent) {
-                            styles.add("-fx-background-color: wheat;");
-                        } else {
-                            styles.add("-fx-background-color: wheat;");
+                        if (item instanceof MovieTreeItemContent) {
+                            styles.add("-fx-font-size: 13;");
                         }
+                        styles.add("-fx-font-weight: bold;");
+                        styles.add("-fx-background-color: wheat;");
                         var joinedStylesString = String.join(" ", styles);
                         setStyle(joinedStylesString);
                     } else {
-                        setStyle(null);
+                        if (item instanceof MovieTreeItemContent) {
+                            styles.add("-fx-font-size: 14;");
+                        } else
+                            setStyle(null);
                     }
                 }
             }
@@ -132,16 +132,11 @@ public class KodiToolsController implements Initializable {
                 }
                 var hans = treeView.getTreeItem(c.getAddedSubList().get(0)).getValue();
                 log.debug("Selection changed: {}", hans);
-                if (hans instanceof KodiLevel3TreeItemContent peter) {
+                if (hans instanceof CheckResultTreeItemContent<?> peter) {
                     log.debug("Handling {}", hans);
-                    if (peter.getCheckResult() instanceof NfoFileContentCheckResult) {
-                        Path nfoFile = ((NfoFileContentCheckResult) peter.getCheckResult()).getNfoFile();
+                    if (peter.getCheckResult() instanceof NfoCheckResult fritz) {
+                        Path nfoFile = fritz.getNfoFile();
                         executor.execute(() -> showImage(nfoFile));
-                    } else if (peter.getCheckResult() instanceof NfoFileNameCheckResult) {
-                        if (!((NfoFileNameCheckResult) peter.getCheckResult()).getNfoFiles().isEmpty()) {
-                            Path nfoFile = ((NfoFileNameCheckResult) peter.getCheckResult()).getNfoFiles().get(0);
-                            executor.execute(() -> showImage(nfoFile));
-                        }
                     }
                 }
             }
