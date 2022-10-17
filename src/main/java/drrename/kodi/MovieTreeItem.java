@@ -21,7 +21,7 @@ package drrename.kodi;
 
 import java.nio.file.Path;
 
-public class MovieTreeItem extends KodiTreeItem<CheckResult> {
+public class MovieTreeItem extends KodiTreeItem {
 
     public MovieTreeItem(MovieTreeItemContent content) {
         super(content);

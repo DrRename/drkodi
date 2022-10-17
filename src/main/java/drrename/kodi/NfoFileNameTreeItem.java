@@ -19,7 +19,7 @@
 
 package drrename.kodi;
 
-public class NfoFileNameTreeItem extends KodiTreeItem<NfoFileNameCheckResult> {
+public class NfoFileNameTreeItem extends KodiTreeItem {
 
     public NfoFileNameTreeItem(NfoFileNameTreeItemContent value) {
         super(value);
