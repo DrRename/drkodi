@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="drrename.kodi.KodiToolsController" fx:id="root"
@@ -25,7 +21,7 @@
                 <Insets top="4" right="4" bottom="4" left="4"/>
             </padding>
             <center>
-               <TreeView fx:id="treeView"></TreeView>
+                <TreeView fx:id="treeView"/>
             </center>
             <bottom>
                 <BorderPane >
@@ -47,6 +43,7 @@
                         </tooltip>
                     </Button>
                         <CheckBox fx:id="checkBoxHideEmpty" text="Show only warnings"/>
+                        <CheckBox fx:id="checkBoxMissingNfoFileIsAWarning" text="Missing NFO file is a warning"/>
                 </HBox>
                 </center>
                 </BorderPane>
