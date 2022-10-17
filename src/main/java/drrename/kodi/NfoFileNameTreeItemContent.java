@@ -21,7 +21,7 @@ package drrename.kodi;
 
 import java.util.stream.Collectors;
 
-public class NfoFileNameTreeItemContent extends CheckResultTreeItemContent<NfoFileNameCheckResult> {
+public class NfoFileNameTreeItemContent extends NfoCheckResultTreeItemContent<NfoFileNameCheckResult> {
 
     public NfoFileNameTreeItemContent(NfoFileNameCheckResult checkResult) {
         super(checkResult);
@@ -29,6 +29,9 @@ public class NfoFileNameTreeItemContent extends CheckResultTreeItemContent<NfoFi
 
     @Override
     protected boolean hasWarning() {
+        if(NfoFileNameType.NO_FILE.equals(getCheckResult().getType()) && !isMissingNfoIsAWarning()){
+            return false;
+        }
         return !NfoFileNameType.MOVIE_NAME.equals(getCheckResult().getType()) && !NfoFileNameType.DEFAULT_NAME.equals(getCheckResult().getType());
     }
 
