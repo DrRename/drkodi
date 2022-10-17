@@ -64,6 +64,7 @@ public class NfoFileContentCheckService extends CheckService<NfoFileContentCheck
                         }
                         return new NfoFileContentCheckResult("XML NFO", child, false);
                     } catch (JsonParseException e) {
+                        log.debug("{} for {}", e.getLocalizedMessage(), child);
                         try {
                             String content = Files.readString(child);
                             if (content == null) {
@@ -75,6 +76,7 @@ public class NfoFileContentCheckService extends CheckService<NfoFileContentCheck
                                 return new NfoFileContentCheckResult("Unknown NFO content", child, true);
                             }
                         } catch (MalformedInputException ee) {
+                            log.debug("{} for {}", ee.getLocalizedMessage(), child);
                             log.debug("{} for path {}", ee.getLocalizedMessage(), path);
                             return new NfoFileContentCheckResult("Invalid NFO content", child, true);
                         }
