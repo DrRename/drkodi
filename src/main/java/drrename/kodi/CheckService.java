@@ -32,7 +32,8 @@ public abstract class CheckService<R extends CheckResult> {
         try {
             R checkResult = checkPath(treeItem.getMoviePath());
             var childItem = buildChildItem(checkResult);
-            Platform.runLater(() -> treeItem.add(childItem));
+            if(!treeItem.contains(childItem))
+                Platform.runLater(() -> treeItem.add(childItem));
         }catch (IOException e){
             log.error(e.getLocalizedMessage(), e);
         }

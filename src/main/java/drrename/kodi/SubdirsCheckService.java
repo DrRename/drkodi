@@ -36,13 +36,13 @@ public class SubdirsCheckService extends CheckService<CheckResult> {
     @Override
     public CheckResult checkPath(Path path) throws IOException {
         if (getSubdirs(path).isEmpty())
-            return new CheckResult("Subdirs", "no");
-        return new CheckResult("Subdirs","yes");
+            return new CheckResult("No sub-directories");
+        return new CheckResult("Sub-directories found");
     }
 
     @Override
     public KodiTreeItem<CheckResult> buildChildItem(CheckResult checkResult) {
-        return new KodiTreeItem<>(new GenericTreeItemContent(checkResult));
+        return new KodiTreeItem<>(new CheckResultTreeItemContent(checkResult));
     }
 
     static List<Path> getSubdirs(Path path) throws IOException {
