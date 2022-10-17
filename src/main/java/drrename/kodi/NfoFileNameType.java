@@ -20,7 +20,7 @@
 package drrename.kodi;
 
 public enum NfoFileNameType {
-    NO_FILE("No NFO file"), MOVIE_NAME("Matching movie name"), DEFAULT_NAME("Default"), MULTIPLE_FILES("Multiple files"), INVALID_NAME("Invalid name");
+    NO_FILE("No NFO file"), MOVIE_NAME("NFO file name matching movie name"), DEFAULT_NAME("Default NFO file name"), MULTIPLE_FILES("Multiple NFO files"), INVALID_NAME("Invalid NFO file name");
 
     private final String name;
 

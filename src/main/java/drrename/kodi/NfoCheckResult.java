@@ -19,27 +19,13 @@
 
 package drrename.kodi;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import java.nio.file.Path;
 
-@AllArgsConstructor
-public class GenericTreeItemContent extends KodiTreeItemContent {
+public abstract class NfoCheckResult extends CheckResult {
 
-    private Object value;
-
-    @Override
-    public String toString() {
-        return value.toString();
+    public NfoCheckResult(String result) {
+        super(result);
     }
 
-    // Getter / Setter //
-
-
-    public Object getValue() {
-        return value;
-    }
-
-    public void setValue(Object value) {
-        this.value = value;
-    }
+    public abstract Path getNfoFile();
 }

@@ -21,6 +21,8 @@ package drrename.kodi;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Objects;
+
 @RequiredArgsConstructor
 public class CheckResultTreeItemContent<T extends CheckResult> extends KodiTreeItemContent {
 
@@ -28,6 +30,18 @@ public class CheckResultTreeItemContent<T extends CheckResult> extends KodiTreeI
 
     public T getCheckResult() {
         return checkResult;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckResultTreeItemContent<?> that)) return false;
+        return checkResult.equals(that.checkResult);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(checkResult);
     }
 
     @Override
