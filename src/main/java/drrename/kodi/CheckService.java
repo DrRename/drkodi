@@ -41,5 +41,5 @@ public abstract class CheckService<R extends CheckResult> {
 
     public abstract R checkPath(Path path) throws IOException;
 
-    public abstract KodiTreeItem<R> buildChildItem(R checkResult);
+    public abstract KodiTreeItem buildChildItem(R checkResult);
 }

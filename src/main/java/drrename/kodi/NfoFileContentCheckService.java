@@ -38,8 +38,8 @@ import java.nio.file.Path;
 public class NfoFileContentCheckService extends CheckService<NfoFileContentCheckResult> {
 
     @Override
-    public KodiTreeItem<NfoFileContentCheckResult> buildChildItem(NfoFileContentCheckResult checkResult) {
-        return new KodiTreeItem<>(new NfoFileContentTreeItemContent(checkResult));
+    public KodiTreeItem buildChildItem(NfoFileContentCheckResult checkResult) {
+        return new KodiTreeItem(new NfoFileContentTreeItemContent(checkResult));
     }
 
     public NfoFileContentCheckResult checkPath(Path path) throws IOException {
