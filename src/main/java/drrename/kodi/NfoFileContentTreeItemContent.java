@@ -19,7 +19,7 @@
 
 package drrename.kodi;
 
-public class NfoFileContentTreeItemContent extends GenericKodiTreeItemContent<NfoFileContentCheckResult> {
+public class NfoFileContentTreeItemContent extends CheckResultTreeItemContent<NfoFileContentCheckResult> {
 
     public NfoFileContentTreeItemContent(NfoFileContentCheckResult value) {
        super(value);

@@ -20,7 +20,7 @@ public class RenameUtil {
             if(xmlFileContent.getArt() != null && xmlFileContent.getArt().getPoster() != null)
                 return nfoFile.getParent().resolve(xmlFileContent.getArt().getPoster());
         } catch (JsonParseException e) {
-            log.debug("Failed to deserialize {} ({})", nfoFile, e.toString());
+            log.debug("Failed to deserialize image path from {})", nfoFile);
         }
         return null;
     }
