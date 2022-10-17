@@ -21,14 +21,14 @@ package drrename.kodi;
 
 import java.nio.file.Path;
 
-public class NfoFileContentCheckResult extends CheckResult {
+public class NfoFileContentCheckResult extends NfoCheckResult {
 
     private final Path nfoFile;
 
     private final boolean warning;
 
     public NfoFileContentCheckResult(String result, Path nfoFile, boolean hasWarning) {
-        super("NFO File Content: ", result);
+        super(result);
         this.nfoFile = nfoFile;
         this.warning = hasWarning;
     }
