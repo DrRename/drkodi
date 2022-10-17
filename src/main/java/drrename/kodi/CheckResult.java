@@ -22,25 +22,36 @@ package drrename.kodi;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.util.Objects;
+
 public class CheckResult {
 
     protected final StringProperty result;
 
-    protected final String prefix;
-
-    public CheckResult(String prefix, String result) {
-        this.prefix = prefix;
+    public CheckResult(String result) {
         this.result = new SimpleStringProperty(result);
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckResult that)) return false;
+        return Objects.equals(getResult(), that.getResult());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(result);
+    }
+
+    @Override
     public String toString() {
-        return getValue();
+        return getResult();
     }
 
     // Getter / Setter //
 
-    public String getValue() {
+    public String getResult() {
         return result.get();
     }
 
