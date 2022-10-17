@@ -8,12 +8,15 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +56,10 @@ public class KodiToolsController implements Initializable {
 
     public CheckBox checkBoxHideEmpty;
 
+    public HBox goCancelButtonsComponent;
+
+    public CheckBox checkBoxMissingNfoFileIsAWarning;
+
     private Stage mainStage;
 
     Stage imageStage;
@@ -89,7 +96,8 @@ public class KodiToolsController implements Initializable {
             buttonExpandAll.setDisable(e.getList().isEmpty());
             buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
-        checkBoxHideEmpty.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate(newValue));
+        checkBoxHideEmpty.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate());
+        checkBoxMissingNfoFileIsAWarning.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate());
         startDirectoryComponentController.inputPathProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 onButtonGoEvent(null);
@@ -131,13 +139,11 @@ public class KodiToolsController implements Initializable {
                     continue;
                 }
                 var hans = treeView.getTreeItem(c.getAddedSubList().get(0)).getValue();
-                log.debug("Selection changed: {}", hans);
-                if (hans instanceof CheckResultTreeItemContent<?> peter) {
-                    log.debug("Handling {}", hans);
-                    if (peter.getCheckResult() instanceof NfoCheckResult fritz) {
-                        Path nfoFile = fritz.getNfoFile();
+                log.debug("Selection changed: {} ({})", hans, hans.getClass());
+                if (hans instanceof NfoCheckResultTreeItemContent<?> peter) {
+                    log.debug("Handling {}", peter);
+                        Path nfoFile = peter.getCheckResult().getNfoFile();
                         executor.execute(() -> showImage(nfoFile));
-                    }
                 }
             }
         });
@@ -177,13 +183,15 @@ public class KodiToolsController implements Initializable {
         imageStage.show();
     }
 
-    private void updateTreeRootPredicate(boolean onlyWarnings) {
-        treeRoot.setPredicate(buildHideEmptyPredicate(onlyWarnings));
+    private void updateTreeRootPredicate() {
+        Platform.runLater(() -> treeRoot.setPredicate(buildHideEmptyPredicate()));
     }
 
-    private static Predicate<KodiTreeItemContent> buildHideEmptyPredicate(boolean onlyWarnings) {
+    private Predicate<KodiTreeItemContent> buildHideEmptyPredicate() {
         return item -> {
-            if (onlyWarnings)
+            if(item instanceof NfoCheckResultTreeItemContent<?> anotherItem)
+                anotherItem.setMissingNfoIsAWarning(checkBoxMissingNfoFileIsAWarning.isSelected());
+            if (checkBoxHideEmpty.isSelected())
                 return item.hasWarning();
             return true;
         };

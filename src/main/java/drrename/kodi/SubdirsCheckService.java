@@ -41,8 +41,8 @@ public class SubdirsCheckService extends CheckService<CheckResult> {
     }
 
     @Override
-    public KodiTreeItem<CheckResult> buildChildItem(CheckResult checkResult) {
-        return new KodiTreeItem<>(new CheckResultTreeItemContent(checkResult));
+    public KodiTreeItem buildChildItem(CheckResult checkResult) {
+        return new KodiTreeItem(new CheckResultTreeItemContent(checkResult));
     }
 
     static List<Path> getSubdirs(Path path) throws IOException {
