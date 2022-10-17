@@ -22,18 +22,18 @@ package drrename.kodi;
 import drrename.ui.FilterableTreeItem;
 import javafx.scene.control.TreeItem;
 
-public class KodiTreeItem<T extends CheckResult> extends FilterableTreeItem<KodiTreeItemContent> {
+public class KodiTreeItem extends FilterableTreeItem<KodiTreeItemContent> {
 
     public KodiTreeItem(KodiTreeItemContent value) {
         super(value);
         getValue().setTreeItem(this);
     }
 
-    public void add(KodiTreeItem<?> childItem) {
+    public void add(KodiTreeItem childItem) {
         getSourceChildren().add(childItem);
     }
 
-    public <R extends CheckResult> boolean contains(KodiTreeItem<R> childItem) {
+    public <R extends CheckResult> boolean contains(KodiTreeItem childItem) {
         return getSourceChildren().stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
     }
 }
