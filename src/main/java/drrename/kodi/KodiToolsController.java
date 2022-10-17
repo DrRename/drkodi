@@ -115,18 +115,18 @@ public class KodiToolsController implements Initializable {
                     setText(item.toString());
                     List<String> styles = new ArrayList<>();
                     if (item.hasWarning()) {
-                        styles.add("-fx-font-weight: bold;");
-                        if (item instanceof KodiLevel1TreeItemContent) {
-                            styles.add("-fx-background-color: wheat;");
-                        } else if (item instanceof KodiLevel2TreeItemContent) {
-                            styles.add("-fx-background-color: wheat;");
-                        } else {
-                            styles.add("-fx-background-color: wheat;");
+                        if (item instanceof MovieTreeItemContent) {
+                            styles.add("-fx-font-size: 13;");
                         }
+                        styles.add("-fx-font-weight: bold;");
+                        styles.add("-fx-background-color: wheat;");
                         var joinedStylesString = String.join(" ", styles);
                         setStyle(joinedStylesString);
                     } else {
-                        setStyle(null);
+                        if (item instanceof MovieTreeItemContent) {
+                            styles.add("-fx-font-size: 14;");
+                        } else
+                            setStyle(null);
                     }
                 }
             }
