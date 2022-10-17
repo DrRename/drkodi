@@ -27,15 +27,20 @@ import javafx.collections.ObservableList;
 import java.nio.file.Path;
 import java.util.Collection;
 
-public class NfoFileNameCheckResult extends CheckResult {
+public class NfoFileNameCheckResult extends NfoCheckResult {
 
     private final ListProperty<Path> nfoFiles;
     private final NfoFileNameType type;
 
     public NfoFileNameCheckResult(NfoFileNameType result, Collection<Path> nfoFiles) {
-        super("NFO File Name: ", result.toString());
+        super(result.toString());
         this.type = result;
         this.nfoFiles = new SimpleListProperty<>(FXCollections.observableArrayList(nfoFiles));
+    }
+
+    @Override
+    public Path getNfoFile() {
+        return getNfoFiles().isEmpty() ? null : getNfoFiles().get(0);
     }
 
     // Getter / Setter //
@@ -55,4 +60,6 @@ public class NfoFileNameCheckResult extends CheckResult {
     public void setNfoFiles(ObservableList<Path> nfoFiles) {
         this.nfoFiles.set(nfoFiles);
     }
+
+
 }
