@@ -17,35 +17,24 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content;
 
-import lombok.RequiredArgsConstructor;
+import java.nio.file.Path;
 
-import java.util.Objects;
+public class MovieTreeItemContent extends KodiTreeItemContent {
 
-@RequiredArgsConstructor
-public class CheckResultTreeItemContent<T extends CheckResult> extends KodiTreeItemContent {
+    private final Path moviePath;
 
-    private final T checkResult;
-
-    public T getCheckResult() {
-        return checkResult;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CheckResultTreeItemContent<?> that)) return false;
-        return checkResult.equals(that.checkResult);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(checkResult);
+    public MovieTreeItemContent(Path moviePath) {
+        this.moviePath = moviePath;
     }
 
     @Override
     public String toString() {
-        return checkResult.toString();
+        return moviePath.getFileName().toString();
+    }
+
+    public Path getMoviePath() {
+        return moviePath;
     }
 }
