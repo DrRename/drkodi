@@ -17,24 +17,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
-import java.nio.file.Path;
+public class NfoCheckResultTreeItemContent<T extends NfoCheckResult> extends CheckResultTreeItemContent<T> {
 
-public class MovieTreeItemContent extends KodiTreeItemContent {
+    private boolean missingNfoIsAWarning;
 
-    private final Path moviePath;
-
-    public MovieTreeItemContent(Path moviePath) {
-        this.moviePath = moviePath;
+    public NfoCheckResultTreeItemContent(T checkResult) {
+        super(checkResult);
     }
 
-    @Override
-    public String toString() {
-        return moviePath.getFileName().toString();
+    public boolean isMissingNfoIsAWarning() {
+        return missingNfoIsAWarning;
     }
 
-    public Path getMoviePath() {
-        return moviePath;
+    public void setMissingNfoIsAWarning(boolean missingNfoIsAWarning) {
+        this.missingNfoIsAWarning = missingNfoIsAWarning;
     }
 }

@@ -17,21 +17,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content;
 
-import java.nio.file.Path;
+public enum NfoFileNameType {
+    NO_FILE("No NFO file"), MOVIE_NAME("NFO file name matching movie name"), DEFAULT_NAME("Default NFO file name"), MULTIPLE_FILES("Multiple NFO files"), INVALID_NAME("Invalid NFO file name");
 
-public class MovieTreeItem extends KodiTreeItem {
+    private final String name;
 
-    public MovieTreeItem(MovieTreeItemContent content) {
-        super(content);
+    NfoFileNameType(String name){
+        this.name = name;
     }
 
-    public MovieTreeItem(Path moviePath) {
-        this(new MovieTreeItemContent(moviePath));
-    }
-
-    public Path getMoviePath(){
-        return ((MovieTreeItemContent)getValue()).getMoviePath();
+    @Override
+    public String toString() {
+        return name;
     }
 }

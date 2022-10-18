@@ -17,35 +17,29 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
-import java.nio.file.Path;
+import drrename.kodi.treeitem.content.NfoFileContentCheckService;
+import org.springframework.stereotype.Service;
 
-public class NfoFileContentCheckResult extends NfoCheckResult {
+import java.util.Arrays;
+import java.util.List;
 
-    private final Path nfoFile;
 
-    private final boolean warning;
+@Service
+public class CheckServiceProvider {
 
-    public NfoFileContentCheckResult(String result, Path nfoFile, boolean hasWarning) {
-        super(result);
-        this.nfoFile = nfoFile;
-        this.warning = hasWarning;
+    private final List<CheckService<?>> checkServices;
+
+    public CheckServiceProvider(){
+        this.checkServices = Arrays.asList(
+                new NfoFileNameCheckService(),
+                new NfoFileContentCheckService(),
+                new SubdirsCheckService()
+        );
     }
 
-    @Override
-    public String toString() {
-//        if(isWarning()){
-//            return super.toString() + (nfoFile != null ? " " + nfoFile.getFileName().toString() : "");
-//        }
-        return super.toString();
-    }
-
-    public boolean isWarning() {
-        return warning;
-    }
-
-    public Path getNfoFile() {
-        return nfoFile;
+    public List<CheckService<?>> getCheckServices() {
+        return checkServices;
     }
 }
