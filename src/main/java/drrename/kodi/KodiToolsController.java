@@ -1,6 +1,11 @@
 package drrename.kodi;
 
 import drrename.RenameUtil;
+import drrename.kodi.treeitem.content.check.NfoCheckResultTreeItemContent;
+import drrename.kodi.treeitem.KodiTreeRootItem;
+import drrename.kodi.treeitem.MovieTreeItemFactory;
+import drrename.kodi.treeitem.content.KodiTreeItemContent;
+import drrename.kodi.treeitem.content.MovieTreeItemContent;
 import drrename.ui.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
@@ -8,13 +13,11 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;

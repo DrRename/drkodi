@@ -17,11 +17,14 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import drrename.kodi.treeitem.KodiTreeItem;
+import drrename.kodi.treeitem.content.check.CheckService;
+import drrename.kodi.treeitem.content.check.NfoFileContentCheckResult;
 import drrename.model.nfo.NfoFileXmlModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
