@@ -17,28 +17,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem;
 
-import org.springframework.stereotype.Service;
+import drrename.kodi.treeitem.content.NfoFileNameTreeItemContent;
 
-import java.util.Arrays;
-import java.util.List;
+public class NfoFileNameTreeItem extends KodiTreeItem {
 
-
-@Service
-public class CheckServiceProvider {
-
-    private final List<CheckService<?>> checkServices;
-
-    public CheckServiceProvider(){
-        this.checkServices = Arrays.asList(
-                new NfoFileNameCheckService(),
-                new NfoFileContentCheckService(),
-                new SubdirsCheckService()
-        );
-    }
-
-    public List<CheckService<?>> getCheckServices() {
-        return checkServices;
+    public NfoFileNameTreeItem(NfoFileNameTreeItemContent value) {
+        super(value);
     }
 }

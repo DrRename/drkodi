@@ -17,8 +17,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
+import drrename.kodi.treeitem.KodiTreeItem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

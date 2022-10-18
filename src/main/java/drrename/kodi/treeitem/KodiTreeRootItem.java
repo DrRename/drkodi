@@ -17,21 +17,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem;
 
-public class NfoCheckResultTreeItemContent<T extends NfoCheckResult> extends CheckResultTreeItemContent<T>{
+import drrename.kodi.treeitem.content.KodiTreeItemContent;
+import drrename.kodi.treeitem.content.KodiRootTreeItemContent;
+import drrename.ui.FilterableTreeItem;
 
-    private boolean missingNfoIsAWarning;
+public class KodiTreeRootItem extends FilterableTreeItem<KodiTreeItemContent> {
 
-    public NfoCheckResultTreeItemContent(T checkResult) {
-        super(checkResult);
-    }
-
-    public boolean isMissingNfoIsAWarning() {
-        return missingNfoIsAWarning;
-    }
-
-    public void setMissingNfoIsAWarning(boolean missingNfoIsAWarning) {
-        this.missingNfoIsAWarning = missingNfoIsAWarning;
+    public KodiTreeRootItem() {
+        super(new KodiRootTreeItemContent());
+        getValue().setTreeItem(this);
     }
 }

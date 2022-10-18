@@ -17,23 +17,35 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
-public class KodiLevel3TreeItemContent extends KodiTreeItemContent {
+import java.nio.file.Path;
 
-    private final CheckResult checkResult;
+public class NfoFileContentCheckResult extends NfoCheckResult {
 
-    public KodiLevel3TreeItemContent(CheckResult checkResult) {
-        super();
-        this.checkResult = checkResult;
-    }
+    private final Path nfoFile;
 
-    public CheckResult getCheckResult() {
-        return checkResult;
+    private final boolean warning;
+
+    public NfoFileContentCheckResult(String result, Path nfoFile, boolean hasWarning) {
+        super(result);
+        this.nfoFile = nfoFile;
+        this.warning = hasWarning;
     }
 
     @Override
     public String toString() {
-        return checkResult != null ? checkResult.toString() : "null";
+//        if(isWarning()){
+//            return super.toString() + (nfoFile != null ? " " + nfoFile.getFileName().toString() : "");
+//        }
+        return super.toString();
+    }
+
+    public boolean isWarning() {
+        return warning;
+    }
+
+    public Path getNfoFile() {
+        return nfoFile;
     }
 }
