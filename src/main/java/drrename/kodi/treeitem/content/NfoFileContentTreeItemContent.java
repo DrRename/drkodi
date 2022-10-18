@@ -17,23 +17,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content;
 
-public class KodiLevel1TreeItemContent extends KodiTreeItemContent {
+import drrename.kodi.treeitem.content.check.NfoFileContentCheckResult;
+import drrename.kodi.treeitem.content.check.NfoCheckResultTreeItemContent;
 
-    private final String type;
+public class NfoFileContentTreeItemContent extends NfoCheckResultTreeItemContent<NfoFileContentCheckResult> {
 
-    public KodiLevel1TreeItemContent(String name) {
-        this.type = name;
+    public NfoFileContentTreeItemContent(NfoFileContentCheckResult value) {
+       super(value);
     }
 
     @Override
-    public String toString() {
-        return type;
-    }
-
-    @SuppressWarnings("unused")
-    public String getType() {
-        return type;
+    public boolean hasWarning() {
+        return getCheckResult().isWarning();
     }
 }

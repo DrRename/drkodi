@@ -17,15 +17,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content;
 
-import java.nio.file.Path;
+import javafx.scene.control.TreeItem;
 
-public abstract class NfoCheckResult extends CheckResult {
 
-    public NfoCheckResult(String result) {
-        super(result);
+public abstract class KodiTreeItemContent {
+
+    private TreeItem<KodiTreeItemContent> treeItem;
+
+    public boolean hasWarning() {
+        return treeItem != null && treeItem.getChildren().stream().map(TreeItem::getValue).anyMatch(KodiTreeItemContent::hasWarning);
     }
 
-    public abstract Path getNfoFile();
+    // Getter / Setter //
+
+    @SuppressWarnings("unused")
+    public TreeItem<KodiTreeItemContent> getTreeItem() {
+        return treeItem;
+    }
+
+    public KodiTreeItemContent setTreeItem(TreeItem<KodiTreeItemContent> treeItem) {
+        this.treeItem = treeItem;
+        return this;
+    }
 }

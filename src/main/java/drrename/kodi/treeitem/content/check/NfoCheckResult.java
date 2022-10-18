@@ -17,11 +17,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
-public class NfoFileNameTreeItem extends KodiTreeItem {
+import java.nio.file.Path;
 
-    public NfoFileNameTreeItem(NfoFileNameTreeItemContent value) {
-        super(value);
+public abstract class NfoCheckResult extends CheckResult {
+
+    public NfoCheckResult(String result) {
+        super(result);
     }
+
+    public abstract Path getNfoFile();
 }
