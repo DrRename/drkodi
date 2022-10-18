@@ -17,25 +17,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem;
+
+import drrename.kodi.treeitem.content.MovieTreeItemContent;
 
 import java.nio.file.Path;
 
-public class KodiLevel2TreeItemContent extends KodiTreeItemContent {
+public class MovieTreeItem extends KodiTreeItem {
 
-    private final Path movie;
-
-    public KodiLevel2TreeItemContent(Path movie) {
-        this.movie = movie;
+    public MovieTreeItem(MovieTreeItemContent content) {
+        super(content);
     }
 
-    @Override
-    public String toString() {
-        return movie.getFileName().toString();
+    public MovieTreeItem(Path moviePath) {
+        this(new MovieTreeItemContent(moviePath));
     }
 
-    @SuppressWarnings("unused")
-    public Path getMovie() {
-        return movie;
+    public Path getMoviePath(){
+        return ((MovieTreeItemContent)getValue()).getMoviePath();
     }
 }

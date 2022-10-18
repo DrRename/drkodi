@@ -17,8 +17,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
+import drrename.kodi.treeitem.NfoFileNameTreeItem;
+import drrename.kodi.treeitem.content.NfoFileNameType;
+import drrename.kodi.treeitem.content.NfoFileNameTreeItemContent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 
@@ -31,6 +34,11 @@ import java.util.List;
 
 @Slf4j
 public class NfoFileNameCheckService extends CheckService<NfoFileNameCheckResult> {
+
+    @Override
+    public NfoFileNameTreeItem buildChildItem(NfoFileNameCheckResult checkResult) {
+        return new NfoFileNameTreeItem(new NfoFileNameTreeItemContent(checkResult));
+    }
 
     @Override
     public NfoFileNameCheckResult checkPath(Path path) throws IOException {
@@ -54,11 +62,6 @@ public class NfoFileNameCheckService extends CheckService<NfoFileNameCheckResult
             }
         }
         return new NfoFileNameCheckResult(type, childString);
-    }
-
-    @Override
-    public NfoFileNameTreeItem buildChildItem(NfoFileNameCheckResult checkResult) {
-        return new NfoFileNameTreeItem(new NfoFileNameTreeItemContent(checkResult));
     }
 
      static NfoFileNameType checkFile(String movieName, Path child) {

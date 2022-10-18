@@ -17,30 +17,31 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
-import lombok.RequiredArgsConstructor;
+import drrename.kodi.treeitem.KodiTreeItem;
+import drrename.kodi.treeitem.MovieTreeItem;
+import javafx.application.Platform;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.concurrent.Executor;
 
 @Slf4j
-@RequiredArgsConstructor
-@Service
-public class MovieTreeItemFactory {
+public abstract class CheckService<R extends CheckResult> {
 
-    private final Executor executor;
-
-    private final CheckServiceProvider checkServiceProvider;
-
-    public MovieTreeItem buildNew(Path moviePath){
-        return triggerNfoFileNameCheck(new MovieTreeItem(moviePath));
+    public void addChildItem(MovieTreeItem treeItem) {
+        try {
+            R checkResult = checkPath(treeItem.getMoviePath());
+            var childItem = buildChildItem(checkResult);
+            if(!treeItem.contains(childItem))
+                Platform.runLater(() -> treeItem.add(childItem));
+        }catch (IOException e){
+            log.error(e.getLocalizedMessage(), e);
+        }
     }
 
-    private MovieTreeItem triggerNfoFileNameCheck(MovieTreeItem movieTreeItem) {
-        executor.execute(() -> checkServiceProvider.getCheckServices().forEach(e -> e.addChildItem(movieTreeItem)));
-        return movieTreeItem;
-    }
+    public abstract R checkPath(Path path) throws IOException;
+
+    public abstract KodiTreeItem buildChildItem(R checkResult);
 }

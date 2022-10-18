@@ -17,7 +17,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content;
+
+import drrename.kodi.treeitem.content.check.NfoFileNameCheckResult;
+import drrename.kodi.treeitem.content.check.NfoCheckResultTreeItemContent;
 
 import java.util.stream.Collectors;
 
@@ -28,7 +31,7 @@ public class NfoFileNameTreeItemContent extends NfoCheckResultTreeItemContent<Nf
     }
 
     @Override
-    protected boolean hasWarning() {
+    public boolean hasWarning() {
         if(NfoFileNameType.NO_FILE.equals(getCheckResult().getType()) && !isMissingNfoIsAWarning()){
             return false;
         }

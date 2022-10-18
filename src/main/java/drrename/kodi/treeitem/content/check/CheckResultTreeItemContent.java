@@ -17,14 +17,36 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem.content.check;
 
-import drrename.ui.FilterableTreeItem;
+import drrename.kodi.treeitem.content.KodiTreeItemContent;
+import lombok.RequiredArgsConstructor;
 
-public class KodiLevel3TreeItem extends FilterableTreeItem<KodiTreeItemContent> {
+import java.util.Objects;
 
-    public KodiLevel3TreeItem(KodiTreeItemContent value) {
-        super(value);
-        getValue().setTreeItem(this);
+@RequiredArgsConstructor
+public class CheckResultTreeItemContent<T extends CheckResult> extends KodiTreeItemContent {
+
+    private final T checkResult;
+
+    public T getCheckResult() {
+        return checkResult;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckResultTreeItemContent<?> that)) return false;
+        return checkResult.equals(that.checkResult);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(checkResult);
+    }
+
+    @Override
+    public String toString() {
+        return checkResult.toString();
     }
 }
