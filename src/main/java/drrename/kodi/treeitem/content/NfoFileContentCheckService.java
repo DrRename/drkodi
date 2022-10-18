@@ -25,7 +25,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import drrename.kodi.treeitem.KodiTreeItem;
 import drrename.kodi.treeitem.content.check.CheckService;
 import drrename.kodi.treeitem.content.check.NfoFileContentCheckResult;
-import drrename.model.NfoFileXmlModel;
+import drrename.model.nfo.NfoFileXmlModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
