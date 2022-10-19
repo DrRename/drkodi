@@ -17,26 +17,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.kodi.treeitem.content.check;
 
-import drrename.kodi.treeitem.content.KodiTreeItemContent;
-import drrename.ui.FilterableTreeItem;
-import javafx.scene.control.TreeItem;
+import drrename.kodi.treeitem.KodiTreeItem;
+import drrename.kodi.treeitem.content.MultipleSpacesTreeItem;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class KodiTreeItem extends FilterableTreeItem<KodiTreeItemContent> {
+public class MultipleSpacesService extends CheckService<MultipleSpacesCheckResult>{
 
-    public KodiTreeItem(KodiTreeItemContent value) {
-        super(value);
-        getValue().setTreeItem(this);
+    @Override
+    public MultipleSpacesCheckResult checkPath(Path path) throws IOException {
+        return new MultipleSpacesCheckResult(path);
     }
 
-    public void add(KodiTreeItem childItem) {
-        getSourceChildren().add(childItem);
-    }
-
-    public boolean contains(KodiTreeItem childItem) {
-        return new ArrayList<>(getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
+    @Override
+    public KodiTreeItem buildChildItem(MultipleSpacesCheckResult checkResult) {
+        return new MultipleSpacesTreeItem(new MultipleSpacesTreeItemContent(checkResult.getPath()));
     }
 }
