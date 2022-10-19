@@ -17,26 +17,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.kodi.treeitem.content;
 
-import drrename.kodi.treeitem.content.KodiTreeItemContent;
-import drrename.ui.FilterableTreeItem;
-import javafx.scene.control.TreeItem;
+import drrename.kodi.treeitem.KodiTreeItem;
 
-import java.util.ArrayList;
+public class MultipleSpacesTreeItem extends KodiTreeItem {
 
-public class KodiTreeItem extends FilterableTreeItem<KodiTreeItemContent> {
-
-    public KodiTreeItem(KodiTreeItemContent value) {
+    public MultipleSpacesTreeItem(KodiTreeItemContent value) {
         super(value);
-        getValue().setTreeItem(this);
-    }
-
-    public void add(KodiTreeItem childItem) {
-        getSourceChildren().add(childItem);
-    }
-
-    public boolean contains(KodiTreeItem childItem) {
-        return new ArrayList<>(getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
     }
 }

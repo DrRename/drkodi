@@ -21,10 +21,15 @@ import java.util.concurrent.Callable;
 public class RenamingEntry {
 
     private final ObjectProperty<Path> oldPath;
+
     private final StringProperty newPath;
+
     private final ObjectProperty<Throwable> exception;
+
     private final BooleanProperty willChange;
+
     private final BooleanProperty filtered;
+
     private final StringProperty fileType;
 
     private final Control leftControl;
