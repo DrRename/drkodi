@@ -19,7 +19,7 @@
 
 package drrename.event;
 
-import drrename.model.RenamingEntry;
+import drrename.model.RenamingControl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -33,9 +33,9 @@ public class FileRenamedEvent  {
 
     private final UUID uuid;
 
-    private final List<RenamingEntry> renamedEntries;
+    private final List<RenamingControl> renamedEntries;
 
-    public FileRenamedEvent(UUID uuid, RenamingEntry renamedEntries) {
+    public FileRenamedEvent(UUID uuid, RenamingControl renamedEntries) {
         this(uuid, Collections.singletonList(renamedEntries));
     }
 }

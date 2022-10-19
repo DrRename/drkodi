@@ -1,7 +1,7 @@
 package drrename.ui.service;
 
 import drrename.event.*;
-import drrename.model.RenamingEntry;
+import drrename.model.RenamingControl;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 @Slf4j
-public class ListDirectoryTask extends Task<List<RenamingEntry>> {
+public class ListDirectoryTask extends Task<List<RenamingControl>> {
 
     private final Path dir;
 
@@ -27,24 +27,24 @@ public class ListDirectoryTask extends Task<List<RenamingEntry>> {
     }
 
     @Override
-    protected List<RenamingEntry> call() throws IOException {
+    protected List<RenamingControl> call() throws IOException {
         return getEntries(dir);
     }
 
-    List<RenamingEntry> getEntries(final Path dir) throws IOException {
-        List<RenamingEntry> result = new ArrayList<>();
+    List<RenamingControl> getEntries(final Path dir) throws IOException {
+        List<RenamingControl> result = new ArrayList<>();
         SynchronousUuidEvent event = new StartingListFilesEvent();
         log.debug("Publishing event {}", event);
         eventPublisher.publishEvent(event);
 
-        List<RenamingEntry> smallList = new ArrayList<>();
+        List<RenamingControl> smallList = new ArrayList<>();
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (Path path : stream) {
                 if (Thread.interrupted()) {
                     break;
                 }
-                RenamingEntry newEntry = new RenamingEntry(path);
+                RenamingControl newEntry = new RenamingControl(path);
                 result.add(newEntry);
                 smallList.add(newEntry);
                 if(smallList.size() > 3) {

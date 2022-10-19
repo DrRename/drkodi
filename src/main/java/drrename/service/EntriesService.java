@@ -3,7 +3,7 @@ package drrename.service;
 import drrename.config.AppConfig;
 import drrename.event.FileRenamedEvent;
 import drrename.event.NewRenamingEntryEvent;
-import drrename.model.RenamingEntry;
+import drrename.model.RenamingControl;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
@@ -44,25 +44,25 @@ public class EntriesService {
 
     private final AppConfig appConfig;
 
-    private final ListProperty<RenamingEntry> entries;
+    private final ListProperty<RenamingControl> entries;
 
-    private final ListProperty<RenamingEntry> entriesFiltered;
+    private final ListProperty<RenamingControl> entriesFiltered;
 
-    private final FilteredList<RenamingEntry> entriesWillRename;
+    private final FilteredList<RenamingControl> entriesWillRename;
 
-    private final FilteredList<RenamingEntry> loadedImageEntries;
+    private final FilteredList<RenamingControl> loadedImageEntries;
 
-    private final FilteredList<RenamingEntry> loadedVideosEntries;
+    private final FilteredList<RenamingControl> loadedVideosEntries;
 
-    private final FilteredList<RenamingEntry> willRenameImageEntries;
+    private final FilteredList<RenamingControl> willRenameImageEntries;
 
-    private final FilteredList<RenamingEntry> willRenameVideosEntries;
+    private final FilteredList<RenamingControl> willRenameVideosEntries;
 
-    private final ListProperty<RenamingEntry> entriesRenamed;
+    private final ListProperty<RenamingControl> entriesRenamed;
 
-    private final FilteredList<RenamingEntry> renamedImageEntries;
+    private final FilteredList<RenamingControl> renamedImageEntries;
 
-    private final FilteredList<RenamingEntry> renamedVideosEntries;
+    private final FilteredList<RenamingControl> renamedVideosEntries;
 
     private final StringProperty statusLoaded = new SimpleStringProperty();
 
@@ -82,13 +82,13 @@ public class EntriesService {
 
     private final BooleanProperty showOnlyChainging = new SimpleBooleanProperty();
 
-    private final Predicate<RenamingEntry> entriesFilteredDefaultPredicate = e -> true;
+    private final Predicate<RenamingControl> entriesFilteredDefaultPredicate = e -> true;
 
-    private final static Predicate<RenamingEntry> isImage = e -> e.getFileType() != null && e.getFileType().contains("image");
+    private final static Predicate<RenamingControl> isImage = e -> e.getFileType() != null && e.getFileType().contains("image");
 
-    private final static Predicate<RenamingEntry> isVideo = e -> e.getFileType() != null && e.getFileType().contains("video");
+    private final static Predicate<RenamingControl> isVideo = e -> e.getFileType() != null && e.getFileType().contains("video");
 
-    private final static Predicate<RenamingEntry> noHidden = e -> {
+    private final static Predicate<RenamingControl> noHidden = e -> {
         try {
             return !Files.isHidden(e.getOldPath());
         } catch (IOException ex) {
@@ -98,9 +98,9 @@ public class EntriesService {
         }
     };
 
-    private final static Predicate<RenamingEntry> noDirectories = e -> !Files.isDirectory(e.getOldPath());
+    private final static Predicate<RenamingControl> noDirectories = e -> !Files.isDirectory(e.getOldPath());
 
-    private final static Predicate<RenamingEntry> onlyChanging = RenamingEntry::willChange;
+    private final static Predicate<RenamingControl> onlyChanging = RenamingControl::isWillChange;
 
     public EntriesService(ResourceBundle resourceBundle, AppConfig appConfig, Executor executor) {
         this.resourceBundle = resourceBundle;
@@ -108,7 +108,7 @@ public class EntriesService {
         entries = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{item.newPathProperty(), item.exceptionProperty(), item.fileTypeProperty(), item.filteredProperty(), item.willChangeProperty()}));
         entriesFiltered = new SimpleListProperty<>(new FilteredList<>(entries, entriesFilteredDefaultPredicate));
         entriesRenamed = new SimpleListProperty<>(FXCollections.observableArrayList());
-        entriesWillRename = new FilteredList<>(entries, RenamingEntry::willChange);
+        entriesWillRename = new FilteredList<>(entries, RenamingControl::isWillChange);
         loadedImageEntries = new FilteredList<>(entries, isImage);
         loadedVideosEntries = new FilteredList<>(entries, isVideo);
         willRenameImageEntries = new FilteredList<>(entriesWillRename, isImage);
@@ -130,29 +130,29 @@ public class EntriesService {
 
         entries.sizeProperty().addListener((observable, oldValue, newValue) -> statusLoaded.setValue(String.format(resourceBundle.getString(LOADED), newValue)));
 
-        entriesWillRename.addListener((ListChangeListener<RenamingEntry>) c -> statusWillRename.setValue(String.format(resourceBundle.getString(WILL_RENAME), c.getList().size())));
+        entriesWillRename.addListener((ListChangeListener<RenamingControl>) c -> statusWillRename.setValue(String.format(resourceBundle.getString(WILL_RENAME), c.getList().size())));
 
         entriesRenamed.sizeProperty().addListener((observable, oldValue, newValue) -> statusRenamed.setValue(String.format(resourceBundle.getString(RENAMED), newValue)));
 
-        loadedImageEntries.addListener((ListChangeListener<RenamingEntry>) c -> updateLoadedFileTypesLabel());
+        loadedImageEntries.addListener((ListChangeListener<RenamingControl>) c -> updateLoadedFileTypesLabel());
 
-        loadedVideosEntries.addListener((ListChangeListener<RenamingEntry>) c -> updateLoadedFileTypesLabel());
+        loadedVideosEntries.addListener((ListChangeListener<RenamingControl>) c -> updateLoadedFileTypesLabel());
 
-        willRenameImageEntries.addListener((ListChangeListener<RenamingEntry>) c -> updateWillRenameFileTypesLabel());
+        willRenameImageEntries.addListener((ListChangeListener<RenamingControl>) c -> updateWillRenameFileTypesLabel());
 
-        willRenameVideosEntries.addListener((ListChangeListener<RenamingEntry>) c -> updateWillRenameFileTypesLabel());
+        willRenameVideosEntries.addListener((ListChangeListener<RenamingControl>) c -> updateWillRenameFileTypesLabel());
 
-        renamedImageEntries.addListener((ListChangeListener<RenamingEntry>) c -> updateRenamedFileTypesLabel());
+        renamedImageEntries.addListener((ListChangeListener<RenamingControl>) c -> updateRenamedFileTypesLabel());
 
-        renamedVideosEntries.addListener((ListChangeListener<RenamingEntry>) c -> updateRenamedFileTypesLabel());
+        renamedVideosEntries.addListener((ListChangeListener<RenamingControl>) c -> updateRenamedFileTypesLabel());
 
-        filterHiddenFiles.addListener((observable, oldValue, newValue) -> ((FilteredList<RenamingEntry>)entriesFiltered.get()).setPredicate(getCombinedPredicate()));
-        filterDirectories.addListener((observable, oldValue, newValue) -> ((FilteredList<RenamingEntry>)entriesFiltered.get()).setPredicate(getCombinedPredicate()));
-        showOnlyChainging.addListener((observable, oldValue, newValue) -> ((FilteredList<RenamingEntry>)entriesFiltered.get()).setPredicate(getCombinedPredicate()));
+        filterHiddenFiles.addListener((observable, oldValue, newValue) -> ((FilteredList<RenamingControl>)entriesFiltered.get()).setPredicate(getCombinedPredicate()));
+        filterDirectories.addListener((observable, oldValue, newValue) -> ((FilteredList<RenamingControl>)entriesFiltered.get()).setPredicate(getCombinedPredicate()));
+        showOnlyChainging.addListener((observable, oldValue, newValue) -> ((FilteredList<RenamingControl>)entriesFiltered.get()).setPredicate(getCombinedPredicate()));
     }
 
-    private Predicate<? super RenamingEntry> getCombinedPredicate() {
-        Predicate<RenamingEntry> resultPredicate = null;
+    private Predicate<? super RenamingControl> getCombinedPredicate() {
+        Predicate<RenamingControl> resultPredicate = null;
         if(isFilterHiddenFiles()){
             resultPredicate = noHidden;
         }
@@ -191,7 +191,7 @@ public class EntriesService {
 
     // Getter / Setter
 
-    public ObservableList<RenamingEntry> getEntries() {
+    public ObservableList<RenamingControl> getEntries() {
         return entries.get();
     }
 
@@ -255,8 +255,8 @@ public class EntriesService {
         this.filterHiddenFiles.set(filterHiddenFiles);
     }
 
-    public FilteredList<RenamingEntry> getEntriesFiltered() {
-        return (FilteredList<RenamingEntry>) entriesFiltered.get();
+    public FilteredList<RenamingControl> getEntriesFiltered() {
+        return (FilteredList<RenamingControl>) entriesFiltered.get();
     }
 
     public boolean isFilterDirectories() {
@@ -283,7 +283,7 @@ public class EntriesService {
         this.showOnlyChainging.set(showOnlyChainging);
     }
 
-    public List<RenamingEntry> getEntriesRenamed() {
+    public List<RenamingControl> getEntriesRenamed() {
         return entriesRenamed;
     }
 }
