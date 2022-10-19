@@ -24,6 +24,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Objects;
 
+@Deprecated
 public class CheckResult {
 
     protected final StringProperty result;

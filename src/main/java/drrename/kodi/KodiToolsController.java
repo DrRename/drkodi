@@ -1,11 +1,11 @@
 package drrename.kodi;
 
 import drrename.RenameUtil;
+import drrename.kodi.treeitem.content.check.NfoCheckResultTreeItemContent;
 import drrename.kodi.treeitem.KodiTreeRootItem;
 import drrename.kodi.treeitem.MovieTreeItemFactory;
 import drrename.kodi.treeitem.content.KodiTreeItemContent;
 import drrename.kodi.treeitem.content.MovieTreeItemContent;
-import drrename.kodi.treeitem.content.check.NfoCheckResultTreeItemContent;
 import drrename.ui.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
@@ -13,9 +13,7 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -108,37 +106,7 @@ public class KodiToolsController implements Initializable {
                 onButtonGoEvent(null);
             }
         });
-        treeView.setCellFactory(tv -> new TreeCell<>() {
-
-            @Override
-            protected void updateItem(KodiTreeItemContent item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null) {
-                    setText(null);
-                    setStyle(null);
-                    setGraphic(null);
-                } else {
-                    setText(item.toString());
-                    List<String> styles = new ArrayList<>();
-                    if (item instanceof MovieTreeItemContent) {
-                        styles.add("-fx-font-size: 14;");
-                    }
-                    if (item.hasWarning()) {
-                        if (item instanceof MovieTreeItemContent) {
-                            styles.add("-fx-font-size: 13;");
-                        }
-                        styles.add("-fx-font-weight: bold;");
-                        styles.add("-fx-background-color: wheat;");
-                        var joinedStylesString = String.join(" ", styles);
-                        setStyle(joinedStylesString);
-                        setGraphic(buildGraphic(item));
-                    } else {
-                        setStyle(null);
-                        setGraphic(null);
-                    }
-                }
-            }
-        });
+        treeView.setCellFactory(this::treeViewCellFactoryCallback);
 
         treeView.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<Integer>) c -> {
             imageStage.close();
@@ -157,16 +125,8 @@ public class KodiToolsController implements Initializable {
         });
     }
 
-    private Node buildGraphic(KodiTreeItemContent item) {
-        Button button = new Button("Fix");
-        button.disableProperty().bind(item.fixableProperty().not());
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-            }
-        });
-        return button;
+    private TreeCell<KodiTreeItemContent> treeViewCellFactoryCallback(TreeView<KodiTreeItemContent> kodiTreeItemContentTreeView) {
+        return new KodiTreeCell();
     }
 
     private void showImage(Path nfoFile) {
