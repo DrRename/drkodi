@@ -106,34 +106,7 @@ public class KodiToolsController implements Initializable {
                 onButtonGoEvent(null);
             }
         });
-        treeView.setCellFactory(tv -> new TreeCell<>() {
-
-            @Override
-            protected void updateItem(KodiTreeItemContent item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null) {
-                    setText(null);
-                    setStyle(null);
-                } else {
-                    setText(item.toString());
-                    List<String> styles = new ArrayList<>();
-                    if (item.hasWarning()) {
-                        if (item instanceof MovieTreeItemContent) {
-                            styles.add("-fx-font-size: 13;");
-                        }
-                        styles.add("-fx-font-weight: bold;");
-                        styles.add("-fx-background-color: wheat;");
-                        var joinedStylesString = String.join(" ", styles);
-                        setStyle(joinedStylesString);
-                    } else {
-                        if (item instanceof MovieTreeItemContent) {
-                            styles.add("-fx-font-size: 14;");
-                        } else
-                            setStyle(null);
-                    }
-                }
-            }
-        });
+        treeView.setCellFactory(this::treeViewCellFactoryCallback);
 
         treeView.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<Integer>) c -> {
             imageStage.close();
@@ -150,6 +123,10 @@ public class KodiToolsController implements Initializable {
                 }
             }
         });
+    }
+
+    private TreeCell<KodiTreeItemContent> treeViewCellFactoryCallback(TreeView<KodiTreeItemContent> kodiTreeItemContentTreeView) {
+        return new KodiTreeCell();
     }
 
     private void showImage(Path nfoFile) {

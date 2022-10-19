@@ -9,7 +9,7 @@ import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
-import drrename.model.RenamingEntry;
+import drrename.model.RenamingControl;
 import drrename.service.EntriesService;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.ReplacementStringComponentController;
@@ -207,12 +207,12 @@ public class MainController implements Initializable {
         if (config.isDebug())
             applyRandomColors();
 
-        entriesService.getEntriesFiltered().addListener((ListChangeListener<RenamingEntry>) c -> {
+        entriesService.getEntriesFiltered().addListener((ListChangeListener<RenamingControl>) c -> {
             while (c.next()) {
                 executor.execute(() -> {
-                    Collection<RenamingEntry> removeFinal = new LinkedHashSet<>(c.getRemoved());
+                    Collection<RenamingControl> removeFinal = new LinkedHashSet<>(c.getRemoved());
                     c.getAddedSubList().forEach(removeFinal::remove);
-                    Collection<RenamingEntry> addFinal = new LinkedHashSet<>(c.getAddedSubList());
+                    Collection<RenamingControl> addFinal = new LinkedHashSet<>(c.getAddedSubList());
                     c.getRemoved().forEach(addFinal::remove);
                     Platform.runLater(() -> {
                         removeFromContent(removeFinal);
@@ -386,32 +386,32 @@ public class MainController implements Initializable {
         return String.format("#%06x", new Random().nextInt(256 * 256 * 256));
     }
 
-    private void addToContent(final Collection<? extends RenamingEntry> renamingBeans) {
+    private void addToContent(final Collection<? extends RenamingControl> renamingBeans) {
         renamingBeans.forEach(this::addToContent);
     }
 
-    private void removeFromContent(final Collection<? extends RenamingEntry> renamingBeans) {
+    private void removeFromContent(final Collection<? extends RenamingControl> renamingBeans) {
         if (leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()) {
             return;
         }
         renamingBeans.forEach(this::removeFromContent);
     }
 
-    private void addToContent(final RenamingEntry renamingEntry) {
-        leftContent.getItems().add(renamingEntry.getLeftControl());
-        rightContent.getItems().add(renamingEntry.getRightControl());
+    private void addToContent(final RenamingControl renamingControl) {
+        leftContent.getItems().add(renamingControl.getLeftControl());
+        rightContent.getItems().add(renamingControl.getRightControl());
     }
 
-    private void removeFromContent(final RenamingEntry renamingEntry) {
+    private void removeFromContent(final RenamingControl renamingControl) {
         if (leftContent.getItems().isEmpty() && rightContent.getItems().isEmpty()) {
             return;
         }
 
-        if (!leftContent.getItems().remove(renamingEntry.getLeftControl())) {
-            log.warn("Failed to remove {} from left content", renamingEntry.getLeftControl());
+        if (!leftContent.getItems().remove(renamingControl.getLeftControl())) {
+            log.warn("Failed to remove {} from left content", renamingControl.getLeftControl());
         }
-        if (!rightContent.getItems().remove(renamingEntry.getRightControl())) {
-            log.warn("Failed to remove {} from right content", renamingEntry.getRightControl());
+        if (!rightContent.getItems().remove(renamingControl.getRightControl())) {
+            log.warn("Failed to remove {} from right content", renamingControl.getRightControl());
         }
 
     }
@@ -468,7 +468,7 @@ public class MainController implements Initializable {
         startService(fileTypeService);
     }
 
-    private void initFileTypeService(Collection<RenamingEntry> renamingEntries) {
+    private void initFileTypeService(Collection<RenamingControl> renamingEntries) {
         fileTypeService.cancel();
         fileTypeService.reset();
         fileTypeService.setRenamingEntries(renamingEntries);
