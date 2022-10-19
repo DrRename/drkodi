@@ -1,7 +1,7 @@
 package drrename.ui.service;
 
 import drrename.event.StartingListFilesEvent;
-import drrename.model.RenamingEntry;
+import drrename.model.RenamingControl;
 import drrename.event.NewRenamingEntryEvent;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ListFilesTask extends Task<List<RenamingEntry>> {
+public class ListFilesTask extends Task<List<RenamingControl>> {
 
     private final Collection<Path> files;
 
@@ -23,13 +23,13 @@ public class ListFilesTask extends Task<List<RenamingEntry>> {
 
 
     @Override
-    protected List<RenamingEntry> call() {
+    protected List<RenamingControl> call() {
         return getEntries(files);
 
     }
 
-    List<RenamingEntry> getEntries(final Collection<Path> files) {
-        List<RenamingEntry> result = new ArrayList<>();
+    List<RenamingControl> getEntries(final Collection<Path> files) {
+        List<RenamingControl> result = new ArrayList<>();
         var event = new StartingListFilesEvent();
         log.debug("Publishing event {}", event);
         eventPublisher.publishEvent(event);
@@ -37,7 +37,7 @@ public class ListFilesTask extends Task<List<RenamingEntry>> {
             if (Thread.interrupted()) {
                 break;
             }
-            var newEntry = new RenamingEntry(f);
+            var newEntry = new RenamingControl(f);
             result.add(newEntry);
             eventPublisher.publishEvent(new NewRenamingEntryEvent(event.getUuid(), newEntry));
             updateProgress(result.size(), files.size());

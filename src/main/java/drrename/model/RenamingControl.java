@@ -1,8 +1,6 @@
 package drrename.model;
 
-import drrename.strategy.RenamingStrategy;
 import drrename.ui.Styles;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
@@ -11,73 +9,26 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileNotFoundException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 @Slf4j
-public class RenamingEntry {
+public class RenamingControl extends RenamingPath {
 
-    private final ObjectProperty<Path> oldPath;
-    private final StringProperty newPath;
-    private final ObjectProperty<Throwable> exception;
-    private final BooleanProperty willChange;
-    private final BooleanProperty filtered;
     private final StringProperty fileType;
 
     private final Control leftControl;
 
     private final Control rightControl;
 
-    public RenamingEntry(final Path path) {
+    public RenamingControl(final Path path) {
+        super(path);
 
-        this.oldPath = new SimpleObjectProperty<>(Objects.requireNonNull(path));
-        this.newPath = new SimpleStringProperty();
-        exception = new SimpleObjectProperty<>();
-        this.willChange = new SimpleBooleanProperty();
         this.fileType = new SimpleStringProperty();
-        this.filtered = new SimpleBooleanProperty();
         newPath.addListener((v, o, n) -> willChange.set(!getOldPath().getFileName().toString().equals(n)));
         oldPath.addListener((observable, oldValue, newValue) -> willChange.set(!getOldPath().getFileName().toString().equals(getNewPath())));
         leftControl = buildLeft();
         rightControl = buildRight();
-    }
-
-    public String preview(final RenamingStrategy strategy) {
-
-        if (Files.exists(getOldPath())) {
-            final String s = strategy.getNameNew(getOldPath());
-            Platform.runLater(() -> newPath.set(s));
-            return s;
-        }
-        var exception = new FileNotFoundException(getOldPath().getFileName().toString());
-        Platform.runLater(() -> exceptionProperty().set(exception));
-        return null;
-    }
-
-    public Path rename(final RenamingStrategy strategy) {
-        if (isFiltered()) {
-            log.warn("Rename called on filtered entry, skipping {}", this);
-            return getOldPath();
-        }
-        try {
-            Path newPath = strategy.rename(getOldPath(), null);
-            Platform.runLater(() -> commitRename(newPath));
-            return newPath;
-        } catch (final Exception e) {
-            log.debug(e.getLocalizedMessage(), e);
-            Platform.runLater(() -> this.exception.set(e));
-            return getOldPath();
-        }
-    }
-
-    public void commitRename(Path newPath) {
-        setOldPath(newPath);
-        exceptionProperty().set(null);
-        // for now set to false to see an immediate effect, preview service should be triggered and should update this any time soon again.
-        setWillChange(false);
     }
 
     @Override
@@ -137,7 +88,7 @@ public class RenamingEntry {
     }
 
     protected String calcStyleRight() {
-        if (willChange()) {
+        if (isWillChange()) {
             return Styles.changingStyle();
         }
         return Styles.defaultStyle();
@@ -145,18 +96,6 @@ public class RenamingEntry {
 
     // Getter / Setter //
 
-
-    public BooleanProperty filteredProperty() {
-        return filtered;
-    }
-
-    public boolean isFiltered() {
-        return filtered.get();
-    }
-
-    public void setFiltered(boolean filtered) {
-        this.filtered.set(filtered);
-    }
 
     public StringProperty fileTypeProperty() {
         return fileType;
@@ -168,50 +107,6 @@ public class RenamingEntry {
 
     public void setFileType(String fileType) {
         fileTypeProperty().set(fileType);
-    }
-
-    public void setNewPath(String newPath) {
-        this.newPath.set(newPath);
-    }
-
-    public String getNewPath() {
-        return newPath.get();
-    }
-
-    public Throwable getException() {
-        return exception.get();
-    }
-
-    public ObjectProperty<Throwable> exceptionProperty() {
-        return exception;
-    }
-
-    public StringProperty newPathProperty() {
-        return newPath;
-    }
-
-    public BooleanProperty willChangeProperty() {
-        return this.willChange;
-    }
-
-    public boolean willChange() {
-        return this.willChangeProperty().get();
-    }
-
-    public void setWillChange(final boolean willChange) {
-        this.willChangeProperty().set(willChange);
-    }
-
-    public ObjectProperty<Path> oldPathProperty() {
-        return this.oldPath;
-    }
-
-    public Path getOldPath() {
-        return this.oldPathProperty().get();
-    }
-
-    public void setOldPath(final Path oldPath) {
-        this.oldPathProperty().set(oldPath);
     }
 
     public Control getLeftControl() {

@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
 
+@Deprecated
 @RequiredArgsConstructor
 public class CheckResultTreeItemContent<T extends CheckResult> extends KodiTreeItemContent {
 
