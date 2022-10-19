@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 @Slf4j
@@ -37,11 +38,12 @@ public class MovieTreeItemFactory {
     private final CheckServiceProvider checkServiceProvider;
 
     public MovieTreeItem buildNew(Path moviePath){
-        return triggerNfoFileNameCheck(new MovieTreeItem(moviePath));
+        return triggerChecks(new MovieTreeItem(moviePath));
     }
 
-    private MovieTreeItem triggerNfoFileNameCheck(MovieTreeItem movieTreeItem) {
-        executor.execute(() -> checkServiceProvider.getCheckServices().forEach(e -> e.addChildItem(movieTreeItem)));
+    private MovieTreeItem triggerChecks(MovieTreeItem movieTreeItem) {
+        var listCopy = new ArrayList<>(checkServiceProvider.getCheckServices());
+        executor.execute(() -> listCopy.forEach(e -> e.addChildItem(movieTreeItem)));
         return movieTreeItem;
     }
 }

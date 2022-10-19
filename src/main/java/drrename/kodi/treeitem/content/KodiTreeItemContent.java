@@ -19,6 +19,8 @@
 
 package drrename.kodi.treeitem.content;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TreeItem;
 
 
@@ -26,11 +28,26 @@ public abstract class KodiTreeItemContent {
 
     private TreeItem<KodiTreeItemContent> treeItem;
 
+    private final BooleanProperty fixable = new SimpleBooleanProperty();
+
     public boolean hasWarning() {
         return treeItem != null && treeItem.getChildren().stream().map(TreeItem::getValue).anyMatch(KodiTreeItemContent::hasWarning);
     }
 
     // Getter / Setter //
+
+
+    public boolean isFixable() {
+        return fixable.get();
+    }
+
+    public BooleanProperty fixableProperty() {
+        return fixable;
+    }
+
+    public void setFixable(boolean fixable) {
+        this.fixable.set(fixable);
+    }
 
     @SuppressWarnings("unused")
     public TreeItem<KodiTreeItemContent> getTreeItem() {

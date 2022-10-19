@@ -35,7 +35,8 @@ public class CheckServiceProvider {
         this.checkServices = Arrays.asList(
                 new NfoFileNameCheckService(),
                 new NfoFileContentCheckService(),
-                new SubdirsCheckService()
+                new SubdirsCheckService(),
+                new MultipleSpacesService()
         );
     }
 

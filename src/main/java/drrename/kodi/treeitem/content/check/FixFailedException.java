@@ -17,26 +17,26 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.kodi.treeitem.content.check;
 
-import drrename.kodi.treeitem.content.KodiTreeItemContent;
-import drrename.ui.FilterableTreeItem;
-import javafx.scene.control.TreeItem;
+public class FixFailedException extends Exception {
 
-import java.util.ArrayList;
-
-public class KodiTreeItem extends FilterableTreeItem<KodiTreeItemContent> {
-
-    public KodiTreeItem(KodiTreeItemContent value) {
-        super(value);
-        getValue().setTreeItem(this);
+    public FixFailedException() {
     }
 
-    public void add(KodiTreeItem childItem) {
-        getSourceChildren().add(childItem);
+    public FixFailedException(String message) {
+        super(message);
     }
 
-    public boolean contains(KodiTreeItem childItem) {
-        return new ArrayList<>(getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
+    public FixFailedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public FixFailedException(Throwable cause) {
+        super(cause);
+    }
+
+    public FixFailedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }
