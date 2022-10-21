@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <VBox fx:controller="drrename.ui.mainview.controller.FileListComponentController" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" >
         <padding>

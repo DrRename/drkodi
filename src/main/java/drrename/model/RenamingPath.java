@@ -22,8 +22,8 @@ package drrename.model;
 import drrename.strategy.RenamingStrategy;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import lombok.Getter;
-import lombok.Setter;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
@@ -40,14 +40,27 @@ public class RenamingPath {
     protected final ObjectProperty<Throwable> exception;
 
     protected final BooleanProperty willChange;
+
     protected final BooleanProperty filtered;
 
+    protected final StringProperty movieName;
+    private final ChangeListener<? super Path> listener;
+
     public RenamingPath(final Path path) {
-        this.oldPath = new SimpleObjectProperty<>(Objects.requireNonNull(path));
+        listener = new ChangeListener<Path>() {
+            @Override
+            public void changed(ObservableValue<? extends Path> observableValue, Path path, Path t1) {
+                movieName.set(t1.getFileName().toString());
+            }
+        };
+        this.oldPath = new SimpleObjectProperty<>();
         this.newPath = new SimpleStringProperty();
-        exception = new SimpleObjectProperty<>();
+        this.movieName = new SimpleStringProperty();
+        this.exception = new SimpleObjectProperty<>();
         this.willChange = new SimpleBooleanProperty();
         this.filtered = new SimpleBooleanProperty();
+        oldPath.addListener(listener);
+        oldPath.set(Objects.requireNonNull(path));
     }
 
     public String preview(final RenamingStrategy strategy) {
@@ -87,6 +100,18 @@ public class RenamingPath {
 
     // Getter / Setter //
 
+
+    public String getMovieName() {
+        return movieName.get();
+    }
+
+    public StringProperty movieNameProperty() {
+        return movieName;
+    }
+
+    public void setMovieName(String movieName) {
+        this.movieName.set(movieName);
+    }
 
     public Path getOldPath() {
         return oldPath.get();

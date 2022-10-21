@@ -1,8 +1,8 @@
 package drrename.ui.service;
 
-import drrename.strategy.RenamingStrategy;
 import drrename.config.AppConfig;
 import drrename.model.RenamingControl;
+import drrename.strategy.RenamingStrategy;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
