@@ -6,9 +6,7 @@ import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -22,21 +20,21 @@ public class GeneralExceptionHandler {
         @Override
         public void uncaughtException(Thread t, Throwable e) {
             log.error("Uncaught exception on thread {}", t, e);
+            Platform.runLater(() -> showAlertDialog(e));
+        }
+
+        private void showAlertDialog(Throwable e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(String.format(resourceBundle.getString(ALERT_TITLE)));
-            alert.setHeaderText(e.toString());
-
-            TextArea area = new TextArea(Arrays.stream(e.getStackTrace())
-                    .map(StackTraceElement::toString)
-                    .collect(Collectors.joining("\n")));
-
+            alert.setHeaderText(e.getLocalizedMessage());
+            TextArea area = new TextArea(RenameUtil.stackTraceToString(e));
             alert.getDialogPane().setContent(area);
             area.setWrapText(true);
             area.setEditable(false);
             alert.setResizable(true);
-
-
-            Platform.runLater(alert::showAndWait);
+            alert.getDialogPane().setPrefHeight(300);
+            alert.getDialogPane().setPrefWidth(400);
+            alert.showAndWait();
         }
     }
 

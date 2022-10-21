@@ -19,8 +19,6 @@
 
 package drrename.event;
 
-import lombok.Data;
-
 import java.util.UUID;
 public class StartingListFilesEvent extends SynchronousUuidEvent {
 

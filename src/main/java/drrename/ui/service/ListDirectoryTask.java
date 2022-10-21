@@ -1,6 +1,9 @@
 package drrename.ui.service;
 
-import drrename.event.*;
+import drrename.event.ListFilesFinishedEvent;
+import drrename.event.NewRenamingEntryEvent;
+import drrename.event.StartingListFilesEvent;
+import drrename.event.SynchronousUuidEvent;
 import drrename.model.RenamingControl;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +13,9 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class ListDirectoryTask extends Task<List<RenamingControl>> {

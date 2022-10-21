@@ -1,16 +1,16 @@
 package drrename.ui;
 
-import drrename.FileTypeByMimeProvider;
 import drrename.FileTypeProvider;
 import drrename.RenamingStrategies;
-import drrename.strategy.RenamingStrategy;
 import drrename.config.AppConfig;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
 import drrename.kodi.KodiToolsController;
+import drrename.mime.FileTypeByMimeProvider;
 import drrename.model.RenamingControl;
 import drrename.service.EntriesService;
+import drrename.strategy.RenamingStrategy;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.ReplacementStringComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
