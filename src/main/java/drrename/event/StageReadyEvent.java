@@ -20,8 +20,6 @@
 package drrename.event;
 
 import javafx.stage.Stage;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 public record StageReadyEvent(Stage stage) {
 

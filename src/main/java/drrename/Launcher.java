@@ -1,5 +1,6 @@
 package drrename;
 
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import drrename.ui.ResourceBundleAwareLazyFxControllerAndViewResolver;
 import javafx.scene.Node;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import net.rgielen.fxweaver.spring.SpringFxWeaver;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -16,6 +18,8 @@ import org.springframework.context.annotation.Scope;
 import java.util.ResourceBundle;
 
 @Slf4j
+@EnableFeignClients
+@EnableEncryptableProperties
 @SpringBootApplication
 public class Launcher {
 

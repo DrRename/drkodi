@@ -1,11 +1,11 @@
 package drrename.ui.service;
 
+import drrename.model.RenamingControl;
+import javafx.concurrent.Service;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import drrename.model.RenamingControl;
-import javafx.concurrent.Service;
 
 public abstract class FilesService<V> extends Service<V> {
 

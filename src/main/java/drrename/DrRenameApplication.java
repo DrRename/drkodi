@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@Slf4j
 public class DrRenameApplication extends Application {
 
     private ConfigurableApplicationContext applicationContext;

@@ -1,8 +1,8 @@
 package drrename.ui.service;
 
+import drrename.event.NewRenamingEntryEvent;
 import drrename.event.StartingListFilesEvent;
 import drrename.model.RenamingControl;
-import drrename.event.NewRenamingEntryEvent;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

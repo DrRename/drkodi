@@ -19,39 +19,36 @@
 
 package drrename.kodi;
 
-import drrename.kodi.treeitem.content.KodiTreeItemContent;
-import drrename.kodi.treeitem.content.MovieTreeItemContent;
+import javafx.beans.binding.Bindings;
+import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.TreeCell;
 
-import java.util.ArrayList;
-import java.util.List;
+public class KodiTreeCell extends TreeCell<KodiTreeItemValue> {
 
-public class KodiTreeCell extends TreeCell<KodiTreeItemContent> {
+    public KodiTreeCell(Control treeView) {
+        prefWidthProperty().bind(treeView.widthProperty().subtract(20.0));
+    }
 
     @Override
-    protected void updateItem(KodiTreeItemContent item, boolean empty) {
+    protected void updateItem(KodiTreeItemValue item, boolean empty) {
 
         super.updateItem(item, empty);
         if (item == null) {
+            textProperty().unbind();
+            styleProperty().unbind();
+            graphicProperty().unbind();
             setText(null);
             setStyle(null);
+            setGraphic(null);
         } else {
-            setText(item.toString());
-            List<String> styles = new ArrayList<>();
-            if (item.hasWarning()) {
-                if (item instanceof MovieTreeItemContent) {
-                    styles.add("-fx-font-size: 13;");
-                }
-                styles.add("-fx-font-weight: bold;");
-                styles.add("-fx-background-color: wheat;");
-                var joinedStylesString = String.join(" ", styles);
-                setStyle(joinedStylesString);
-            } else {
-                if (item instanceof MovieTreeItemContent) {
-                    styles.add("-fx-font-size: 14;");
-                } else
-                    setStyle(null);
-            }
+            graphicProperty().bind(item.graphicProperty());
+            textProperty().bind(Bindings.createStringBinding(() -> calculateMessageString(item), item.messageProperty()));
+            styleProperty().bind(item.styleProperty());
         }
+    }
+
+    private String calculateMessageString(KodiTreeItemValue item) {
+        return (item.getIdentifer() != null ? item.getIdentifer() + ": " : "") + item.getMessage();
     }
 }
