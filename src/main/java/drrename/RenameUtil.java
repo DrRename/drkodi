@@ -1,27 +1,20 @@
 package drrename;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import drrename.model.nfo.NfoFileXmlModel;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
-@Slf4j
 public class RenameUtil {
 
-    public static Path getImagePathFromNfo(Path nfoFile) throws IOException {
-        XmlMapper mapper = new XmlMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        try {
-            NfoFileXmlModel xmlFileContent = mapper.readValue(nfoFile.toFile(), NfoFileXmlModel.class);
-            if(xmlFileContent.getArt() != null && xmlFileContent.getArt().getPoster() != null)
-                return nfoFile.getParent().resolve(xmlFileContent.getArt().getPoster());
-        } catch (JsonParseException e) {
-            log.debug("Failed to deserialize image path from {})", nfoFile);
-        }
-        return null;
+    public static Path rename(final Path file, String newFileName) throws IOException {
+        return Files.move(file, file.resolveSibling(newFileName));
+    }
+
+    public static String stackTraceToString(Throwable e) {
+        return Arrays.stream(e.getStackTrace())
+                .map(StackTraceElement::toString)
+                .collect(Collectors.joining("\n"));
     }
 }

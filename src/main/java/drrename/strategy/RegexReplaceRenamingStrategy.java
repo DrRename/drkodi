@@ -1,10 +1,10 @@
 package drrename.strategy;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.regex.PatternSyntaxException;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RegexReplaceRenamingStrategy extends RenamingStrategyProto {
