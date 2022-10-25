@@ -1,15 +1,13 @@
 package com.github.drrename;
 
-import java.io.File;
-import java.nio.file.Path;
-
 import com.github.ktools1000.io.BackupCreator;
-import org.apache.commons.io.FileUtils;
-
-
 import drrename.strategy.RenamingStrategy;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.File;
+import java.nio.file.Path;
 
 public abstract class AbstractRenamingStrategyTest {
 

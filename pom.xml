@@ -18,6 +18,7 @@
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
         <java.version>17</java.version>
         <javafx.version>19</javafx.version>
+        <spring-cloud-version>3.1.14</spring-cloud-version>
         <sonar.coverage.exclusions>src/main/java/drrename/PrimaryStageInitializer.java</sonar.coverage.exclusions>
     </properties>
     <scm>
@@ -127,6 +128,11 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-maven-plugin</artifactId>
+                <version>3.0.3</version>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -188,6 +194,20 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.13.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>3.0.4</version>
         </dependency>
     </dependencies>
     <profiles>

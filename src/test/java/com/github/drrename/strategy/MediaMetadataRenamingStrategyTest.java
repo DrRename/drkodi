@@ -1,16 +1,15 @@
 package com.github.drrename.strategy;
 
-import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-
 import com.github.drrename.AbstractRenamingStrategyTest;
-import drrename.strategy.RenamingStrategy;
 import drrename.strategy.MediaMetadataRenamingStrategy;
+import drrename.strategy.RenamingStrategy;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class MediaMetadataRenamingStrategyTest extends AbstractRenamingStrategyTest {
 
