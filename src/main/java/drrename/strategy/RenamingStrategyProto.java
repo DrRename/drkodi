@@ -1,5 +1,10 @@
 package drrename.strategy;
 
+import drrename.RenameUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -8,10 +13,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 
 @Slf4j
 public abstract class RenamingStrategyProto implements RenamingStrategy {
@@ -65,7 +66,7 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
                 return file;
             }
             log.debug("Renaming" + IOUtils.LINE_SEPARATOR + "old:\t" + nameOld + IOUtils.LINE_SEPARATOR + "new:\t" + nameNew);
-            return Files.move(file, file.resolveSibling(nameNew));
+            return RenameUtil.rename(file, nameNew);
         } catch (final FileAlreadyExistsException e) {
             log.debug(e.getLocalizedMessage());
             return doRename(file, getFileAlreadyExistsFileName(nameNew, fileNameCounter));
@@ -106,13 +107,15 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
     }
 
     @Override
-    public void setReplacementStringFrom(final String replacementStringFrom) {
+    public RenamingStrategyProto setReplacementStringFrom(final String replacementStringFrom) {
         this.replacementStringFrom = replacementStringFrom;
+        return this;
     }
 
     @Override
-    public void setReplacementStringTo(final String replacementStringTo) {
+    public RenamingStrategyProto setReplacementStringTo(final String replacementStringTo) {
         this.replacementStringTo = replacementStringTo;
+        return this;
     }
 
     @Override
