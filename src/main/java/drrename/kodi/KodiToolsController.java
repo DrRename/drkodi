@@ -1,11 +1,7 @@
 package drrename.kodi;
 
-import drrename.RenameUtil;
-import drrename.kodi.treeitem.content.check.NfoCheckResultTreeItemContent;
-import drrename.kodi.treeitem.KodiTreeRootItem;
-import drrename.kodi.treeitem.MovieTreeItemFactory;
-import drrename.kodi.treeitem.content.KodiTreeItemContent;
-import drrename.kodi.treeitem.content.MovieTreeItemContent;
+import drrename.kodi.nfo.NfoFileTreeItemValue;
+import drrename.model.RenamingPath;
 import drrename.ui.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
@@ -51,7 +47,7 @@ public class KodiToolsController implements Initializable {
 
     public ProgressBar progressBar;
 
-    public TreeView<KodiTreeItemContent> treeView;
+    public TreeView<KodiTreeItemValue> treeView;
 
     public Button buttonExpandAll;
 
@@ -75,9 +71,11 @@ public class KodiToolsController implements Initializable {
 
     private final Executor executor;
 
-    private KodiTreeRootItem treeRoot;
+    private KodiRootTreeItem treeRoot;
 
     private final MovieTreeItemFactory movieTreeItemFactory;
+
+    private WarningsConfig warningsConfig;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -91,11 +89,11 @@ public class KodiToolsController implements Initializable {
         goCancelButtonsComponentController.setButtonGoActionEventFactory(KodiToolsButtonGoEvent::new);
         progressBar.visibleProperty().bind(service.runningProperty());
 
-        treeRoot = new KodiTreeRootItem();
+        treeRoot = new KodiRootTreeItem(executor);
         treeView.setRoot(treeRoot);
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
-        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemContent>>) e -> {
+        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemValue>>) e -> {
             buttonExpandAll.setDisable(e.getList().isEmpty());
             buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
@@ -106,34 +104,7 @@ public class KodiToolsController implements Initializable {
                 onButtonGoEvent(null);
             }
         });
-        treeView.setCellFactory(tv -> new TreeCell<>() {
-
-            @Override
-            protected void updateItem(KodiTreeItemContent item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null) {
-                    setText(null);
-                    setStyle(null);
-                } else {
-                    setText(item.toString());
-                    List<String> styles = new ArrayList<>();
-                    if (item.hasWarning()) {
-                        if (item instanceof MovieTreeItemContent) {
-                            styles.add("-fx-font-size: 13;");
-                        }
-                        styles.add("-fx-font-weight: bold;");
-                        styles.add("-fx-background-color: wheat;");
-                        var joinedStylesString = String.join(" ", styles);
-                        setStyle(joinedStylesString);
-                    } else {
-                        if (item instanceof MovieTreeItemContent) {
-                            styles.add("-fx-font-size: 14;");
-                        } else
-                            setStyle(null);
-                    }
-                }
-            }
-        });
+        treeView.setCellFactory(this::treeViewCellFactoryCallback);
 
         treeView.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<Integer>) c -> {
             imageStage.close();
@@ -143,19 +114,26 @@ public class KodiToolsController implements Initializable {
                 }
                 var hans = treeView.getTreeItem(c.getAddedSubList().get(0)).getValue();
                 log.debug("Selection changed: {} ({})", hans, hans.getClass());
-                if (hans instanceof NfoCheckResultTreeItemContent<?> peter) {
+                if (hans instanceof NfoFileTreeItemValue peter) {
                     log.debug("Handling {}", peter);
-                        Path nfoFile = peter.getCheckResult().getNfoFile();
-                        executor.execute(() -> showImage(nfoFile));
+                    Path nfoFile = peter.getNfoFile();
+                    executor.execute(() -> showImage(nfoFile));
                 }
             }
         });
+
+        warningsConfig = new WarningsConfig();
+        warningsConfig.missingNfoFileIsWarningProperty().bind(checkBoxMissingNfoFileIsAWarning.selectedProperty());
+    }
+
+    private TreeCell<KodiTreeItemValue> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue> kodiTreeItemContentTreeView) {
+        return new KodiTreeCell(treeView);
     }
 
     private void showImage(Path nfoFile) {
         if (nfoFile != null && Files.exists(nfoFile) && Files.isReadable(nfoFile)) {
             try {
-                Path imagePath = RenameUtil.getImagePathFromNfo(nfoFile);
+                Path imagePath = KodiUtil.getImagePathFromNfo(nfoFile);
                 if (imagePath != null && Files.exists(imagePath) && Files.isReadable(imagePath)) {
                     log.debug("Taking a look at {}", imagePath);
                     Image image = new Image(imagePath.toFile().toURI().toString(), false);
@@ -190,13 +168,13 @@ public class KodiToolsController implements Initializable {
         Platform.runLater(() -> treeRoot.setPredicate(buildHideEmptyPredicate()));
     }
 
-    private Predicate<KodiTreeItemContent> buildHideEmptyPredicate() {
+    private Predicate<KodiTreeItemValue> buildHideEmptyPredicate() {
         return item -> {
-            if(item instanceof NfoCheckResultTreeItemContent<?> anotherItem)
-                anotherItem.setMissingNfoIsAWarning(checkBoxMissingNfoFileIsAWarning.isSelected());
-            if (checkBoxHideEmpty.isSelected())
-                return item.hasWarning();
-            return true;
+            var nfoFileIsWarning = checkBoxMissingNfoFileIsAWarning.isSelected();
+            if(item instanceof NfoFileTreeItemValue item2){
+                item2.setMissingNfoFileIsWarning(nfoFileIsWarning);
+            }
+            return item.isWarning() || !checkBoxHideEmpty.isSelected();
         };
     }
 
@@ -239,11 +217,11 @@ public class KodiToolsController implements Initializable {
         }
     }
 
-    private List<TreeItem<KodiTreeItemContent>> buildAndFillLevel1Items(List<Path> movieFolders) {
-        List<TreeItem<KodiTreeItemContent>> result = new ArrayList<>();
+    private List<TreeItem<KodiTreeItemValue>> buildAndFillLevel1Items(List<Path> movieFolders) {
+        List<TreeItem<KodiTreeItemValue>> result = new ArrayList<>();
 
-        for(Path moviePath : movieFolders){
-            var item = movieTreeItemFactory.buildNew(moviePath);
+        for (Path moviePath : movieFolders) {
+            var item = movieTreeItemFactory.buildNew(new RenamingPath(moviePath), warningsConfig);
             result.add(item);
         }
 
