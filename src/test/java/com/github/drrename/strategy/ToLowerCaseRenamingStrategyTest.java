@@ -1,9 +1,9 @@
 package com.github.drrename.strategy;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import com.github.drrename.AbstractRenamingStrategyTest;
+import drrename.strategy.RenamingStrategy;
+import drrename.strategy.ToLowerCaseRenamingStrategy;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,10 +12,9 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import com.github.drrename.AbstractRenamingStrategyTest;
-import drrename.strategy.RenamingStrategy;
-import drrename.strategy.ToLowerCaseRenamingStrategy;
-import org.junit.jupiter.api.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ToLowerCaseRenamingStrategyTest extends AbstractRenamingStrategyTest {
 

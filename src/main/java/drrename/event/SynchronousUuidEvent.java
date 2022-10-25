@@ -22,7 +22,6 @@ package drrename.event;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor

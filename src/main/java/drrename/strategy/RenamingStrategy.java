@@ -35,7 +35,7 @@ public interface RenamingStrategy {
 
 	Path rename(Path file, BasicFileAttributes attrs) throws IOException, InterruptedException;
 
-	void setReplacementStringFrom(String replacement);
+	RenamingStrategyProto setReplacementStringFrom(String replacement);
 
-	void setReplacementStringTo(String replacement);
+    RenamingStrategyProto setReplacementStringTo(String replacement);
 }

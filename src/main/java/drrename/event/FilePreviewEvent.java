@@ -19,10 +19,8 @@
 
 package drrename.event;
 
-import drrename.model.RenamingEntry;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import drrename.model.RenamingControl;
 
-public record FilePreviewEvent(RenamingEntry renamingEntry) {
+public record FilePreviewEvent(RenamingControl renamingControl) {
 
 }
