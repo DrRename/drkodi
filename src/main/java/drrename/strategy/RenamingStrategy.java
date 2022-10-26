@@ -25,17 +25,56 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 public interface RenamingStrategy {
 
+	/**
+	 * Returns a help text that explains what this strategy will do.
+	 * @return a help text explaining what this strategy will do
+	 */
 	String getHelpText();
 
+	/**
+	 * Returns the strategy's name, i.e., a short text to identify this strategy.
+	 * @return the strategy's name
+	 */
 	String getName();
 
+	/**
+	 * Returns the new file name, i.e., the new file name provided by this strategy.
+	 * @param file the file to rename
+	 * @return the new file name
+	 */
 	String getNameNew(Path file);
 
+	/**
+	 *
+	 * @return {code true}, if this strategy is replacing one (sub)string by another; {@code false} otherwise
+	 * @see #setReplacementStringFrom(String)
+	 * @see #setReplacementStringTo(String)
+	 */
 	boolean isReplacing();
 
 	Path rename(Path file, BasicFileAttributes attrs) throws IOException, InterruptedException;
 
-	RenamingStrategyProto setReplacementStringFrom(String replacement);
+	/**
+	 * Sets the string that should be replaced by a replacing strategy.
+	 * @param replacement string to replace
+	 * @return {@code this}
+	 * @see #setReplacementStringTo(String)
+	 * @see #isReplacing()
+	 */
+	RenamingStrategy setReplacementStringFrom(String replacement);
 
-    RenamingStrategyProto setReplacementStringTo(String replacement);
+	/**
+	 * Sets the replacement string, by which another string should be replaced.
+	 * @param replacement the new string for a replacement
+	 * @return {@code this}
+	 * @see #setReplacementStringFrom(String)
+	 * @see #isReplacing()
+	 */
+    RenamingStrategy setReplacementStringTo(String replacement);
+
+	RenamingConfig getConfig();
+
+	RenamingStrategy setConfig(RenamingConfig config);
+
+
 }

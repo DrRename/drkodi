@@ -39,15 +39,16 @@ public class RenamingStrategies implements Iterable<RenamingStrategy> {
 
     @PostConstruct
     public void init(){
-        renamingStrategies.add(new SimpleReplaceRenamingStrategy(resourceBundle));
-        renamingStrategies.add(new RegexReplaceRenamingStrategy(resourceBundle));
-        renamingStrategies.add(new CleanupStrategy(resourceBundle));
-        renamingStrategies.add(new MediaMetadataRenamingStrategy(resourceBundle));
-        renamingStrategies.add(new ToLowerCaseRenamingStrategy(resourceBundle));
-        renamingStrategies.add(new SpaceToCamelCaseRenamingStrategy(resourceBundle));
-        renamingStrategies.add(new UnhideStrategy(resourceBundle));
-        renamingStrategies.add(new ExtensionFromMimeStrategy(resourceBundle));
-        renamingStrategies.add(new CapitalizeFirstStrategy(resourceBundle));
+        var renamingConfig = new SimpleRenamingConfig();
+        renamingStrategies.add(new SimpleReplaceRenamingStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new RegexReplaceRenamingStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new CleanupStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new MediaMetadataRenamingStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new ToLowerCaseRenamingStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new SpaceToCamelCaseRenamingStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new UnhideStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new ExtensionFromMimeStrategy(resourceBundle, renamingConfig));
+        renamingStrategies.add(new CapitalizeFirstStrategy(resourceBundle, renamingConfig));
     }
 
     @Override

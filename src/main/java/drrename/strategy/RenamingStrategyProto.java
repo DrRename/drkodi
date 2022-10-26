@@ -21,12 +21,15 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
 
     private final ResourceBundle resourceBundle;
 
+    private RenamingConfig renamingConfig;
+
     private String replacementStringFrom = "";
 
     private String replacementStringTo = "";
 
-    public RenamingStrategyProto(ResourceBundle resourceBundle) {
+    public RenamingStrategyProto(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
         this.resourceBundle = resourceBundle;
+        this.renamingConfig = renamingConfig;
     }
 
     protected ResourceBundle getResourceBundle() {
@@ -46,6 +49,37 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
     protected abstract String getNameId();
 
     protected abstract String getHelpTextId();
+
+    public String getNameNew(final Path file) {
+        return getNewName(file.getFileName().toString(), Files.isDirectory(file));
+    }
+
+    /**
+     * Returns the new file name (excluding parent paths) after this renaming strategy has been applied.
+     *
+     * @param fileNameString the current file name string, excluding parent paths
+     *
+     * @return the new file name (excluding parent paths) after this renaming strategy has been applied
+     */
+    public String getNewName(final String fileNameString, boolean directory) {
+        if(directory){
+            return applyStrategyOnString(fileNameString);
+        }
+        return getConfig().isIncludeFileExtension() ? applyStrategyOnString(fileNameString) : getStringExcludingExtension(fileNameString);
+    }
+
+    public String getStringExcludingExtension(String fileNameString) {
+        var baseName = FilenameUtils.getBaseName(fileNameString);
+        var extension = FilenameUtils.getExtension(fileNameString);
+        if(extension.isBlank()){
+            return applyStrategyOnString(baseName);
+        }
+        return applyStrategyOnString(baseName) + "." + extension;
+    }
+
+    public String applyStrategyOnString(String fileNameString) {
+        throw new IllegalStateException("Need to take a look at the acutal file");
+    }
 
     /**
      * Performs the rename. Does not override existing files, but creates numbered suffixes for file names that exist
@@ -115,6 +149,17 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
     @Override
     public RenamingStrategyProto setReplacementStringTo(final String replacementStringTo) {
         this.replacementStringTo = replacementStringTo;
+        return this;
+    }
+
+    @Override
+    public RenamingConfig getConfig() {
+        return renamingConfig;
+    }
+
+    @Override
+    public RenamingStrategy setConfig(RenamingConfig config) {
+        this.renamingConfig = config;
         return this;
     }
 

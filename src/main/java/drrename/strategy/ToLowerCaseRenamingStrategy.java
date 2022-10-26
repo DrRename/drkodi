@@ -1,6 +1,5 @@
 package drrename.strategy;
 
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 public class ToLowerCaseRenamingStrategy extends RenamingStrategyProto {
@@ -9,8 +8,8 @@ public class ToLowerCaseRenamingStrategy extends RenamingStrategyProto {
 
 	private static final String help_identifier = "strategy.to-lower-case.help";
 
-	public ToLowerCaseRenamingStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+	public ToLowerCaseRenamingStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
 	@Override
@@ -24,8 +23,8 @@ public class ToLowerCaseRenamingStrategy extends RenamingStrategyProto {
 	}
 
 	@Override
-	public String getNameNew(final Path file) {
-		return file.getFileName().toString().toLowerCase();
+	public String applyStrategyOnString(String fileNameString) {
+		return fileNameString.toLowerCase();
 	}
 
 	@Override

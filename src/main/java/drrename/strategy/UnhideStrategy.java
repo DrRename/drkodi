@@ -3,7 +3,6 @@ package drrename.strategy;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 @Slf4j
@@ -13,8 +12,8 @@ public class UnhideStrategy extends RenamingStrategyProto {
 
 	private static final String help_identifier = "strategy.unhide.help";
 
-	public UnhideStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+	public UnhideStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
 	@Override
@@ -26,22 +25,20 @@ public class UnhideStrategy extends RenamingStrategyProto {
 	protected String getHelpTextId() {
 		return help_identifier;
 	}
-
+	
 	@Override
-	public String getNameNew(final Path file) {
-
-		if(file.getFileName().toString().matches(".+\\~\\d+\\~")){
-			return file.getFileName().toString().substring(0, file.getFileName().toString().indexOf("~") - 1);
+	public String applyStrategyOnString(String fileNameString) {
+		if(fileNameString.matches(".+~\\d+~")){
+			return fileNameString.substring(0, fileNameString.indexOf("~"));
 		}
-		if(file.getFileName().toString().endsWith("~")){
-			return file.getFileName().toString().substring(0, file.getFileName().toString().length() - 1);
+		if(fileNameString.endsWith("~")){
+			return fileNameString.substring(0, fileNameString.length() - 1);
 		}
-		return file.getFileName().toString();
+		return fileNameString;
 	}
 
 	@Override
 	public boolean isReplacing() {
-
 		return false;
 	}
 }

@@ -1,6 +1,5 @@
 package drrename.strategy;
 
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 public class SimpleReplaceRenamingStrategy extends RenamingStrategyProto {
@@ -9,8 +8,8 @@ public class SimpleReplaceRenamingStrategy extends RenamingStrategyProto {
 
 	private static final String help_identifier = "strategy.simple-replace.help";
 
-	public SimpleReplaceRenamingStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+	public SimpleReplaceRenamingStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
 	@Override
@@ -23,9 +22,8 @@ public class SimpleReplaceRenamingStrategy extends RenamingStrategyProto {
 		return help_identifier;
 	}
 
-	@Override
-	public String getNameNew(final Path file) {
-		return file.getFileName().toString().replace(getReplacementStringFrom(), getReplacementStringTo());
+	public String applyStrategyOnString(String fileNameString) {
+		return fileNameString.replace(getReplacementStringFrom(), getReplacementStringTo());
 	}
 
 	@Override

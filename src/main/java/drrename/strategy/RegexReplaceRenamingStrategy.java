@@ -2,7 +2,6 @@ package drrename.strategy;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.regex.PatternSyntaxException;
 
@@ -13,8 +12,8 @@ public class RegexReplaceRenamingStrategy extends RenamingStrategyProto {
 
     private static final String help_identifier = "strategy.regex-replace.help";
 
-    public RegexReplaceRenamingStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+    public RegexReplaceRenamingStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
     @Override
@@ -28,15 +27,13 @@ public class RegexReplaceRenamingStrategy extends RenamingStrategyProto {
     }
 
     @Override
-    public String getNameNew(final Path file) {
-
+    public String applyStrategyOnString(String fileNameString) {
         try {
-            return file.getFileName().toString().replaceAll(getReplacementStringFrom(), getReplacementStringTo());
+            return fileNameString.replaceAll(getReplacementStringFrom(), getReplacementStringTo());
         } catch (final PatternSyntaxException e) {
-
             log.debug(e.getLocalizedMessage());
         }
-        return file.getFileName().toString();
+        return fileNameString;
     }
 
     @Override

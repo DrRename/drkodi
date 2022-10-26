@@ -61,7 +61,7 @@ public class MultipleSpacesTreeItemValue extends KodiTreeItemValue {
     }
 
     public void fix() {
-        getRenamingPath().rename(new RegexReplaceRenamingStrategy(null).setReplacementStringFrom("\\s+").setReplacementStringTo(" "));
+        getRenamingPath().rename(new RegexReplaceRenamingStrategy(null, null).setReplacementStringFrom("\\s+").setReplacementStringTo(" "));
     }
 
 

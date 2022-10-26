@@ -1,6 +1,7 @@
 package com.github.drrename.strategy;
 
 import drrename.strategy.RenamingStrategyProto;
+import drrename.strategy.SimpleRenamingConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class RenamingStrategyProtoTest {
 
     @BeforeEach
     void setUp() {
-        strat = new RenamingStrategyProto(bundle) {
+        strat = new RenamingStrategyProto(bundle, new SimpleRenamingConfig()) {
             @Override
             public String getName() {
                 return null;
@@ -28,6 +29,11 @@ class RenamingStrategyProtoTest {
 
             @Override
             public String getNameNew(Path file) {
+                return null;
+            }
+
+            @Override
+            public String applyStrategyOnString(String fileNameString) {
                 return null;
             }
 
@@ -52,13 +58,13 @@ class RenamingStrategyProtoTest {
     }
 
     @Test
-    void getFileAlreadyExistsFileName01() throws IOException, InterruptedException {
+    void getFileAlreadyExistsFileName01() {
         String nameNew = strat.getFileAlreadyExistsFileName("new.jpg", 0);
         assertThat(nameNew).isEqualTo("new_copy1.jpg");
     }
 
     @Test
-    void getFileAlreadyExistsFileName02() throws IOException, InterruptedException {
+    void getFileAlreadyExistsFileName02() {
         String nameNew = strat.getFileAlreadyExistsFileName("new.jpg", 1);
         assertThat(nameNew).isEqualTo("new_copy2.jpg");
     }

@@ -11,8 +11,8 @@ public class SpaceToCamelCaseRenamingStrategy extends RenamingStrategyProto {
 
 	private static final String help_identifier = "strategy.space-to-camel-case.help";
 
-	public SpaceToCamelCaseRenamingStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+	public SpaceToCamelCaseRenamingStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
 	@Override
@@ -30,10 +30,18 @@ public class SpaceToCamelCaseRenamingStrategy extends RenamingStrategyProto {
 
 
 		if(!file.getFileName().toString().matches("\\S+")){
-			String newName = CaseUtils.toCamelCase(file.getFileName().toString(), false, ' ');
-			return newName;
+			return CaseUtils.toCamelCase(file.getFileName().toString(), false, ' ');
 		}
 		return file.getFileName().toString();
+	}
+
+	@Override
+	public String applyStrategyOnString(String fileNameString) {
+		if(!fileNameString.matches("\\S+")){
+			String newName = CaseUtils.toCamelCase(fileNameString, false, ' ');
+			return newName;
+		}
+		return fileNameString;
 	}
 
 	@Override
