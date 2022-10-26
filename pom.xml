@@ -13,6 +13,7 @@
     <description>Minimalistic Batch-Rename Tool.</description>
     <properties>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
         <github-user>drrename</github-user>
         <github-repo>drrename</github-repo>
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
@@ -120,11 +121,6 @@
                         <version>9.4</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>com.github.ulisesbocchio</groupId>
-                <artifactId>jasypt-maven-plugin</artifactId>
-                <version>3.0.3</version>
             </plugin>
         </plugins>
     </build>
