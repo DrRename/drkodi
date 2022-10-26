@@ -66,7 +66,7 @@ public class MovieDbChecker {
 
     public MovieDbCheckType check(String searchString, Integer year) throws IOException {
         reset();
-        var searchResult = client.searchMovie(config.getApiKey(), null, config.isIncludeAdult(), searchString, year);
+        var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, year);
         ResponseEntity<TranslationsDto> translatinos;
         if(searchResult.getBody() != null && !searchResult.getBody().getResults().isEmpty()){
             SearchResultDto firstResult = searchResult.getBody().getResults().get(0);
@@ -80,7 +80,7 @@ public class MovieDbChecker {
                 theMovieDbId = firstResult.getPosterPath();
                 return MovieDbCheckType.ORIGINAL_TITEL;
             }
-            translatinos = client.getTranslations(firstResult.getId(), config.getApiKey());
+            translatinos = client.getTranslations(firstResult.getId(), "ca540140c89af81851d4026286942896");
             if(translatinos.getBody() != null){
                 for(TranslationDto translationDto : translatinos.getBody().getTranslations()){
                     String iso1 = translationDto.getIso3166();

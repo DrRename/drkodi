@@ -31,7 +31,6 @@ app:
   debug: false
   kodi:
     themoviedb:
-      api-key: "ENC(CmZ0CbclHAqHtwYOj+CQWtnHbHji2D69NKDiXllj948WUfrc12oOq48yRL82jItl4AtJYpYtRDq4y2fi0kYhDf24hXfs1Z8Tva0lp4xP/0E=)"
       base-url: https://api.themoviedb.org/3
       include-adult: true
       images:
