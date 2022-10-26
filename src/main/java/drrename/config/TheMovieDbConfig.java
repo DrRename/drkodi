@@ -28,8 +28,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "app.kodi.themoviedb")
 public class TheMovieDbConfig {
 
-    String apiKey;
-
     String baseUrl;
 
     boolean includeAdult;
