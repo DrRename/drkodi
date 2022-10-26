@@ -1,5 +1,12 @@
 package drrename.strategy;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -7,14 +14,6 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
-
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.metadata.Directory;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 
 @Slf4j
 public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {

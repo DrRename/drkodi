@@ -19,10 +19,10 @@
 
 package drrename.filecreator;
 
-import drrename.ui.mainview.GoCancelButtonsComponentController;
-import drrename.ui.mainview.StartDirectoryComponentController;
 import drrename.event.DummyFileCreatorButtonCancelEvent;
 import drrename.event.DummyFileCreatorButtonGoEvent;
+import drrename.ui.mainview.GoCancelButtonsComponentController;
+import drrename.ui.mainview.StartDirectoryComponentController;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -36,13 +36,10 @@ import javafx.util.converter.NumberStringConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 @RequiredArgsConstructor

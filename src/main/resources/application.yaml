@@ -1,16 +1,23 @@
 spring:
   main:
-    web:
-      application-type: none
     banner-mode: off
 
 logging:
   level:
     root: info
     drrename: debug
+    com:
+      ulisesbocchio: warn
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
 
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: none
 
 app:
   ui:
@@ -22,4 +29,10 @@ app:
   loop-delay-ms: 500
   reset-delay-ms: 1000
   debug: false
+  kodi:
+    themoviedb:
+      base-url: https://api.themoviedb.org/3
+      include-adult: true
+      images:
+        base-url: https://image.tmdb.org/t/p
 

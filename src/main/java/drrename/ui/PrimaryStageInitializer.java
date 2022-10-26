@@ -1,14 +1,13 @@
 package drrename.ui;
 
-import drrename.ui.config.UiConfig;
 import drrename.event.StageReadyEvent;
+import drrename.ui.config.UiConfig;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
