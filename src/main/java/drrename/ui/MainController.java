@@ -10,7 +10,9 @@ import drrename.kodi.KodiToolsController;
 import drrename.mime.FileTypeByMimeProvider;
 import drrename.model.RenamingControl;
 import drrename.service.EntriesService;
+import drrename.strategy.RenamingConfig;
 import drrename.strategy.RenamingStrategy;
+import drrename.strategy.SimpleRenamingConfig;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.ReplacementStringComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
@@ -25,6 +27,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
@@ -127,7 +130,10 @@ public class MainController implements Initializable {
     public TextField textFieldReplacementStringTo;
 
     public CheckBox showOnlyChanging;
+
     public Label selectedStrategyLabel;
+
+    public CheckBox includeExtension;
 
     private ChangeListener<? super String> replaceStringFromChangeListener;
 
@@ -179,8 +185,12 @@ public class MainController implements Initializable {
 
     private final ListProperty<Path> loadedPaths = new SimpleListProperty<>(FXCollections.observableArrayList());
 
+    private RenamingConfig renamingConfig;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        renamingConfig = new SimpleRenamingConfig();
 
         leftContent = fileListComponentController.content1;
         rightContent = fileListComponentController.content2;
@@ -223,10 +233,8 @@ public class MainController implements Initializable {
         });
 
         /* Make scrolling of both lists symmetrical */
-        Platform.runLater(() -> {
-            FXUtil.getListViewScrollBar(leftContent).valueProperty()
-                    .bindBidirectional(FXUtil.getListViewScrollBar(rightContent).valueProperty());
-        });
+        Platform.runLater(() -> FXUtil.getListViewScrollBar(leftContent).valueProperty()
+                .bindBidirectional(FXUtil.getListViewScrollBar(rightContent).valueProperty()));
 
         leftContent.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         rightContent.setEditable(false);
@@ -293,7 +301,7 @@ public class MainController implements Initializable {
             if(newValue == null)
                 selectedStrategyLabel.setText(null);
             else
-            selectedStrategyLabel.setText(newValue.getHelpText());
+                selectedStrategyLabel.setText(newValue.getHelpText());
         });
         comboBoxRenamingStrategy.getSelectionModel().selectFirst();
     }
@@ -314,6 +322,10 @@ public class MainController implements Initializable {
         ignoreDirectories.selectedProperty().addListener(ignoreDirectoriesChangeListener);
         ignoreHiddenFiles.selectedProperty().addListener(ignoreHiddenFilesChangeListener);
         showOnlyChanging.selectedProperty().addListener(showOnlyChangingChangeListener);
+        includeExtension.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            renamingConfig.setIncludeFileExtension(newValue);
+            updatePreview();
+        });
         comboBoxRenamingStrategy.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             textFieldReplacementStringFrom.setDisable(!newValue.isReplacing());
             textFieldReplacementStringTo.setDisable(!newValue.isReplacing());
@@ -542,6 +554,7 @@ public class MainController implements Initializable {
             return null;
         strategy.setReplacementStringFrom(textFieldReplacementStringFrom.getText());
         strategy.setReplacementStringTo(textFieldReplacementStringTo.getText());
+        strategy.setConfig(renamingConfig);
         return strategy;
     }
 

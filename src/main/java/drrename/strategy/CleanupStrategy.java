@@ -1,6 +1,5 @@
 package drrename.strategy;
 
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 public class CleanupStrategy extends RenamingStrategyProto {
@@ -11,9 +10,9 @@ public class CleanupStrategy extends RenamingStrategyProto {
 
     private final ExtensionFromMimeStrategy extensionFromMimeStrategy;
 
-    public CleanupStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
-        extensionFromMimeStrategy = new ExtensionFromMimeStrategy(resourceBundle);
+    public CleanupStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
+        extensionFromMimeStrategy = new ExtensionFromMimeStrategy(resourceBundle, renamingConfig);
     }
 
     @Override
@@ -27,8 +26,8 @@ public class CleanupStrategy extends RenamingStrategyProto {
     }
 
     @Override
-    public String getNameNew(final Path file) {
-        return extensionFromMimeStrategy.getNameNew(file).replaceAll("(?i)\\(case conflict\\)", "");
+    public String applyStrategyOnString(String fileNameString) {
+        return extensionFromMimeStrategy.applyStrategyOnString(fileNameString).replaceAll("(?i)\\(case conflict\\)", "");
     }
 
     @Override

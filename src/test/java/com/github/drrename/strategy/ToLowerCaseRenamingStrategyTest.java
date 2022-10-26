@@ -2,6 +2,7 @@ package com.github.drrename.strategy;
 
 import com.github.drrename.AbstractRenamingStrategyTest;
 import drrename.strategy.RenamingStrategy;
+import drrename.strategy.SimpleRenamingConfig;
 import drrename.strategy.ToLowerCaseRenamingStrategy;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ public class ToLowerCaseRenamingStrategyTest extends AbstractRenamingStrategyTes
 
 	@Override
 	protected RenamingStrategy getStrategy() {
-		return new ToLowerCaseRenamingStrategy(bundle);
+		return new ToLowerCaseRenamingStrategy(bundle, new SimpleRenamingConfig());
 	}
 
 	@Override
@@ -33,7 +34,7 @@ public class ToLowerCaseRenamingStrategyTest extends AbstractRenamingStrategyTes
 	protected static final File testFile01 = new File("src/test/resources/UPPERCASE.txt");
 
 	@Test
-	public void test01() throws IOException, InterruptedException {
+	public void test01() {
 
 		assertEquals("test", s.getNameNew(Paths.get("/home/TEST")));
 	}

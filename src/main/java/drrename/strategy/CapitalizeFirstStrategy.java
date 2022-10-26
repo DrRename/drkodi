@@ -2,7 +2,6 @@ package drrename.strategy;
 
 import org.apache.commons.text.WordUtils;
 
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 public class CapitalizeFirstStrategy extends RenamingStrategyProto {
@@ -11,8 +10,8 @@ public class CapitalizeFirstStrategy extends RenamingStrategyProto {
 
     private static final String help_text_identifier = "strategy.capitalize-first-letter.help";
 
-    public CapitalizeFirstStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+    public CapitalizeFirstStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
     @Override
@@ -31,8 +30,8 @@ public class CapitalizeFirstStrategy extends RenamingStrategyProto {
     }
 
     @Override
-    public String getNameNew(Path file) {
-        return WordUtils.capitalize(file.getFileName().toString(), ' ', '_', '-');
+    public String applyStrategyOnString(String fileNameString) {
+        return WordUtils.capitalize(fileNameString, ' ', '_', '-');
     }
 
     @Override

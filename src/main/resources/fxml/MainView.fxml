@@ -57,6 +57,7 @@
                             </padding>
                             <CheckBox fx:id="ignoreHiddenFiles" text="%filter.ignore-hidden"/>
                             <CheckBox fx:id="ignoreDirectories" text="%filter.directories"/>
+                            <CheckBox fx:id="includeExtension" text="%filter.extension"/>
                             <CheckBox fx:id="showOnlyChanging" text="%filter.only-changing"/>
                         </VBox>
                     </left>

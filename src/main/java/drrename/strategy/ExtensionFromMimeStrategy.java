@@ -17,8 +17,8 @@ public class ExtensionFromMimeStrategy extends RenamingStrategyProto {
 
     private static final String help_identifier = "strategy.mime.file-extension.help";
 
-    public ExtensionFromMimeStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+    public ExtensionFromMimeStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
     @Override

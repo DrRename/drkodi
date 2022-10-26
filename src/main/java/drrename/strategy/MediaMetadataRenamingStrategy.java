@@ -31,8 +31,8 @@ public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {
         DATE_FORMATTERS_READ.add(DateTimeFormatter.ofPattern("EE MMM dd HH:mm:ss XXX yyyy"));
     }
 
-    public MediaMetadataRenamingStrategy(ResourceBundle resourceBundle) {
-        super(resourceBundle);
+    public MediaMetadataRenamingStrategy(ResourceBundle resourceBundle, RenamingConfig renamingConfig) {
+        super(resourceBundle, renamingConfig);
     }
 
     @Override
@@ -61,8 +61,7 @@ public class MediaMetadataRenamingStrategy extends RenamingStrategyProto {
 
                             try {
                                 final TemporalAccessor dt = df.parse(tag.getDescription());
-                                final String result = DATE_FORMATTER_WRITE.format(dt) + "." + FilenameUtils.getExtension(file.toString());
-                                return result;
+                                return DATE_FORMATTER_WRITE.format(dt) + "." + FilenameUtils.getExtension(file.toString());
                             } catch (final DateTimeParseException e) {
                                 log.debug(e.toString());
                             }
