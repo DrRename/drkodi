@@ -61,4 +61,10 @@ class KodiUtilTest {
         var directoryString = "Frozen";
         assertNull(KodiUtil.getMovieYearFromDirectoryName(directoryString));
     }
+
+    @Test
+    void testNoYearInBrackets(){
+        var directoryString = "Frozen (cold)";
+        assertNull(KodiUtil.getMovieYearFromDirectoryName(directoryString));
+    }
 }

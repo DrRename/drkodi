@@ -27,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class KodiUtil {
@@ -39,8 +41,10 @@ public class KodiUtil {
     }
 
     public static Integer getMovieYearFromDirectoryName(String directoryName) {
-        if(directoryName.contains("(")) {
-            return Integer.parseInt(directoryName.substring(directoryName.indexOf("(")+1, directoryName.indexOf(")")).trim());
+        Pattern p = Pattern.compile("\\(\\d+\\)");
+        Matcher m = p.matcher(directoryName);
+        if(m.find()) {
+            return Integer.parseInt(m.group().replaceAll("\\(", "").replaceAll("\\)", ""));
         }
         return null;
     }
