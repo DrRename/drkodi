@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -32,6 +33,10 @@ public class ExtensionFromMimeStrategy extends RenamingStrategyProto {
 
     @Override
     public String getNameNew(final Path file) {
+
+        if(Files.isDirectory(file)){
+            return file.getFileName().toString();
+        }
 
         try {
             Tika tika = new Tika();
