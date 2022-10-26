@@ -1,6 +1,5 @@
 package drrename;
 
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import drrename.ui.ResourceBundleAwareLazyFxControllerAndViewResolver;
 import javafx.scene.Node;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,6 @@ import java.util.ResourceBundle;
 
 @Slf4j
 @EnableFeignClients
-@EnableEncryptableProperties
 @SpringBootApplication
 public class Launcher {
 

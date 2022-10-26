@@ -117,7 +117,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
             Platform.runLater(() -> setGraphic(super.buildGraphic()));
         }
         if (checker.getTheMovieDbId() != null) {
-            var image = imagesClient.searchMovie(config.getApiKey(), null, true, checker.getTheMovieDbId());
+            var image = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, true, checker.getTheMovieDbId());
             try {
                 if (image.getBody() != null) {
                     Path tempFile = Files.createTempFile("tmp", ".jpg");
