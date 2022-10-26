@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "app.loop-delay-ms",
+      "type": "java.lang.String",
+      "description": "Description for app.loop-delay-ms."
+    },
+    {
+      "name": "app.debug",
+      "type": "java.lang.String",
+      "description": "Description for app.debug."
+    },
+    {
+      "name": "app.ui.override-locale",
+      "type": "java.lang.String",
+      "description": "Description for app.ui.override-locale."
+    },
+    {
+      "name": "app.ui.initialHeight",
+      "type": "java.lang.String",
+      "description": "Description for app.ui.initialHeight."
+    },
+    {
+      "name": "app.ui.appTitle",
+      "type": "java.lang.String",
+      "description": "Description for app.ui.appTitle."
+    }
+  ] }

@@ -9,6 +9,7 @@ import net.rgielen.fxweaver.spring.SpringFxWeaver;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import java.util.ResourceBundle;
 
 @Slf4j
+@EnableFeignClients
 @SpringBootApplication
 public class Launcher {
 

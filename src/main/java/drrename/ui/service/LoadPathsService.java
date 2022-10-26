@@ -1,6 +1,6 @@
 package drrename.ui.service;
 
-import drrename.model.RenamingEntry;
+import drrename.model.RenamingControl;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +13,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @org.springframework.stereotype.Service
-public class LoadPathsService extends Service<List<RenamingEntry>> {
+public class LoadPathsService extends Service<List<RenamingControl>> {
 
     private Collection<Path> files;
 
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
-    protected Task<List<RenamingEntry>> createTask(){
+    protected Task<List<RenamingControl>> createTask(){
         // If 'files' is one entry only, and it's a directory, use ListDirectoryTask, otherwise use ListFilesTask.
         if(files != null && files.size() == 1 && Files.isDirectory(files.iterator().next())){
             return new ListDirectoryTask(files.iterator().next(), eventPublisher);

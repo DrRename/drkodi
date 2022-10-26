@@ -30,9 +30,13 @@ public class AppConfig {
 
     private boolean debug;
 
+    /**
+     * Time to sleep within loops. Can be used to slow down file generation or other features that support this property, for example when debugging.
+     */
     private long loopDelayMs;
 
-    private long resetDelayMs;
-
+    /**
+     * Number of words a newly generated word should have.
+     */
     private long wordCnt;
 }

@@ -22,4 +22,6 @@ open module drrename {
     requires org.apache.commons.text;
     requires metadata.extractor;
     requires jodd.util;
+    requires spring.cloud.openfeign.core;
+    requires spring.web;
 }

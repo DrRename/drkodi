@@ -1,27 +1,27 @@
 package drrename.ui.service;
 
+import drrename.model.RenamingControl;
+import javafx.concurrent.Service;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import drrename.model.RenamingEntry;
-import javafx.concurrent.Service;
-
 public abstract class FilesService<V> extends Service<V> {
 
-    private List<RenamingEntry> renamingEntries;
+    private List<RenamingControl> renamingEntries;
 
     public FilesService() {
 
         this.renamingEntries = new ArrayList<>();
     }
 
-    public List<RenamingEntry> getRenamingEntries() {
+    public List<RenamingControl> getRenamingEntries() {
 
         return renamingEntries;
     }
 
-    public void setRenamingEntries(final Collection<? extends RenamingEntry> renamingEntries) {
+    public void setRenamingEntries(final Collection<? extends RenamingControl> renamingEntries) {
 
         this.renamingEntries = new ArrayList<>(renamingEntries);
     }
