@@ -76,11 +76,11 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
 
     @Override
     protected String updateMessage(Boolean newValue) {
-        return newValue ? "Movie name could not be found online" + getAdditionalMessageString() : "Movie name found online" + ": " + getType();
+        return newValue ? "Movie name could not be found online.\n" + getAdditionalMessageString() : "Movie name found online:\n" + ": " + getType();
     }
 
     private String getAdditionalMessageString() {
-        return checker.getOnlineTitles().isEmpty() ? "" : ". Best matches: " + checker.getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining(", "));
+        return checker.getOnlineTitles().isEmpty() ? "" : "Best matches:\n" + checker.getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
 
     @Override
     protected String updateIdentifier() {
-        return "Movie name lookup";
+        return "theMovieDB lookup";
     }
 
 
