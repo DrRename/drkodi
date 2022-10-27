@@ -57,7 +57,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
 
     private final ObjectProperty<MovieDbCheckType> type;
 
-    private final MovieDbQuerier checker;
+    private final MovieDbQuerier querier;
 
     private final MovieDbImagesClient imagesClient;
 
@@ -68,7 +68,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
     public NfoFileContentUrlTreeItemValue(RenamingPath moviePath, Executor executor, MovieDbClientFactory factory) {
         super(moviePath, false, executor);
         this.type = new SimpleObjectProperty<>();
-        this.checker = factory.getNewMovieDbChecker();
+        this.querier = factory.getNewMovieDbChecker();
         this.imagesClient = factory.getImagesClient();
         this.config = factory.getConfig();
         updateStatus();
@@ -80,7 +80,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
     }
 
     private String getAdditionalMessageString() {
-        return checker.getOnlineTitles().isEmpty() ? "" : "Best matches:\n" + checker.getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining("\n"));
+        return querier.getOnlineTitles().isEmpty() ? "" : "Best matches:\n" + querier.getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
 
     @Override
@@ -103,21 +103,21 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
     protected void updateStatus() {
         MovieDbCheckType newType = null;
         try {
-            newType = checker.query(KodiUtil.getMovieNameFromDirectoryName(getRenamingPath().getMovieName()), KodiUtil.getMovieYearFromDirectoryName(getRenamingPath().getMovieName()));
+            newType = querier.query(KodiUtil.getMovieNameFromDirectoryName(getRenamingPath().getMovieName()), KodiUtil.getMovieYearFromDirectoryName(getRenamingPath().getMovieName()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         setType(newType);
         setWarning(getType().isWarning());
         updateMessage(isWarning());
-        setCanFix(!checker.getOnlineTitles().isEmpty() && isWarning());
-        if (!checker.getOnlineTitles().isEmpty() && isWarning()) {
+        setCanFix(!querier.getOnlineTitles().isEmpty() && isWarning());
+        if (!querier.getOnlineTitles().isEmpty() && isWarning()) {
             Platform.runLater(() -> setGraphic(buildGraphic2()));
         } else {
             Platform.runLater(() -> setGraphic(super.buildGraphic()));
         }
-        if (checker.getTheMovieDbId() != null) {
-            var image = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, true, checker.getTheMovieDbId());
+        if (querier.getTheMovieDbId() != null) {
+            var image = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), querier.getTheMovieDbId());
             try {
                 if (image.getBody() != null) {
                     Path tempFile = Files.createTempFile("tmp", ".jpg");
@@ -134,7 +134,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
                         long imageFileSize2 = imageFileChannel2.size();
                         imageFileChannel2.close();
                         if(imageFileSize2 > imageFileSize){
-                            log.debug("Downloaded file is larger in size, replacing ours with download");
+                            log.debug("Downloaded file is larger in size, replacing ours with downloaded");
                             Files.move(tempFile, outputFile, StandardCopyOption.REPLACE_EXISTING);
                         } else {
                             log.debug("Our image is larger in size, keeping it");
@@ -152,7 +152,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
 
     private Node buildGraphic2() {
         VBox box = new VBox(4);
-        for (String name : checker.getOnlineTitles()) {
+        for (String name : querier.getOnlineTitles()) {
             Button button = new Button("Fix to \"" + name + "\"");
             VBox.setVgrow(button, Priority.ALWAYS);
             button.setMaxWidth(500);

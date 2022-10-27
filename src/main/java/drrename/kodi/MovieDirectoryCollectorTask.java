@@ -3,7 +3,6 @@ package drrename.kodi;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,21 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-class KodiTask extends Task<List<Path>> {
+class MovieDirectoryCollectorTask extends Task<List<Path>> {
     private Path directory;
-
-    public KodiTask(Path directory) {
-        this.directory = directory;
-    }
-
-    public static boolean isEmpty(Path path) throws IOException {
-        if (Files.isDirectory(path)) {
-            try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
-                return !directory.iterator().hasNext();
-            }
-        }
-        return false;
-    }
 
     @Override
     protected List<Path> call() throws Exception {
@@ -37,9 +23,8 @@ class KodiTask extends Task<List<Path>> {
                     break;
                 }
                 if (Files.isDirectory(path)) {
-                    String movieName = path.getFileName().toString();
-                    if (movieName.startsWith("@")) {
-                        log.info("Ignoring {}", path);
+                    if (path.getFileName().toString().startsWith("@")) {
+                        log.debug("Ignoring {}", path);
                         continue;
                     }
                     result.add(path);
@@ -53,8 +38,12 @@ class KodiTask extends Task<List<Path>> {
         return directory;
     }
 
-    public void setDirectory(Path directory) {
+    public MovieDirectoryCollectorTask setDirectory(Path directory) {
+        if(!Files.isDirectory(directory)){
+            throw new IllegalArgumentException( directory.getFileName() + " is not a directory");
+        }
         this.directory = directory;
+        return this;
     }
 
 }

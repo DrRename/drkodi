@@ -38,10 +38,10 @@ public class MovieTreeItemFactory {
     private final CheckServiceProvider checkServiceProvider;
 
     public MovieTreeItem buildNew(RenamingPath moviePath, WarningsConfig warningsConfig) {
-        return triggerChecks(new MovieTreeItem(new MovieTreeItemValue(moviePath, executor)), warningsConfig);
+        return addChildItems(new MovieTreeItem(new MovieTreeItemValue(moviePath, executor)), warningsConfig);
     }
 
-    private MovieTreeItem triggerChecks(MovieTreeItem movieTreeItem, WarningsConfig warningsConfig) {
+    private MovieTreeItem addChildItems(MovieTreeItem movieTreeItem, WarningsConfig warningsConfig) {
         var listCopy = new ArrayList<>(checkServiceProvider.getCheckServices());
         executor.execute(() -> listCopy.forEach(e -> e.addChildItem(movieTreeItem, warningsConfig, executor)));
         return movieTreeItem;

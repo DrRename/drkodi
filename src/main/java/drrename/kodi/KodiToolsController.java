@@ -67,7 +67,7 @@ public class KodiToolsController implements Initializable {
 
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
 
-    private final KodiService service;
+    private final MovieDirectoryCollectorService service;
 
     private final Executor executor;
 
