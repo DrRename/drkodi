@@ -19,7 +19,7 @@
 
 package drrename.kodi;
 
-import drrename.MovieDbChecker;
+import drrename.MovieDbQuerier;
 import drrename.MovieDbClient;
 import drrename.MovieDbImagesClient;
 import drrename.config.TheMovieDbConfig;
@@ -50,8 +50,8 @@ public class MovieDbClientFactory {
 
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public MovieDbChecker getNewMovieDbChecker() {
-        return new MovieDbChecker(client, config, resourceBundle);
+    public MovieDbQuerier getNewMovieDbChecker() {
+        return new MovieDbQuerier(client, config, resourceBundle);
     }
 
     public MovieDbImagesClient getImagesClient() {

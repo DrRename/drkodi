@@ -19,7 +19,7 @@
 
 package drrename.kodi.nfo;
 
-import drrename.MovieDbChecker;
+import drrename.MovieDbQuerier;
 import drrename.MovieDbImagesClient;
 import drrename.RenameUtil;
 import drrename.config.TheMovieDbConfig;
@@ -57,7 +57,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
 
     private final ObjectProperty<MovieDbCheckType> type;
 
-    private final MovieDbChecker checker;
+    private final MovieDbQuerier checker;
 
     private final MovieDbImagesClient imagesClient;
 
@@ -103,7 +103,7 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
     protected void updateStatus() {
         MovieDbCheckType newType = null;
         try {
-            newType = checker.check(KodiUtil.getMovieNameFromDirectoryName(getRenamingPath().getMovieName()), KodiUtil.getMovieYearFromDirectoryName(getRenamingPath().getMovieName()));
+            newType = checker.query(KodiUtil.getMovieNameFromDirectoryName(getRenamingPath().getMovieName()), KodiUtil.getMovieYearFromDirectoryName(getRenamingPath().getMovieName()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -53,6 +53,6 @@ All files and folders should be simply named with the name of the movie and the 
 
 Kodi Tools perform the following checks:
 
-1. Look up the movie name (i.e., the *folder* name) on [theMovieDB](https://www.themoviedb.org/). If the exact folder name could not be found on theMovieDB, but suggestions are available, those are offered as a quick fix. Localized titles are suggested depending on your [locale setting](link to locale).
+1. Look up the movie name (i.e., the *folder* name) on [theMovieDB](https://www.themoviedb.org/). If no movie matching the exact folder name could be found on theMovieDB, suggestions are available, those are offered as a quick fix. Localized titles are suggested depending on your [locale setting](link to locale).
     
    ![kodi-checks-themoviedb-01](./screens/kodi-checks-themoviedb-01.png)
