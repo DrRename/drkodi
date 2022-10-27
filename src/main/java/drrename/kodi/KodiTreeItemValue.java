@@ -116,7 +116,7 @@ public abstract class KodiTreeItemValue {
         executor.execute(() -> {
             try {
                 fix();
-                Platform.runLater(() -> updateStatus());
+                Platform.runLater(this::updateStatus);
             } catch (FixFailedException e) {
                 throw new RuntimeException(e);
             }
@@ -163,7 +163,7 @@ public abstract class KodiTreeItemValue {
         return getTreeItem() != null && new ArrayList<>(getTreeItem().getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
     }
 
-    // Getter / Setter //
+    // FX Getter / Setter //
 
 
     public KodiTreeItem getTreeItem() {
@@ -212,10 +212,6 @@ public abstract class KodiTreeItemValue {
 
     public void setCanFix(boolean canFix) {
         this.canFix.set(canFix);
-    }
-
-    public boolean isFixable() {
-        return fixable;
     }
 
     public String getStyle() {
