@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -41,7 +40,7 @@ import java.util.*;
 @Slf4j
 @Component
 @Scope("prototype")
-public class MovieDbChecker {
+public class MovieDbQuerier {
 
     private final MovieDbClient client;
 
@@ -53,7 +52,7 @@ public class MovieDbChecker {
 
     private String theMovieDbId;
 
-    public MovieDbChecker(MovieDbClient client, TheMovieDbConfig config, ResourceBundle resourceBundle) {
+    public MovieDbQuerier(MovieDbClient client, TheMovieDbConfig config, ResourceBundle resourceBundle) {
         this.client = client;
         this.config = config;
         this.resourceBundle = resourceBundle;
@@ -64,7 +63,7 @@ public class MovieDbChecker {
         this.theMovieDbId = null;
     }
 
-    public MovieDbCheckType check(String searchString, Integer year) throws IOException {
+    public MovieDbCheckType query(String searchString, Integer year) throws IOException {
         reset();
         var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, year);
         ResponseEntity<TranslationsDto> translatinos;
