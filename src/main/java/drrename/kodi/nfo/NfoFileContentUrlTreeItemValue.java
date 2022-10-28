@@ -156,10 +156,10 @@ public class NfoFileContentUrlTreeItemValue extends KodiTreeItemValue {
             Button button = new Button("Fix to \"" + name + "\"");
             VBox.setVgrow(button, Priority.ALWAYS);
             button.setMaxWidth(500);
-            button.setOnAction(event -> button.setOnAction(actionEvent -> {
+            button.setOnAction(actionEvent -> {
                 fixConfig = new FixConfig(button, name);
                 performFix();
-            }));
+            });
             box.getChildren().add(button);
         }
         return box;
