@@ -19,15 +19,20 @@
 
 package drrename.kodi.nfo;
 
+import drrename.RenameUtil;
 import drrename.kodi.FixFailedException;
 import drrename.kodi.WarningsConfig;
 import drrename.model.RenamingPath;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
@@ -52,10 +57,26 @@ public class NfoFileNameTreeItemValue extends NfoFileTreeItemValue {
     protected void updateStatus() {
         var checker = new NfoFileNameChecker();
         var type = checker.checkDir(getRenamingPath().getOldPath());
-            setNfoFiles(checker.getNfoFiles());
+        setNfoFiles(checker.getNfoFiles());
         setType(type);
         setWarning(calculateWarning());
         setCanFix(isWarning() && getNfoFiles().size() == 1);
+        if (isCanFix() || type.equals(NfoFileNameType.DEFAULT_NAME)) {
+            Platform.runLater(() -> setGraphic(buildGraphic2()));
+        } else {
+            Platform.runLater(() -> setGraphic(super.buildGraphic()));
+        }
+    }
+
+    private Node buildGraphic2() {
+        VBox box = new VBox(4);
+        Button button = new Button("Fix to \"" + getRenamingPath().getMovieName() + ".nfo\"");
+        VBox.setVgrow(button, Priority.ALWAYS);
+        button.setMaxWidth(500);
+        button.setOnAction(event ->
+                performFix());
+        box.getChildren().add(button);
+        return box;
     }
 
     @Override
@@ -77,8 +98,9 @@ public class NfoFileNameTreeItemValue extends NfoFileTreeItemValue {
     public void fix() throws FixFailedException {
         Path nfoFile = getNfoFile();
         try {
-            Path newPath = Files.move(nfoFile, nfoFile.resolveSibling(NfoFiles.DEFAULT_NAME));
-            if(!newPath.getFileName().toString().equals(NfoFiles.DEFAULT_NAME)){
+            Path newPath = RenameUtil.rename(nfoFile, getRenamingPath().getMovieName() + ".nfo");
+            log.info("Renamed {} to {}", nfoFile, newPath);
+            if(!newPath.getFileName().toString().equals(getRenamingPath().getMovieName())){
                 throw new FixFailedException("Rename failed");
             }
         } catch (IOException e) {
