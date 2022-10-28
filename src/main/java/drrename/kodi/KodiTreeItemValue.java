@@ -57,7 +57,7 @@ public abstract class KodiTreeItemValue {
 
     private final StringProperty message;
 
-    private final StringProperty identifer;
+    private final StringProperty identifier;
 
     private final ObjectProperty<Node> graphic;
 
@@ -84,7 +84,7 @@ public abstract class KodiTreeItemValue {
         this.graphic = new SimpleObjectProperty<>();
         this.treeItem = new SimpleObjectProperty<>();
         this.warningsConfig = new WarningsConfig();
-        this.identifer = new SimpleStringProperty();
+        this.identifier = new SimpleStringProperty();
         init();
     }
 
@@ -101,7 +101,7 @@ public abstract class KodiTreeItemValue {
             setMessage(updateMessage(newValue));
         });
         setGraphic(buildGraphic());
-        setIdentifer(updateIdentifier());
+        setIdentifier(updateIdentifier());
     }
 
     protected abstract String updateMessage(Boolean newValue);
@@ -271,15 +271,15 @@ public abstract class KodiTreeItemValue {
         return warningsConfig;
     }
 
-    public String getIdentifer() {
-        return identifer.get();
+    public String getIdentifier() {
+        return identifier.get();
     }
 
-    public StringProperty identiferProperty() {
-        return identifer;
+    public StringProperty identifierProperty() {
+        return identifier;
     }
 
-    public void setIdentifer(String identifer) {
-        this.identifer.set(identifer);
+    public void setIdentifier(String identifier) {
+        this.identifier.set(identifier);
     }
 }

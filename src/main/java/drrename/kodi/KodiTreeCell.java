@@ -20,7 +20,6 @@
 package drrename.kodi;
 
 import javafx.beans.binding.Bindings;
-import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.TreeCell;
 
@@ -49,6 +48,6 @@ public class KodiTreeCell extends TreeCell<KodiTreeItemValue> {
     }
 
     private String calculateMessageString(KodiTreeItemValue item) {
-        return (item.getIdentifer() != null ? item.getIdentifer() + ": " : "") + item.getMessage();
+        return (item.getIdentifier() != null ? item.getIdentifier() + ": " : "") + item.getMessage();
     }
 }
