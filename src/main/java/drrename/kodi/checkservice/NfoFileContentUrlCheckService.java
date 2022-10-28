@@ -23,17 +23,16 @@ import drrename.kodi.MovieDbClientFactory;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoFileContentUrlTreeItemValue;
 import drrename.model.RenamingPath;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Executor;
 
-@Component
+@Service
 public class NfoFileContentUrlCheckService extends CheckService<NfoFileContentUrlTreeItemValue> {
 
     private final MovieDbClientFactory factory;
 
     public NfoFileContentUrlCheckService(MovieDbClientFactory factory) {
-
         this.factory = factory;
     }
 
