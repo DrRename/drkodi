@@ -19,124 +19,104 @@
 
 package drrename.kodi.nfo;
 
-import drrename.RenameUtil;
-import drrename.kodi.FixFailedException;
-import drrename.kodi.WarningsConfig;
+import drrename.kodi.*;
 import drrename.model.RenamingPath;
-import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class NfoFileNameTreeItemValue extends NfoFileTreeItemValue {
+public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheckResult> {
 
-    private final ObjectProperty<NfoFileNameType> type;
+    private final NfoFileNameIssue delegate;
 
-    private final WarningsConfig warningsConfig;
-
-
-    public NfoFileNameTreeItemValue(RenamingPath moviePath, WarningsConfig warningsConfig, Executor executor) {
-        super(moviePath, true, executor);
-        this.warningsConfig = warningsConfig;
-        this.type = new SimpleObjectProperty<>();
-        updateStatus();
-        missingNfoFileIsWarningProperty().addListener((observable, oldValue, newValue) -> setWarning(calculateWarning()));
-    }
-
-    @Override
-    protected void updateStatus() {
-        var checker = new NfoFileNameChecker();
-        var type = checker.checkDir(getRenamingPath().getOldPath());
-        setNfoFiles(checker.getNfoFiles());
-        setType(type);
-        setWarning(calculateWarning());
-        setCanFix(isWarning() && getNfoFiles().size() == 1);
-        if (isCanFix() || type.equals(NfoFileNameType.DEFAULT_NAME)) {
-            Platform.runLater(() -> setGraphic(buildGraphic2()));
-        } else {
-            Platform.runLater(() -> setGraphic(super.buildGraphic()));
-        }
+    public NfoFileNameTreeItemValue(RenamingPath moviePath, Executor executor){
+        super(moviePath, executor);
+        delegate = new NfoFileNameIssue(moviePath);
+        triggerStatusCheck();
     }
 
     private Node buildGraphic2() {
         VBox box = new VBox(4);
-        Button button = new Button("Fix to \"" + getRenamingPath().getMovieName() + ".nfo\"");
+        Button button = new Button("Fix to \"" + getMovieName() + ".nfo\"");
         VBox.setVgrow(button, Priority.ALWAYS);
         button.setMaxWidth(500);
         button.setOnAction(event ->
-                performFix());
+                triggerFixer());
         box.getChildren().add(button);
         return box;
     }
 
-    @Override
-    protected String updateIdentifier() {
-        return "NFO File Name";
+    private void triggerFixer(){
+        var fixableFixer = new IssueFixer<>(this, delegate.getCheckResult());
+        fixableFixer.setOnFailed(this::defaultTaskFailed);
+        fixableFixer.setOnSucceeded(this::fixSucceeded);
+        getExecutor().execute(fixableFixer);
     }
 
-    protected String updateMessage(Boolean newValue) {
-        if (getType() == null) {
-            return "unknown";
-        }
-        if (newValue) {
-            return (getType().toString() + getWarningAdditionalInfo());
-        }
-        return (getType().toString());
-    }
-
-    @Override
-    public void fix() throws FixFailedException {
-        Path nfoFile = getNfoFile();
-        try {
-            Path newPath = RenameUtil.rename(nfoFile, getRenamingPath().getMovieName() + ".nfo");
-            log.info("Renamed {} to {}", nfoFile, newPath);
-            if(!newPath.getFileName().toString().equals(getRenamingPath().getMovieName())){
-                throw new FixFailedException("Rename failed");
-            }
-        } catch (IOException e) {
-            throw new FixFailedException(e);
-        }
-    }
-
-    private String getWarningAdditionalInfo() {
-        return getNfoFiles().isEmpty() ? "" : ": " + getNfoFiles().stream().map(f -> f.getFileName().toString()).collect(Collectors.joining(", "));
+    private void fixSucceeded(WorkerStateEvent workerStateEvent) {
+        triggerStatusCheck();
     }
 
     protected boolean calculateWarning() {
-        if (NfoFileNameType.NO_FILE.equals(getType()) && !isMissingNfoFileIsWarning()) {
+        if (NfoFileNameType.NO_FILE.equals(delegate.getCheckResult().getType()) && !getWarningsConfig().isMissingNfoFileIsWarning()) {
             return false;
         }
-        return !NfoFileNameType.MOVIE_NAME.equals(getType()) && !NfoFileNameType.DEFAULT_NAME.equals(getType());
+        return !NfoFileNameType.MOVIE_NAME.equals(delegate.getCheckResult().getType());
     }
 
-    // Getter / Setter //
-
-
-    public NfoFileNameType getType() {
-        return type.get();
+    protected String buildNewMessage(Boolean newValue) {
+        if (delegate.getCheckResult().getType() == null) {
+            return "unknown";
+        }
+        if (newValue) {
+            return (delegate.getCheckResult().getType().toString() + getWarningAdditionalInfo());
+        }
+        return (delegate.getCheckResult().getType().toString());
     }
 
-    public ObjectProperty<NfoFileNameType> typeProperty() {
-        return type;
+    private String getWarningAdditionalInfo() {
+        return delegate.getCheckResult().getNfoFiles().isEmpty() ? "" : ": " + delegate.getCheckResult().getNfoFiles().stream().map(f -> f.getFileName().toString()).collect(Collectors.joining(", "));
     }
 
-    public void setType(NfoFileNameType type) {
-        this.type.set(type);
+    @Override
+    public void updateStatus(NfoFileNameCheckResult result) {
+        delegate.updateStatus(result);
+        setWarning(calculateWarning());
+        setFixable(isWarning() && delegate.getCheckResult().getNfoFiles().size() == 1);
+        if (isFixable()) {
+            setGraphic(buildGraphic2());
+        } else {
+            setGraphic(super.buildGraphic());
+        }
     }
 
-    public WarningsConfig getWarningsConfig() {
-        return warningsConfig;
+    // Delegate //
+
+    @Override
+    public String getHelpText() {
+        return delegate.getHelpText();
+    }
+
+    @Override
+    public String getIdentifier() {
+        return delegate.getIdentifier();
     }
 
 
+    @Override
+    public NfoFileNameCheckResult checkStatus() {
+        return delegate.checkStatus();
+    }
+
+    @Override
+    public void fix(NfoFileNameCheckResult result) throws FixFailedException {
+        delegate.fix(result);
+    }
 }

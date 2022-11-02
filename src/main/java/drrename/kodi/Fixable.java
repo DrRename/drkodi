@@ -17,22 +17,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.checkservice;
+package drrename.kodi;
 
-import drrename.kodi.WarningsConfig;
-import drrename.kodi.nfo.NfoFileNameTreeItemValue;
-import drrename.model.RenamingPath;
+import java.io.IOException;
 
-import java.nio.file.Files;
-import java.util.concurrent.Executor;
+public interface Fixable<R> {
 
-public class NfoFileNameCheckService extends CheckService<NfoFileNameTreeItemValue> {
+    /**
+     * Called on a background thread to check the status.
+     * I.e., if a "fixable" state is found.
+     */
+    R checkStatus() throws IOException;
 
-    @Override
-    public NfoFileNameTreeItemValue checkPath(RenamingPath path, WarningsConfig warningsConfig, Executor executor) {
-        if (!Files.isDirectory(path.getOldPath())) {
-            throw new IllegalArgumentException(path.getMovieName() + " is not a directory");
-        }
-        return new NfoFileNameTreeItemValue(path, warningsConfig, executor);
-    }
+    boolean isFixable();
+
+    /**
+     * Called on a background thread to perform the fix.
+     * @throws FixFailedException if the fix failed
+     */
+    void fix(R checkStatusResult) throws FixFailedException;
+
+    /**
+     * Called on the FX-Application Thread to update the (UI) status.
+     */
+    void updateStatus(R checkStatusResult);
 }

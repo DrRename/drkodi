@@ -23,7 +23,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.control.Control;
 import javafx.scene.control.TreeCell;
 
-public class KodiTreeCell extends TreeCell<KodiTreeItemValue> {
+public class KodiTreeCell extends TreeCell<KodiTreeItemValue<?>> {
 
     public KodiTreeCell(Control treeView) {
         prefWidthProperty().bind(treeView.widthProperty().subtract(20.0));
@@ -47,7 +47,7 @@ public class KodiTreeCell extends TreeCell<KodiTreeItemValue> {
         }
     }
 
-    private String calculateMessageString(KodiTreeItemValue item) {
-        return (item.getIdentifier() != null ? item.getIdentifier() + ": " : "") + item.getMessage();
+    private String calculateMessageString(KodiTreeItemValue<?> item) {
+        return item.getIdentifier() + (item.getMessage() == null ? "" : ": " + item.getMessage());
     }
 }

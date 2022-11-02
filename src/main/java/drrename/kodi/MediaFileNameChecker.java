@@ -30,34 +30,34 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
 @Setter
 @Slf4j
-public class MovieFileNameChecker {
+public class MediaFileNameChecker {
 
-    private List<Path> mediaFiles;
-
-    public MovieFileNameType checkDir(Path directory) {
+    public MediaFileNameCheckResult checkStatus(Path directory) {
+//        log.debug("Triggering status check on thread {}", Thread.currentThread());
         String movieName = directory.getFileName().toString();
         try {
-            setMediaFiles(findAllMediaFiles(directory));
+            List<Path> mediaFiles = findAllMediaFiles(directory);
             for(Path mediaFile : mediaFiles){
                 String baseName = FilenameUtils.getBaseName(mediaFile.getFileName().toString());
                 if(baseName.startsWith(movieName)){
-                    return MovieFileNameType.MATCHES_DIR_NAME;
+                    return new MediaFileNameCheckResult(MovieFileNameType.MATCHES_DIR_NAME, mediaFiles);
                 }
             }
             if(!mediaFiles.isEmpty()){
-                return MovieFileNameType.INVALID_MEDIA_FILE_NAME;
+                return new MediaFileNameCheckResult(MovieFileNameType.INVALID_MEDIA_FILE_NAME, mediaFiles);
             }
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);
-            return MovieFileNameType.EXCEPTION;
+            return new MediaFileNameCheckResult(MovieFileNameType.EXCEPTION, Collections.emptyList());
 
         }
-        return MovieFileNameType.NO_MEDIA_FILES_FOUND;
+        return new MediaFileNameCheckResult(MovieFileNameType.NO_MEDIA_FILES_FOUND, Collections.emptyList());
     }
 
     private List<Path> findAllMediaFiles(Path directory) throws IOException {

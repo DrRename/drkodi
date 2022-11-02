@@ -24,43 +24,50 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.control.TreeItem;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class MovieTreeItemValue extends KodiTreeItemValue {
+public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
 
     public MovieTreeItemValue(RenamingPath moviePath, Executor executor) {
-        super(moviePath, false, executor);
-        moviePath.movieNameProperty().addListener((observableValue, s, t1) -> setMessage(t1));
-        treeItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                initWarning(newValue);
-            } else {
-                warningProperty().unbind();
-            }
-        });
-        setMessage(moviePath.getMovieName());
+        super(moviePath, executor);
         setGraphic(null);
     }
 
     @Override
-    protected String updateIdentifier() {
+    public void setTreeItem(KodiTreeItem treeItem) {
+        super.setTreeItem(treeItem);
+        initWarning(treeItem);
+    }
+
+    @Override
+    protected String buildNewMessage(Boolean newValue) {
         return null;
     }
 
     @Override
-    protected void updateStatus() {
-        // message is updated via binding to movie name property
+    public Object checkStatus() throws IOException {
+        return null;
     }
 
     @Override
-    protected String updateMessage(Boolean newValue) {
-        return getRenamingPath().getMovieName();
-    }
-
-    @Override
-    public void fix() throws FixFailedException {
+    public void fix(Object hans) throws FixFailedException {
         throw new IllegalStateException("Cannot fix");
+    }
+
+    @Override
+    public void updateStatus(Object checkStatusResult) {
+    }
+
+    @Override
+    public String getHelpText() {
+        return null;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return getRenamingPath().getMovieName();
     }
 
     protected void initWarning(KodiTreeItem treeItem) {
@@ -68,6 +75,6 @@ public class MovieTreeItemValue extends KodiTreeItemValue {
     }
 
     protected boolean calculateWarning(KodiTreeItem treeItem) {
-        return treeItem.getSourceChildren().stream().map(TreeItem::getValue).anyMatch(KodiTreeItemValue::isWarning);
+        return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
     }
 }
