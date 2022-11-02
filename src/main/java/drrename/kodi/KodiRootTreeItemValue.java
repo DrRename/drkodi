@@ -19,6 +19,9 @@
 
 package drrename.kodi;
 
+import javafx.beans.binding.Bindings;
+import javafx.scene.control.TreeItem;
+
 import java.util.concurrent.Executor;
 
 /**
@@ -26,31 +29,54 @@ import java.util.concurrent.Executor;
  *
  * @see KodiRootTreeItem
  */
-public class KodiRootTreeItemValue extends KodiTreeItemValue {
+public class KodiRootTreeItemValue extends KodiTreeItemValue<Object> {
 
     public KodiRootTreeItemValue(Executor executor) {
-        super(null, false, executor);
-        setMessage("Analysis");
+        super(null, executor);
         setGraphic(null);
     }
 
     @Override
-    protected String updateMessage(Boolean newValue) {
+    public void setTreeItem(KodiTreeItem treeItem) {
+        super.setTreeItem(treeItem);
+        initWarning(treeItem);
+    }
+
+    protected void initWarning(KodiTreeItem treeItem) {
+        warningProperty().bind(Bindings.createBooleanBinding(() -> calculateWarning(treeItem), treeItem.getSourceChildren()));
+    }
+
+    protected boolean calculateWarning(KodiTreeItem treeItem) {
+        return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
+    }
+
+    @Override
+    public String getHelpText() {
         return null;
     }
 
     @Override
-    protected String updateIdentifier() {
+    public String getIdentifier() {
+        return "Analysis";
+    }
+
+    @Override
+    protected String buildNewMessage(Boolean newValue) {
         return null;
     }
 
     @Override
-    public void fix() throws FixFailedException {
-        throw new IllegalStateException("Cannot fix");
+    public Object checkStatus() {
+        return null;
     }
 
     @Override
-    protected void updateStatus() {
-        // nothing to update
+    public void fix(Object checkStatusResult) throws FixFailedException {
+        // Ignore
+    }
+
+    @Override
+    public void updateStatus(Object checkStatusResult) {
+       // Ignore
     }
 }

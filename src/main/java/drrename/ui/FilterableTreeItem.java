@@ -31,6 +31,8 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.util.Callback;
 
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class FilterableTreeItem<T> extends TreeItem<T> {
@@ -56,6 +58,10 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
 
     }
 
+    protected Comparator<TreeItem<T>> getComparator() {
+        return null;
+    }
+
     public FilterableTreeItem(T value, Node graphic) {
         super(value, graphic);
         sourceChildren = FXCollections.observableArrayList(this::getExtractorCallback);
@@ -71,6 +77,7 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
                 getChildren().removeAll(c.getRemoved());
                 getChildren().addAll(c.getAddedSubList());
             }
+            Optional.ofNullable(getComparator()).ifPresent(cc -> getChildren().sort(cc));
         });
     }
 

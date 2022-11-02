@@ -20,11 +20,11 @@
 package drrename.kodi;
 
 import drrename.model.RenamingPath;
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
@@ -39,7 +39,7 @@ import java.util.concurrent.Executor;
  * @see KodiTreeItem
  */
 @Slf4j
-public abstract class KodiTreeItemValue {
+public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
     private static final String warning_font = "-fx-font-weight: bold;";
 
@@ -51,82 +51,74 @@ public abstract class KodiTreeItemValue {
 
     private final StringProperty buttonText;
 
-    private final BooleanProperty canFix;
-
     private final ObjectProperty<Boolean> warning;
-
-    private final StringProperty message;
-
-    private final StringProperty identifier;
 
     private final ObjectProperty<Node> graphic;
 
-    private final boolean fixable;
-
     private final WarningsConfig warningsConfig;
-
-    private final RenamingPath renamingPath;
 
     private final ObjectProperty<KodiTreeItem> treeItem;
 
+    private final ObjectProperty<R> checkResult;
+
     private final Executor executor;
 
-    public KodiTreeItemValue(RenamingPath moviePath, boolean fixable, Executor executor) {
-        this.renamingPath = moviePath;
-        this.fixable = fixable;
+    public KodiTreeItemValue(RenamingPath moviePath, Executor executor) {
+        super(moviePath);
         this.executor = executor;
         this.buttonText = new SimpleStringProperty();
-        this.canFix = new SimpleBooleanProperty();
         this.styles = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.style = new SimpleStringProperty();
         this.warning = new SimpleObjectProperty<>();
-        this.message = new SimpleStringProperty();
         this.graphic = new SimpleObjectProperty<>();
         this.treeItem = new SimpleObjectProperty<>();
         this.warningsConfig = new WarningsConfig();
-        this.identifier = new SimpleStringProperty();
+        this.checkResult = new SimpleObjectProperty<>();
         init();
     }
 
-    private void init() {
+    protected void init() {
         getStyles().addListener((ListChangeListener<String>) c -> {
             while (c.next()) {
                 setStyle(String.join(" ", c.getList()));
             }
         });
-        canFixProperty().addListener((observable, oldValue, newValue) -> updateButtonText());
+        fixableProperty().addListener((observable, oldValue, newValue) -> updateButtonText());
         warningProperty().addListener((observable, oldValue, newValue) -> {
-            updateStyles(newValue);
-            updateButtonText();
-            setMessage(updateMessage(newValue));
-        });
-        setGraphic(buildGraphic());
-        setIdentifier(updateIdentifier());
-    }
-
-    protected abstract String updateMessage(Boolean newValue);
-
-
-    public abstract void fix() throws FixFailedException;
-
-    protected abstract String updateIdentifier();
-
-    protected void performFix() {
-
-        executor.execute(() -> {
-            try {
-                fix();
-                Platform.runLater(this::updateStatus);
-            } catch (FixFailedException e) {
-                throw new RuntimeException(e);
+            if(newValue != null) {
+                updateStyles(newValue);
+                updateButtonText();
+                setMessage(buildNewMessage(newValue));
             }
         });
+        setGraphic(buildGraphic());
     }
 
-    protected abstract void updateStatus();
+     protected void triggerStatusCheck(){
+        // Start the processing cascade:
+        // - check status: worker thread
+        // - update status: UI thread
+        var fixableStatusChecker = new FixableStatusChecker<>(this);
+        fixableStatusChecker.setOnFailed(this::defaultTaskFailed);
+        fixableStatusChecker.setOnSucceeded(this::statusCheckerSucceeded);
+        getExecutor().execute(fixableStatusChecker);
+    }
+
+    protected void defaultTaskFailed(WorkerStateEvent workerStateEvent) {
+        log.error(workerStateEvent.getSource().getException().getLocalizedMessage(), workerStateEvent.getSource().getException());
+    }
+
+    protected void statusCheckerSucceeded(WorkerStateEvent event) {
+//        log.debug("Status checker succeeded, updating status on thread {}", Thread.currentThread());
+        updateStatus((R) event.getSource().getValue());
+    }
+
+    public abstract void updateStatus(R result);
+
+    protected abstract String buildNewMessage(Boolean newValue);
 
     protected void updateButtonText() {
-        updateButtonText(isCanFix(), isWarning());
+        updateButtonText(isFixable(), isWarning());
     }
 
     protected void updateButtonText(boolean canFix, boolean isWarning) {
@@ -152,9 +144,13 @@ public abstract class KodiTreeItemValue {
     protected Node buildGraphic() {
         Button button = new Button();
         button.textProperty().bind(buttonText);
-        button.disableProperty().bind(canFixProperty().not());
+        button.disableProperty().bind(fixableProperty().not());
         button.setOnAction(actionEvent -> {
-            performFix();
+            try {
+                fix(getCheckResult());
+            } catch (FixFailedException e) {
+                throw new RuntimeException(e);
+            }
         });
         return button;
     }
@@ -163,8 +159,30 @@ public abstract class KodiTreeItemValue {
         return getTreeItem() != null && new ArrayList<>(getTreeItem().getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
     }
 
+    // Getter //
+
+    public Executor getExecutor() {
+        return executor;
+    }
+
+    public WarningsConfig getWarningsConfig() {
+        return warningsConfig;
+    }
+
     // FX Getter / Setter //
 
+
+    public R getCheckResult() {
+        return checkResult.get();
+    }
+
+    public ObjectProperty<R> checkResultProperty() {
+        return checkResult;
+    }
+
+    public void setCheckResult(R checkResult) {
+        this.checkResult.set(checkResult);
+    }
 
     public KodiTreeItem getTreeItem() {
         return treeItem.get();
@@ -178,18 +196,6 @@ public abstract class KodiTreeItemValue {
         this.treeItem.set(treeItem);
     }
 
-    public String getMessage() {
-        return message.get();
-    }
-
-    public StringProperty messageProperty() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message.set(message);
-    }
-
     public boolean isWarning() {
         return warning.get();
     }
@@ -200,18 +206,6 @@ public abstract class KodiTreeItemValue {
 
     public void setWarning(boolean warning) {
         this.warning.set(warning);
-    }
-
-    public boolean isCanFix() {
-        return canFix.get();
-    }
-
-    public BooleanProperty canFixProperty() {
-        return canFix;
-    }
-
-    public void setCanFix(boolean canFix) {
-        this.canFix.set(canFix);
     }
 
     public String getStyle() {
@@ -238,11 +232,6 @@ public abstract class KodiTreeItemValue {
         this.styles.set(styles);
     }
 
-    public RenamingPath getRenamingPath() {
-        return renamingPath;
-    }
-
-
     public String getButtonText() {
         return buttonText.get();
     }
@@ -267,19 +256,5 @@ public abstract class KodiTreeItemValue {
         this.graphic.set(graphic);
     }
 
-    public WarningsConfig getWarningsConfig() {
-        return warningsConfig;
-    }
 
-    public String getIdentifier() {
-        return identifier.get();
-    }
-
-    public StringProperty identifierProperty() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier.set(identifier);
-    }
 }

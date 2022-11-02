@@ -42,18 +42,18 @@ class NfoFileNameCheckerTest {
     @Test
     void checkNoFile() {
         var result = new NfoFileNameChecker().checkDir(Paths.get("src/test/resources/kodi/Maleficent 2 (2019)"));
-        assertEquals(NfoFileNameType.NO_FILE, result);
+        assertEquals(NfoFileNameType.NO_FILE, result.getType());
     }
 
     @Test
     void checkMovieName() {
         var result = new NfoFileNameChecker().checkDir(Paths.get("src/test/resources/kodi/test01"));
-        assertEquals(NfoFileNameType.MOVIE_NAME, result);
+        assertEquals(NfoFileNameType.MOVIE_NAME, result.getType());
     }
 
     @Test
     void checkDefaultName() {
         var result = new NfoFileNameChecker().checkDir(Paths.get("src/test/resources/kodi/test02"));
-        assertEquals(NfoFileNameType.DEFAULT_NAME, result);
+        assertEquals(NfoFileNameType.DEFAULT_NAME, result.getType());
     }
 }

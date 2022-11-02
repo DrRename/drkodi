@@ -32,4 +32,6 @@ public class TheMovieDbConfig {
 
     boolean includeAdult;
 
+    int numberOfMaxSuggestions;
+
 }

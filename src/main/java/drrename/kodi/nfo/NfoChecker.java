@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @Getter
 @Setter
 public class NfoChecker {

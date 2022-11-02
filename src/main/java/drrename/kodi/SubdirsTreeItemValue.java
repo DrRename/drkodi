@@ -19,70 +19,81 @@
 
 package drrename.kodi;
 
+import drrename.RenameUtil;
 import drrename.model.RenamingPath;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class SubdirsTreeItemValue extends KodiTreeItemValue {
+public class SubdirsTreeItemValue extends KodiTreeItemValue<SubdirsCheckResult> {
 
-    private final ListProperty<Path> subdirs;
+    private SubdirsCheckResult checkResult;
 
     public SubdirsTreeItemValue(RenamingPath moviePath, Executor executor) {
-        super(moviePath, false, executor);
-        subdirs = new SimpleListProperty<>();
-        init();
-        updateStatus();
-    }
-
-    private void init(){
-        subdirs.addListener((ListChangeListener<Path>) c -> {
-            while(c.next()){
-                setWarning(calculateWarning(c.getList()));
-                setCanFix(isWarning());
-            }
-        });
+        super(moviePath, executor);
     }
 
     @Override
-    protected String updateIdentifier() {
+    public String getIdentifier() {
         return "Subdirs";
     }
 
     @Override
-    protected void updateStatus() {
-        try {
-            setSubdirs(FXCollections.observableArrayList(getSubdirs(getRenamingPath().getOldPath())));
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
+    public String getHelpText() {
+        return null;
+    }
+
+    @Override
+    public SubdirsCheckResult checkStatus() throws IOException {
+        log.debug("Triggering check status on thread {}", Thread.currentThread());
+        SubdirsChecker checker = new SubdirsChecker();
+        return checker.checkDir(getRenamingPath().getOldPath());
+    }
+
+    protected void statusCheckerSucceeded(WorkerStateEvent event) {
+        log.debug("Status checker succeeded, updating status on thread {}", Thread.currentThread());
+        checkResult = (SubdirsCheckResult) event.getSource().getValue();
+        updateStatus(checkResult);
+    }
+
+    protected void defaultTaskFailed(WorkerStateEvent workerStateEvent) {
+        log.error(workerStateEvent.getSource().getException().getLocalizedMessage(), workerStateEvent.getSource().getException());
+    }
+
+    @Override
+    public void updateStatus(SubdirsCheckResult checkResult) {
+        log.debug("Triggering status update on thread {}", Thread.currentThread());
+        setWarning(calculateWarning());
+        setFixable(isWarning());
+    }
+
+    @Override
+    protected String buildNewMessage(Boolean newValue) {
+        return newValue ? "Has subdirs: " + checkResult.getSubdirs().stream().map(p -> p.getFileName() + "[" + countChildFilesAndFolders(p) + "]").toList() : "No subdirs";
+    }
+
+    @Override
+    public void fix(SubdirsCheckResult checkResult) throws FixFailedException {
+        log.debug("Triggering fixing on thread {}", Thread.currentThread());
+        for(Path p : checkResult.getSubdirs()){
+            try {
+                RenameUtil.deleteRecursively(p);
+            } catch (IOException e) {
+                throw new FixFailedException(e);
+            }
         }
     }
 
-    protected List<Path> getSubdirs(Path path) throws IOException {
-        List<Path> subdirs = new ArrayList<>();
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
-            for (Path child : ds) {
-                if (Files.isDirectory(child)) {
-                    subdirs.add(child);
-                }
-            }
-        }
-        return subdirs;
+    private void fixSucceeded(WorkerStateEvent workerStateEvent) {
+        updateStatus(getCheckResult());
     }
 
     protected List<Path> getChildFilesAndFolders(Path path) throws IOException {
@@ -103,43 +114,8 @@ public class SubdirsTreeItemValue extends KodiTreeItemValue {
         }
     }
 
-    private boolean calculateWarning(Collection<? extends Path> subdirs){
-        return !subdirs.isEmpty();
+    private boolean calculateWarning(){
+        return !checkResult.getSubdirs().isEmpty();
     }
 
-    @Override
-    protected String updateMessage(Boolean newValue) {
-        return newValue ? "Has subdirs: " + getSubdirs().stream().map(p -> p.getFileName() + "[" + countChildFilesAndFolders(p) + "]").toList() : "No subdirs";
-    }
-
-    @Override
-    public void fix() throws FixFailedException {
-        for(Path p : getSubdirs()){
-            try (var dirStream = Files.walk(p)) {
-                dirStream
-                        .map(Path::toFile)
-                        .sorted(Comparator.reverseOrder())
-                        .forEach(File::delete);
-            } catch (IOException e) {
-                throw new FixFailedException(e);
-            }
-        }
-    }
-
-
-
-    // Getter / Setter //
-
-
-    public ObservableList<Path> getSubdirs() {
-        return subdirs.get();
-    }
-
-    public ListProperty<Path> subdirsProperty() {
-        return subdirs;
-    }
-
-    public void setSubdirs(ObservableList<Path> subdirs) {
-        this.subdirs.set(subdirs);
-    }
 }
