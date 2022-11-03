@@ -20,38 +20,41 @@
 
 package drrename.kodi;
 
-import drrename.kodi.nfo.*;
+import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.model.RenamingPath;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
-import java.util.Collections;
+import java.util.concurrent.Executor;
 
 @Getter
 @Slf4j
-public class NfoFileNameIssue extends FxKodiIssue<NfoFileNameCheckResult> {
+public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoFileContentMovieNameCheckResult> {
 
-    private NfoFileNameCheckResult checkResult;
+    private NfoFileContentMovieNameCheckResult checkResult;
 
-    public NfoFileNameIssue(RenamingPath moviePath) {
-        super(moviePath);
+    public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor) {
+        super(moviePath, executor);
     }
 
     @Override
-    public NfoFileNameCheckResult checkStatus() {
-            return new NfoFileNameChecker().checkDir(getRenamingPath().getOldPath());
+    public NfoFileContentMovieNameCheckResult checkStatus() {
+        return new NfoFileContentMovieNameCheckResult(new NfoContentTitleChecker().checkNfoFile(getRenamingPath().getOldPath()));
     }
 
     @Override
-    public void fix(NfoFileNameCheckResult result) throws FixFailedException {
-
+    public void fix(NfoFileContentMovieNameCheckResult result) throws FixFailedException {
+        throw new IllegalStateException("Cannot fix");
     }
 
     @Override
-    public void updateStatus(NfoFileNameCheckResult result) {
+    public void updateStatus(NfoFileContentMovieNameCheckResult result) {
         this.checkResult = result;
+    }
 
+    @Override
+    protected String buildNewMessage(Boolean newValue) {
+        return checkResult.toString();
     }
 
     @Override
@@ -61,6 +64,6 @@ public class NfoFileNameIssue extends FxKodiIssue<NfoFileNameCheckResult> {
 
     @Override
     public String getIdentifier() {
-        return "NFO File Name";
+        return "NFO File Content Movie Name";
     }
 }
