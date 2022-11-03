@@ -156,7 +156,7 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
         for (String name : checkResult.getOnlineTitles()) {
             Button button = new Button("Fix to \"" + name + "\"");
 //            VBox.setVgrow(button, Priority.ALWAYS);
-            button.setMaxWidth(300);
+            button.setMaxWidth(250);
             button.wrapTextProperty().setValue(true);
             button.setOnAction(actionEvent -> {
                 fixConfig = new FixConfig(button, name);

@@ -20,7 +20,7 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-class MovieDirectoryCollectorTask extends Task<Void> {
+class MovieDirectoryIssuesTask extends Task<Void> {
     private final Path directory;
 
     private final KodiRootTreeItem rootTreeItem;
@@ -67,7 +67,8 @@ class MovieDirectoryCollectorTask extends Task<Void> {
         return Arrays.asList(
                 new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory),
                 new NfoFileNameTreeItemValue(renamingPath, executor),
-                new MediaFileNameTreeItemValue(renamingPath, executor));
+                new MediaFileNameTreeItemValue(renamingPath, executor),
+                new NfoFileContentMovieNameTreeItemValue(renamingPath, executor));
     }
 
     private void triggerUiUpdate(MovieTreeItem item, List<KodiTreeItemValue<?>> issuesToCheck) {

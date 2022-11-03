@@ -22,7 +22,7 @@ public class MovieDirectoryCollectorService extends Service<Void> {
 
     @Override
     protected Task<Void> createTask() {
-        return new MovieDirectoryCollectorTask(directory, rootTreeItem, getExecutor(), movieDbClientFactory);
+        return new MovieDirectoryIssuesTask(directory, rootTreeItem, getExecutor(), movieDbClientFactory);
     }
 
 }
