@@ -41,7 +41,7 @@ class NfoContentCoverCheckerTest {
 
     @Test
     void test01(){
-        var result = new NfoContentCoverChecker().checkNfoFile(Paths.get("src/test/resources/kodi/Cover Test Movie (1999)/movie.nfo"));
+        var result = new NfoContentCoverChecker().checkFile(null,Paths.get("src/test/resources/kodi/Cover Test Movie (1999)/movie.nfo"));
         assertEquals(NfoFileContentType.MISSING_POSTER, result);
     }
 }

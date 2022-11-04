@@ -20,9 +20,6 @@
 
 package drrename.kodi;
 
-import drrename.kodi.nfo.NfoContentTitleChecker;
-import drrename.kodi.nfo.NfoFileContentType;
-import drrename.kodi.nfo.NfoFileNameType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -30,5 +27,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NfoFileContentMovieNameCheckResult {
 
-    private final NfoFileContentType type;
+    private final NfoFileNameCheckResult type;
 }

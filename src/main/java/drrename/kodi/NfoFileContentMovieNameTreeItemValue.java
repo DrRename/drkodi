@@ -23,10 +23,14 @@ package drrename.kodi;
 import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.model.RenamingPath;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.file.Path;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
+@Setter
 @Getter
 @Slf4j
 public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoFileContentMovieNameCheckResult> {
@@ -35,11 +39,12 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
 
     public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor) {
         super(moviePath, executor);
+        triggerStatusCheck();
     }
 
     @Override
     public NfoFileContentMovieNameCheckResult checkStatus() {
-        return new NfoFileContentMovieNameCheckResult(new NfoContentTitleChecker().checkNfoFile(getRenamingPath().getOldPath()));
+        return new NfoFileContentMovieNameCheckResult(new NfoContentTitleChecker().checkDir(getRenamingPath().getOldPath()));
     }
 
     @Override
@@ -49,12 +54,15 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
 
     @Override
     public void updateStatus(NfoFileContentMovieNameCheckResult result) {
+        if(result == null){
+            return;
+        }
         this.checkResult = result;
     }
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
-        return checkResult.toString();
+        return checkResult.getType().getType() + (checkResult.getType().getNfoFiles() == null || checkResult.getType().getNfoFiles().isEmpty() ? "" : ": " + checkResult.getType().getNfoFiles().stream().map(Path::getFileName).map(Object::toString).collect(Collectors.joining(", ")));
     }
 
     @Override
