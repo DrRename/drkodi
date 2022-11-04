@@ -25,6 +25,13 @@ public enum NfoFileContentType {
             return missingNfoFileIsWarning;
         }
     },
+    DEFAULT_NAME("Default file name"),
+    MOVIE_NAME("File name matches movie name"),
+    INVALID_NAME("Invalid file name"){
+    public boolean isWarning(boolean missingNfoFileIsWarning) {
+            return true;
+        }
+    },
     INVALID_FILE("Invalid file"){
         public boolean isWarning(boolean missingNfoFileIsWarning) {
             return true;
@@ -39,7 +46,14 @@ public enum NfoFileContentType {
         public boolean isWarning(boolean missingNfoFileIsWarning) {
             return true;
         }
-    }, URL_ONLY_FILE("URL-only"),
+    },
+    MULTIPLE_FILES("Multiple files"){
+        public boolean isWarning(boolean missingNfoFileIsWarning) {
+            return true;
+        }
+    },
+
+    URL_ONLY_FILE("URL-only"),
     MISSING_YEAR("No year"){
         @Override
         public boolean isWarning(boolean missingNfoFileIsWarning) {

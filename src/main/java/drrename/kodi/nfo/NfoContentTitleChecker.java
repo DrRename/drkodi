@@ -25,7 +25,8 @@ import drrename.model.nfo.NfoRoot;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class NfoContentTitleChecker  extends NfoContentChecker {
+public class NfoContentTitleChecker extends NfoContentChecker {
+
     @Override
     protected NfoFileContentType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) {
         if(xmlModel.getMovie().getTitle() == null){

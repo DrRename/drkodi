@@ -12,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Getter
@@ -55,26 +57,28 @@ class MovieDirectoryIssuesTask extends Task<Void> {
 
                     var renamingPath = new RenamingPath(path);
                     var item = new MovieTreeItem(new MovieTreeItemValue(renamingPath, executor));
-                    List<KodiTreeItemValue<?>> issuesToCheck = getIssuesToCheck(renamingPath);
-                    triggerUiUpdate(item, issuesToCheck);
+                    List<KodiTreeItem> childItems = buildChildItems(renamingPath);
+                    childItems.forEach(childItem -> Platform.runLater(() -> item.getSourceChildren().add(childItem)));
+                    Platform.runLater(() -> getRootTreeItem().getSourceChildren().add(item));
                 }
             }
         }
         return null;
     }
 
-    private List<KodiTreeItemValue<?>> getIssuesToCheck(RenamingPath renamingPath){
-        return Arrays.asList(
-                new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory),
-                new NfoFileNameTreeItemValue(renamingPath, executor),
-                new MediaFileNameTreeItemValue(renamingPath, executor),
-                new NfoFileContentMovieNameTreeItemValue(renamingPath, executor));
+    List<KodiTreeItem> buildChildItems(RenamingPath renamingPath){
+        List<KodiTreeItem> result = new ArrayList<>();
+        result.add(new KodiTreeItem(new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory)));
+        result.add(new KodiTreeItem(new NfoFileNameTreeItemValue(renamingPath, executor)));
+        result.add(new KodiTreeItem(new MediaFileNameTreeItemValue(renamingPath, executor)));
+        result.add(new KodiTreeItem(new NfoFileContentMovieNameTreeItemValue(renamingPath, executor)));
+        return result;
     }
 
-    private void triggerUiUpdate(MovieTreeItem item, List<KodiTreeItemValue<?>> issuesToCheck) {
-        Platform.runLater(() -> getRootTreeItem().getSourceChildren().add(item));
-        issuesToCheck.forEach(i -> Platform.runLater(() -> {item.getSourceChildren().add(new KodiTreeItem(i));}));
+    private void executeTask(MovieTreeItem item, Task<KodiTreeItem> task) {
+        task.setOnFailed(event -> log.error(task + " failed", task.getException()));
+        task.setOnCancelled(event -> log.debug("{} cancelled", task));
+        task.setOnSucceeded(event -> item.getSourceChildren().add(task.getValue()));
+        executor.execute(task);
     }
-
-
 }

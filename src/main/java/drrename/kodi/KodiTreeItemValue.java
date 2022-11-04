@@ -159,7 +159,7 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         return getTreeItem() != null && new ArrayList<>(getTreeItem().getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
     }
 
-    // Getter //
+    // Getter / Setter  //
 
     public Executor getExecutor() {
         return executor;

@@ -43,10 +43,7 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
     protected final ObjectProperty<Predicate<T>> predicate;
 
     public FilterableTreeItem() {
-        predicate = new SimpleObjectProperty<>();
-        sourceChildren = FXCollections.observableArrayList(this::getExtractorCallback);
-        filteredChildren = new FilteredList<>(sourceChildren);
-        init();
+        this(null);
     }
 
     public FilterableTreeItem(T value) {

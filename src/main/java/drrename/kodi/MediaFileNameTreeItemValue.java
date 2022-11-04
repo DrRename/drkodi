@@ -40,14 +40,16 @@ public class MediaFileNameTreeItemValue extends KodiTreeItemValue<MediaFileNameC
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
-        if (delegate.getCheckResult().getType() == null) {
-            return "unknown";
+        if (delegate.getCheckResult() == null) {
+            return null;
         }
         return (delegate.getCheckResult().getType().toString()) + (delegate.getCheckResult().getMediaFiles().isEmpty() ? "" : ":\n" + delegate.getCheckResult().getMediaFiles().stream().map(Object::toString).collect(Collectors.joining("\n")));
     }
 
     private boolean calculateWarning() {
-        return delegate.getCheckResult().getType().isWarning();
+        if(delegate.getCheckResult() != null)
+            return delegate.getCheckResult().getType().isWarning();
+        return false;
     }
 
     @Override
