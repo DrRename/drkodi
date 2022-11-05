@@ -4,6 +4,7 @@ import drrename.ui.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -67,7 +68,7 @@ public class KodiToolsController implements Initializable {
 
     private final Executor executor;
 
-    private KodiRootTreeItem treeRoot;
+    private FilterableKodiRootTreeItem treeRoot;
 
     private final MovieDbClientFactory movieDbClientFactory;
 
@@ -85,7 +86,7 @@ public class KodiToolsController implements Initializable {
         goCancelButtonsComponentController.setButtonGoActionEventFactory(KodiToolsButtonGoEvent::new);
         progressBar.visibleProperty().bind(service.runningProperty());
 
-        treeRoot = new KodiRootTreeItem(executor);
+        treeRoot = new FilterableKodiRootTreeItem(executor, warningsConfig, null);
         treeView.setRoot(treeRoot);
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
@@ -93,8 +94,7 @@ public class KodiToolsController implements Initializable {
             buttonExpandAll.setDisable(e.getList().isEmpty());
             buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
-        checkBoxHideEmpty.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate());
-        checkBoxMissingNfoFileIsAWarning.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate());
+        treeRoot.setPredicate(buildHideEmptyPredicate());
         startDirectoryComponentController.inputPathProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 onButtonGoEvent(null);
@@ -160,17 +160,9 @@ public class KodiToolsController implements Initializable {
         imageStage.show();
     }
 
-    private void updateTreeRootPredicate() {
-        Platform.runLater(() -> treeRoot.setPredicate(buildHideEmptyPredicate()));
-    }
-
     private Predicate<KodiTreeItemValue<?>> buildHideEmptyPredicate() {
         return item -> {
-            var nfoFileIsWarning = checkBoxMissingNfoFileIsAWarning.isSelected();
-//            if(item instanceof NfoFileTreeItemValue item2){
-//                item2.setMissingNfoFileIsWarning(nfoFileIsWarning);
-//            }
-            return item.isWarning() || !checkBoxHideEmpty.isSelected();
+            return item.warningProperty().get() != null && item.isWarning() || !checkBoxHideEmpty.isSelected();
         };
     }
 
@@ -200,6 +192,8 @@ public class KodiToolsController implements Initializable {
         service.setExecutor(executor);
         service.setRootTreeItem(treeRoot);
         service.setMovieDbClientFactory(movieDbClientFactory);
+        service.setWarningsConfig(warningsConfig);
+        service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
         progressBar.progressProperty().bind(service.progressProperty());
         service.setOnFailed(this::handleFailed);
         treeRoot.getSourceChildren().clear();

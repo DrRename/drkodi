@@ -37,8 +37,8 @@ public class SubdirsTreeItemValue extends KodiTreeItemValue<SubdirsCheckResult> 
 
     private SubdirsCheckResult checkResult;
 
-    public SubdirsTreeItemValue(RenamingPath moviePath, Executor executor) {
-        super(moviePath, executor);
+    public SubdirsTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
+        super(moviePath, executor, warningsConfig);
     }
 
     @Override

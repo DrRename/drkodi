@@ -4,6 +4,7 @@ import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
 import drrename.kodi.nfo.NfoFileNameTreeItemValue;
 import drrename.model.RenamingPath;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,9 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Getter
@@ -25,11 +24,15 @@ import java.util.stream.Stream;
 class MovieDirectoryIssuesTask extends Task<Void> {
     private final Path directory;
 
-    private final KodiRootTreeItem rootTreeItem;
+    private final FilterableKodiRootTreeItem rootTreeItem;
 
     private final Executor executor;
 
     private final MovieDbClientFactory movieDbClientFactory;
+
+    private final WarningsConfig warningsConfig;
+
+    private final Observable[] extractor;
 
     private void verifyState() {
         Objects.requireNonNull(directory);
@@ -56,8 +59,8 @@ class MovieDirectoryIssuesTask extends Task<Void> {
                     }
 
                     var renamingPath = new RenamingPath(path);
-                    var item = new MovieTreeItem(new MovieTreeItemValue(renamingPath, executor));
-                    List<KodiTreeItem> childItems = buildChildItems(renamingPath);
+                    var item = new MovieTreeItemFilterable(new MovieTreeItemValue(renamingPath, executor, warningsConfig), extractor);
+                    List<FilterableKodiTreeItem> childItems = buildChildItems(renamingPath);
                     childItems.forEach(childItem -> Platform.runLater(() -> item.getSourceChildren().add(childItem)));
                     Platform.runLater(() -> getRootTreeItem().getSourceChildren().add(item));
                 }
@@ -66,19 +69,13 @@ class MovieDirectoryIssuesTask extends Task<Void> {
         return null;
     }
 
-    List<KodiTreeItem> buildChildItems(RenamingPath renamingPath){
-        List<KodiTreeItem> result = new ArrayList<>();
-        result.add(new KodiTreeItem(new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory)));
-        result.add(new KodiTreeItem(new NfoFileNameTreeItemValue(renamingPath, executor)));
-        result.add(new KodiTreeItem(new MediaFileNameTreeItemValue(renamingPath, executor)));
-        result.add(new KodiTreeItem(new NfoFileContentMovieNameTreeItemValue(renamingPath, executor)));
+    List<FilterableKodiTreeItem> buildChildItems(RenamingPath renamingPath){
+        List<FilterableKodiTreeItem> result = new ArrayList<>();
+        result.add(new FilterableKodiTreeItem(new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory, warningsConfig), null));
+        result.add(new FilterableKodiTreeItem(new NfoFileNameTreeItemValue(renamingPath, executor, warningsConfig), null));
+        result.add(new FilterableKodiTreeItem(new MediaFileNameTreeItemValue(renamingPath, executor, warningsConfig), null));
+        result.add(new FilterableKodiTreeItem(new NfoFileContentMovieNameTreeItemValue(renamingPath, executor, warningsConfig), null));
         return result;
     }
 
-    private void executeTask(MovieTreeItem item, Task<KodiTreeItem> task) {
-        task.setOnFailed(event -> log.error(task + " failed", task.getException()));
-        task.setOnCancelled(event -> log.debug("{} cancelled", task));
-        task.setOnSucceeded(event -> item.getSourceChildren().add(task.getValue()));
-        executor.execute(task);
-    }
 }

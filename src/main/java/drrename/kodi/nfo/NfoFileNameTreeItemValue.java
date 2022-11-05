@@ -36,8 +36,8 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
 
     private final NfoFileNameIssue delegate;
 
-    public NfoFileNameTreeItemValue(RenamingPath moviePath, Executor executor){
-        super(moviePath, executor);
+    public NfoFileNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig){
+        super(moviePath, executor, warningsConfig);
         delegate = new NfoFileNameIssue(moviePath);
         triggerStatusCheck();
     }
@@ -56,6 +56,7 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
     }
 
     protected boolean calculateWarning() {
+//        log.debug("Calculating warning");
         if (delegate.getCheckResult() == null) {
             return false;
         }
@@ -81,7 +82,12 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
 
     @Override
     public void updateStatus(NfoFileNameCheckResult result) {
+        if(result == null){
+            return;
+        }
+//        log.debug("Updating status");
         delegate.updateStatus(result);
+        setCheckResult(result);
         setWarning(calculateWarning());
         setFixable(isWarning() && delegate.getCheckResult().getNfoFiles().size() == 1);
         if (isFixable()) {

@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupCheckResult> {
 
     private final MovieDbClientFactory factory;
-    private MovieDbLookupCheckResult checkResult;
 
     @AllArgsConstructor
     static
@@ -57,8 +56,8 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
 
     private FixConfig fixConfig;
 
-    public MovieDbLookupTreeItemValue(RenamingPath moviePath, Executor executor, MovieDbClientFactory factory) {
-        super(moviePath, executor);
+    public MovieDbLookupTreeItemValue(RenamingPath moviePath, Executor executor, MovieDbClientFactory factory, WarningsConfig warningsConfig) {
+        super(moviePath, executor, warningsConfig);
         this.factory = factory;
         this.imagesClient = factory.getImagesClient();
         this.config = factory.getConfig();
@@ -88,16 +87,17 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
 
     @Override
     public void updateStatus(MovieDbLookupCheckResult result) {
-        if(checkResult == null)
+        if(result == null)
             return;
-        this.checkResult = result;
-        setWarning(checkResult.getType().isWarning());
+//        log.debug("Updating status");
+        setCheckResult(result);
+        setWarning(getCheckResult().getType().isWarning());
         buildNewMessage(isWarning());
-        setFixable(!checkResult.getOnlineTitles().isEmpty() && isWarning());
-        if (!checkResult.getOnlineTitles().isEmpty() && isWarning()) {
-            Platform.runLater(() -> setGraphic(buildGraphic2()));
+        setFixable(!getCheckResult().getOnlineTitles().isEmpty() && isWarning());
+        if (!getCheckResult().getOnlineTitles().isEmpty() && isWarning()) {
+            setGraphic(buildGraphic2());
         } else {
-            Platform.runLater(() -> setGraphic(super.buildGraphic()));
+            setGraphic(super.buildGraphic());
         }
 //        if (querier.getTheMovieDbId() != null) {
 //            var image = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), querier.getTheMovieDbId());
@@ -135,14 +135,14 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
-        if(checkResult == null){
+        if(getAdditionalMessageString() == null){
             return null;
         }
-        return newValue ? "Movie name could not be found online.\n" + getAdditionalMessageString() : "Movie name found online: " + checkResult.getType() +  getAdditionalMessageString();
+        return newValue ? "Movie name could not be found online.\n" + getAdditionalMessageString() : "Movie name found online: " + getCheckResult().getType() +  getAdditionalMessageString();
     }
 
     private String getAdditionalMessageString() {
-        return ". " + (checkResult.getOnlineTitles().isEmpty() ? "" : "Best matches:\n" + checkResult.getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining("\n")));
+        return ". " + (getCheckResult().getOnlineTitles().isEmpty() ? "" : "Best matches:\n" + getCheckResult().getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining("\n")));
     }
 
     @Override
@@ -158,7 +158,7 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
 
     private Node buildGraphic2() {
         VBox box = new VBox(4);
-        for (String name : checkResult.getOnlineTitles()) {
+        for (String name : getCheckResult().getOnlineTitles()) {
             Button button = new Button("Fix to \"" + name + "\"");
 //            VBox.setVgrow(button, Priority.ALWAYS);
             button.setMaxWidth(250);
@@ -173,7 +173,7 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
     }
 
     private void bla2(){
-        var fixableFixer = new IssueFixer<>(this, checkResult);
+        var fixableFixer = new IssueFixer<>(this, getCheckResult());
         fixableFixer.setOnFailed(this::defaultTaskFailed);
         fixableFixer.setOnSucceeded(this::fixSucceeded);
         getExecutor().execute(fixableFixer);
