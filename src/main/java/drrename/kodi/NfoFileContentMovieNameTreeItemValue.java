@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoFileContentMovieNameCheckResult> {
 
-    private NfoFileContentMovieNameCheckResult checkResult;
 
-    public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor) {
-        super(moviePath, executor);
+
+    public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
+        super(moviePath, executor, warningsConfig);
         triggerStatusCheck();
     }
 
@@ -57,12 +57,22 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
         if(result == null){
             return;
         }
-        this.checkResult = result;
+//        log.debug("Updating status");
+        setCheckResult(result);
+        setWarning(calculateWarning());
+    }
+
+    private boolean calculateWarning() {
+        if(getCheckResult() == null){
+            return false;
+        }
+//        log.debug("Calculating warning");
+        return getCheckResult().getType().getType().isWarning(getWarningsConfig().isMissingNfoFileIsWarning());
     }
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
-        return checkResult.getType().getType() + (checkResult.getType().getNfoFiles() == null || checkResult.getType().getNfoFiles().isEmpty() ? "" : ": " + checkResult.getType().getNfoFiles().stream().map(Path::getFileName).map(Object::toString).collect(Collectors.joining(", ")));
+        return getCheckResult().getType().getType() + (getCheckResult().getType().getNfoFiles() == null || getCheckResult().getType().getNfoFiles().isEmpty() ? "" : ": " + getCheckResult().getType().getNfoFiles().stream().map(Path::getFileName).map(Object::toString).collect(Collectors.joining(", ")));
     }
 
     @Override

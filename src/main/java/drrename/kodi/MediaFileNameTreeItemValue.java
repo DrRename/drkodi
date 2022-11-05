@@ -32,8 +32,8 @@ public class MediaFileNameTreeItemValue extends KodiTreeItemValue<MediaFileNameC
 
     private final MediaFileNameIssue delegate;
 
-    public MediaFileNameTreeItemValue(RenamingPath path, Executor executor) {
-        super(path, executor);
+    public MediaFileNameTreeItemValue(RenamingPath path, Executor executor, WarningsConfig warningsConfig) {
+        super(path, executor, warningsConfig);
         this.delegate = new MediaFileNameIssue(path);
         triggerStatusCheck();
     }
@@ -47,13 +47,17 @@ public class MediaFileNameTreeItemValue extends KodiTreeItemValue<MediaFileNameC
     }
 
     private boolean calculateWarning() {
-        if(delegate.getCheckResult() != null)
+        if(delegate.getCheckResult() != null) {
+//            log.debug("Calculating warning");
             return delegate.getCheckResult().getType().isWarning();
+        }
         return false;
     }
 
     @Override
     public void updateStatus(MediaFileNameCheckResult result) {
+//        log.debug("Updating status");
+        setCheckResult(result);
         delegate.updateStatus(result);
         setWarning(calculateWarning());
     }

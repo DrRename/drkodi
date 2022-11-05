@@ -19,10 +19,12 @@
 
 package drrename.kodi;
 
-public class MovieTreeItem extends KodiTreeItem {
+import javafx.beans.Observable;
 
-    public MovieTreeItem(MovieTreeItemValue content) {
-        super(content);
+public class MovieTreeItemFilterable extends FilterableKodiTreeItem {
+
+    public MovieTreeItemFilterable(MovieTreeItemValue content, Observable[] extractor) {
+        super(content, extractor);
     }
 
 
