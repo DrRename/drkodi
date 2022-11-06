@@ -180,7 +180,7 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
     }
 
     private void fixSucceeded(WorkerStateEvent workerStateEvent) {
-        triggerStatusCheck();
+        updateAllStatus();
     }
 
 }
