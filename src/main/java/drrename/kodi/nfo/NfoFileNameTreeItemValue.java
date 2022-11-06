@@ -51,7 +51,7 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
         getExecutor().execute(fixableFixer);
     }
 
-    private void fixSucceeded(WorkerStateEvent workerStateEvent) {
+    protected void fixSucceeded(WorkerStateEvent workerStateEvent) {
         triggerStatusCheck();
     }
 

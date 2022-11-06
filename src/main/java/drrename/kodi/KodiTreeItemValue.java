@@ -109,7 +109,7 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
             this.warningsConfig.missingNfoFileIsWarningProperty().addListener(missingNfoFileIsWarningListener);
     }
 
-    protected void triggerStatusCheck() {
+    public void triggerStatusCheck() {
         // Start the processing cascade:
         // - check status: worker thread
         // - update status: UI thread
@@ -126,6 +126,13 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     protected void statusCheckerSucceeded(WorkerStateEvent event) {
 //        log.debug("Status checker succeeded, updating status on thread {}", Thread.currentThread());
         updateStatus((R) event.getSource().getValue());
+    }
+
+    public void updateAllStatus(){
+        var parent = getTreeItem().getParent();
+        if(parent instanceof FilterableKodiTreeItem parent2){
+            parent2.getSourceChildren().forEach(c -> c.getValue().triggerStatusCheck());
+        }
     }
 
     public abstract void updateStatus(R result);
