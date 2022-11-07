@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RenameUtilTest {
+class UtilTest {
 
     Path fileToRename = Paths.get("src/test/resources/rename-tests/some-dir/some-file.txt");
 
@@ -32,14 +32,15 @@ class RenameUtilTest {
     void tearDown() throws IOException {
         new BackupCreator().restoreBackup(backupFile);
         backupFile.delete();
-        Files.delete(newFile);
+        if(newFile != null)
+            Files.delete(newFile);
     }
 
     @Test
     void rename() throws IOException {
 
         var newName = "some2-file2.txt";
-        RenameUtil.rename(fileToRename, newName);
+        Util.rename(fileToRename, newName);
         newFile = Paths.get("src/test/resources/rename-tests/some-dir", newName);
         assertTrue(Files.exists(newFile));
         assertTrue(Files.isReadable(newFile));
@@ -54,9 +55,18 @@ class RenameUtilTest {
         Files.createFile(newFile);
 
         Throwable throwable =  assertThrows(FileAlreadyExistsException.class, () -> {
-            RenameUtil.rename(fileToRename, newName);
+            Util.rename(fileToRename, newName);
         });
         assertEquals(FileAlreadyExistsException.class, throwable.getClass());
+    }
+
+
+    @Test
+    void concatenate() {
+    }
+
+    @Test
+    void getSubList() {
     }
 
 

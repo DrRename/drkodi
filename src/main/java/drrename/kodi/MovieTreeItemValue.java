@@ -30,13 +30,13 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
 
-    public MovieTreeItemValue(RenamingPath moviePath, Executor executor) {
-        super(moviePath, executor);
+    public MovieTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
+        super(moviePath, executor, warningsConfig);
         setGraphic(null);
     }
 
     @Override
-    public void setTreeItem(KodiTreeItem treeItem) {
+    public void setTreeItem(FilterableKodiTreeItem treeItem) {
         super.setTreeItem(treeItem);
         initWarning(treeItem);
     }
@@ -70,11 +70,11 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
         return getRenamingPath().getMovieName();
     }
 
-    protected void initWarning(KodiTreeItem treeItem) {
+    protected void initWarning(FilterableKodiTreeItem treeItem) {
         warningProperty().bind(Bindings.createBooleanBinding(() -> calculateWarning(treeItem), treeItem.getSourceChildren()));
     }
 
-    protected boolean calculateWarning(KodiTreeItem treeItem) {
+    protected boolean calculateWarning(FilterableKodiTreeItem treeItem) {
         return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
     }
 }

@@ -4,6 +4,7 @@ import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
 import drrename.kodi.nfo.NfoFileNameTreeItemValue;
 import drrename.model.RenamingPath;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -20,14 +21,18 @@ import java.util.concurrent.Executor;
 @RequiredArgsConstructor
 @Getter
 @Slf4j
-class MovieDirectoryCollectorTask extends Task<Void> {
+class MovieDirectoryIssuesTask extends Task<Void> {
     private final Path directory;
 
-    private final KodiRootTreeItem rootTreeItem;
+    private final FilterableKodiRootTreeItem rootTreeItem;
 
     private final Executor executor;
 
     private final MovieDbClientFactory movieDbClientFactory;
+
+    private final WarningsConfig warningsConfig;
+
+    private final Observable[] extractor;
 
     private void verifyState() {
         Objects.requireNonNull(directory);
@@ -54,26 +59,23 @@ class MovieDirectoryCollectorTask extends Task<Void> {
                     }
 
                     var renamingPath = new RenamingPath(path);
-                    var item = new MovieTreeItem(new MovieTreeItemValue(renamingPath, executor));
-                    List<KodiTreeItemValue<?>> issuesToCheck = getIssuesToCheck(renamingPath);
-                    triggerUiUpdate(item, issuesToCheck);
+                    var item = new MovieTreeItemFilterable(new MovieTreeItemValue(renamingPath, executor, warningsConfig), extractor);
+                    List<FilterableKodiTreeItem> childItems = buildChildItems(renamingPath);
+                    childItems.forEach(childItem -> Platform.runLater(() -> item.getSourceChildren().add(childItem)));
+                    Platform.runLater(() -> getRootTreeItem().getSourceChildren().add(item));
                 }
             }
         }
         return null;
     }
 
-    private List<KodiTreeItemValue<?>> getIssuesToCheck(RenamingPath renamingPath){
-        return Arrays.asList(
-                new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory),
-                new NfoFileNameTreeItemValue(renamingPath, executor),
-                new MediaFileNameTreeItemValue(renamingPath, executor));
+    List<FilterableKodiTreeItem> buildChildItems(RenamingPath renamingPath){
+        List<FilterableKodiTreeItem> result = new ArrayList<>();
+        result.add(new FilterableKodiTreeItem(new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory, warningsConfig), null));
+        result.add(new FilterableKodiTreeItem(new NfoFileNameTreeItemValue(renamingPath, executor, warningsConfig), null));
+        result.add(new FilterableKodiTreeItem(new MediaFileNameTreeItemValue(renamingPath, executor, warningsConfig), null));
+        result.add(new FilterableKodiTreeItem(new NfoFileContentMovieNameTreeItemValue(renamingPath, executor, warningsConfig), null));
+        return result;
     }
-
-    private void triggerUiUpdate(MovieTreeItem item, List<KodiTreeItemValue<?>> issuesToCheck) {
-        Platform.runLater(() -> getRootTreeItem().getSourceChildren().add(item));
-        issuesToCheck.forEach(i -> Platform.runLater(() -> {item.getSourceChildren().add(new KodiTreeItem(i));}));
-    }
-
 
 }

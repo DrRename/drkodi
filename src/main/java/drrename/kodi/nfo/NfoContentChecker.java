@@ -27,9 +27,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Slf4j
-public abstract class NfoContentChecker extends NfoChecker {
+public abstract class NfoContentChecker extends AbstractNfoFileChecker {
 
-    public NfoFileContentType checkNfoFile(Path nfoFile){
+    public NfoFileContentType checkFile(String movieName, Path nfoFile){
         if(Files.notExists(nfoFile)){
             return NfoFileContentType.NO_FILE;
         }
