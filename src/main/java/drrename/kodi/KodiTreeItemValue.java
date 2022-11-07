@@ -131,8 +131,23 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     public void updateAllStatus(){
         var parent = getTreeItem().getParent();
         if(parent instanceof FilterableKodiTreeItem parent2){
+            log.debug("Updating all children of {}", this);
             parent2.getSourceChildren().forEach(c -> c.getValue().triggerStatusCheck());
         }
+    }
+
+    protected void triggerFixing(){
+        // Start the processing cascade:
+        // - fix issue: worker thread
+        // - fix succeeded: UI thread
+        var fixableFixer = new IssueFixer<>(this, getCheckResult());
+        fixableFixer.setOnFailed(this::defaultTaskFailed);
+        fixableFixer.setOnSucceeded(this::fixSucceeded);
+        getExecutor().execute(fixableFixer);
+    }
+
+    protected void fixSucceeded(WorkerStateEvent workerStateEvent){
+
     }
 
     public abstract void updateStatus(R result);
@@ -179,6 +194,11 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
     public boolean contains(FilterableKodiTreeItem childItem) {
         return getTreeItem() != null && new ArrayList<>(getTreeItem().getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ": " + getMovieName();
     }
 
     // Getter / Setter  //

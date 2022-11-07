@@ -20,14 +20,13 @@
 
 package drrename.kodi;
 
-import drrename.RenameUtil;
+import drrename.Util;
 import drrename.kodi.nfo.*;
 import drrename.model.RenamingPath;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @Getter
 @Slf4j
@@ -47,7 +46,7 @@ public class NfoFileNameIssue extends FxKodiIssue<NfoFileNameCheckResult> {
     @Override
     public void fix(NfoFileNameCheckResult result) throws FixFailedException {
         try {
-            RenameUtil.rename(result.getNfoFiles().get(0), getMovieName() + KodiConstants.NFO_FILE_EXTENSION);
+            Util.rename(result.getNfoFiles().get(0), getMovieName() + KodiConstants.NFO_FILE_EXTENSION);
         } catch (IOException e) {
             throw new FixFailedException(e);
         }
