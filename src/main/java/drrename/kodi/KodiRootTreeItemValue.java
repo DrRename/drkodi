@@ -25,28 +25,28 @@ import javafx.scene.control.TreeItem;
 import java.util.concurrent.Executor;
 
 /**
- * {@link KodiRootTreeItem}'s value.
+ * {@link FilterableKodiRootTreeItem}'s value.
  *
- * @see KodiRootTreeItem
+ * @see FilterableKodiRootTreeItem
  */
 public class KodiRootTreeItemValue extends KodiTreeItemValue<Object> {
 
-    public KodiRootTreeItemValue(Executor executor) {
-        super(null, executor);
+    public KodiRootTreeItemValue(Executor executor, WarningsConfig warningsConfig) {
+        super(null, executor, warningsConfig);
         setGraphic(null);
     }
 
     @Override
-    public void setTreeItem(KodiTreeItem treeItem) {
+    public void setTreeItem(FilterableKodiTreeItem treeItem) {
         super.setTreeItem(treeItem);
         initWarning(treeItem);
     }
 
-    protected void initWarning(KodiTreeItem treeItem) {
+    protected void initWarning(FilterableKodiTreeItem treeItem) {
         warningProperty().bind(Bindings.createBooleanBinding(() -> calculateWarning(treeItem), treeItem.getSourceChildren()));
     }
 
-    protected boolean calculateWarning(KodiTreeItem treeItem) {
+    protected boolean calculateWarning(FilterableKodiTreeItem treeItem) {
         return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
     }
 

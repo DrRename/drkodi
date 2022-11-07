@@ -20,7 +20,7 @@
 package drrename.kodi;
 
 public enum MovieFileNameType {
-    MATCHES_DIR_NAME("Media file names matches directory name"), EXCEPTION("Failed to get media names"){
+    MATCHES_DIR_NAME("Media file names match directory name"), EXCEPTION("Failed to get media names"){
         @Override
         boolean isWarning() {
             return true;

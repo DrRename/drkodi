@@ -59,7 +59,7 @@
                 <Insets top="4" right="4" bottom="4" left="4"/>
             </padding>
             <center>
-                <ProgressBar fx:id="progressBar"/>
+                <ProgressBar fx:id="progressBar" maxWidth="Infinity"/>
             </center>
             <right>
                 <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>

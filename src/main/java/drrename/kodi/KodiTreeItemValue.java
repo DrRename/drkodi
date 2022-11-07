@@ -21,6 +21,7 @@ package drrename.kodi;
 
 import drrename.model.RenamingPath;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -34,9 +35,9 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 /**
- * Base class for all {@link KodiTreeItem} values.
+ * Base class for all {@link FilterableKodiTreeItem} values.
  *
- * @see KodiTreeItem
+ * @see FilterableKodiTreeItem
  */
 @Slf4j
 public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
@@ -55,15 +56,17 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
     private final ObjectProperty<Node> graphic;
 
-    private final WarningsConfig warningsConfig;
+    private WarningsConfig warningsConfig;
 
-    private final ObjectProperty<KodiTreeItem> treeItem;
+    private final ObjectProperty<FilterableKodiTreeItem> treeItem;
 
     private final ObjectProperty<R> checkResult;
 
     private final Executor executor;
 
-    public KodiTreeItemValue(RenamingPath moviePath, Executor executor) {
+    private ChangeListener<? super Boolean> missingNfoFileIsWarningListener;
+
+    public KodiTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath);
         this.executor = executor;
         this.buttonText = new SimpleStringProperty();
@@ -72,9 +75,13 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         this.warning = new SimpleObjectProperty<>();
         this.graphic = new SimpleObjectProperty<>();
         this.treeItem = new SimpleObjectProperty<>();
-        this.warningsConfig = new WarningsConfig();
         this.checkResult = new SimpleObjectProperty<>();
+        this.missingNfoFileIsWarningListener = (ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            if(newValue != null)
+                updateStatus(getCheckResult());
+        };
         init();
+        setWarningsConfig(warningsConfig);
     }
 
     protected void init() {
@@ -94,7 +101,15 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         setGraphic(buildGraphic());
     }
 
-     protected void triggerStatusCheck(){
+    public void setWarningsConfig(WarningsConfig warningsConfig) {
+        if(this.warningsConfig != null)
+            this.warningsConfig.missingNfoFileIsWarningProperty().removeListener(missingNfoFileIsWarningListener);
+        this.warningsConfig = warningsConfig;
+        if(this.warningsConfig != null)
+            this.warningsConfig.missingNfoFileIsWarningProperty().addListener(missingNfoFileIsWarningListener);
+    }
+
+    public void triggerStatusCheck() {
         // Start the processing cascade:
         // - check status: worker thread
         // - update status: UI thread
@@ -111,6 +126,28 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     protected void statusCheckerSucceeded(WorkerStateEvent event) {
 //        log.debug("Status checker succeeded, updating status on thread {}", Thread.currentThread());
         updateStatus((R) event.getSource().getValue());
+    }
+
+    public void updateAllStatus(){
+        var parent = getTreeItem().getParent();
+        if(parent instanceof FilterableKodiTreeItem parent2){
+            log.debug("Updating all children of {}", this);
+            parent2.getSourceChildren().forEach(c -> c.getValue().triggerStatusCheck());
+        }
+    }
+
+    protected void triggerFixing(){
+        // Start the processing cascade:
+        // - fix issue: worker thread
+        // - fix succeeded: UI thread
+        var fixableFixer = new IssueFixer<>(this, getCheckResult());
+        fixableFixer.setOnFailed(this::defaultTaskFailed);
+        fixableFixer.setOnSucceeded(this::fixSucceeded);
+        getExecutor().execute(fixableFixer);
+    }
+
+    protected void fixSucceeded(WorkerStateEvent workerStateEvent){
+
     }
 
     public abstract void updateStatus(R result);
@@ -155,11 +192,16 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         return button;
     }
 
-    public boolean contains(KodiTreeItem childItem) {
+    public boolean contains(FilterableKodiTreeItem childItem) {
         return getTreeItem() != null && new ArrayList<>(getTreeItem().getSourceChildren()).stream().map(TreeItem::getValue).anyMatch(v -> v.equals(childItem.getValue()));
     }
 
-    // Getter //
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ": " + getMovieName();
+    }
+
+    // Getter / Setter  //
 
     public Executor getExecutor() {
         return executor;
@@ -184,15 +226,15 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         this.checkResult.set(checkResult);
     }
 
-    public KodiTreeItem getTreeItem() {
+    public FilterableKodiTreeItem getTreeItem() {
         return treeItem.get();
     }
 
-    public ObjectProperty<KodiTreeItem> treeItemProperty() {
+    public ObjectProperty<FilterableKodiTreeItem> treeItemProperty() {
         return treeItem;
     }
 
-    public void setTreeItem(KodiTreeItem treeItem) {
+    public void setTreeItem(FilterableKodiTreeItem treeItem) {
         this.treeItem.set(treeItem);
     }
 

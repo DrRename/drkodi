@@ -36,22 +36,13 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
 
     private final NfoFileNameIssue delegate;
 
-    public NfoFileNameTreeItemValue(RenamingPath moviePath, Executor executor){
-        super(moviePath, executor);
+    public NfoFileNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig){
+        super(moviePath, executor, warningsConfig);
         delegate = new NfoFileNameIssue(moviePath);
         triggerStatusCheck();
     }
 
-    private Node buildGraphic2() {
-        VBox box = new VBox(4);
-        Button button = new Button("Fix to \"" + getMovieName() + ".nfo\"");
-        VBox.setVgrow(button, Priority.ALWAYS);
-        button.setMaxWidth(500);
-        button.setOnAction(event ->
-                triggerFixer());
-        box.getChildren().add(button);
-        return box;
-    }
+
 
     private void triggerFixer(){
         var fixableFixer = new IssueFixer<>(this, delegate.getCheckResult());
@@ -60,20 +51,24 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
         getExecutor().execute(fixableFixer);
     }
 
-    private void fixSucceeded(WorkerStateEvent workerStateEvent) {
+    protected void fixSucceeded(WorkerStateEvent workerStateEvent) {
         triggerStatusCheck();
     }
 
     protected boolean calculateWarning() {
-        if (NfoFileNameType.NO_FILE.equals(delegate.getCheckResult().getType()) && !getWarningsConfig().isMissingNfoFileIsWarning()) {
+//        log.debug("Calculating warning");
+        if (delegate.getCheckResult() == null) {
             return false;
         }
-        return !NfoFileNameType.MOVIE_NAME.equals(delegate.getCheckResult().getType());
+        if (NfoFileContentType.NO_FILE.equals(delegate.getCheckResult().getType()) && !getWarningsConfig().isMissingNfoFileIsWarning()) {
+            return false;
+        }
+        return !NfoFileContentType.MOVIE_NAME.equals(delegate.getCheckResult().getType());
     }
 
     protected String buildNewMessage(Boolean newValue) {
-        if (delegate.getCheckResult().getType() == null) {
-            return "unknown";
+        if (delegate.getCheckResult() == null) {
+            return null;
         }
         if (newValue) {
             return (delegate.getCheckResult().getType().toString() + getWarningAdditionalInfo());
@@ -87,7 +82,12 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
 
     @Override
     public void updateStatus(NfoFileNameCheckResult result) {
+        if(result == null){
+            return;
+        }
+//        log.debug("Updating status");
         delegate.updateStatus(result);
+        setCheckResult(result);
         setWarning(calculateWarning());
         setFixable(isWarning() && delegate.getCheckResult().getNfoFiles().size() == 1);
         if (isFixable()) {
@@ -95,6 +95,17 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
         } else {
             setGraphic(super.buildGraphic());
         }
+    }
+
+    private Node buildGraphic2() {
+        VBox box = new VBox(4);
+        Button button = new Button("Fix to \"" + getMovieName() + ".nfo\"");
+        VBox.setVgrow(button, Priority.ALWAYS);
+        button.setMaxWidth(500);
+        button.setOnAction(event ->
+                triggerFixer());
+        box.getChildren().add(button);
+        return box;
     }
 
     // Delegate //

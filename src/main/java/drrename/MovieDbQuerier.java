@@ -76,7 +76,7 @@ public class MovieDbQuerier {
                 theMovieDbId.add(searchResult.getBody().getResults().get(0).getId());
                 return new MovieDbLookupCheckResult(MovieDbCheckType.ORIGINAL_TITEL, onlineTitles);
             }
-            List<SearchResultDto> subList = RenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
+            List<SearchResultDto> subList = Util.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
             for(SearchResultDto searchResultDto : subList){
                 getOnlineTitles().add(buildNameString(searchResultDto.getTitle(), searchResultDto.getReleaseDate()));
                 getOnlineTitles().add(buildNameString(searchResultDto.getOriginalTitle(), searchResultDto.getReleaseDate()));
