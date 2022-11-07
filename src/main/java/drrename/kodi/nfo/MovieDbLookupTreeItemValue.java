@@ -20,7 +20,7 @@
 package drrename.kodi.nfo;
 
 import drrename.MovieDbImagesClient;
-import drrename.RenameUtil;
+import drrename.Util;
 import drrename.config.TheMovieDbConfig;
 import drrename.kodi.*;
 import drrename.model.RenamingPath;
@@ -149,7 +149,7 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
     public void fix(MovieDbLookupCheckResult result) throws FixFailedException {
         log.debug("Triggering fixing on thread {}", Thread.currentThread());
         try {
-            var renameResult = RenameUtil.rename(getRenamingPath().getOldPath(), fixConfig.newName);
+            var renameResult = Util.rename(getRenamingPath().getOldPath(), fixConfig.newName);
             Platform.runLater(() -> getRenamingPath().commitRename(renameResult));
         } catch (IOException e) {
             throw new FixFailedException(e);
@@ -165,21 +165,24 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
             button.wrapTextProperty().setValue(true);
             button.setOnAction(actionEvent -> {
                 fixConfig = new FixConfig(button, name);
-                bla2();
+                triggerFixing();
             });
             box.getChildren().add(button);
         }
         return box;
     }
 
-    private void bla2(){
+    protected void triggerFixing(){
+        // Start the processing cascade:
+        // - fix issue: worker thread
+        // - fix succeeded: UI thread
         var fixableFixer = new IssueFixer<>(this, getCheckResult());
         fixableFixer.setOnFailed(this::defaultTaskFailed);
         fixableFixer.setOnSucceeded(this::fixSucceeded);
         getExecutor().execute(fixableFixer);
     }
 
-    private void fixSucceeded(WorkerStateEvent workerStateEvent) {
+    protected void fixSucceeded(WorkerStateEvent workerStateEvent) {
         updateAllStatus();
     }
 
