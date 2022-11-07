@@ -17,31 +17,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.nfo;
+package drrename.kodi;
 
-import drrename.model.RenamingPath;
-import lombok.extern.slf4j.Slf4j;
+import javafx.beans.Observable;
 
-import java.nio.file.Path;
-import java.util.concurrent.Executor;
+public class MovieTreeItemFilterable extends FilterableKodiTreeItem {
 
-@Slf4j
-public class NfoFileContentCoverTreeItemValue extends NfoFileContentTreeItemValue {
-
-    public NfoFileContentCoverTreeItemValue(RenamingPath path, Executor executor) {
-        super(path, false, executor);
+    public MovieTreeItemFilterable(MovieTreeItemValue content, Observable[] extractor) {
+        super(content, extractor);
     }
 
-    @Override
-    protected String updateIdentifier() {
-        return "NFO Poster";
-    }
 
-    @Override
-    protected NfoFileContentType parseNfoFile(Path child) {
-        var checker = new NfoContentCoverChecker();
-        var result = checker.checkNfoFile(child);
-        setNfoFiles(checker.getNfoFiles());
-        return result;
-    }
 }

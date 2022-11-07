@@ -41,25 +41,25 @@ class NfoContentYearCheckerTest {
 
     @Test
     void checkValidFile() {
-        var result = new NfoContentYearChecker().checkNfoFile(Paths.get("src/test/resources/kodi/Some Movie (2000)/movie.nfo"));
+        var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/Some Movie (2000)/movie.nfo"));
         assertEquals(NfoFileContentType.VALID_YEAR, result);
     }
 
     @Test
     void checkInValidFile() {
-        var result = new NfoContentYearChecker().checkNfoFile(Paths.get("src/test/resources/kodi/Some Movie (2000)/wrong-format.nfo"));
+        var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/Some Movie (2000)/wrong-format.nfo"));
         assertEquals(NfoFileContentType.INVALID_FILE, result);
     }
 
     @Test
     void checkUrlOnlyFile() {
-        var result = new NfoContentYearChecker().checkNfoFile(Paths.get("src/test/resources/kodi/UrlOnlyMovie/movie.nfo"));
+        var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/UrlOnlyMovie/movie.nfo"));
         assertEquals(NfoFileContentType.URL_ONLY_FILE, result);
     }
 
     @Test
     void checkYearlessFile() {
-        var result = new NfoContentYearChecker().checkNfoFile(Paths.get("src/test/resources/kodi/Yearless Movie/movie.nfo"));
+        var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/Yearless Movie/movie.nfo"));
         assertEquals(NfoFileContentType.MISSING_YEAR, result);
     }
 }

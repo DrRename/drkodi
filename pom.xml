@@ -8,7 +8,7 @@
     </parent>
     <groupId>app.drrename</groupId>
     <artifactId>drrename</artifactId>
-    <version>0.13.1-SNAPSHOT</version>
+    <version>0.14.1-SNAPSHOT</version>
     <name>DrRename</name>
     <description>Minimalistic Batch-Rename Tool.</description>
     <properties>

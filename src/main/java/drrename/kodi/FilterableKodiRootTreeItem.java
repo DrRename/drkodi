@@ -17,22 +17,21 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.checkservice;
+package drrename.kodi;
 
-import drrename.kodi.WarningsConfig;
-import drrename.kodi.nfo.NfoFileNameTreeItemValue;
-import drrename.model.RenamingPath;
+import javafx.beans.Observable;
+import javafx.scene.control.TreeView;
 
-import java.nio.file.Files;
 import java.util.concurrent.Executor;
 
-public class NfoFileNameCheckService extends CheckService<NfoFileNameTreeItemValue> {
+/**
+ * The root value of the Kodi {@link TreeView}.
+ *
+ * @see KodiRootTreeItemValue
+ */
+public class FilterableKodiRootTreeItem extends FilterableKodiTreeItem {
 
-    @Override
-    public NfoFileNameTreeItemValue checkPath(RenamingPath path, WarningsConfig warningsConfig, Executor executor) {
-        if (!Files.isDirectory(path.getOldPath())) {
-            throw new IllegalArgumentException(path.getMovieName() + " is not a directory");
-        }
-        return new NfoFileNameTreeItemValue(path, warningsConfig, executor);
+    public FilterableKodiRootTreeItem(Executor executor, WarningsConfig warningsConfig, Observable[] extractor) {
+        super(new KodiRootTreeItemValue(executor, warningsConfig), extractor);
     }
 }

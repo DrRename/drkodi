@@ -19,45 +19,30 @@
 
 package drrename.kodi.nfo;
 
+import drrename.kodi.NfoFileNameCheckResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+
 
 @Slf4j
-public class NfoFileNameChecker extends NfoChecker {
+public class NfoFileNameChecker extends AbstractNfoFileChecker {
 
-    public NfoFileNameType checkDir(Path directory) {
-        String movieName = directory.getFileName().toString();
-        try {
-            setNfoFiles(new NfoFileCollector().collectNfoFiles(directory));
-            if (getNfoFiles().isEmpty()) {
-                return NfoFileNameType.NO_FILE;
-            }
-            if (getNfoFiles().size() > 1) {
-                return NfoFileNameType.MULTIPLE_FILES;
-            } else {
-                return checkFile(movieName, getNfoFiles().get(0));
-            }
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-            return NfoFileNameType.ERROR;
-        }
-    }
-
-    protected NfoFileNameType checkFile(String movieName, Path nfoFile) {
+    protected NfoFileContentType checkFile(String movieName, Path nfoFile) {
         if (!Files.isRegularFile(nfoFile)) {
             throw new IllegalArgumentException(nfoFile.getFileName().toString() + " is not a file");
         }
         String nfoFileName = nfoFile.getFileName().toString();
-        if (NfoFiles.DEFAULT_NAME.equalsIgnoreCase(nfoFileName)) {
-            return NfoFileNameType.DEFAULT_NAME;
-        } else if (FilenameUtils.getBaseName(nfoFileName).equalsIgnoreCase(movieName)) {
-            return NfoFileNameType.MOVIE_NAME;
+        if (NfoFiles.DEFAULT_NAME.equals(nfoFileName)) {
+            return NfoFileContentType.DEFAULT_NAME;
+        } else if (FilenameUtils.getBaseName(nfoFileName).equals(movieName)) {
+            return NfoFileContentType.MOVIE_NAME;
         } else {
-            return NfoFileNameType.INVALID_NAME;
+            return NfoFileContentType.INVALID_NAME;
         }
     }
 

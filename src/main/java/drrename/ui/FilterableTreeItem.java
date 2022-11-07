@@ -31,6 +31,8 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.util.Callback;
 
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class FilterableTreeItem<T> extends TreeItem<T> {
@@ -41,19 +43,15 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
     protected final ObjectProperty<Predicate<T>> predicate;
 
     public FilterableTreeItem() {
-        predicate = new SimpleObjectProperty<>();
-        sourceChildren = FXCollections.observableArrayList(this::getExtractorCallback);
-        filteredChildren = new FilteredList<>(sourceChildren);
-        init();
+        this(null);
     }
 
     public FilterableTreeItem(T value) {
-        super(value);
-        predicate = new SimpleObjectProperty<>();
-        sourceChildren = FXCollections.observableArrayList(this::getExtractorCallback);
-        filteredChildren = new FilteredList<>(sourceChildren);
-        init();
+        this(value, null);
+    }
 
+    protected Comparator<TreeItem<T>> getComparator() {
+        return null;
     }
 
     public FilterableTreeItem(T value, Node graphic) {
@@ -65,13 +63,8 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
     }
 
     private void init() {
+        Bindings.bindContent(super.getChildren(), filteredChildren);
         filteredChildren.predicateProperty().bind(Bindings.createObjectBinding(this::buildFilterableListPredicate, predicate));
-        filteredChildren.addListener((ListChangeListener<TreeItem<T>>) c -> {
-            while (c.next()) {
-                getChildren().removeAll(c.getRemoved());
-                getChildren().addAll(c.getAddedSubList());
-            }
-        });
     }
 
     /**

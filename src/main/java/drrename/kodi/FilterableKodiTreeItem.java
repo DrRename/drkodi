@@ -19,25 +19,36 @@
 
 package drrename.kodi;
 
+import drrename.Util;
 import drrename.ui.FilterableTreeItem;
 import javafx.beans.Observable;
 import javafx.scene.control.TreeItem;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-public class KodiTreeItem extends FilterableTreeItem<KodiTreeItemValue> {
+import java.util.Comparator;
 
-    public KodiTreeItem(KodiTreeItemValue value) {
+@Slf4j
+public class FilterableKodiTreeItem extends FilterableTreeItem<KodiTreeItemValue<?>> {
+
+    private final Observable[] extractor;
+
+    public FilterableKodiTreeItem(KodiTreeItemValue value, Observable[] extractor) {
         super(value);
+        this.extractor = extractor;
         value.setTreeItem(this);
         graphicProperty().bind(value.graphicProperty());
     }
 
-    protected Observable[] getExtractorCallback(TreeItem<KodiTreeItemValue> item) {
-        return new Observable[]{item.getValue().getRenamingPath().movieNameProperty(), item.getValue().warningProperty()};
+    @Override
+    protected Comparator<TreeItem<KodiTreeItemValue<?>>> getComparator() {
+        return Comparator.comparing(o -> o.getValue().getRenamingPath().getMovieName());
     }
 
-    public void add(KodiTreeItem childItem) {
+    protected Observable[] getExtractorCallback(TreeItem<KodiTreeItemValue<?>> item) {
+        return Util.concatenate(new Observable[]{item.getValue().getRenamingPath().movieNameProperty(), item.getValue().warningProperty(), item.getValue().messageProperty()}, extractor);
+    }
+
+    public void add(FilterableKodiTreeItem childItem) {
         getSourceChildren().add(childItem);
     }
 }

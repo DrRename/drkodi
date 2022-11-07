@@ -1,11 +1,10 @@
 package drrename.kodi;
 
-import drrename.kodi.nfo.NfoFileTreeItemValue;
-import drrename.model.RenamingPath;
 import drrename.ui.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -29,8 +28,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -47,7 +44,7 @@ public class KodiToolsController implements Initializable {
 
     public ProgressBar progressBar;
 
-    public TreeView<KodiTreeItemValue> treeView;
+    public TreeView<KodiTreeItemValue<?>> treeView;
 
     public Button buttonExpandAll;
 
@@ -67,13 +64,13 @@ public class KodiToolsController implements Initializable {
 
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
 
-    private final KodiService service;
+    private final MovieDirectoryCollectorService service;
 
     private final Executor executor;
 
-    private KodiRootTreeItem treeRoot;
+    private FilterableKodiRootTreeItem treeRoot;
 
-    private final MovieTreeItemFactory movieTreeItemFactory;
+    private final MovieDbClientFactory movieDbClientFactory;
 
     private WarningsConfig warningsConfig;
 
@@ -89,16 +86,15 @@ public class KodiToolsController implements Initializable {
         goCancelButtonsComponentController.setButtonGoActionEventFactory(KodiToolsButtonGoEvent::new);
         progressBar.visibleProperty().bind(service.runningProperty());
 
-        treeRoot = new KodiRootTreeItem(executor);
+        treeRoot = new FilterableKodiRootTreeItem(executor, warningsConfig, null);
         treeView.setRoot(treeRoot);
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
-        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemValue>>) e -> {
+        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemValue<?>>>) e -> {
             buttonExpandAll.setDisable(e.getList().isEmpty());
             buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
-        checkBoxHideEmpty.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate());
-        checkBoxMissingNfoFileIsAWarning.selectedProperty().addListener((observable, oldValue, newValue) -> updateTreeRootPredicate());
+        treeRoot.setPredicate(buildHideEmptyPredicate());
         startDirectoryComponentController.inputPathProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 onButtonGoEvent(null);
@@ -114,11 +110,11 @@ public class KodiToolsController implements Initializable {
                 }
                 var hans = treeView.getTreeItem(c.getAddedSubList().get(0)).getValue();
                 log.debug("Selection changed: {} ({})", hans, hans.getClass());
-                if (hans instanceof NfoFileTreeItemValue peter) {
-                    log.debug("Handling {}", peter);
-                    Path nfoFile = peter.getNfoFile();
-                    executor.execute(() -> showImage(nfoFile));
-                }
+//                if (hans instanceof NfoFileTreeItemValue peter) {
+//                    log.debug("Handling {}", peter);
+//                    Path nfoFile = peter.getNfoFile();
+//                    executor.execute(() -> showImage(nfoFile));
+//                }
             }
         });
 
@@ -126,7 +122,7 @@ public class KodiToolsController implements Initializable {
         warningsConfig.missingNfoFileIsWarningProperty().bind(checkBoxMissingNfoFileIsAWarning.selectedProperty());
     }
 
-    private TreeCell<KodiTreeItemValue> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue> kodiTreeItemContentTreeView) {
+    private TreeCell<KodiTreeItemValue<?>> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue<?>> kodiTreeItemContentTreeView) {
         return new KodiTreeCell(treeView);
     }
 
@@ -164,17 +160,9 @@ public class KodiToolsController implements Initializable {
         imageStage.show();
     }
 
-    private void updateTreeRootPredicate() {
-        Platform.runLater(() -> treeRoot.setPredicate(buildHideEmptyPredicate()));
-    }
-
-    private Predicate<KodiTreeItemValue> buildHideEmptyPredicate() {
+    private Predicate<KodiTreeItemValue<?>> buildHideEmptyPredicate() {
         return item -> {
-            var nfoFileIsWarning = checkBoxMissingNfoFileIsAWarning.isSelected();
-            if(item instanceof NfoFileTreeItemValue item2){
-                item2.setMissingNfoFileIsWarning(nfoFileIsWarning);
-            }
-            return item.isWarning() || !checkBoxHideEmpty.isSelected();
+            return item.warningProperty().get() != null && item.isWarning() || !checkBoxHideEmpty.isSelected();
         };
     }
 
@@ -199,33 +187,17 @@ public class KodiToolsController implements Initializable {
         }
         log.debug("Starting service {}", service);
         service.reset();
+        treeRoot.getSourceChildren().clear();
         service.setDirectory(startDirectoryComponentController.getInputPath());
+        service.setExecutor(executor);
+        service.setRootTreeItem(treeRoot);
+        service.setMovieDbClientFactory(movieDbClientFactory);
+        service.setWarningsConfig(warningsConfig);
+        service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
         progressBar.progressProperty().bind(service.progressProperty());
-        service.setOnSucceeded(this::handleResult);
         service.setOnFailed(this::handleFailed);
-        service.setOnCancelled(this::handleResult);
         treeRoot.getSourceChildren().clear();
         service.start();
-    }
-
-    private void handleResult(WorkerStateEvent workerStateEvent) {
-        if (service.getValue() != null) {
-            treeRoot.getSourceChildren().clear();
-            treeRoot.getSourceChildren().addAll(buildAndFillLevel1Items(service.getValue()));
-        } else {
-            log.info("Got no result. Cancelled?");
-        }
-    }
-
-    private List<TreeItem<KodiTreeItemValue>> buildAndFillLevel1Items(List<Path> movieFolders) {
-        List<TreeItem<KodiTreeItemValue>> result = new ArrayList<>();
-
-        for (Path moviePath : movieFolders) {
-            var item = movieTreeItemFactory.buildNew(new RenamingPath(moviePath), warningsConfig);
-            result.add(item);
-        }
-
-        return result;
     }
 
     private void handleFailed(WorkerStateEvent e) {

@@ -8,6 +8,7 @@ logging:
     drrename: debug
     com:
       ulisesbocchio: warn
+    drrename.kodi.nfo.NfoFileCollector: info
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
 
@@ -15,8 +16,8 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 5000
-        readTimeout: 5000
+        connectTimeout: 10000
+        readTimeout: 10000
         loggerLevel: none
 
 app:
@@ -33,6 +34,7 @@ app:
     themoviedb:
       base-url: https://api.themoviedb.org/3
       include-adult: true
+      number-of-max-suggestions: 5
       images:
         base-url: https://image.tmdb.org/t/p
 

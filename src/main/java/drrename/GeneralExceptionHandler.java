@@ -27,7 +27,7 @@ public class GeneralExceptionHandler {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(String.format(resourceBundle.getString(ALERT_TITLE)));
             alert.setHeaderText(e.getLocalizedMessage());
-            TextArea area = new TextArea(RenameUtil.stackTraceToString(e));
+            TextArea area = new TextArea(Util.stackTraceToString(e));
             alert.getDialogPane().setContent(area);
             area.setWrapText(true);
             area.setEditable(false);
