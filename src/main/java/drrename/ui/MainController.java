@@ -585,4 +585,8 @@ public class MainController implements Initializable {
     }
 
 
+    public void handleMenuItemSettings(ActionEvent actionEvent) {
+        SettingsController controller = fxWeaver.loadController(SettingsController.class, resourceBundle);
+        controller.show();
+    }
 }

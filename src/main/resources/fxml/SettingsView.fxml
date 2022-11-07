@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  ~     Dr.Rename - A Minimalistic Batch Renamer
+  ~
+  ~     Copyright (C) 2022
+  ~
+  ~     This file is part of Dr.Rename.
+  ~
+  ~     You can redistribute it and/or modify it under the terms of the GNU Affero
+  ~     General Public License as published by the Free Software Foundation, either
+  ~     version 3 of the License, or (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful, but WITHOUT
+  ~     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+  ~     for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<?import javafx.geometry.Insets?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="drrename.ui.SettingsController"
+      prefHeight="400.0" prefWidth="600.0" fx:id="root">
+
+    <padding>
+        <Insets top="4" right="4" bottom="4" left="4"/>
+    </padding>
+
+    <HBox spacing="4" alignment="CENTER_LEFT">
+        <Label text="%preferences.interface.theme"/>
+        <ChoiceBox fx:id="themeChoiceBox"/>
+    </HBox>
+
+
+</VBox>
