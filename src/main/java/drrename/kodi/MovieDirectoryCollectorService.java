@@ -1,5 +1,6 @@
 package drrename.kodi;
 
+import javafx.beans.Observable;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.Getter;
@@ -16,13 +17,17 @@ public class MovieDirectoryCollectorService extends Service<Void> {
 
     private Path directory;
 
-    private KodiRootTreeItem rootTreeItem;
+    private FilterableKodiRootTreeItem rootTreeItem;
 
     private MovieDbClientFactory movieDbClientFactory;
 
+    private WarningsConfig warningsConfig;
+
+    private Observable[] extractor;
+
     @Override
     protected Task<Void> createTask() {
-        return new MovieDirectoryCollectorTask(directory, rootTreeItem, getExecutor(), movieDbClientFactory);
+        return new MovieDirectoryIssuesTask(directory, rootTreeItem, getExecutor(), movieDbClientFactory, warningsConfig, extractor);
     }
 
 }

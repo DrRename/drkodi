@@ -19,6 +19,7 @@
 
 package drrename.kodi;
 
+import javafx.beans.Observable;
 import javafx.scene.control.TreeView;
 
 import java.util.concurrent.Executor;
@@ -28,9 +29,9 @@ import java.util.concurrent.Executor;
  *
  * @see KodiRootTreeItemValue
  */
-public class KodiRootTreeItem extends KodiTreeItem {
+public class FilterableKodiRootTreeItem extends FilterableKodiTreeItem {
 
-    public KodiRootTreeItem(Executor executor) {
-        super(new KodiRootTreeItemValue(executor));
+    public FilterableKodiRootTreeItem(Executor executor, WarningsConfig warningsConfig, Observable[] extractor) {
+        super(new KodiRootTreeItemValue(executor, warningsConfig), extractor);
     }
 }

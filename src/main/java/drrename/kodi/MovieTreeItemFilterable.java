@@ -17,19 +17,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.nfo;
+package drrename.kodi;
 
-public enum NfoFileNameType {
-    NO_FILE("No file"), MOVIE_NAME("File name matching movie name"), DEFAULT_NAME("Default file name"), MULTIPLE_FILES("Multiple files"), INVALID_NAME("Invalid file name"), ERROR("Error");
+import javafx.beans.Observable;
 
-    private final String name;
+public class MovieTreeItemFilterable extends FilterableKodiTreeItem {
 
-    NfoFileNameType(String name){
-        this.name = name;
+    public MovieTreeItemFilterable(MovieTreeItemValue content, Observable[] extractor) {
+        super(content, extractor);
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
+
 }
