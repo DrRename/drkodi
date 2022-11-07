@@ -19,38 +19,64 @@
 
 package drrename.kodi;
 
+import javafx.beans.binding.Bindings;
+import javafx.scene.control.TreeItem;
+
 import java.util.concurrent.Executor;
 
 /**
- * {@link KodiRootTreeItem}'s value.
+ * {@link FilterableKodiRootTreeItem}'s value.
  *
- * @see KodiRootTreeItem
+ * @see FilterableKodiRootTreeItem
  */
-public class KodiRootTreeItemValue extends KodiTreeItemValue {
+public class KodiRootTreeItemValue extends KodiTreeItemValue<Object> {
 
-    public KodiRootTreeItemValue(Executor executor) {
-        super(null, false, executor);
-        setMessage("Analysis");
+    public KodiRootTreeItemValue(Executor executor, WarningsConfig warningsConfig) {
+        super(null, executor, warningsConfig);
         setGraphic(null);
     }
 
     @Override
-    protected String updateMessage(Boolean newValue) {
+    public void setTreeItem(FilterableKodiTreeItem treeItem) {
+        super.setTreeItem(treeItem);
+        initWarning(treeItem);
+    }
+
+    protected void initWarning(FilterableKodiTreeItem treeItem) {
+        warningProperty().bind(Bindings.createBooleanBinding(() -> calculateWarning(treeItem), treeItem.getSourceChildren()));
+    }
+
+    protected boolean calculateWarning(FilterableKodiTreeItem treeItem) {
+        return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
+    }
+
+    @Override
+    public String getHelpText() {
         return null;
     }
 
     @Override
-    protected String updateIdentifier() {
+    public String getIdentifier() {
+        return "Analysis";
+    }
+
+    @Override
+    protected String buildNewMessage(Boolean newValue) {
         return null;
     }
 
     @Override
-    public void fix() throws FixFailedException {
-        throw new IllegalStateException("Cannot fix");
+    public Object checkStatus() {
+        return null;
     }
 
     @Override
-    protected void updateStatus() {
-        // nothing to update
+    public void fix(Object checkStatusResult) throws FixFailedException {
+        // Ignore
+    }
+
+    @Override
+    public void updateStatus(Object checkStatusResult) {
+       // Ignore
     }
 }

@@ -1,6 +1,6 @@
 package drrename.strategy;
 
-import drrename.RenameUtil;
+import drrename.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -78,7 +78,7 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
     }
 
     public String applyStrategyOnString(String fileNameString) {
-        throw new IllegalStateException("Need to take a look at the acutal file");
+        throw new IllegalStateException("Need to take a look at the actual file");
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
                 return file;
             }
             log.debug("Renaming" + IOUtils.LINE_SEPARATOR + "old:\t" + nameOld + IOUtils.LINE_SEPARATOR + "new:\t" + nameNew);
-            return RenameUtil.rename(file, nameNew);
+            return Util.rename(file, nameNew);
         } catch (final FileAlreadyExistsException e) {
             log.debug(e.getLocalizedMessage());
             return doRename(file, getFileAlreadyExistsFileName(nameNew, fileNameCounter));

@@ -19,18 +19,26 @@
 
 package drrename.kodi;
 
-import javafx.scene.control.TreeView;
+import java.io.IOException;
 
-import java.util.concurrent.Executor;
+public interface Fixable<R> {
 
-/**
- * The root value of the Kodi {@link TreeView}.
- *
- * @see KodiRootTreeItemValue
- */
-public class KodiRootTreeItem extends KodiTreeItem {
+    /**
+     * Called on a background thread to check the status.
+     * I.e., if a "fixable" state is found.
+     */
+    R checkStatus() throws IOException;
 
-    public KodiRootTreeItem(Executor executor) {
-        super(new KodiRootTreeItemValue(executor));
-    }
+    boolean isFixable();
+
+    /**
+     * Called on a background thread to perform the fix.
+     * @throws FixFailedException if the fix failed
+     */
+    void fix(R checkStatusResult) throws FixFailedException;
+
+    /**
+     * Called on the FX-Application Thread to update the (UI) status.
+     */
+    void updateStatus(R checkStatusResult);
 }
