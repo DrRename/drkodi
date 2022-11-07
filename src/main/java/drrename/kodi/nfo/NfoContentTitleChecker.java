@@ -25,9 +25,10 @@ import drrename.model.nfo.NfoRoot;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class NfoContentTitleChecker  extends NfoContentChecker {
+public class NfoContentTitleChecker extends NfoContentChecker {
+
     @Override
-    protected NfoFileContentType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) throws IOException {
+    protected NfoFileContentType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) {
         if(xmlModel.getMovie().getTitle() == null){
             return NfoFileContentType.MISSING_TITLE;
         }
@@ -38,11 +39,6 @@ public class NfoContentTitleChecker  extends NfoContentChecker {
     }
 
     static boolean verifyTitle(Path moviePath, NfoRoot xmlFileContent) {
-        return xmlFileContent != null && xmlFileContent.getMovie() != null && xmlFileContent.getMovie().getTitle() != null && Strings.startsWithIgnoreCase(moviePath.getFileName().toString(),getSimplifiedName(xmlFileContent.getMovie().getTitle()));
-    }
-
-    private static String getSimplifiedName(String title) {
-        // NFO title may be more specific, e.g. might contain punctuation
-        return title.replaceAll(",", "");
+        return xmlFileContent != null && xmlFileContent.getMovie() != null && xmlFileContent.getMovie().getTitle() != null && moviePath.getFileName().toString().equals(xmlFileContent.getMovie().getTitle());
     }
 }

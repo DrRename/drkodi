@@ -20,11 +20,13 @@
 
 package drrename.kodi;
 
-import drrename.kodi.nfo.NfoFileNameChecker;
-import drrename.kodi.nfo.NfoFileNameFixer;
+import drrename.Util;
+import drrename.kodi.nfo.*;
 import drrename.model.RenamingPath;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 
 @Getter
 @Slf4j
@@ -38,14 +40,16 @@ public class NfoFileNameIssue extends FxKodiIssue<NfoFileNameCheckResult> {
 
     @Override
     public NfoFileNameCheckResult checkStatus() {
-//        log.debug("Triggering check status on thread {}", Thread.currentThread());
-        return new NfoFileNameChecker().checkDir(getRenamingPath().getOldPath());
+            return new NfoFileNameChecker().checkDir(getRenamingPath().getOldPath());
     }
 
     @Override
     public void fix(NfoFileNameCheckResult result) throws FixFailedException {
-//        log.debug("Triggering fixing on thread {}", Thread.currentThread());
-        new NfoFileNameFixer(result).fix(getMovieName());
+        try {
+            Util.rename(result.getNfoFiles().get(0), getMovieName() + KodiConstants.NFO_FILE_EXTENSION);
+        } catch (IOException e) {
+            throw new FixFailedException(e);
+        }
     }
 
     @Override

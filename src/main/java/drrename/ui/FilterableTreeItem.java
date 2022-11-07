@@ -43,19 +43,11 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
     protected final ObjectProperty<Predicate<T>> predicate;
 
     public FilterableTreeItem() {
-        predicate = new SimpleObjectProperty<>();
-        sourceChildren = FXCollections.observableArrayList(this::getExtractorCallback);
-        filteredChildren = new FilteredList<>(sourceChildren);
-        init();
+        this(null);
     }
 
     public FilterableTreeItem(T value) {
-        super(value);
-        predicate = new SimpleObjectProperty<>();
-        sourceChildren = FXCollections.observableArrayList(this::getExtractorCallback);
-        filteredChildren = new FilteredList<>(sourceChildren);
-        init();
-
+        this(value, null);
     }
 
     protected Comparator<TreeItem<T>> getComparator() {
@@ -71,14 +63,8 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
     }
 
     private void init() {
+        Bindings.bindContent(super.getChildren(), filteredChildren);
         filteredChildren.predicateProperty().bind(Bindings.createObjectBinding(this::buildFilterableListPredicate, predicate));
-        filteredChildren.addListener((ListChangeListener<TreeItem<T>>) c -> {
-            while (c.next()) {
-                getChildren().removeAll(c.getRemoved());
-                getChildren().addAll(c.getAddedSubList());
-            }
-            Optional.ofNullable(getComparator()).ifPresent(cc -> getChildren().sort(cc));
-        });
     }
 
     /**

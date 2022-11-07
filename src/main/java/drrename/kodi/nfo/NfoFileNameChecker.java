@@ -30,37 +30,19 @@ import java.util.Collections;
 
 
 @Slf4j
-public class NfoFileNameChecker {
+public class NfoFileNameChecker extends AbstractNfoFileChecker {
 
-    public NfoFileNameCheckResult checkDir(Path directory) {
-        String movieName = directory.getFileName().toString();
-        try {
-            var nfoFiles = new NfoFileCollector().collectNfoFiles(directory);
-            if (nfoFiles.isEmpty()) {
-                return new NfoFileNameCheckResult(NfoFileNameType.NO_FILE, Collections.emptyList());
-            }
-            if (nfoFiles.size() > 1) {
-                return new NfoFileNameCheckResult(NfoFileNameType.MULTIPLE_FILES, nfoFiles);
-            } else {
-                return new NfoFileNameCheckResult(checkFile(movieName, nfoFiles.get(0)), nfoFiles.get(0));
-            }
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-             return new NfoFileNameCheckResult(NfoFileNameType.ERROR, Collections.emptyList());
-        }
-    }
-
-    protected NfoFileNameType checkFile(String movieName, Path nfoFile) {
+    protected NfoFileContentType checkFile(String movieName, Path nfoFile) {
         if (!Files.isRegularFile(nfoFile)) {
             throw new IllegalArgumentException(nfoFile.getFileName().toString() + " is not a file");
         }
         String nfoFileName = nfoFile.getFileName().toString();
         if (NfoFiles.DEFAULT_NAME.equals(nfoFileName)) {
-            return NfoFileNameType.DEFAULT_NAME;
+            return NfoFileContentType.DEFAULT_NAME;
         } else if (FilenameUtils.getBaseName(nfoFileName).equals(movieName)) {
-            return NfoFileNameType.MOVIE_NAME;
+            return NfoFileContentType.MOVIE_NAME;
         } else {
-            return NfoFileNameType.INVALID_NAME;
+            return NfoFileContentType.INVALID_NAME;
         }
     }
 

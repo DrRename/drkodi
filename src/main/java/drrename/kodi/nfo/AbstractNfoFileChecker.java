@@ -20,32 +20,33 @@
 
 package drrename.kodi.nfo;
 
-import drrename.Util;
-import drrename.kodi.FixFailedException;
 import drrename.kodi.NfoFileNameCheckResult;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 
 @Slf4j
-@RequiredArgsConstructor
-public class NfoFileNameFixer {
+public abstract class AbstractNfoFileChecker {
 
-    private final NfoFileNameCheckResult checkResult;
-
-    public void fix(String movieName) throws FixFailedException {
-        final Path nfoFile = checkResult.getNfoFiles().get(0);
-        final String nfoFileName = movieName + KodiConstants.NFO_FILE_EXTENSION;
+    public NfoFileNameCheckResult checkDir(Path directory) {
+        String movieName = directory.getFileName().toString();
         try {
-            Path newPath = Util.rename(nfoFile, nfoFileName);
-            log.info("Renamed {} to {}", nfoFile, newPath);
-            if(!newPath.getFileName().toString().equals(nfoFileName)){
-                throw new FixFailedException("Rename failed");
+            var nfoFiles = new NfoFileCollector().collectNfoFiles(directory);
+            if (nfoFiles.isEmpty()) {
+                return new NfoFileNameCheckResult(NfoFileContentType.NO_FILE, Collections.emptyList());
+            }
+            if (nfoFiles.size() > 1) {
+                return new NfoFileNameCheckResult(NfoFileContentType.MULTIPLE_FILES, nfoFiles);
+            } else {
+                return new NfoFileNameCheckResult(checkFile(movieName, nfoFiles.get(0)), nfoFiles.get(0));
             }
         } catch (IOException e) {
-            throw new FixFailedException(e);
+            log.error(e.getLocalizedMessage(), e);
+            return new NfoFileNameCheckResult(NfoFileContentType.EXCEPTION, Collections.emptyList());
         }
     }
+
+    protected abstract NfoFileContentType checkFile(String movieName, Path nfoFile);
 }
