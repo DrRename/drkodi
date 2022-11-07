@@ -69,13 +69,5 @@ class UtilTest {
     void getSubList() {
     }
 
-    @Test
-    void fileSystemIsCaseSensitive01() throws IOException {
-        assertTrue(Util.fileSystemIsCaseSensitive(Paths.get("/Volumes/Case-sensitive-Volume/Data"), "b"));
-    }
 
-    @Test
-    void fileSystemIsCaseSensitive02() throws IOException {
-        assertFalse(Util.fileSystemIsCaseSensitive(Paths.get("/Users/alex/Workspaces"), "b"));
-    }
 }
