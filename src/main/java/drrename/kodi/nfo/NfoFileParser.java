@@ -30,6 +30,7 @@ import drrename.model.nfo.NfoRoot;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -45,9 +46,16 @@ public class NfoFileParser {
         xmlMapper.addHandler(new DeserializationProblemHandler() {
             @Override
             public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
-                if (beanOrClass instanceof NfoRoot) {
-                    ((NfoRoot) beanOrClass).setUrl(p.readValueAs(String.class));
-                    return true;
+                if (beanOrClass instanceof NfoRoot nfoRoot) {
+                    String valueAsString = p.readValueAs(String.class);
+                    try {
+                        URL url = new URL(valueAsString);
+                        url.toURI();
+                        nfoRoot.setUrl(valueAsString);
+                        return true;
+                    } catch (Exception e) {
+                        return false;
+                    }
                 }
                 return super.handleUnknownProperty(ctxt, p, deserializer, beanOrClass, propertyName);
             }
