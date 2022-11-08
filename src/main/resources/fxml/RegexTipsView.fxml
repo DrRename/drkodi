@@ -7,9 +7,6 @@
 <?import java.net.URL?>
 <VBox styleClass="root" xmlns:fx="http://javafx.com/fxml/1"
 	  xmlns="http://javafx.com/javafx/8">
-	<stylesheets>
-		<URL value="@/css/root.css" />
-	</stylesheets>
 	<children>
 		<GridPane hgap="8">
 			<padding>

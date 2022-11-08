@@ -29,7 +29,6 @@ public class PrimaryStageInitializer {
         Platform.runLater(() -> {
             Stage stage = event.stage();
             Scene scene = new Scene(fxWeaver.loadView(MainController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
-            scene.getStylesheets().add("css/root.css");
             stage.setTitle(uiConfig.getAppTitle());
             stage.setScene(scene);
             stage.show();
