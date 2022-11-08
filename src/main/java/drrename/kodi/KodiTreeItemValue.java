@@ -93,7 +93,7 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         fixableProperty().addListener((observable, oldValue, newValue) -> updateButtonText());
         warningProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-                updateStyles(newValue);
+//                updateStyles(newValue);
                 updateButtonText();
                 setMessage(buildNewMessage(newValue));
             }
