@@ -90,6 +90,15 @@ is being used to size a border should also be in pixels.
      **************************************************************************/
 
     GRAY_0: #1F2122;
+    GRAY_1: #35393B;
+    GRAY_2: #494E51;
+    GRAY_3: #585E62;
+    GRAY_4: #71797E;
+    GRAY_5: #8E989E;
+    GRAY_6: #9FAAB1;
+    GRAY_7: #BEC9CF;
+    GRAY_8: #D3DCE1;
+    GRAY_9: #EDF3F7;
 
     /* A dark grey that is the base color for objects.  Instead of using
      * -fx-base directly, the sections in this file will typically use -fx-color.
@@ -1281,7 +1290,7 @@ is being used to size a border should also be in pixels.
     -fx-text-fill: -fx-text-inner-color;
     -fx-highlight-fill: derive(-fx-control-inner-background,-20%);
     -fx-highlight-text-fill: -fx-text-inner-color;
-    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,+80%);
     -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
     linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
     -fx-background-insets: 0, 1;
