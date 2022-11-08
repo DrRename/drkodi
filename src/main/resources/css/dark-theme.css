@@ -109,14 +109,14 @@ is being used to size a border should also be in pixels.
      * -fx-text-background-color, which should be used as the -fx-text-fill
      * value for text painted on top of backgrounds colored with -fx-background.
      */
-    -fx-background: derive(-fx-base,26.4%);
+    -fx-background: derive(-fx-base,-26.4%);
 
     /* Used for the inside of text boxes, password boxes, lists, trees, and
      * tables.  See also -fx-text-inner-color, which should be used as the
      * -fx-text-fill value for text painted on top of backgrounds colored
      * with -fx-control-inner-background.
      */
-    -fx-control-inner-background: derive(-fx-base,80%);
+    -fx-control-inner-background: derive(-fx-base,20%);
     /* Version of -fx-control-inner-background for alternative rows */
     -fx-control-inner-background-alt: derive(-fx-control-inner-background,-2%);
 
@@ -298,7 +298,7 @@ is being used to size a border should also be in pixels.
             derive(-fx-color,8%) 75%,
             derive(-fx-color,10%) 80%
     ),
-    derive(-fx-color,-8%));
+    derive(-fx-color,8%));
     -fx-body-color-bottomup: linear-gradient(to top, derive(-fx-color,10%) ,derive(-fx-color,-6%));
     -fx-body-color-to-right: linear-gradient(to right, derive(-fx-color,10%) ,derive(-fx-color,-6%));
 
