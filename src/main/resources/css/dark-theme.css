@@ -89,10 +89,12 @@ is being used to size a border should also be in pixels.
      *                                                                         *
      **************************************************************************/
 
-    /* A light grey that is the base color for objects.  Instead of using
+    GRAY_0: #1F2122;
+
+    /* A dark grey that is the base color for objects.  Instead of using
      * -fx-base directly, the sections in this file will typically use -fx-color.
      */
-    -fx-base: #ececec;
+    -fx-base: GRAY_0;
 
     /* A very light grey used for the background of windows.  See also
      * -fx-text-background-color, which should be used as the -fx-text-fill
