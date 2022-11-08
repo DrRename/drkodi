@@ -20,22 +20,31 @@
 
 package drrename.ui;
 
+import com.jthemedetecor.OsThemeDetector;
 import drrename.Settings;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-@RequiredArgsConstructor
 @Slf4j
 @Component
 public class FxApplicationStyle {
 
     private final Settings settings;
+
+    private final OsThemeDetector detector;
+
+    private final Consumer<Boolean> systemInterfaceThemeListener = this::systemInterfaceThemeChanged;
+
+    FxApplicationStyle(Settings settings){
+        this.settings = settings;
+        detector  = OsThemeDetector.getDetector();
+    }
 
     @PostConstruct
     public void init() {
@@ -43,21 +52,32 @@ public class FxApplicationStyle {
         loadSelectedStyleSheet(settings.getTheme());
     }
 
-
     private void appThemeChanged(@SuppressWarnings("unused") ObservableValue<? extends UiTheme> observable, @SuppressWarnings("unused") UiTheme oldValue, UiTheme newValue) {
+        if (oldValue == UiTheme.AUTOMATIC && newValue != UiTheme.AUTOMATIC) {
+                detector.removeListener(systemInterfaceThemeListener);
+        }
         loadSelectedStyleSheet(newValue);
     }
 
+    private void systemInterfaceThemeChanged(Boolean aBoolean) {
+    }
+
     private void loadSelectedStyleSheet(UiTheme desiredTheme) {
-        UiTheme theme = desiredTheme;
-        switch (theme) {
+        switch (desiredTheme) {
             case LIGHT -> applyLightTheme();
             case DARK -> applyDarkTheme();
             case AUTOMATIC -> {
-
-
+                detector.registerListener(systemInterfaceThemeListener);
+                applySystemTheme();
             }
         }
+    }
+
+    private void applySystemTheme() {
+            if(detector.isDark()){
+                applyDarkTheme();
+            } else
+                applyLightTheme();
     }
 
     private void applyLightTheme() {
