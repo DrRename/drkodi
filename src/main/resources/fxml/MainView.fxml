@@ -11,6 +11,7 @@
             <MenuItem text="Dummy File Creator" onAction="#handleMenuItemDummyFileCreator" accelerator="Shortcut+D"/>
             <!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
             <MenuItem text="Kodi Tools" onAction="#handleMenuItemKodiTools" accelerator="Shortcut+K"/>
+            <MenuItem text="Settings" onAction="#handleMenuItemSettings" accelerator="Shortcut+S"/>
         </Menu>
     </MenuBar>
     <BorderPane fx:id="layer01" VBox.vgrow="ALWAYS">

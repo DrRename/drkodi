@@ -73,6 +73,7 @@ public class MainController implements Initializable {
     private final AppConfig config;
 
     private final LoadPathsService loadPathsService;
+
     private final PreviewService previewService;
 
     private final FileTypeService fileTypeService;
@@ -585,4 +586,8 @@ public class MainController implements Initializable {
     }
 
 
+    public void handleMenuItemSettings(ActionEvent actionEvent) {
+        SettingsController controller = fxWeaver.loadController(SettingsController.class, resourceBundle);
+        controller.show();
+    }
 }

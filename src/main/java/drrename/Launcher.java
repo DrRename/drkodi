@@ -32,6 +32,13 @@ public class Launcher {
         return new SpringFxWeaver(applicationContext);
     }
 
+    @Bean
+    public Settings settings(SettingsProvider settingsProvider){
+       var settings = settingsProvider.load();
+       log.debug("Instantiated settings {}", settings);
+       return settings;
+    }
+
     /**
      * See {@link net.rgielen.fxweaver.samples.springboot.controller.DialogController#DialogController(FxControllerAndView)}
      * for an example usage.
