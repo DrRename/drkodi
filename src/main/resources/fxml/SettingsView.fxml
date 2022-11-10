@@ -29,7 +29,7 @@
 <?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="drrename.ui.SettingsController"
+      fx:controller="drrename.ui.settingsview.SettingsController"
       prefHeight="400.0" prefWidth="600.0" fx:id="root">
 
     <padding>

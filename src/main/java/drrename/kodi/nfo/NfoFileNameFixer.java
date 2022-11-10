@@ -20,7 +20,7 @@
 
 package drrename.kodi.nfo;
 
-import drrename.Util;
+import drrename.util.ArrayUtil;
 import drrename.kodi.FixFailedException;
 import drrename.kodi.NfoFileNameCheckResult;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class NfoFileNameFixer {
         final Path nfoFile = checkResult.getNfoFiles().get(0);
         final String nfoFileName = movieName + KodiConstants.NFO_FILE_EXTENSION;
         try {
-            Path newPath = Util.rename(nfoFile, nfoFileName);
+            Path newPath = ArrayUtil.rename(nfoFile, nfoFileName);
             log.info("Renamed {} to {}", nfoFile, newPath);
             if(!newPath.getFileName().toString().equals(nfoFileName)){
                 throw new FixFailedException("Rename failed");

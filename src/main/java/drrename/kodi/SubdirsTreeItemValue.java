@@ -19,7 +19,7 @@
 
 package drrename.kodi;
 
-import drrename.Util;
+import drrename.util.ArrayUtil;
 import drrename.model.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +85,7 @@ public class SubdirsTreeItemValue extends KodiTreeItemValue<SubdirsCheckResult> 
         log.debug("Triggering fixing on thread {}", Thread.currentThread());
         for(Path p : checkResult.getSubdirs()){
             try {
-                Util.deleteRecursively(p);
+                ArrayUtil.deleteRecursively(p);
             } catch (IOException e) {
                 throw new FixFailedException(e);
             }
