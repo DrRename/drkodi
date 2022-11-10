@@ -23,11 +23,15 @@ package drrename.ui;
 import com.jthemedetecor.OsThemeDetector;
 import drrename.Settings;
 import javafx.application.Application;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.URL;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -41,14 +45,18 @@ public class FxApplicationStyle {
 
     private final Consumer<Boolean> systemInterfaceThemeListener = this::systemInterfaceThemeChanged;
 
+    private final ObjectProperty<URL> currentStyleSheet;
+
     FxApplicationStyle(Settings settings){
         this.settings = settings;
         detector  = OsThemeDetector.getDetector();
+        this.currentStyleSheet = new SimpleObjectProperty<>();
     }
 
     @PostConstruct
     public void init() {
         settings.themeProperty().addListener(this::appThemeChanged);
+        currentStyleSheet.addListener((observable, oldValue, newValue) -> doApplyTheme(oldValue, newValue));
         loadSelectedStyleSheet(settings.getTheme());
     }
 
@@ -56,7 +64,7 @@ public class FxApplicationStyle {
         if (oldValue == UiTheme.AUTOMATIC && newValue != UiTheme.AUTOMATIC) {
                 detector.removeListener(systemInterfaceThemeListener);
         }
-        loadSelectedStyleSheet(newValue);
+            loadSelectedStyleSheet(newValue);
     }
 
     private void systemInterfaceThemeChanged(Boolean aBoolean) {
@@ -84,23 +92,23 @@ public class FxApplicationStyle {
         var stylesheet = Optional //
                 .ofNullable(getClass().getResource("/css/light-theme.bss")) //
                 .orElse(getClass().getResource("/css/light-theme.css"));
-        if (stylesheet == null) {
-            log.warn("Failed to load light_theme stylesheet");
-        } else {
-            Application.setUserAgentStylesheet(stylesheet.toString());
-        }
+        currentStyleSheet.set(stylesheet);
     }
 
     private void applyDarkTheme() {
         var stylesheet = Optional //
                 .ofNullable(getClass().getResource("/css/dark-theme.bss")) //
                 .orElse(getClass().getResource("/css/dark-theme.css"));
-        if (stylesheet == null) {
-            log.warn("Failed to load dark_theme stylesheet");
-        } else {
-            Application.setUserAgentStylesheet(stylesheet.toString());
-        }
+        currentStyleSheet.set(stylesheet);
     }
 
-
+    private void doApplyTheme(URL oldStyle, URL newStyle) {
+        if (newStyle == null) {
+            log.warn("Failed to load stylesheet");
+        }
+        else {
+            log.debug("Changing style from {} to {}", oldStyle, newStyle);
+            Application.setUserAgentStylesheet(newStyle.toString());
+        }
+    }
 }

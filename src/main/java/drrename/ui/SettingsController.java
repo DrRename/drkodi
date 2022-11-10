@@ -21,10 +21,11 @@
 package drrename.ui;
 
 import drrename.Settings;
+import drrename.SettingsProvider;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -64,28 +65,33 @@ public class SettingsController implements Initializable {
 
     private final Settings settings;
 
+    private final SettingsProvider settingsProvider;
+
     public VBox root;
 
     public ChoiceBox<UiTheme> themeChoiceBox;
 
     private Stage mainStage;
 
-   private final FxApplicationStyle applicationStyle;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         mainStage = new Stage();
         mainStage.setScene(new Scene(root));
         mainStage.setTitle("Settings");
-
+        log.debug("Working with settings {}", settings);
+        // Settings::Theme
+        settings.themeProperty().addListener(this::saveSettings);
         themeChoiceBox.getItems().addAll(UiTheme.applicableValues());
         if (!themeChoiceBox.getItems().contains(settings.getTheme())) {
             settings.setTheme(UiTheme.LIGHT);
         }
         themeChoiceBox.valueProperty().bindBidirectional(settings.themeProperty());
         themeChoiceBox.setConverter(new UiThemeConverter(resourceBundle));
+        //
+    }
 
-        System.out.println(applicationStyle);
+    private void saveSettings(@SuppressWarnings("unused") ObservableValue<? extends UiTheme> observable, @SuppressWarnings("unused") UiTheme oldValue, UiTheme newValue) {
+        settingsProvider.save(settings);
     }
 
     public void show() {

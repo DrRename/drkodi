@@ -73,6 +73,7 @@ public class MainController implements Initializable {
     private final AppConfig config;
 
     private final LoadPathsService loadPathsService;
+
     private final PreviewService previewService;
 
     private final FileTypeService fileTypeService;

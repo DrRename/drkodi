@@ -23,10 +23,10 @@ package drrename;
 import drrename.ui.UiTheme;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.springframework.stereotype.Component;
 
-@Component
-public class Settings {
+
+
+public class Settings  {
 
     public static final UiTheme DEFAULT_THEME = UiTheme.LIGHT;
 
@@ -42,5 +42,14 @@ public class Settings {
 
     public void setTheme(UiTheme theme) {
         this.theme.set(theme);
+
+    }
+
+    @Override
+    public String toString() {
+        return "Settings{" +
+                "theme=" + theme +
+                "hash=" + hashCode() +
+                '}';
     }
 }
