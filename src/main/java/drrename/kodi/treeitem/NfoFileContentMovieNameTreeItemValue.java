@@ -18,14 +18,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.treeitem;
 
+import drrename.kodi.FixFailedException;
+import drrename.kodi.NfoFileContentMovieNameCheckResult;
+import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;
+import drrename.kodi.nfo.NfoFileParser;
+import drrename.kodi.treeitem.KodiTreeItemValue;
 import drrename.model.RenamingPath;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
@@ -35,10 +41,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoFileContentMovieNameCheckResult> {
 
-
+    private final NfoFileParser nfoFileParser;
 
     public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath, executor, warningsConfig);
+        nfoFileParser = new NfoFileParser();
         triggerStatusCheck();
     }
 
@@ -72,7 +79,16 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
-        return getCheckResult().getType().getType() + (getCheckResult().getType().getNfoFiles() == null || getCheckResult().getType().getNfoFiles().isEmpty() ? "" : ": " + getCheckResult().getType().getNfoFiles().stream().map(Path::getFileName).map(Object::toString).collect(Collectors.joining(", ")));
+        return getCheckResult().getType().getType() + (getCheckResult().getType().getNfoFiles() == null || getCheckResult().getType().getNfoFiles().isEmpty() ? "" : ": " + getCheckResult().getType().getNfoFiles().stream().map(this::getTitleFromNfoFile).collect(Collectors.joining(", ")));
+    }
+
+    String getTitleFromNfoFile(Path nfoFile){
+        try {
+            return nfoFileParser.parse(nfoFile).getMovie().getTitle();
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
+        return "<n/a>";
     }
 
     @Override

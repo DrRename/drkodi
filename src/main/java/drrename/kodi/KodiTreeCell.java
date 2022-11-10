@@ -19,6 +19,7 @@
 
 package drrename.kodi;
 
+import drrename.kodi.treeitem.KodiTreeItemValue;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Control;
 import javafx.scene.control.TreeCell;

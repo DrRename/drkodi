@@ -1,5 +1,7 @@
 package drrename.kodi;
 
+import drrename.kodi.treeitem.FilterableKodiRootTreeItem;
+import drrename.kodi.treeitem.KodiTreeItemValue;
 import drrename.util.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;

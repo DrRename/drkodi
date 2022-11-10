@@ -1,5 +1,6 @@
 package drrename.kodi;
 
+import drrename.kodi.treeitem.FilterableKodiRootTreeItem;
 import javafx.beans.Observable;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
