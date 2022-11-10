@@ -22,17 +22,17 @@ package drrename.kodi;
 public enum MovieFileNameType {
     MATCHES_DIR_NAME("Media file names match directory name"), EXCEPTION("Failed to get media names"){
         @Override
-        boolean isWarning() {
+        public boolean isWarning() {
             return true;
         }
     }, NO_MEDIA_FILES_FOUND("No media files found"){
         @Override
-        boolean isWarning() {
+        public boolean isWarning() {
             return true;
         }
     }, INVALID_MEDIA_FILE_NAME("Invalid media file name"){
         @Override
-        boolean isWarning() {
+        public boolean isWarning() {
             return true;
         }
     };
@@ -48,7 +48,7 @@ public enum MovieFileNameType {
         return name;
     }
 
-    boolean isWarning(){
+    public boolean isWarning(){
         return false;
     }
 }
