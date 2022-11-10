@@ -3,23 +3,25 @@
  *
  *     Copyright (C) 2022
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU Affero General Public License as
- *     published by the Free Software Foundation, either version 3 of the
- *     License, or (at your option) any later version.
+ *     This file is part of Dr.Rename.
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU Affero General Public License for more details.
+ *     You can redistribute it and/or modify it under the terms of the GNU Affero
+ *     General Public License as published by the Free Software Foundation, either
+ *     version 3 of the License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful, but WITHOUT
+ *     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+ *     for more details.
  *
  *     You should have received a copy of the GNU Affero General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.nfo;
+package drrename.kodi.treeitem;
 
 import drrename.kodi.*;
+import drrename.kodi.nfo.NfoFileContentType;
 import drrename.kodi.treeitem.KodiTreeItemValue;
 import drrename.model.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
@@ -74,11 +76,11 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
         if (newValue) {
             return (delegate.getCheckResult().getType().toString() + getWarningAdditionalInfo());
         }
-        return (delegate.getCheckResult().getType().toString());
+        return (delegate.getCheckResult().getType() + ".");
     }
 
     private String getWarningAdditionalInfo() {
-        return delegate.getCheckResult().getNfoFiles().isEmpty() ? "" : ": " + delegate.getCheckResult().getNfoFiles().stream().map(f -> f.getFileName().toString()).collect(Collectors.joining(", "));
+        return delegate.getCheckResult().getNfoFiles().isEmpty() ? "." : ": " + delegate.getCheckResult().getNfoFiles().stream().map(f -> f.getFileName().toString()).collect(Collectors.joining(", "));
     }
 
     @Override
