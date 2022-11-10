@@ -23,9 +23,10 @@ package drrename;
 import drrename.ui.UiTheme;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import lombok.EqualsAndHashCode;
 
 
-
+@EqualsAndHashCode
 public class Settings  {
 
     public static final UiTheme DEFAULT_THEME = UiTheme.LIGHT;
