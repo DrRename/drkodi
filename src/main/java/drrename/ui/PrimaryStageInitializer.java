@@ -2,6 +2,7 @@ package drrename.ui;
 
 import drrename.event.StageReadyEvent;
 import drrename.ui.config.UiConfig;
+import drrename.ui.mainview.MainController;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

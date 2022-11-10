@@ -1,5 +1,6 @@
 package drrename;
 
+import drrename.util.ArrayUtil;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
@@ -27,7 +28,7 @@ public class GeneralExceptionHandler {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(String.format(resourceBundle.getString(ALERT_TITLE)));
             alert.setHeaderText(e.getLocalizedMessage());
-            TextArea area = new TextArea(Util.stackTraceToString(e));
+            TextArea area = new TextArea(ArrayUtil.stackTraceToString(e));
             alert.getDialogPane().setContent(area);
             area.setWrapText(true);
             area.setEditable(false);

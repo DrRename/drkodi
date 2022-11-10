@@ -19,10 +19,8 @@
 
 package drrename.kodi.nfo;
 
-import drrename.Strings;
 import drrename.model.nfo.NfoRoot;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 public class NfoContentTitleChecker extends NfoContentChecker {

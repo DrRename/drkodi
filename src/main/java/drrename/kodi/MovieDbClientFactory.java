@@ -19,9 +19,6 @@
 
 package drrename.kodi;
 
-import drrename.MovieDbQuerier;
-import drrename.MovieDbClient;
-import drrename.MovieDbImagesClient;
 import drrename.config.TheMovieDbConfig;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;

@@ -18,10 +18,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui;
+package drrename.ui.settingsview;
 
 import drrename.Settings;
 import drrename.SettingsProvider;
+import drrename.ui.UiTheme;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
