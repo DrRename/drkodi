@@ -21,7 +21,7 @@
 package drrename.kodi.treeitem;
 
 import drrename.kodi.FixFailedException;
-import drrename.kodi.NfoFileContentMovieNameCheckResult;
+import drrename.kodi.NfoFileNameCheckResult;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.kodi.nfo.NfoFileParser;
@@ -38,7 +38,7 @@ import java.util.concurrent.Executor;
 @Setter
 @Getter
 @Slf4j
-public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoFileContentMovieNameCheckResult> {
+public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheckResult> {
 
     private final NfoFileParser nfoFileParser;
 
@@ -49,17 +49,17 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
     }
 
     @Override
-    public NfoFileContentMovieNameCheckResult checkStatus() {
-        return new NfoFileContentMovieNameCheckResult(new NfoContentTitleChecker().checkDir(getRenamingPath().getOldPath()));
+    public NfoFileNameCheckResult checkStatus() {
+        return new NfoContentTitleChecker().checkDir(getRenamingPath().getOldPath());
     }
 
     @Override
-    public void fix(NfoFileContentMovieNameCheckResult result) throws FixFailedException {
+    public void fix(NfoFileNameCheckResult result) throws FixFailedException {
         throw new IllegalStateException("Cannot fix");
     }
 
     @Override
-    public void updateStatus(NfoFileContentMovieNameCheckResult result) {
+    public void updateStatus(NfoFileNameCheckResult result) {
         if(result == null){
             return;
         }
@@ -73,21 +73,21 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
             return false;
         }
 //        log.debug("Calculating warning");
-        return getCheckResult().getType().getType().isWarning(getWarningsConfig().isMissingNfoFileIsWarning());
+        return getCheckResult().getType().isWarning(getWarningsConfig().isMissingNfoFileIsWarning());
     }
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
         String additionalInfo = getAdditionalMessageInfo();
         if(additionalInfo != null)
-            return getCheckResult().getType().getType() + ": " + getAdditionalMessageInfo();
-        return getCheckResult().getType().getType() + ".";
+            return getCheckResult().getType() + ": " + getAdditionalMessageInfo();
+        return getCheckResult().getType() + ".";
     }
 
     private String getAdditionalMessageInfo() {
-        if(getCheckResult().getType().getNfoFiles() == null || getCheckResult().getType().getNfoFiles().isEmpty())
+        if(getCheckResult().getType() == null || getCheckResult().getNfoFiles().isEmpty())
             return null;
-        var validNfoFiles = getCheckResult().getType().getNfoFiles().stream().map(this::getTitleFromNfoFile).filter(Objects::nonNull).toList();
+        var validNfoFiles = getCheckResult().getNfoFiles().stream().map(this::getTitleFromNfoFile).filter(Objects::nonNull).toList();
         if(validNfoFiles.isEmpty()){
             return null;
         }
