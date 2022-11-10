@@ -24,15 +24,20 @@ public class PrimaryStageInitializer {
 
     private final ResourceBundle resourceBundle;
 
+    private Scene mainScene;
+
     @EventListener
     public void onApplicationEvent(StageReadyEvent event) {
         Platform.runLater(() -> {
             Stage stage = event.stage();
-            Scene scene = new Scene(fxWeaver.loadView(MainController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
+            mainScene = new Scene(fxWeaver.loadView(MainController.class, resourceBundle), uiConfig.getInitialWidth(), uiConfig.getInitialHeight());
             stage.setTitle(uiConfig.getAppTitle());
-            stage.setScene(scene);
+            stage.setScene(mainScene);
             stage.show();
         });
+    }
 
+    public Scene getMainScene() {
+        return mainScene;
     }
 }
