@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -68,6 +69,9 @@ public class NfoFileParser {
             lineCount = stream.filter(s -> !s.isBlank()).count();
         }catch (Exception e){
             log.debug("Cannot count lines, reason: {}", e.getLocalizedMessage());
+            if(e.getCause() instanceof MalformedInputException){
+                return null;
+            }
             throw new IOException(e);
         }
         if(lineCount == 1){

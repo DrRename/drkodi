@@ -53,7 +53,7 @@ public enum NfoFileContentType {
         }
     },
 
-    URL_ONLY_FILE("URL-only"),
+    URL_ONLY_FILE("URL-only file"),
     MISSING_YEAR("No year"){
         @Override
         public boolean isWarning(boolean missingNfoFileIsWarning) {

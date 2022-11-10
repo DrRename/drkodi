@@ -45,12 +45,12 @@ public class MediaFileNameChecker {
             List<Path> mediaFiles = findAllMediaFiles(directory);
             for(Path mediaFile : mediaFiles){
                 String baseName = FilenameUtils.getBaseName(mediaFile.getFileName().toString());
-                if(baseName.startsWith(movieName)){
-                    return new MediaFileNameCheckResult(MovieFileNameType.MATCHES_DIR_NAME, mediaFiles);
+                if(!baseName.equals(movieName)){
+                    return new MediaFileNameCheckResult(MovieFileNameType.INVALID_MEDIA_FILE_NAME, mediaFiles);
                 }
             }
             if(!mediaFiles.isEmpty()){
-                return new MediaFileNameCheckResult(MovieFileNameType.INVALID_MEDIA_FILE_NAME, mediaFiles);
+                return new MediaFileNameCheckResult(MovieFileNameType.MATCHES_DIR_NAME, mediaFiles);
             }
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);

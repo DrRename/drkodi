@@ -74,7 +74,7 @@ public class MovieDbQuerier {
         var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);
 
         if(searchResult.getBody() != null && !searchResult.getBody().getResults().isEmpty()){
-            if(searchString.equals(searchResult.getBody().getResults().get(0).getTitle())){
+            if(searchString.equals(searchResult.getBody().getResults().get(0).getTitle()) && year.equals(searchResult.getBody().getResults().get(0).getReleaseDate().getYear())){
                 theMovieDbId.add(searchResult.getBody().getResults().get(0).getId());
                 return new MovieDbLookupCheckResult(MovieDbCheckType.ORIGINAL_TITEL, onlineTitles);
             }
@@ -89,11 +89,11 @@ public class MovieDbQuerier {
                             String iso1 = translationDto.getIso3166();
                             String iso2 = translationDto.getIso639();
                             String title = translationDto.getData().getTitle();
+                            if (searchString.equals(title) && year.equals(searchResultDto.getReleaseDate().getYear())) {
+                                return new MovieDbLookupCheckResult(MovieDbCheckType.LOCALIZED_TITLE, onlineTitles);
+                            }
                             if (resourceBundle.getLocale().getLanguage().equals(iso1) || resourceBundle.getLocale().getLanguage().equals(iso2)) {
                                 getOnlineTitles().add(buildNameString(translationDto.getData().getTitle(), searchResultDto.getReleaseDate()));
-                            }
-                            if (searchString.equals(title)) {
-                                return new MovieDbLookupCheckResult(MovieDbCheckType.LOCALIZED_TITLE, onlineTitles);
                             }
                         }
                     } else {
