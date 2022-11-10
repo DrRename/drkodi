@@ -1,7 +1,7 @@
 package drrename.kodi;
 
 import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
-import drrename.kodi.nfo.NfoFileNameTreeItemValue;
+import drrename.kodi.treeitem.NfoFileNameTreeItemValue;
 import drrename.kodi.treeitem.*;
 import drrename.model.RenamingPath;
 import javafx.application.Platform;

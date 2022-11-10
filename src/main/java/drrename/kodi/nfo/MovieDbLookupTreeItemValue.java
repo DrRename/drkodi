@@ -136,14 +136,11 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
-        if(getAdditionalMessageString() == null){
-            return null;
-        }
-        return newValue ? "Movie name could not be found online.\n" + getAdditionalMessageString() : "Movie name found online: " + getCheckResult().getType() +  getAdditionalMessageString();
+        return newValue ? "Movie name could not be found online.\n" + getAdditionalMessageString() : "Movie name found online: " + getCheckResult().getType() + getAdditionalMessageString();
     }
 
     private String getAdditionalMessageString() {
-        return ". " + (getCheckResult().getOnlineTitles().isEmpty() ? "" : "Best matches:\n" + getCheckResult().getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining("\n")));
+        return (getCheckResult().getOnlineTitles().isEmpty() ? "" : ". Best matches:\n" + getCheckResult().getOnlineTitles().stream().map(Object::toString).collect(Collectors.joining("\n")));
     }
 
     @Override

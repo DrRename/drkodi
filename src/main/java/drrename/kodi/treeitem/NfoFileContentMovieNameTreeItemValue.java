@@ -25,7 +25,6 @@ import drrename.kodi.NfoFileContentMovieNameCheckResult;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.kodi.nfo.NfoFileParser;
-import drrename.kodi.treeitem.KodiTreeItemValue;
 import drrename.model.RenamingPath;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,8 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.concurrent.Executor;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -79,12 +78,28 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
 
     @Override
     protected String buildNewMessage(Boolean newValue) {
-        return getCheckResult().getType().getType() + (getCheckResult().getType().getNfoFiles() == null || getCheckResult().getType().getNfoFiles().isEmpty() ? "" : ": " + getCheckResult().getType().getNfoFiles().stream().map(this::getTitleFromNfoFile).collect(Collectors.joining(", ")));
+        String additionalInfo = getAdditionalMessageInfo();
+        if(additionalInfo != null)
+            return getCheckResult().getType().getType() + ": " + getAdditionalMessageInfo();
+        return getCheckResult().getType().getType() + ".";
+    }
+
+    private String getAdditionalMessageInfo() {
+        if(getCheckResult().getType().getNfoFiles() == null || getCheckResult().getType().getNfoFiles().isEmpty())
+            return null;
+        var validNfoFiles = getCheckResult().getType().getNfoFiles().stream().map(this::getTitleFromNfoFile).filter(Objects::nonNull).toList();
+        if(validNfoFiles.isEmpty()){
+            return null;
+        }
+        return String.join(", ", validNfoFiles);
     }
 
     String getTitleFromNfoFile(Path nfoFile){
         try {
-            return nfoFileParser.parse(nfoFile).getMovie().getTitle();
+            var xmlModel = nfoFileParser.parse(nfoFile);
+            if (xmlModel == null || xmlModel.getMovie() == null)
+                return null;
+            return xmlModel.getMovie().getTitle();
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);
         }
