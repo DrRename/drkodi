@@ -24,4 +24,5 @@ open module drrename {
     requires jodd.util;
     requires spring.cloud.openfeign.core;
     requires spring.web;
+    requires com.jthemedetector;
 }
