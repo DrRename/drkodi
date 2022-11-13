@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~     Dr.Rename - A Minimalistic Batch Renamer
+  ~     
+  ~     Copyright (C) 2022
+  ~     
+  ~     This file is part of Dr.Rename.
+  ~
+  ~     You can redistribute it and/or modify it under the terms of the GNU Affero
+  ~     General Public License as published by the Free Software Foundation, either
+  ~     version 3 of the License, or (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful, but WITHOUT
+  ~     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+  ~     for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="drrename.ui.mainview.controller.TabController">
+
+    <top>
+
+        <MenuBar fx:id="menuBar">
+            <Menu text="File">
+                <!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
+                <MenuItem text="Settings" onAction="#handleMenuItemSettings" accelerator="Shortcut+S"/>
+            </Menu>
+        </MenuBar>
+
+    </top>
+
+    <center>
+
+        <VBox>
+            <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
+            <TabPane fx:id="tabPane">
+                <tabs>
+                    <Tab fx:id="renameTab" text="Rename" closable="false">
+                        <fx:include fx:id="mainController" source="RenameView.fxml"/>
+                    </Tab>
+                    <Tab fx:id="kodiToolsTab" text="Kodi Tools" closable="false">
+                        <fx:include fx:id="kodiToolsController" source="KodiTools.fxml"/>
+                    </Tab>
+                    <Tab fx:id="dummyFileTab" text="File Creator" closable="false">
+                        <fx:include fx:id="dummyFileCreatorController" source="DummyFileCreator.fxml"/>
+                    </Tab>
+                </tabs>
+            </TabPane>
+        </VBox>
+
+
+
+    </center>
+
+
+</BorderPane>

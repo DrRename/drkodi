@@ -5,22 +5,11 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
-      fx:controller="drrename.ui.mainview.MainController">
-    <MenuBar fx:id="menuBar">
-        <Menu text="File">
-            <MenuItem text="Dummy File Creator" onAction="#handleMenuItemDummyFileCreator" accelerator="Shortcut+D"/>
-            <!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
-            <MenuItem text="Kodi Tools" onAction="#handleMenuItemKodiTools" accelerator="Shortcut+K"/>
-            <MenuItem text="Settings" onAction="#handleMenuItemSettings" accelerator="Shortcut+S"/>
-        </Menu>
-    </MenuBar>
+      fx:controller="drrename.ui.mainview.RenameController">
     <BorderPane fx:id="layer01" VBox.vgrow="ALWAYS">
         <padding>
             <Insets top="4" right="4" bottom="4" left="4"/>
         </padding>
-        <top>
-            <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
-        </top>
         <center>
             <fx:include fx:id="fileListComponent" source="FileListComponent.fxml"/>
         </center>
