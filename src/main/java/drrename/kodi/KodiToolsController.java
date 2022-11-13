@@ -2,6 +2,7 @@ package drrename.kodi;
 
 import drrename.kodi.treeitem.FilterableKodiRootTreeItem;
 import drrename.kodi.treeitem.KodiTreeItemValue;
+import drrename.ui.mainview.controller.TabController;
 import drrename.util.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
@@ -42,6 +43,8 @@ public class KodiToolsController implements Initializable {
 
     public static final int imageStageXOffset = 600;
 
+    private final TabController tabController;
+
     public BorderPane root;
 
     public ProgressBar progressBar;
@@ -62,8 +65,6 @@ public class KodiToolsController implements Initializable {
 
     Stage imageStage;
 
-    public StartDirectoryComponentController startDirectoryComponentController;
-
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
 
     private final MovieDirectoryCollectorService service;
@@ -82,7 +83,7 @@ public class KodiToolsController implements Initializable {
         imageStage = new Stage();
         mainStage.setScene(new Scene(root));
         mainStage.setTitle("Kodi Tools");
-        goCancelButtonsComponentController.buttonGo.disableProperty().bind(service.runningProperty().or(startDirectoryComponentController.readyProperty().not()));
+        goCancelButtonsComponentController.buttonGo.disableProperty().bind(service.runningProperty().or(tabController.startDirectoryComponentController.readyProperty().not()));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(service.runningProperty().not());
         goCancelButtonsComponentController.setButtonCancelActionEventFactory(KodiToolsButtonCancelEvent::new);
         goCancelButtonsComponentController.setButtonGoActionEventFactory(KodiToolsButtonGoEvent::new);
@@ -97,7 +98,7 @@ public class KodiToolsController implements Initializable {
             buttonCollapseAll.setDisable(e.getList().isEmpty());
         });
         treeRoot.setPredicate(buildHideEmptyPredicate());
-        startDirectoryComponentController.inputPathProperty().addListener((observable, oldValue, newValue) -> {
+        tabController.startDirectoryComponentController.inputPathProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 onButtonGoEvent(null);
             }
@@ -183,14 +184,14 @@ public class KodiToolsController implements Initializable {
     }
 
     private void startService() {
-        if (startDirectoryComponentController.getInputPath() == null) {
+        if (tabController.startDirectoryComponentController.getInputPath() == null) {
             log.warn("Cannot start, input path is null");
             return;
         }
         log.debug("Starting service {}", service);
         service.reset();
         treeRoot.getSourceChildren().clear();
-        service.setDirectory(startDirectoryComponentController.getInputPath());
+        service.setDirectory(tabController.startDirectoryComponentController.getInputPath());
         service.setExecutor(executor);
         service.setRootTreeItem(treeRoot);
         service.setMovieDbClientFactory(movieDbClientFactory);

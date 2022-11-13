@@ -1,6 +1,5 @@
 package drrename.ui.mainview;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -8,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +17,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -34,19 +37,18 @@ public class StartDirectoryComponentController implements Initializable, Applica
 
     private BooleanProperty ready;
 
-    @SuppressWarnings("")
     private ChangeListener<? super String> textFieldChangeListener;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ready = new SimpleBooleanProperty(false);
         inputPath = new SimpleObjectProperty<>();
-        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> updateInput(n));
+        textFieldChangeListener = (e, o, n) -> updateInput(n);
         textFieldDirectory.textProperty().addListener(textFieldChangeListener);
         textFieldDirectory.setOnDragOver(event -> {
             if ((event.getGestureSource() != textFieldDirectory) && event.getDragboard().hasFiles()) {
                 /* allow for both copying and moving, whatever user chooses */
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                event.acceptTransferModes(TransferMode.ANY);
             }
             event.consume();
         });
@@ -54,7 +56,7 @@ public class StartDirectoryComponentController implements Initializable, Applica
             final Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasFiles()) {
-                if (!db.getFiles().isEmpty() && db.getFiles().iterator().next().isDirectory())
+                if (db.getFiles().iterator().next().isDirectory())
                     textFieldDirectory.setText(db.getFiles().iterator().next().getPath());
                 else textFieldDirectory.setText(null);
                 success = true;
@@ -68,7 +70,7 @@ public class StartDirectoryComponentController implements Initializable, Applica
     }
 
     private void updateInput(String inputPath) {
-        if(inputPath != null){
+        if (inputPath != null) {
             updateInput(Path.of(inputPath));
         }
     }
