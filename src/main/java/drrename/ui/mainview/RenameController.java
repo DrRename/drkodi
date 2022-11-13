@@ -33,6 +33,7 @@ import drrename.EntriesService;
 import drrename.strategy.RenamingConfig;
 import drrename.strategy.RenamingStrategy;
 import drrename.strategy.SimpleRenamingConfig;
+import drrename.ui.mainview.controller.TabController;
 import drrename.util.FXUtil;
 import drrename.ui.settingsview.SettingsController;
 import drrename.ui.mainview.controller.FileListComponentController;
@@ -46,6 +47,7 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
@@ -77,8 +79,8 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-@FxmlView("/fxml/MainView.fxml")
-public class MainController implements Initializable {
+@FxmlView("/fxml/RenameView.fxml")
+public class RenameController implements Initializable {
 
     private static final String RENAMING_FILES = "mainview.status.renaming_files";
 
@@ -87,6 +89,8 @@ public class MainController implements Initializable {
     private static final String LOADING_PREVIEVS = "mainview.status.loading_previews";
 
     private static final String LOADING_FILE_TYPES = "mainview.status.loading_filetypes";
+
+    private final TabController tabController;
 
     private final AppConfig config;
 
@@ -107,8 +111,6 @@ public class MainController implements Initializable {
     public BorderPane buttonPane;
 
     public VBox fileListComponent;
-
-    public BorderPane startDirectoryComponent;
 
     public HBox replacementStringComponent;
 
@@ -168,8 +170,6 @@ public class MainController implements Initializable {
 
     @FXML
     private ProgressBar progressBar;
-    @FXML
-    MenuBar menuBar;
 
     @FXML
     Node layer01;
@@ -194,8 +194,6 @@ public class MainController implements Initializable {
 
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
 
-    public StartDirectoryComponentController startDirectoryComponentController;
-
     public FileListComponentController fileListComponentController;
 
     public ReplacementStringComponentController replacementStringComponentController;
@@ -217,7 +215,7 @@ public class MainController implements Initializable {
         textFieldReplacementStringTo = replacementStringComponentController.textFieldReplacementStringTo;
         textFieldReplacementStringFrom = replacementStringComponentController.textFieldReplacementStringFrom;
 
-        FXUtil.initAppMenu(menuBar);
+
 
         initRenamingStrategies();
 
@@ -228,8 +226,6 @@ public class MainController implements Initializable {
         configureButtons();
 
         configureStatusLabels();
-
-        initDragAndDrop();
 
         progressBar.visibleProperty().bind(loadPathsService.runningProperty().or(previewService.runningProperty().or(renamingService.runningProperty())));
 
@@ -259,43 +255,6 @@ public class MainController implements Initializable {
         rightContent.setEditable(false);
 
 
-    }
-
-    private void initDragAndDrop() {
-        startDirectoryComponentController.textFieldDirectory.setOnDragEntered(this::handleDragEvent);
-        startDirectoryComponentController.textFieldDirectory.setOnDragEntered(this::handleDragEvent);
-        startDirectoryComponentController.textFieldDirectory.setOnDragOver(this::handleDragEvent);
-        startDirectoryComponentController.textFieldDirectory.setOnDragDropped(this::handleDragEvent);
-        startDirectoryComponentController.textFieldDirectory.setOnDragExited(this::handleDragEvent);
-
-        leftContent.setOnDragEntered(this::handleDragEvent);
-        leftContent.setOnDragEntered(this::handleDragEvent);
-        leftContent.setOnDragOver(this::handleDragEvent);
-        leftContent.setOnDragDropped(this::handleDragEvent);
-        leftContent.setOnDragExited(this::handleDragEvent);
-    }
-
-    private void handleDragEvent(DragEvent event) {
-        if (DragEvent.DRAG_ENTERED.equals(event.getEventType()) && event.getGestureSource() == null) {
-            draggingOver.set(true);
-        } else if (DragEvent.DRAG_OVER.equals(event.getEventType()) && event.getGestureSource() == null && event.getDragboard().hasFiles()) {
-            event.acceptTransferModes(TransferMode.ANY);
-        } else if (DragEvent.DRAG_DROPPED.equals(event.getEventType()) && event.getGestureSource() == null && event.getDragboard().hasFiles()) {
-
-            if (event.getDragboard().getFiles().size() == 1 && event.getDragboard().getFiles().iterator().next().isDirectory()) {
-                // Only update the input field, this will trigger a loading
-                startDirectoryComponentController.textFieldDirectory.setText(event.getDragboard().getFiles().iterator().next().toString());
-            } else {
-                Set<Path> vaultPaths = event.getDragboard().getFiles().stream().map(File::toPath).collect(Collectors.toSet());
-                loadedPaths.setAll(vaultPaths);
-                startDirectoryComponentController.textFieldDirectory.setText(null);
-                Platform.runLater(this::updateInputView);
-            }
-            event.setDropCompleted(true);
-            event.consume();
-        } else if (DragEvent.DRAG_EXITED.equals(event.getEventType())) {
-            draggingOver.set(false);
-        }
     }
 
     private void configureStatusLabels() {
@@ -328,16 +287,18 @@ public class MainController implements Initializable {
     private void registerInputChangeListener() {
         replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(this::updatePreview);
         replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updatePreview);
-        textFieldChangeListener = (e, o, n) -> Platform.runLater(() -> {
-            if (n != null) loadedPaths.setAll(Path.of(n));
-            updateInputView();
+        tabController.startDirectoryComponentController.inputPathProperty().addListener(new ChangeListener<Path>() {
+            @Override
+            public void changed(ObservableValue<? extends Path> observable, Path oldValue, Path n) {
+                if (n != null) loadedPaths.setAll(n);
+                updateInputView();
+            }
         });
         ignoreDirectoriesChangeListener = (e, o, n) -> entriesService.setFilterDirectories(n);
         ignoreHiddenFilesChangeListener = (e, o, n) -> entriesService.setFilterHiddenFiles(n);
         showOnlyChangingChangeListener = (e, o, n) -> entriesService.setShowOnlyChainging(n);
         textFieldReplacementStringFrom.textProperty().addListener(replaceStringFromChangeListener);
         textFieldReplacementStringTo.textProperty().addListener(replaceStringToChangeListener);
-        startDirectoryComponentController.textFieldDirectory.textProperty().addListener(textFieldChangeListener);
         ignoreDirectories.selectedProperty().addListener(ignoreDirectoriesChangeListener);
         ignoreHiddenFiles.selectedProperty().addListener(ignoreHiddenFilesChangeListener);
         showOnlyChanging.selectedProperty().addListener(showOnlyChangingChangeListener);
