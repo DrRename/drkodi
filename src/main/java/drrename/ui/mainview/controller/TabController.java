@@ -26,6 +26,7 @@ import drrename.util.FXUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
@@ -45,7 +46,7 @@ import java.util.ResourceBundle;
 @FxmlView("/fxml/TabView.fxml")
 public class TabController implements Initializable {
 
-    public BorderPane startDirectoryComponent;
+    public Parent startDirectoryComponent;
 
     public StartDirectoryComponentController startDirectoryComponentController;
 
@@ -53,7 +54,7 @@ public class TabController implements Initializable {
 
     private final ResourceBundle resourceBundle;
 
-    public VBox mainController;
+    public Parent mainController;
 
     public BorderPane kodiToolsController;
 
@@ -63,7 +64,7 @@ public class TabController implements Initializable {
 
     public Tab renameTab;
 
-    public BorderPane dummyFileCreatorController;
+    public Parent dummyFileCreatorController;
 
     @FXML
     MenuBar menuBar;

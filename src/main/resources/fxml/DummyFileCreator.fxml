@@ -3,16 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns="http://javafx.com/javafx"
+<VBox xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:id="root" fx:controller="drrename.filecreator.DummyFileCreatorController" minWidth="120" minHeight="120">
-    <padding>
-        <Insets top="4" right="4" bottom="4" left="4"/>
-    </padding>
-    <top>
-        <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
-    </top>
-    <center>
+
+
         <GridPane vgap="4" hgap="4">
             <padding>
                 <Insets top="4" right="4" bottom="4" left="4"/>
@@ -34,8 +29,7 @@
                 </tooltip>
             </TextField>
         </GridPane>
-    </center>
-    <bottom>
+
         <BorderPane >
             <padding>
                 <Insets top="4" right="4" bottom="4" left="4"/>
@@ -47,5 +41,5 @@
                 <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>
             </right>
         </BorderPane>
-    </bottom>
-</BorderPane>
+
+</VBox>

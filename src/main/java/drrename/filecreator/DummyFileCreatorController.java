@@ -23,8 +23,11 @@ import drrename.event.DummyFileCreatorButtonCancelEvent;
 import drrename.event.DummyFileCreatorButtonGoEvent;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import drrename.ui.mainview.StartDirectoryComponentController;
+import drrename.ui.mainview.controller.TabController;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
@@ -48,7 +51,7 @@ import java.util.ResourceBundle;
 @FxmlView("/fxml/DummyFileCreator.fxml")
 public class DummyFileCreatorController implements Initializable {
 
-    public StartDirectoryComponentController startDirectoryComponentController;
+    private final TabController tabController;
 
     public GoCancelButtonsComponentController goCancelButtonsComponentController;
 
@@ -58,7 +61,7 @@ public class DummyFileCreatorController implements Initializable {
 
     public ProgressBar progressBar;
 
-    public BorderPane root;
+    public Parent root;
 
     private final FileCreatorService fileCreatorService;
 
@@ -73,14 +76,12 @@ public class DummyFileCreatorController implements Initializable {
         TextFormatter<Number> textFormatter = new TextFormatter<>(new NumberStringConverter());
         wordSeparator.setText("_");
         filesCnt.setTextFormatter(textFormatter);
-        goCancelButtonsComponentController.buttonGo.disableProperty().bind(fileCreatorService.runningProperty().or(startDirectoryComponentController.readyProperty().not().or(filesCnt.textProperty().isEmpty())));
+        goCancelButtonsComponentController.buttonGo.disableProperty().bind(fileCreatorService.runningProperty().or(tabController.startDirectoryComponentController.readyProperty().not().or(filesCnt.textProperty().isEmpty())));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(fileCreatorService.runningProperty().not());
         goCancelButtonsComponentController.setButtonCancelActionEventFactory( DummyFileCreatorButtonCancelEvent::new);
         goCancelButtonsComponentController.setButtonGoActionEventFactory(DummyFileCreatorButtonGoEvent::new);
         progressBar.visibleProperty().bind(fileCreatorService.runningProperty());
 
-        log.debug("Input component: {}", startDirectoryComponentController);
-        log.debug("Buttons component: {}", goCancelButtonsComponentController);
     }
 
     public void show() {
@@ -110,7 +111,7 @@ public class DummyFileCreatorController implements Initializable {
         fileCreatorService.cancel();
         fileCreatorService.reset();
         fileCreatorService.setFileCnt((long) filesCnt.getTextFormatter().getValue());
-        fileCreatorService.setDirectory(startDirectoryComponentController.getInputPath());
+        fileCreatorService.setDirectory(tabController.startDirectoryComponentController.getInputPath());
         fileCreatorService.setWordSeparator(wordSeparator.getText());
         progressBar.progressProperty().bind(fileCreatorService.progressProperty());
         fileCreatorService.start();
