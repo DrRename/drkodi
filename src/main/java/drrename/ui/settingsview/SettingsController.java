@@ -22,7 +22,9 @@ package drrename.ui.settingsview;
 
 import drrename.Settings;
 import drrename.SettingsProvider;
+import drrename.ui.FxApplicationStyle;
 import drrename.ui.UiTheme;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -68,6 +70,8 @@ public class SettingsController implements Initializable {
 
     private final SettingsProvider settingsProvider;
 
+    private final FxApplicationStyle applicationStyle;
+
     public VBox root;
 
     public ChoiceBox<UiTheme> themeChoiceBox;
@@ -89,6 +93,19 @@ public class SettingsController implements Initializable {
         themeChoiceBox.valueProperty().bindBidirectional(settings.themeProperty());
         themeChoiceBox.setConverter(new UiThemeConverter(resourceBundle));
         //
+        applicationStyle.currentStyleSheetProperty().addListener(this::themeChanged);
+        Platform.runLater(() -> applyTheme(null, applicationStyle.getCurrentStyleSheet()));
+    }
+
+    private void themeChanged(ObservableValue<? extends URL> observable, URL oldValue, URL newValue) {
+        applyTheme(oldValue, newValue);
+    }
+
+    private void applyTheme(URL oldSheet, URL newSheet) {
+        if(oldSheet != null)
+            root.getScene().getStylesheets().remove(oldSheet.toString());
+        if(newSheet != null)
+            root.getScene().getStylesheets().add(newSheet.toString());
     }
 
     private void saveSettings(@SuppressWarnings("unused") ObservableValue<? extends UiTheme> observable, @SuppressWarnings("unused") UiTheme oldValue, UiTheme newValue) {

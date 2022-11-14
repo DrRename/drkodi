@@ -164,9 +164,7 @@ public class KodiToolsController implements Initializable {
     }
 
     private Predicate<KodiTreeItemValue<?>> buildHideEmptyPredicate() {
-        return item -> {
-            return item.warningProperty().get() != null && item.isWarning() || !checkBoxHideEmpty.isSelected();
-        };
+        return item -> item.warningProperty().get() != null && item.isWarning() || !checkBoxHideEmpty.isSelected();
     }
 
     public void show() {

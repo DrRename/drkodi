@@ -81,7 +81,7 @@ public class SettingsProvider {
             Files.move(tmpPath, settingsPath, StandardCopyOption.REPLACE_EXISTING);
             log.info("Settings saved to {}", settingsPath);
         } catch (IOException e) {
-            log.error("Failed to save settings", e);
+            log.error("Failed to save settings ", e);
         }
     }
 }

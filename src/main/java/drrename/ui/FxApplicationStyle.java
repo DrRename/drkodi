@@ -22,17 +22,15 @@ package drrename.ui;
 
 import com.jthemedetecor.OsThemeDetector;
 import drrename.Settings;
-import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.net.URL;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -47,24 +45,24 @@ public class FxApplicationStyle {
 
     private final ObjectProperty<URL> currentStyleSheet;
 
-    FxApplicationStyle(Settings settings){
+    FxApplicationStyle(Settings settings) {
         this.settings = settings;
-        detector  = OsThemeDetector.getDetector();
+        detector = OsThemeDetector.getDetector();
         this.currentStyleSheet = new SimpleObjectProperty<>();
     }
 
     @PostConstruct
     public void init() {
         settings.themeProperty().addListener(this::appThemeChanged);
-        currentStyleSheet.addListener((observable, oldValue, newValue) -> doApplyTheme(oldValue, newValue));
-        loadSelectedStyleSheet(settings.getTheme());
+        log.debug("Loading theme {}", settings.getTheme());
+        Platform.runLater(()-> loadSelectedStyleSheet(settings.getTheme()));
     }
 
     private void appThemeChanged(@SuppressWarnings("unused") ObservableValue<? extends UiTheme> observable, @SuppressWarnings("unused") UiTheme oldValue, UiTheme newValue) {
         if (oldValue == UiTheme.AUTOMATIC && newValue != UiTheme.AUTOMATIC) {
                 detector.removeListener(systemInterfaceThemeListener);
         }
-            loadSelectedStyleSheet(newValue);
+        loadSelectedStyleSheet(newValue);
     }
 
     private void systemInterfaceThemeChanged(Boolean aBoolean) {
@@ -89,26 +87,29 @@ public class FxApplicationStyle {
     }
 
     private void applyLightTheme() {
-        var stylesheet = Optional //
-                .ofNullable(getClass().getResource("/css/light-theme.bss")) //
-                .orElse(getClass().getResource("/css/light-theme.css"));
+        var stylesheet = getClass().getResource("/css/light-theme.css");
+        log.debug("Setting style sheet from {} to {}", currentStyleSheet.get(), stylesheet);
         currentStyleSheet.set(stylesheet);
     }
 
     private void applyDarkTheme() {
-        var stylesheet = Optional //
-                .ofNullable(getClass().getResource("/css/dark-theme.bss")) //
-                .orElse(getClass().getResource("/css/dark-theme.css"));
+        var stylesheet = getClass().getResource("/css/dark-theme.css");
+        log.debug("Setting style sheet from {} to {}", currentStyleSheet.get(), stylesheet);
         currentStyleSheet.set(stylesheet);
     }
 
-    private void doApplyTheme(URL oldStyle, URL newStyle) {
-        if (newStyle == null) {
-            log.warn("Failed to load stylesheet");
-        }
-        else {
-            log.debug("Changing style from {} to {}", oldStyle, newStyle);
-            Application.setUserAgentStylesheet(newStyle.toString());
-        }
+    // FX Getter / Setter //
+
+
+    public URL getCurrentStyleSheet() {
+        return currentStyleSheet.get();
+    }
+
+    public ObjectProperty<URL> currentStyleSheetProperty() {
+        return currentStyleSheet;
+    }
+
+    public void setCurrentStyleSheet(URL currentStyleSheet) {
+        this.currentStyleSheet.set(currentStyleSheet);
     }
 }
