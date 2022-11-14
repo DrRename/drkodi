@@ -19,5 +19,8 @@
 
 package drrename.event;
 
+/**
+ * Marker interface to indicate that this event needs to be processed synchronously.
+ */
 public interface SynchronousEvent {
 }

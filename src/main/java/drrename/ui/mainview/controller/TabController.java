@@ -20,9 +20,12 @@
 
 package drrename.ui.mainview.controller;
 
+import drrename.ui.FxApplicationStyle;
 import drrename.ui.mainview.StartDirectoryComponentController;
 import drrename.ui.settingsview.SettingsController;
 import drrename.util.FXUtil;
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,7 +33,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -54,6 +56,8 @@ public class TabController implements Initializable {
 
     private final ResourceBundle resourceBundle;
 
+    private final FxApplicationStyle applicationStyle;
+
     public Parent mainController;
 
     public BorderPane kodiToolsController;
@@ -66,12 +70,27 @@ public class TabController implements Initializable {
 
     public Parent dummyFileCreatorController;
 
+    public Parent root;
+
     @FXML
     MenuBar menuBar;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         FXUtil.initAppMenu(menuBar);
+        applicationStyle.currentStyleSheetProperty().addListener(this::themeChanged);
+        Platform.runLater(() -> applyTheme(null, applicationStyle.getCurrentStyleSheet()));
+    }
+
+    private void themeChanged(ObservableValue<? extends URL> observable, URL oldValue, URL newValue) {
+        applyTheme(oldValue, newValue);
+    }
+
+    private void applyTheme(URL oldSheet, URL newSheet) {
+        if(oldSheet != null)
+            root.getScene().getStylesheets().remove(oldSheet.toString());
+        if(newSheet != null)
+            root.getScene().getStylesheets().add(newSheet.toString());
     }
 
     public void handleMenuItemSettings(ActionEvent actionEvent) {
