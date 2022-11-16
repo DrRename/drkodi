@@ -42,7 +42,7 @@ public class MediaFileNameChecker {
 //        log.debug("Triggering status check on thread {}", Thread.currentThread());
         String movieName = directory.getFileName().toString();
         try {
-            List<Path> mediaFiles = findAllMediaFiles(directory);
+            List<Path> mediaFiles = findAllVideoFiles(directory);
             for(Path mediaFile : mediaFiles){
                 String baseName = FilenameUtils.getBaseName(mediaFile.getFileName().toString());
                 if(!baseName.equals(movieName)){
@@ -60,7 +60,7 @@ public class MediaFileNameChecker {
         return new MediaFileNameCheckResult(MovieFileNameType.NO_MEDIA_FILES_FOUND, Collections.emptyList());
     }
 
-    private List<Path> findAllMediaFiles(Path directory) throws IOException {
+    static List<Path> findAllVideoFiles(Path directory) throws IOException {
         List<Path> result = new ArrayList<>();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
             for (Path child : ds) {
