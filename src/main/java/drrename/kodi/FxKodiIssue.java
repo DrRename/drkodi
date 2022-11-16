@@ -61,7 +61,7 @@ public abstract class FxKodiIssue<R> implements KodiIssue<R> {
 
     @Override
     public String getMovieName() {
-        return getRenamingPath().getMovieName();
+        return getRenamingPath() == null ? null : getRenamingPath().getMovieName();
     }
 
     // FX Getter / Setter //
