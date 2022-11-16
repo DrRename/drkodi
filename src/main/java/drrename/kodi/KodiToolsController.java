@@ -12,6 +12,7 @@ import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -45,7 +46,7 @@ public class KodiToolsController implements Initializable {
 
     private final TabController tabController;
 
-    public BorderPane root;
+    public Parent root;
 
     public ProgressBar progressBar;
 

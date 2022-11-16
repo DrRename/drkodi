@@ -36,15 +36,19 @@ public class KodiTreeCell extends TreeCell<KodiTreeItemValue<?>> {
         super.updateItem(item, empty);
         if (item == null) {
             textProperty().unbind();
-            styleProperty().unbind();
             graphicProperty().unbind();
             setText(null);
-            setStyle(null);
             setGraphic(null);
+            getStyleClass().remove("warning");
+
         } else {
             graphicProperty().bind(item.graphicProperty());
             textProperty().bind(Bindings.createStringBinding(() -> calculateMessageString(item), item.messageProperty()));
-            styleProperty().bind(item.styleProperty());
+            if(item.isWarning()){
+                getStyleClass().add("warning");
+            } else {
+                getStyleClass().remove("warning");
+            }
         }
     }
 

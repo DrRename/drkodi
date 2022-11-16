@@ -45,14 +45,6 @@ import java.util.concurrent.Executor;
 @Slf4j
 public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
-    private static final String warning_font = "-fx-font-weight: bold;";
-
-    private static final String warning_color = "-fx-background-color: wheat;";
-
-    private final ListProperty<String> styles;
-
-    private final StringProperty style;
-
     private final StringProperty buttonText;
 
     private final ObjectProperty<Boolean> warning;
@@ -73,8 +65,6 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         super(moviePath);
         this.executor = executor;
         this.buttonText = new SimpleStringProperty();
-        this.styles = new SimpleListProperty<>(FXCollections.observableArrayList());
-        this.style = new SimpleStringProperty();
         this.warning = new SimpleObjectProperty<>();
         this.graphic = new SimpleObjectProperty<>();
         this.treeItem = new SimpleObjectProperty<>();
@@ -88,15 +78,9 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     }
 
     protected void init() {
-        getStyles().addListener((ListChangeListener<String>) c -> {
-            while (c.next()) {
-                setStyle(String.join(" ", c.getList()));
-            }
-        });
         fixableProperty().addListener((observable, oldValue, newValue) -> updateButtonText());
         warningProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null) {
-//                updateStyles(newValue);
                 updateButtonText();
                 setMessage(buildNewMessage(newValue));
             }
@@ -168,16 +152,6 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
             buttonText.set("Fix manually");
         } else {
             buttonText.set("OK");
-        }
-    }
-
-    protected void updateStyles(Boolean warning) {
-        if (warning) {
-            styles.add(warning_font);
-            styles.add(warning_color);
-        } else {
-            styles.remove(warning_font);
-            styles.remove(warning_color);
         }
     }
 
@@ -253,29 +227,11 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         this.warning.set(warning);
     }
 
-    public String getStyle() {
-        return style.get();
-    }
 
-    public StringProperty styleProperty() {
-        return style;
-    }
 
-    public void setStyle(String style) {
-        this.style.set(style);
-    }
 
-    protected ObservableList<String> getStyles() {
-        return styles.get();
-    }
 
-    protected ListProperty<String> stylesProperty() {
-        return styles;
-    }
 
-    protected void setStyles(ObservableList<String> styles) {
-        this.styles.set(styles);
-    }
 
     public String getButtonText() {
         return buttonText.get();

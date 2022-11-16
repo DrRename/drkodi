@@ -60,7 +60,7 @@ public class TabController implements Initializable {
 
     public Parent mainController;
 
-    public BorderPane kodiToolsController;
+    public Parent kodiToolsController;
 
     public Tab dummyFileTab;
 
