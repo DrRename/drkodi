@@ -108,6 +108,7 @@ public class KodiToolsController implements Initializable {
         progressBar.visibleProperty().bind(service.runningProperty());
 
         treeRoot = new FilterableKodiRootTreeItem(executor, warningsConfig, null);
+        treeRoot.setExpanded(true);
         treeView.setRoot(treeRoot);
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
