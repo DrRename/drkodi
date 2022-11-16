@@ -21,17 +21,19 @@
 package drrename.ui.kodi;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Control;
 import javafx.scene.control.TreeCell;
 
-public class KodiTreeCell extends TreeCell<KodiTreeItemValue<?>> {
+public class KodiTreeCell<R> extends TreeCell<KodiTreeItemValue<R>> {
 
     public KodiTreeCell(Control treeView) {
         prefWidthProperty().bind(treeView.widthProperty().subtract(20.0));
     }
 
     @Override
-    protected void updateItem(KodiTreeItemValue item, boolean empty) {
+    protected void updateItem(KodiTreeItemValue<R> item, boolean empty) {
 
         super.updateItem(item, empty);
         if (item == null) {
@@ -42,13 +44,24 @@ public class KodiTreeCell extends TreeCell<KodiTreeItemValue<?>> {
             getStyleClass().remove("warning");
 
         } else {
-            graphicProperty().bind(item.graphicProperty());
-            textProperty().bind(Bindings.createStringBinding(() -> calculateMessageString(item), item.messageProperty()));
             if(item.isWarning()){
                 getStyleClass().add("warning");
             } else {
                 getStyleClass().remove("warning");
             }
+            item.warningProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+                    if(newValue != null && newValue){
+                        getStyleClass().add("warning");
+                    }
+                    else {
+                        getStyleClass().remove("warning");
+                    }
+                }
+            });
+            graphicProperty().bind(item.graphicProperty());
+            textProperty().bind(Bindings.createStringBinding(() -> calculateMessageString(item), item.messageProperty()));
         }
     }
 

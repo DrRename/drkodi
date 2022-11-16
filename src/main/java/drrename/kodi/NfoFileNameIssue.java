@@ -20,7 +20,7 @@
 
 package drrename.kodi;
 
-import drrename.util.ArrayUtil;
+import drrename.util.DrRenameUtil;
 import drrename.kodi.nfo.*;
 import drrename.model.RenamingPath;
 import lombok.Getter;
@@ -46,7 +46,7 @@ public class NfoFileNameIssue extends FxKodiIssue<NfoFileNameCheckResult> {
     @Override
     public void fix(NfoFileNameCheckResult result) throws FixFailedException {
         try {
-            ArrayUtil.rename(result.getNfoFiles().get(0), getMovieName() + KodiConstants.NFO_FILE_EXTENSION);
+            DrRenameUtil.rename(result.getNfoFiles().get(0), getMovieName() + KodiConstants.NFO_FILE_EXTENSION);
         } catch (IOException e) {
             throw new FixFailedException(e);
         }

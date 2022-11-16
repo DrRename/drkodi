@@ -20,7 +20,7 @@
 
 package drrename.ui.kodi;
 
-import drrename.util.ArrayUtil;
+import drrename.util.DrRenameUtil;
 import drrename.ui.FilterableTreeItem;
 import javafx.beans.Observable;
 import javafx.scene.control.TreeItem;
@@ -46,7 +46,7 @@ public class FilterableKodiTreeItem extends FilterableTreeItem<KodiTreeItemValue
     }
 
     protected Observable[] getExtractorCallback(TreeItem<KodiTreeItemValue<?>> item) {
-        return ArrayUtil.concatenate(new Observable[]{item.getValue().getRenamingPath().movieNameProperty(), item.getValue().warningProperty(), item.getValue().messageProperty()}, extractor);
+        return DrRenameUtil.concatenate(new Observable[]{item.getValue().getRenamingPath().movieNameProperty(), item.getValue().warningProperty(), item.getValue().messageProperty()}, extractor);
     }
 
     public void add(FilterableKodiTreeItem childItem) {

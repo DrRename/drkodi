@@ -21,8 +21,14 @@
 package drrename.kodi;
 
 import drrename.model.RenamingPath;
+import drrename.util.DrRenameUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Getter
 @Slf4j
@@ -41,7 +47,26 @@ public class MediaFileNameIssue extends FxKodiIssue<MediaFileNameCheckResult> {
 
     @Override
     public void fix(MediaFileNameCheckResult checkStatusResult) throws FixFailedException {
-throw new UnsupportedOperationException("Cannot fix");
+        log.debug("Fixing following files: {}", checkStatusResult.getMediaFiles());
+        for(Path file : checkResult.getMediaFiles()){
+            fixFile(file);
+        }
+    }
+
+    private void fixFile(Path file) throws FixFailedException {
+        if(Files.isDirectory(file)){
+            throw new IllegalArgumentException(file.getFileName() + " is a directory");
+        }
+        String fileNameString = file.getFileName().toString();
+        var baseName = FilenameUtils.getBaseName(fileNameString);
+        var extension = FilenameUtils.getExtension(fileNameString);
+        var newPath = file.resolveSibling(getMovieName() + "." + extension);
+        log.debug("Renaming from {} to {}", file, newPath);
+        try {
+            DrRenameUtil.rename(file, newPath.getFileName().toString());
+        } catch (IOException e) {
+            throw new FixFailedException(e);
+        }
     }
 
     @Override

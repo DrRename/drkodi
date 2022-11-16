@@ -20,7 +20,7 @@
 
 package drrename.kodi;
 
-import drrename.util.ArrayUtil;
+import drrename.util.DrRenameUtil;
 import drrename.config.TheMovieDbConfig;
 import drrename.kodi.nfo.MovieDbCheckType;
 import drrename.kodi.nfo.MovieDbLookupCheckResult;
@@ -74,11 +74,11 @@ public class MovieDbQuerier {
         var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);
 
         if(searchResult.getBody() != null && !searchResult.getBody().getResults().isEmpty()){
-            if(searchString.equals(searchResult.getBody().getResults().get(0).getTitle()) && year.equals(searchResult.getBody().getResults().get(0).getReleaseDate().getYear())){
+            if(searchString.equals(searchResult.getBody().getResults().get(0).getOriginalTitle()) && year.equals(searchResult.getBody().getResults().get(0).getReleaseDate().getYear())){
                 theMovieDbId.add(searchResult.getBody().getResults().get(0).getId());
                 return new MovieDbLookupCheckResult(MovieDbCheckType.ORIGINAL_TITEL, onlineTitles);
             }
-            List<SearchResultDto> subList = ArrayUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
+            List<SearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
             for(SearchResultDto searchResultDto : subList){
                 getOnlineTitles().add(buildNameString(searchResultDto.getTitle(), searchResultDto.getReleaseDate()));
                 getOnlineTitles().add(buildNameString(searchResultDto.getOriginalTitle(), searchResultDto.getReleaseDate()));
