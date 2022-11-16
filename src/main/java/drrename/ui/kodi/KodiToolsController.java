@@ -1,11 +1,29 @@
-package drrename.kodi;
+/*
+ *     Dr.Rename - A Minimalistic Batch Renamer
+ *
+ *     Copyright (C) 2022
+ *
+ *     This file is part of Dr.Rename.
+ *
+ *     You can redistribute it and/or modify it under the terms of the GNU Affero
+ *     General Public License as published by the Free Software Foundation, either
+ *     version 3 of the License, or (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful, but WITHOUT
+ *     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+ *     for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-import drrename.kodi.treeitem.FilterableKodiRootTreeItem;
-import drrename.kodi.treeitem.KodiTreeItemValue;
+package drrename.ui.kodi;
+
+import drrename.kodi.*;
 import drrename.ui.mainview.controller.TabController;
 import drrename.util.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
-import drrename.ui.mainview.StartDirectoryComponentController;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
@@ -17,7 +35,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;

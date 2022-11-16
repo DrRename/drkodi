@@ -26,3 +26,8 @@
 .text-input {
     -fx-prompt-text-fill: derive(-fx-control-inner-background,+80%);
 }
+
+.warning {
+    -fx-background-color: rgba(227, 163, 89, 0.58);
+    -fx-font-family: 'Open Sans SemiBold';
+}

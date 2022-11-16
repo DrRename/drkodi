@@ -18,13 +18,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.ui.kodi;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.MediaFileNameCheckResult;
 import drrename.kodi.MediaFileNameIssue;
 import drrename.kodi.WarningsConfig;
-import drrename.kodi.treeitem.KodiTreeItemValue;
 import drrename.model.RenamingPath;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

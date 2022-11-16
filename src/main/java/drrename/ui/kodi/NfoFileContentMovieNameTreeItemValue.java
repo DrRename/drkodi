@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.ui.kodi;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.NfoFileNameCheckResult;

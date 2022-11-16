@@ -18,24 +18,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.ui.kodi;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.WarningsConfig;
+import drrename.model.RenamingPath;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.TreeItem;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 
-/**
- * {@link FilterableKodiRootTreeItem}'s value.
- *
- * @see FilterableKodiRootTreeItem
- */
-public class KodiRootTreeItemValue extends KodiTreeItemValue<Object> {
+@Slf4j
+public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
 
-    public KodiRootTreeItemValue(Executor executor, WarningsConfig warningsConfig) {
-        super(null, executor, warningsConfig);
+    public MovieTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
+        super(moviePath, executor, warningsConfig);
         setGraphic(null);
     }
 
@@ -45,12 +44,23 @@ public class KodiRootTreeItemValue extends KodiTreeItemValue<Object> {
         initWarning(treeItem);
     }
 
-    protected void initWarning(FilterableKodiTreeItem treeItem) {
-        warningProperty().bind(Bindings.createBooleanBinding(() -> calculateWarning(treeItem), treeItem.getSourceChildren()));
+    @Override
+    protected String buildNewMessage(Boolean newValue) {
+        return null;
     }
 
-    protected boolean calculateWarning(FilterableKodiTreeItem treeItem) {
-        return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
+    @Override
+    public Object checkStatus() throws IOException {
+        return null;
+    }
+
+    @Override
+    public void fix(Object hans) throws FixFailedException {
+        throw new IllegalStateException("Cannot fix");
+    }
+
+    @Override
+    public void updateStatus(Object checkStatusResult) {
     }
 
     @Override
@@ -60,26 +70,14 @@ public class KodiRootTreeItemValue extends KodiTreeItemValue<Object> {
 
     @Override
     public String getIdentifier() {
-        return "Analysis";
+        return getRenamingPath().getMovieName();
     }
 
-    @Override
-    protected String buildNewMessage(Boolean newValue) {
-        return null;
+    protected void initWarning(FilterableKodiTreeItem treeItem) {
+        warningProperty().bind(Bindings.createBooleanBinding(() -> calculateWarning(treeItem), treeItem.getSourceChildren()));
     }
 
-    @Override
-    public Object checkStatus() {
-        return null;
-    }
-
-    @Override
-    public void fix(Object checkStatusResult) throws FixFailedException {
-        // Ignore
-    }
-
-    @Override
-    public void updateStatus(Object checkStatusResult) {
-       // Ignore
+    protected boolean calculateWarning(FilterableKodiTreeItem treeItem) {
+        return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
     }
 }
