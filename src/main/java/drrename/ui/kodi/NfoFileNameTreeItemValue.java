@@ -18,11 +18,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.ui.kodi;
 
 import drrename.kodi.*;
 import drrename.kodi.nfo.NfoFileContentType;
-import drrename.kodi.treeitem.KodiTreeItemValue;
 import drrename.model.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
@@ -44,8 +43,6 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
         delegate = new NfoFileNameIssue(moviePath);
         triggerStatusCheck();
     }
-
-
 
     private void triggerFixer(){
         var fixableFixer = new IssueFixer<>(this, delegate.getCheckResult());

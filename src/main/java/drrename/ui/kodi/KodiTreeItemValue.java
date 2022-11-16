@@ -18,16 +18,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.ui.kodi;
 
 import drrename.kodi.*;
-import drrename.kodi.treeitem.FilterableKodiTreeItem;
+import drrename.ui.kodi.FilterableKodiTreeItem;
 import drrename.model.RenamingPath;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;

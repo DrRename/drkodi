@@ -18,13 +18,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.treeitem;
+package drrename.ui.kodi;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.SubdirsCheckResult;
 import drrename.kodi.SubdirsChecker;
 import drrename.kodi.WarningsConfig;
-import drrename.kodi.treeitem.KodiTreeItemValue;
 import drrename.util.ArrayUtil;
 import drrename.model.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
