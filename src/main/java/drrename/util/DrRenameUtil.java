@@ -32,7 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ArrayUtil {
+public class DrRenameUtil {
 
     public static <T> T[] concatenate(T[] a, T[] b) {
         if (a == null) {

@@ -39,7 +39,6 @@ import java.util.List;
 public class MediaFileNameChecker {
 
     public MediaFileNameCheckResult checkStatus(Path directory) {
-//        log.debug("Triggering status check on thread {}", Thread.currentThread());
         String movieName = directory.getFileName().toString();
         try {
             List<Path> mediaFiles = findAllVideoFiles(directory);
@@ -67,7 +66,7 @@ public class MediaFileNameChecker {
                 if(Files.isRegularFile(child)){
                     var mediaType = new FileTypeByMimeProvider().getFileType(child);
                     if(mediaType.startsWith("video")){
-                        result.add(child.getFileName());
+                        result.add(child);
                     }
                 }
             }
