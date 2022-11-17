@@ -30,6 +30,10 @@
     src: url('opensans_bold.ttf');
 }
 
-.tree-cell {
+.kodi-tree-cell:warning {
+    -fx-background-color: rgba(227, 163, 89, 0.58);
+}
 
+.warning-text {
+    -fx-font-family: 'Open Sans SemiBold';
 }

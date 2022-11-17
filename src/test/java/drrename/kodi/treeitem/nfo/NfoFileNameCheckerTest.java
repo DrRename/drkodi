@@ -19,7 +19,7 @@
 
 package drrename.kodi.treeitem.nfo;
 
-import drrename.kodi.nfo.NfoFileContentType;
+import drrename.kodi.nfo.NfoFileCheckResultType;
 import drrename.kodi.nfo.NfoFileNameChecker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,18 +42,18 @@ class NfoFileNameCheckerTest {
     @Test
     void checkNoFile() {
         var result = new NfoFileNameChecker().checkDir(Paths.get("src/test/resources/kodi/Maleficent 2 (2019)"));
-        assertEquals(NfoFileContentType.NO_FILE, result.getType());
+        assertEquals(NfoFileCheckResultType.NO_FILE, result.getType());
     }
 
     @Test
     void checkMovieName() {
         var result = new NfoFileNameChecker().checkDir(Paths.get("src/test/resources/kodi/test01"));
-        assertEquals(NfoFileContentType.MOVIE_NAME, result.getType());
+        assertEquals(NfoFileCheckResultType.MOVIE_NAME, result.getType());
     }
 
     @Test
     void checkDefaultName() {
         var result = new NfoFileNameChecker().checkDir(Paths.get("src/test/resources/kodi/test02"));
-        assertEquals(NfoFileContentType.DEFAULT_NAME, result.getType());
+        assertEquals(NfoFileCheckResultType.DEFAULT_NAME, result.getType());
     }
 }

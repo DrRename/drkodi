@@ -26,14 +26,14 @@ import java.nio.file.Path;
 public class NfoContentTitleChecker extends NfoContentChecker {
 
     @Override
-    protected NfoFileContentType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) {
+    protected NfoFileCheckResultType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) {
         if(xmlModel.getMovie().getTitle() == null){
-            return NfoFileContentType.MISSING_TITLE;
+            return NfoFileCheckResultType.MISSING_TITLE;
         }
         if(verifyTitle(moviePath, xmlModel)){
-            return NfoFileContentType.VALID_TITLE;
+            return NfoFileCheckResultType.VALID_TITLE;
         }
-        return NfoFileContentType.INVALID_TITLE;
+        return NfoFileCheckResultType.INVALID_TITLE;
     }
 
     static boolean verifyTitle(Path moviePath, NfoRoot xmlFileContent) {

@@ -26,8 +26,11 @@ public class WarningsConfig {
 
     private final BooleanProperty missingNfoFileIsWarning;
 
+    private final BooleanProperty defaultNfoFileNameIsWarning;
+
     public WarningsConfig(){
         this.missingNfoFileIsWarning = new SimpleBooleanProperty();
+        this.defaultNfoFileNameIsWarning = new SimpleBooleanProperty();
     }
 
     // Getter / Setter //
@@ -42,5 +45,17 @@ public class WarningsConfig {
 
     public void setMissingNfoFileIsWarning(boolean missingNfoFileIsWarning) {
         this.missingNfoFileIsWarning.set(missingNfoFileIsWarning);
+    }
+
+    public boolean isDefaultNfoFileNameIsWarning() {
+        return defaultNfoFileNameIsWarning.get();
+    }
+
+    public BooleanProperty defaultNfoFileNameIsWarningProperty() {
+        return defaultNfoFileNameIsWarning;
+    }
+
+    public void setDefaultNfoFileNameIsWarning(boolean defaultNfoFileNameIsWarning) {
+        this.defaultNfoFileNameIsWarning.set(defaultNfoFileNameIsWarning);
     }
 }

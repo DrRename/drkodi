@@ -23,46 +23,114 @@ package drrename.ui.kodi;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Control;
-import javafx.scene.control.TreeCell;
+import javafx.beans.value.WeakChangeListener;
+import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.HBox;
+import lombok.extern.slf4j.Slf4j;
 
+import java.nio.file.Path;
+
+@Slf4j
 public class KodiTreeCell<R> extends TreeCell<KodiTreeItemValue<R>> {
+
+    static final PseudoClass WARNING = PseudoClass.getPseudoClass("warning");
+
+    private final ChangeListener<Boolean> warningListener = (obs, oldVal, newVal) -> {
+        pseudoClassStateChanged(WARNING, newVal);
+    };
+
+    // use a weak listener to avoid a memory leak
+    private final WeakChangeListener<Boolean> weakWarningListener = new WeakChangeListener<>(warningListener);
+
+    private ChangeListener<KodiTreeItemValue<R>> itemListener = new ChangeListener<KodiTreeItemValue<R>>() {
+        @Override
+        public void changed(ObservableValue<? extends KodiTreeItemValue<R>> observable, KodiTreeItemValue<R> oldVal, KodiTreeItemValue<R> newVal) {
+            if (oldVal != null) {
+                oldVal.warningProperty().removeListener(weakWarningListener);
+            }
+            if (newVal != null) {
+                newVal.warningProperty().addListener(weakWarningListener);
+                // need to "observe" the initial NodeType of the new Node item.
+                // You could call the listener manually to avoid code duplication
+                pseudoClassStateChanged(WARNING, newVal.isWarning());
+            } else {
+                // no item in this cell so deactivate all PseudoClass's
+                pseudoClassStateChanged(WARNING, false);
+            }
+        }
+    };
 
     public KodiTreeCell(Control treeView) {
         prefWidthProperty().bind(treeView.widthProperty().subtract(20.0));
+        getStyleClass().add("kodi-tree-cell");
+        itemProperty().addListener(itemListener);
     }
 
     @Override
-    protected void updateItem(KodiTreeItemValue<R> item, boolean empty) {
+    public void updateItem(KodiTreeItemValue<R> item, boolean empty) {
 
         super.updateItem(item, empty);
-        if (item == null) {
+        if (item == null || empty) {
             textProperty().unbind();
             graphicProperty().unbind();
             setText(null);
             setGraphic(null);
-            getStyleClass().remove("warning");
-
+            setContextMenu(null);
         } else {
-            if(item.isWarning()){
-                getStyleClass().add("warning");
-            } else {
-                getStyleClass().remove("warning");
-            }
-            item.warningProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-                    if(newValue != null && newValue){
-                        getStyleClass().add("warning");
-                    }
-                    else {
-                        getStyleClass().remove("warning");
-                    }
-                }
-            });
-            graphicProperty().bind(item.graphicProperty());
+//            if (item.getRenamingPath() != null) {
+//                // for now, only MacOS supported for opening the system explorer
+//                if (SystemUtils.IS_OS_MAC) {
+//                    setContextMenu(buildContextMenu(item.getRenamingPath().getOldPath()));
+//                }
+//            }
+            graphicProperty().bind(Bindings.createObjectBinding(() -> buildGraphic(item), item.graphicProperty()));
             textProperty().bind(Bindings.createStringBinding(() -> calculateMessageString(item), item.messageProperty()));
         }
+    }
+
+    private Node buildGraphic(KodiTreeItemValue<R> item) {
+//        if (item instanceof MovieTreeItemValue item2) {
+//            HBox boxx = new HBox(2);
+//            boxx.getChildren().add(item2.getGraphic());
+//            Button button2 = new Button("Rename");
+//            button2.setOnAction(new EventHandler<ActionEvent>() {
+//                @Override
+//                public void handle(ActionEvent event) {
+//                    startEdit();
+//                }
+//            });
+//            boxx.getChildren().add(button2);
+//            return boxx;
+//        }
+        return item.getGraphic();
+    }
+
+    private void contextMenuRequested(ContextMenuEvent contextMenuEvent, Path path) {
+        if (contextMenuEvent.getTarget() instanceof Node node) {
+            log.debug("Showing context menu at X:{},Y:{}", contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            var menu = buildContextMenu(path);
+            menu.setX(contextMenuEvent.getScreenX());
+            menu.setY(contextMenuEvent.getScreenY());
+            menu.show(node.getScene().getWindow());
+        }
+    }
+
+    private ContextMenu buildContextMenu(Path path) {
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem menuItem1 = new MenuItem("Open with system explorer");
+        menuItem1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+        contextMenu.getItems().add(menuItem1);
+        return contextMenu;
     }
 
     private String calculateMessageString(KodiTreeItemValue<?> item) {

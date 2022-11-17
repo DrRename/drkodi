@@ -29,30 +29,30 @@ import java.nio.file.Path;
 @Slf4j
 public abstract class NfoContentChecker extends AbstractNfoFileChecker {
 
-    public NfoFileContentType checkFile(String movieName, Path nfoFile){
+    public NfoFileCheckResultType checkFile(String movieName, Path nfoFile){
         if(Files.notExists(nfoFile)){
-            return NfoFileContentType.NO_FILE;
+            return NfoFileCheckResultType.NO_FILE;
         }
         if(!Files.isReadable(nfoFile)){
-            return NfoFileContentType.EXCEPTION;
+            return NfoFileCheckResultType.EXCEPTION;
         }
         if(!Files.isRegularFile(nfoFile)){
-            return NfoFileContentType.NOT_A_FILE;
+            return NfoFileCheckResultType.NOT_A_FILE;
         }
         try {
             NfoRoot xmlModel = new NfoFileParser().parse(nfoFile);
             if(xmlModel == null || (xmlModel.getMovie() == null && xmlModel.getUrl() == null)){
-                return NfoFileContentType.INVALID_FILE;
+                return NfoFileCheckResultType.INVALID_FILE;
             }
             if(xmlModel.getMovie() == null && xmlModel.getUrl() != null){
-                return NfoFileContentType.URL_ONLY_FILE;
+                return NfoFileCheckResultType.URL_ONLY_FILE;
             }
             return doCheckNfoFile(nfoFile.getParent(), xmlModel);
         } catch (IOException e) {
             log.debug(e.getLocalizedMessage());
-            return NfoFileContentType.EXCEPTION;
+            return NfoFileCheckResultType.EXCEPTION;
         }
     }
 
-    protected abstract NfoFileContentType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) throws IOException;
+    protected abstract NfoFileCheckResultType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) throws IOException;
 }

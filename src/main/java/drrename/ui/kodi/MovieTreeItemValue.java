@@ -24,10 +24,20 @@ import drrename.kodi.FixFailedException;
 import drrename.kodi.WarningsConfig;
 import drrename.model.RenamingPath;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
+import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SystemUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.concurrent.Executor;
 
 @Slf4j
@@ -35,7 +45,26 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
 
     public MovieTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath, executor, warningsConfig);
-        setGraphic(null);
+    }
+
+    @Override
+    protected HBox buildGraphic() {
+
+        HBox box = new HBox(2);
+
+        if(SystemUtils.IS_OS_MAC) {
+            Button button = new Button("Open in finder");
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    runOpenFolderCommandMacOs(getRenamingPath().getOldPath());
+                }
+            });
+           box.getChildren().add(button);
+            return box;
+        }
+        return null;
+
     }
 
     @Override
@@ -79,5 +108,33 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
 
     protected boolean calculateWarning(FilterableKodiTreeItem treeItem) {
         return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
+    }
+
+    private void runOpenFolderCommandMacOs(Path path) {
+        runCommand(new String[]{"open", "-R", path.toString()});
+    }
+
+    private void runCommand(String[] command) {
+        log.debug("Running {}", Arrays.toString(command));
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                log.debug("Process out: {}", line);
+            }
+            final BufferedReader bufferedReader2 = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String line2;
+            while ((line2 = bufferedReader2.readLine()) != null) {
+                log.debug("Process err: {}", line2);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public HBox getGraphic() {
+        return (HBox) super.getGraphic();
     }
 }

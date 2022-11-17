@@ -20,7 +20,7 @@
 package drrename.kodi.treeitem.nfo;
 
 import drrename.kodi.nfo.NfoContentYearChecker;
-import drrename.kodi.nfo.NfoFileContentType;
+import drrename.kodi.nfo.NfoFileCheckResultType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,24 +42,24 @@ class NfoContentYearCheckerTest {
     @Test
     void checkValidFile() {
         var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/Some Movie (2000)/movie.nfo"));
-        assertEquals(NfoFileContentType.VALID_YEAR, result);
+        assertEquals(NfoFileCheckResultType.VALID_YEAR, result);
     }
 
     @Test
     void checkInValidFile() {
         var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/Some Movie (2000)/wrong-format.nfo"));
-        assertEquals(NfoFileContentType.INVALID_FILE, result);
+        assertEquals(NfoFileCheckResultType.INVALID_FILE, result);
     }
 
     @Test
     void checkUrlOnlyFile() {
         var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/UrlOnlyMovie/movie.nfo"));
-        assertEquals(NfoFileContentType.URL_ONLY_FILE, result);
+        assertEquals(NfoFileCheckResultType.URL_ONLY_FILE, result);
     }
 
     @Test
     void checkYearlessFile() {
         var result = new NfoContentYearChecker().checkFile(null,Paths.get("src/test/resources/kodi/Yearless Movie/movie.nfo"));
-        assertEquals(NfoFileContentType.MISSING_YEAR, result);
+        assertEquals(NfoFileCheckResultType.MISSING_YEAR, result);
     }
 }

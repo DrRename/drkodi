@@ -73,7 +73,7 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
             return false;
         }
 //        log.debug("Calculating warning");
-        return getCheckResult().getType().isWarning(getWarningsConfig().isMissingNfoFileIsWarning());
+        return getCheckResult().getType().isWarning(getWarningsConfig());
     }
 
     @Override

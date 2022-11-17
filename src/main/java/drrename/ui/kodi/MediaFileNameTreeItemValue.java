@@ -51,7 +51,7 @@ public class MediaFileNameTreeItemValue extends KodiTreeItemValue<MediaFileNameC
         setCheckResult(result);
         delegate.updateStatus(result);
         setWarning(calculateWarning());
-        setFixable(isWarning());
+        setFixable(isWarning() && !result.getMediaFiles().isEmpty());
         if (isFixable()) {
             setGraphic(buildGraphic2());
         } else {

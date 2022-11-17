@@ -26,6 +26,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TreeItem;
+import org.apache.commons.lang3.SystemUtils;
 
 public class FXUtil {
     public static ScrollBar getListViewScrollBar(final ListView<?> listView) {
@@ -42,8 +43,7 @@ public class FXUtil {
     }
 
     public static void initAppMenu(MenuBar menuBar) {
-        final String os = System.getProperty("os.name");
-        if (os != null && os.startsWith("Mac")) {
+        if (SystemUtils.IS_OS_MAC) {
             menuBar.useSystemMenuBarProperty().set(true);
         }
     }
