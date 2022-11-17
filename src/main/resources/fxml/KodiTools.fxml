@@ -42,6 +42,7 @@
                         <VBox spacing="4">
                             <CheckBox fx:id="checkBoxHideEmpty" text="Show only warnings"/>
                             <CheckBox fx:id="checkBoxMissingNfoFileIsAWarning" text="Missing NFO file is a warning"/>
+                            <CheckBox fx:id="checkBoxDefaultNfoFileNameIsAWarning" text="Default NFO file name is a warning"/>
                         </VBox>
                 </HBox>
                 </center>

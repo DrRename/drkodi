@@ -19,30 +19,27 @@
 
 package drrename.kodi.nfo;
 
-import drrename.kodi.NfoFileNameCheckResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 
 
 @Slf4j
 public class NfoFileNameChecker extends AbstractNfoFileChecker {
 
-    protected NfoFileContentType checkFile(String movieName, Path nfoFile) {
+    protected NfoFileCheckResultType checkFile(String movieName, Path nfoFile) {
         if (!Files.isRegularFile(nfoFile)) {
             throw new IllegalArgumentException(nfoFile.getFileName().toString() + " is not a file");
         }
         String nfoFileName = nfoFile.getFileName().toString();
         if (NfoFiles.DEFAULT_NAME.equals(nfoFileName)) {
-            return NfoFileContentType.DEFAULT_NAME;
+            return NfoFileCheckResultType.DEFAULT_NAME;
         } else if (FilenameUtils.getBaseName(nfoFileName).equals(movieName)) {
-            return NfoFileContentType.MOVIE_NAME;
+            return NfoFileCheckResultType.MOVIE_NAME;
         } else {
-            return NfoFileContentType.INVALID_NAME;
+            return NfoFileCheckResultType.INVALID_NAME;
         }
     }
 

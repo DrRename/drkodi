@@ -29,6 +29,7 @@ import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,6 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -78,6 +81,8 @@ public class KodiToolsController implements Initializable {
     public HBox goCancelButtonsComponent;
 
     public CheckBox checkBoxMissingNfoFileIsAWarning;
+
+    public CheckBox checkBoxDefaultNfoFileNameIsAWarning;
 
     private Stage mainStage;
 
@@ -140,8 +145,11 @@ public class KodiToolsController implements Initializable {
             }
         });
 
+
+
         warningsConfig = new WarningsConfig();
         warningsConfig.missingNfoFileIsWarningProperty().bind(checkBoxMissingNfoFileIsAWarning.selectedProperty());
+        warningsConfig.defaultNfoFileNameIsWarningProperty().bind(checkBoxDefaultNfoFileNameIsAWarning.selectedProperty());
     }
 
     private TreeCell<KodiTreeItemValue<?>> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue<?>> kodiTreeItemContentTreeView) {

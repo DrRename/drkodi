@@ -21,7 +21,6 @@
 package drrename.ui.kodi;
 
 import drrename.kodi.*;
-import drrename.kodi.nfo.NfoFileContentType;
 import drrename.model.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
@@ -56,28 +55,29 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
     }
 
     protected boolean calculateWarning() {
-//        log.debug("Calculating warning");
         if (delegate.getCheckResult() == null) {
             return false;
         }
-        if (NfoFileContentType.NO_FILE.equals(delegate.getCheckResult().getType()) && !getWarningsConfig().isMissingNfoFileIsWarning()) {
-            return false;
-        }
-        return !NfoFileContentType.MOVIE_NAME.equals(delegate.getCheckResult().getType());
+       return delegate.getCheckResult().getType().isWarning(getWarningsConfig());
     }
 
     protected String buildNewMessage(Boolean newValue) {
         if (delegate.getCheckResult() == null) {
             return null;
         }
-        if (newValue) {
-            return (delegate.getCheckResult().getType().toString() + getWarningAdditionalInfo());
+        StringBuilder sb = new StringBuilder(delegate.getCheckResult().getType().toString());
+        var additionalInfo = getWarningAdditionalInfo();
+        if(additionalInfo != null){
+            sb.append(": ");
+            sb.append(additionalInfo);
+        } else {
+            sb.append(".");
         }
-        return (delegate.getCheckResult().getType() + ".");
+        return sb.toString();
     }
 
     private String getWarningAdditionalInfo() {
-        return delegate.getCheckResult().getNfoFiles().isEmpty() ? "." : ": " + delegate.getCheckResult().getNfoFiles().stream().map(f -> f.getFileName().toString()).collect(Collectors.joining(", "));
+        return delegate.getCheckResult().getNfoFiles().isEmpty() ? null : delegate.getCheckResult().getNfoFiles().stream().map(f -> f.getFileName().toString()).collect(Collectors.joining(", "));
     }
 
     @Override

@@ -20,7 +20,7 @@
 
 package drrename.kodi;
 
-import drrename.kodi.nfo.NfoFileContentType;
+import drrename.kodi.nfo.NfoFileCheckResultType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -33,11 +33,11 @@ import java.util.List;
 @Setter
 public class NfoFileNameCheckResult {
 
-    private final NfoFileContentType type;
+    private final NfoFileCheckResultType type;
 
     private final List<Path> nfoFiles;
 
-    public NfoFileNameCheckResult(NfoFileContentType type, Path path){
+    public NfoFileNameCheckResult(NfoFileCheckResultType type, Path path){
         this(type, List.of(path));
     }
 

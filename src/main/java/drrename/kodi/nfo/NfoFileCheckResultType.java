@@ -19,36 +19,48 @@
 
 package drrename.kodi.nfo;
 
-public enum NfoFileContentType {
+import drrename.kodi.WarningsConfig;
+
+public enum NfoFileCheckResultType {
     NO_FILE("No file"){
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
-            return missingNfoFileIsWarning;
+        public boolean isWarning(WarningsConfig warningsConfig) {
+            return warningsConfig.isMissingNfoFileIsWarning();
         }
     },
-    DEFAULT_NAME("Default file name"),
+    DEFAULT_NAME("Default file name"){
+        @Override
+        public boolean isWarning(WarningsConfig warningsConfig) {
+            return warningsConfig.isDefaultNfoFileNameIsWarning();
+        }
+    },
     MOVIE_NAME("File name matches movie name"),
     INVALID_NAME("Invalid file name"){
-    public boolean isWarning(boolean missingNfoFileIsWarning) {
+        @Override
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     },
     INVALID_FILE("Invalid file"){
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        @Override
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     }
     , INVALID_YEAR("Invalid year"){
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        @Override
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     }, VALID_YEAR("Valid year"),
     EXCEPTION("Could not parse file"){
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        @Override
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     },
     MULTIPLE_FILES("Multiple files"){
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        @Override
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     },
@@ -56,41 +68,41 @@ public enum NfoFileContentType {
     URL_ONLY_FILE("URL-only file"),
     MISSING_YEAR("No year"){
         @Override
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     }, VALID_TITLE("Valid title"),
     INVALID_TITLE("Title does not match folder name"){
         @Override
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     }, VALID_POSTER("Valid Poster"),
     INVALID_POSTER("Invalid Poster"){
         @Override
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     }, NOT_A_FILE("Not a file"){
         @Override
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     }, MISSING_TITLE("Missing title"){
         @Override
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     }, MISSING_POSTER("Missing poster"){
         @Override
-        public boolean isWarning(boolean missingNfoFileIsWarning) {
+        public boolean isWarning(WarningsConfig warningsConfig) {
             return true;
         }
     };
 
     private final String name;
 
-    NfoFileContentType(String name){
+    NfoFileCheckResultType(String name){
         this.name = name;
     }
 
@@ -99,7 +111,7 @@ public enum NfoFileContentType {
         return name;
     }
 
-    public boolean isWarning(boolean missingNfoFileIsWarning) {
+    public boolean isWarning(WarningsConfig warningsConfig) {
         return false;
     }
 }

@@ -35,18 +35,18 @@ public abstract class AbstractNfoFileChecker {
         try {
             var nfoFiles = new NfoFileCollector().collectNfoFiles(directory);
             if (nfoFiles.isEmpty()) {
-                return new NfoFileNameCheckResult(NfoFileContentType.NO_FILE, Collections.emptyList());
+                return new NfoFileNameCheckResult(NfoFileCheckResultType.NO_FILE, Collections.emptyList());
             }
             if (nfoFiles.size() > 1) {
-                return new NfoFileNameCheckResult(NfoFileContentType.MULTIPLE_FILES, nfoFiles);
+                return new NfoFileNameCheckResult(NfoFileCheckResultType.MULTIPLE_FILES, nfoFiles);
             } else {
                 return new NfoFileNameCheckResult(checkFile(movieName, nfoFiles.get(0)), nfoFiles.get(0));
             }
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);
-            return new NfoFileNameCheckResult(NfoFileContentType.EXCEPTION, Collections.emptyList());
+            return new NfoFileNameCheckResult(NfoFileCheckResultType.EXCEPTION, Collections.emptyList());
         }
     }
 
-    protected abstract NfoFileContentType checkFile(String movieName, Path nfoFile);
+    protected abstract NfoFileCheckResultType checkFile(String movieName, Path nfoFile);
 }

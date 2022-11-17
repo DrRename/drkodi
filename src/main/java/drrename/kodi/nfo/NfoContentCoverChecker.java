@@ -28,14 +28,14 @@ import java.nio.file.Path;
 
 public class NfoContentCoverChecker extends NfoContentChecker {
     @Override
-    protected NfoFileContentType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) throws IOException {
+    protected NfoFileCheckResultType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) throws IOException {
         if(xmlModel.getMovie().getArt() == null || xmlModel.getMovie().getArt().getPoster() == null){
-            return NfoFileContentType.MISSING_POSTER;
+            return NfoFileCheckResultType.MISSING_POSTER;
         }
         if(verifyCoverFront(moviePath, xmlModel)){
-            return NfoFileContentType.VALID_POSTER;
+            return NfoFileCheckResultType.VALID_POSTER;
         }
-        return NfoFileContentType.INVALID_POSTER;
+        return NfoFileCheckResultType.INVALID_POSTER;
     }
 
     static boolean verifyCoverFront(Path moviePath, NfoRoot xmlFileContent) {

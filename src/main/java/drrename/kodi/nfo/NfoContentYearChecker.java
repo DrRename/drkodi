@@ -27,14 +27,14 @@ import java.nio.file.Path;
 public class NfoContentYearChecker extends NfoContentChecker {
 
     @Override
-    protected NfoFileContentType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) throws IOException {
+    protected NfoFileCheckResultType doCheckNfoFile(Path moviePath, NfoRoot xmlModel) throws IOException {
         if(xmlModel.getMovie().getYear() == null){
-            return NfoFileContentType.MISSING_YEAR;
+            return NfoFileCheckResultType.MISSING_YEAR;
         }
         if(verifyYear(moviePath, xmlModel)){
-            return NfoFileContentType.VALID_YEAR;
+            return NfoFileCheckResultType.VALID_YEAR;
         }
-        return NfoFileContentType.INVALID_YEAR;
+        return NfoFileCheckResultType.INVALID_YEAR;
     }
 
     private boolean verifyYear(Path moviePath, NfoRoot xmlFileContent) {

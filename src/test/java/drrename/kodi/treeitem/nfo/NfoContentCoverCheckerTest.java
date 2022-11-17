@@ -20,7 +20,7 @@
 package drrename.kodi.treeitem.nfo;
 
 import drrename.kodi.nfo.NfoContentCoverChecker;
-import drrename.kodi.nfo.NfoFileContentType;
+import drrename.kodi.nfo.NfoFileCheckResultType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +42,6 @@ class NfoContentCoverCheckerTest {
     @Test
     void test01(){
         var result = new NfoContentCoverChecker().checkFile(null,Paths.get("src/test/resources/kodi/Cover Test Movie (1999)/movie.nfo"));
-        assertEquals(NfoFileContentType.MISSING_POSTER, result);
+        assertEquals(NfoFileCheckResultType.MISSING_POSTER, result);
     }
 }

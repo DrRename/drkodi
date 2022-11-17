@@ -21,10 +21,14 @@
 package drrename.ui.kodi;
 
 import drrename.kodi.*;
-import drrename.ui.kodi.FilterableKodiTreeItem;
 import drrename.model.RenamingPath;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -58,6 +62,8 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
     private ChangeListener<? super Boolean> missingNfoFileIsWarningListener;
 
+    private ChangeListener<? super Boolean> defaultNfoFileNameIsWarningListener;
+
     public KodiTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath);
         this.executor = executor;
@@ -67,7 +73,11 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         this.treeItem = new SimpleObjectProperty<>();
         this.checkResult = new SimpleObjectProperty<>();
         this.missingNfoFileIsWarningListener = (ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            if(newValue != null)
+            if (newValue != null)
+                updateStatus(getCheckResult());
+        };
+        this.defaultNfoFileNameIsWarningListener = (ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            if (newValue != null)
                 updateStatus(getCheckResult());
         };
         init();
@@ -77,7 +87,7 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     protected void init() {
         fixableProperty().addListener((observable, oldValue, newValue) -> updateButtonText());
         warningProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) {
+            if (newValue != null) {
                 updateButtonText();
                 setMessage(buildNewMessage(newValue));
             }
@@ -86,11 +96,15 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     }
 
     public void setWarningsConfig(WarningsConfig warningsConfig) {
-        if(this.warningsConfig != null)
+        if (this.warningsConfig != null) {
             this.warningsConfig.missingNfoFileIsWarningProperty().removeListener(missingNfoFileIsWarningListener);
+            this.warningsConfig.defaultNfoFileNameIsWarningProperty().removeListener(defaultNfoFileNameIsWarningListener);
+        }
         this.warningsConfig = warningsConfig;
-        if(this.warningsConfig != null)
+        if (this.warningsConfig != null) {
             this.warningsConfig.missingNfoFileIsWarningProperty().addListener(missingNfoFileIsWarningListener);
+            this.warningsConfig.defaultNfoFileNameIsWarningProperty().addListener(defaultNfoFileNameIsWarningListener);
+        }
     }
 
     public void triggerStatusCheck() {
