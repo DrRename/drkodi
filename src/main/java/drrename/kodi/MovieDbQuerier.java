@@ -75,14 +75,10 @@ public class MovieDbQuerier {
 
         if(searchResult.getBody() != null && !searchResult.getBody().getResults().isEmpty()){
             for(SearchResultDto result2 : searchResult.getBody().getResults()){
-                if(result2.getReleaseDate() != null && (searchString.equals(result2.getOriginalTitle()) && year.equals(result2.getReleaseDate().getYear()))){
+                if(result2.getReleaseDate() != null && year != null && (searchString.equals(result2.getOriginalTitle()) && year.equals(result2.getReleaseDate().getYear()))){
                     theMovieDbId.add(result2.getId());
                     return new MovieDbLookupCheckResult(MovieDbCheckType.ORIGINAL_TITEL, onlineTitles);
                 }
-            }
-            if(searchString.equals(searchResult.getBody().getResults().get(0).getOriginalTitle()) && year.equals(searchResult.getBody().getResults().get(0).getReleaseDate().getYear())){
-                theMovieDbId.add(searchResult.getBody().getResults().get(0).getId());
-                return new MovieDbLookupCheckResult(MovieDbCheckType.ORIGINAL_TITEL, onlineTitles);
             }
             List<SearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
             for(SearchResultDto searchResultDto : subList){

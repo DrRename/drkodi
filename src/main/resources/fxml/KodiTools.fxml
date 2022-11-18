@@ -34,7 +34,7 @@
             <CheckBox fx:id="checkBoxDefaultNfoFileNameIsAWarning" text="Default NFO file name is a warning"/>
         </VBox>
     </HBox>
-    <HBox spacing="4" alignment="CENTER_RIGHT" VBox.vgrow="NEVER">
+    <HBox spacing="4" alignment="CENTER" maxWidth="Infinity">
         <ProgressBar fx:id="progressBar" maxWidth="Infinity"/>
     </HBox>
 </VBox>
