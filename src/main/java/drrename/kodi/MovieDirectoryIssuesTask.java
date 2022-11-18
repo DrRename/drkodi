@@ -47,6 +47,7 @@ class MovieDirectoryIssuesTask extends Task<Void> {
     protected Void call() throws Exception {
         verifyState();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
+
             for (Path path : ds) {
                 if (Thread.interrupted()) {
                     log.info("Cancelling");

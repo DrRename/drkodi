@@ -86,8 +86,6 @@ public class KodiToolsController implements Initializable {
 
     Stage imageStage;
 
-    public GoCancelButtonsComponentController goCancelButtonsComponentController;
-
     private final MovieDirectoryCollectorService service;
 
     private final Executor executor;
@@ -117,13 +115,12 @@ public class KodiToolsController implements Initializable {
             service.setMovieDbClientFactory(movieDbClientFactory);
             service.setWarningsConfig(warningsConfig);
             service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
-            progressBar.progressProperty().bind(service.progressProperty());
-            progressBar.visibleProperty().bind(service.runningProperty());
+
         }
 
         @Override
         protected void prepareUi() {
-            treeRoot.getSourceChildren().clear();
+            clearUi();
         }
 
         @Override
@@ -151,14 +148,13 @@ public class KodiToolsController implements Initializable {
         mainStage.setScene(new Scene(root));
         mainStage.setTitle("Kodi Tools");
 
-
-
         initTreeRoot();
-
-
 
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
+
+        progressBar.progressProperty().bind(service.progressProperty());
+        progressBar.visibleProperty().bind(service.runningProperty());
 
         tabController.startDirectoryComponentController.readyProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -217,7 +213,11 @@ public class KodiToolsController implements Initializable {
     }
 
     private void clearUi() {
-        initTreeRoot();
+
+        treeRoot.getSourceChildren().clear();
+        // for some reason, always one element is left in the children list
+        treeRoot.getChildren().clear();
+        log.debug("UI cleared. Elements left: {}, {}", treeRoot.getSourceChildren(), treeRoot.getChildren());
 
     }
 

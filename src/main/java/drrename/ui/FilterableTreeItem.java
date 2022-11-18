@@ -59,18 +59,6 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
     public FilterableTreeItem(T value, Node graphic) {
         super(value, graphic);
         sourceChildren = FXCollections.observableList(new ArrayList<>(){
-            @Override
-            public boolean add(TreeItem<T> mt) {
-                super.add(mt);
-                sourceChildren.sort(getComparator());
-                return true;
-            }
-
-            @Override
-            public void add(int index, TreeItem<T> element) {
-                super.add(index, element);
-                sourceChildren.sort(getComparator());
-            }
         },this::getExtractorCallback);
         filteredChildren = new FilteredList<>(sourceChildren);
         predicate = new SimpleObjectProperty<>();
