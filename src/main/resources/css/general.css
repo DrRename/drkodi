@@ -34,6 +34,10 @@
     -fx-background-color: rgba(227, 163, 89, 0.58);
 }
 
+.root {
+    -fx-font-family: 'Open Sans Regular';
+}
+
 .warning-text {
     -fx-font-family: 'Open Sans SemiBold';
 }
