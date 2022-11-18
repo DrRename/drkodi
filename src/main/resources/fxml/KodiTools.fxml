@@ -36,6 +36,5 @@
     </HBox>
     <HBox spacing="4" alignment="CENTER_RIGHT" VBox.vgrow="NEVER">
         <ProgressBar fx:id="progressBar" maxWidth="Infinity"/>
-        <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>
     </HBox>
 </VBox>

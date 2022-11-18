@@ -58,10 +58,17 @@ public class ListDirectoryTask extends Task<List<RenamingControl>> {
                 }
             }
         }
+        // publish 'left-overs'
+        eventPublisher.publishEvent(new NewRenamingEntryEvent(event.getUuid(), smallList));
+        smallList.clear();
         event = new ListFilesFinishedEvent();
         log.debug("Publishing event {}", event);
         eventPublisher.publishEvent(event);
         return result;
+    }
+
+    private void publishSubset() {
+
     }
 }
 
