@@ -6,6 +6,7 @@ logging:
   level:
     root: info
     drrename: debug
+    drrename.ui.mainview.StartDirectoryComponentController: info
     com:
       ulisesbocchio: warn
     drrename.kodi.nfo.NfoFileCollector: info

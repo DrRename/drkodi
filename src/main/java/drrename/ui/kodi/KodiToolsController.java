@@ -26,20 +26,19 @@ import drrename.util.FXUtil;
 import drrename.ui.mainview.GoCancelButtonsComponentController;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.event.EventListener;
@@ -56,7 +55,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 
-@RequiredArgsConstructor
+
 @Slf4j
 @Component
 @FxmlView("/fxml/KodiTools.fxml")
@@ -78,7 +77,6 @@ public class KodiToolsController implements Initializable {
 
     public CheckBox checkBoxHideEmpty;
 
-    public HBox goCancelButtonsComponent;
 
     public CheckBox checkBoxMissingNfoFileIsAWarning;
 
@@ -100,31 +98,76 @@ public class KodiToolsController implements Initializable {
 
     private WarningsConfig warningsConfig;
 
+    private class KodiServiceStarter extends ServiceStarter<MovieDirectoryCollectorService> {
+
+        public KodiServiceStarter(MovieDirectoryCollectorService service) {
+            super(service);
+        }
+
+        @Override
+        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
+
+        }
+
+        @Override
+        protected void doInitService(MovieDirectoryCollectorService service) {
+            service.setDirectory(tabController.startDirectoryComponentController.getInputPath());
+            service.setExecutor(executor);
+            service.setRootTreeItem(treeRoot);
+            service.setMovieDbClientFactory(movieDbClientFactory);
+            service.setWarningsConfig(warningsConfig);
+            service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
+            progressBar.progressProperty().bind(service.progressProperty());
+            progressBar.visibleProperty().bind(service.runningProperty());
+        }
+
+        @Override
+        protected void prepareUi() {
+            treeRoot.getSourceChildren().clear();
+        }
+
+        @Override
+        protected boolean checkPreConditions() {
+           return true;
+        }
+    }
+
+    private final KodiServiceStarter serviceStarter;
+
+    public KodiToolsController(TabController tabController, MovieDirectoryCollectorService service, Executor executor, MovieDbClientFactory movieDbClientFactory) {
+        this.tabController = tabController;
+        this.service = service;
+        this.executor = executor;
+        this.movieDbClientFactory = movieDbClientFactory;
+        this.serviceStarter = new KodiServiceStarter(service);
+    }
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         mainStage = new Stage();
         imageStage = new Stage();
         mainStage.setScene(new Scene(root));
         mainStage.setTitle("Kodi Tools");
-        goCancelButtonsComponentController.buttonGo.disableProperty().bind(service.runningProperty().or(tabController.startDirectoryComponentController.readyProperty().not()));
-        goCancelButtonsComponentController.buttonCancel.disableProperty().bind(service.runningProperty().not());
-        goCancelButtonsComponentController.setButtonCancelActionEventFactory(KodiToolsButtonCancelEvent::new);
-        goCancelButtonsComponentController.setButtonGoActionEventFactory(KodiToolsButtonGoEvent::new);
-        progressBar.visibleProperty().bind(service.runningProperty());
 
-        treeRoot = new FilterableKodiRootTreeItem(executor, warningsConfig, null);
-        treeRoot.setExpanded(true);
-        treeView.setRoot(treeRoot);
+
+
+        initTreeRoot();
+
+
+
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
-        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemValue<?>>>) e -> {
-            buttonExpandAll.setDisable(e.getList().isEmpty());
-            buttonCollapseAll.setDisable(e.getList().isEmpty());
-        });
-        treeRoot.setPredicate(buildHideEmptyPredicate());
-        tabController.startDirectoryComponentController.inputPathProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                onButtonGoEvent(null);
+
+        tabController.startDirectoryComponentController.readyProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue)
+                    serviceStarter.startService();
+                else {
+                    cancelAllAndClearUi();
+                }
             }
         });
         treeView.setCellFactory(this::treeViewCellFactoryCallback);
@@ -150,6 +193,32 @@ public class KodiToolsController implements Initializable {
         warningsConfig = new WarningsConfig();
         warningsConfig.missingNfoFileIsWarningProperty().bind(checkBoxMissingNfoFileIsAWarning.selectedProperty());
         warningsConfig.defaultNfoFileNameIsWarningProperty().bind(checkBoxDefaultNfoFileNameIsAWarning.selectedProperty());
+
+
+
+
+    }
+
+    private void initTreeRoot() {
+        treeRoot = new FilterableKodiRootTreeItem(executor, warningsConfig, null);
+        treeRoot.setExpanded(true);
+        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemValue<?>>>) e -> {
+            buttonExpandAll.setDisable(e.getList().isEmpty());
+            buttonCollapseAll.setDisable(e.getList().isEmpty());
+        });
+        treeRoot.setPredicate(buildHideEmptyPredicate());
+        treeView.setRoot(treeRoot);
+    }
+
+    private void cancelAllAndClearUi() {
+        service.setOnCancelled(event -> clearUi());
+        service.cancel();
+        clearUi();
+    }
+
+    private void clearUi() {
+        initTreeRoot();
+
     }
 
     private TreeCell<KodiTreeItemValue<?>> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue<?>> kodiTreeItemContentTreeView) {
@@ -196,44 +265,6 @@ public class KodiToolsController implements Initializable {
 
     public void show() {
         mainStage.show();
-    }
-
-    @EventListener
-    public void onButtonGoEvent(KodiToolsButtonGoEvent event) {
-        startService();
-    }
-
-    @EventListener
-    public void onButtonCancelEvent(KodiToolsButtonCancelEvent event){
-        cancelService();
-    }
-
-    private void startService() {
-        if (tabController.startDirectoryComponentController.getInputPath() == null) {
-            log.warn("Cannot start, input path is null");
-            return;
-        }
-        log.debug("Starting service {}", service);
-        service.reset();
-        treeRoot.getSourceChildren().clear();
-        service.setDirectory(tabController.startDirectoryComponentController.getInputPath());
-        service.setExecutor(executor);
-        service.setRootTreeItem(treeRoot);
-        service.setMovieDbClientFactory(movieDbClientFactory);
-        service.setWarningsConfig(warningsConfig);
-        service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
-        progressBar.progressProperty().bind(service.progressProperty());
-        service.setOnFailed(this::handleFailed);
-        treeRoot.getSourceChildren().clear();
-        service.start();
-    }
-
-    private void handleFailed(WorkerStateEvent e) {
-        log.error("Service failed: {}", service.getException(), service.getException());
-    }
-
-    private void cancelService(){
-        service.cancel();
     }
 
     public void handleButtonExpandAll(ActionEvent actionEvent) {

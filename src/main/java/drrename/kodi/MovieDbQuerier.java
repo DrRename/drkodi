@@ -95,7 +95,7 @@ public class MovieDbQuerier {
                             String iso1 = translationDto.getIso3166();
                             String iso2 = translationDto.getIso639();
                             String title = translationDto.getData().getTitle();
-                            if (searchString.equals(title) && year.equals(searchResultDto.getReleaseDate().getYear())) {
+                            if (searchString.equals(title) && searchResultDto.getReleaseDate() != null && year != null && year.equals(searchResultDto.getReleaseDate().getYear())) {
                                 return new MovieDbLookupCheckResult(MovieDbCheckType.LOCALIZED_TITLE, onlineTitles);
                             }
                             if (resourceBundle.getLocale().getLanguage().equals(iso1) || resourceBundle.getLocale().getLanguage().equals(iso2)) {
