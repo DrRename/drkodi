@@ -74,6 +74,12 @@ public class MovieDbQuerier {
         var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);
 
         if(searchResult.getBody() != null && !searchResult.getBody().getResults().isEmpty()){
+            for(SearchResultDto result2 : searchResult.getBody().getResults()){
+                if(result2.getReleaseDate() != null && (searchString.equals(result2.getOriginalTitle()) && year.equals(result2.getReleaseDate().getYear()))){
+                    theMovieDbId.add(result2.getId());
+                    return new MovieDbLookupCheckResult(MovieDbCheckType.ORIGINAL_TITEL, onlineTitles);
+                }
+            }
             if(searchString.equals(searchResult.getBody().getResults().get(0).getOriginalTitle()) && year.equals(searchResult.getBody().getResults().get(0).getReleaseDate().getYear())){
                 theMovieDbId.add(searchResult.getBody().getResults().get(0).getId());
                 return new MovieDbLookupCheckResult(MovieDbCheckType.ORIGINAL_TITEL, onlineTitles);

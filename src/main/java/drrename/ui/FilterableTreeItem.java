@@ -31,6 +31,8 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -56,7 +58,20 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
 
     public FilterableTreeItem(T value, Node graphic) {
         super(value, graphic);
-        sourceChildren = FXCollections.observableArrayList(this::getExtractorCallback);
+        sourceChildren = FXCollections.observableList(new ArrayList<>(){
+            @Override
+            public boolean add(TreeItem<T> mt) {
+                super.add(mt);
+                sourceChildren.sort(getComparator());
+                return true;
+            }
+
+            @Override
+            public void add(int index, TreeItem<T> element) {
+                super.add(index, element);
+                sourceChildren.sort(getComparator());
+            }
+        },this::getExtractorCallback);
         filteredChildren = new FilteredList<>(sourceChildren);
         predicate = new SimpleObjectProperty<>();
         init();

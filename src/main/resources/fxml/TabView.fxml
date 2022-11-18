@@ -23,11 +23,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx"
+<VBox xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="drrename.ui.mainview.controller.TabController" fx:id="root">
 
-    <top>
+
 
         <MenuBar fx:id="menuBar">
             <Menu text="File">
@@ -36,13 +36,11 @@
             </Menu>
         </MenuBar>
 
-    </top>
 
-    <center>
 
-        <VBox>
+        <VBox VBox.vgrow="ALWAYS" maxHeight="Infinity" >
             <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
-            <TabPane fx:id="tabPane">
+            <TabPane fx:id="tabPane" maxHeight="Infinity" VBox.vgrow="ALWAYS" >
                 <tabs>
                     <Tab fx:id="renameTab" text="Rename" closable="false">
                         <fx:include fx:id="mainController" source="RenameView.fxml"/>
@@ -59,7 +57,7 @@
 
 
 
-    </center>
 
 
-</BorderPane>
+
+</VBox>
