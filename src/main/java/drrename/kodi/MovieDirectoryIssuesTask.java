@@ -73,20 +73,20 @@ class MovieDirectoryIssuesTask extends Task<Void> {
     }
 
     List<FilterableKodiTreeItem> buildChildItems(RenamingPath renamingPath) {
-        List<FilterableKodiTreeItem> result = new ArrayList<>();
-        List<KodiTreeItemValue<?>> values = Arrays.asList(
+        List<FilterableKodiTreeItem> treeItems = new ArrayList<>();
+        List<KodiTreeItemValue<?>> treeItemValues = Arrays.asList(
                 new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory, warningsConfig),
                 new NfoFileNameTreeItemValue(renamingPath, executor, warningsConfig),
                 new MediaFileNameTreeItemValue(renamingPath, executor, warningsConfig),
                 new NfoFileContentMovieNameTreeItemValue(renamingPath, executor, warningsConfig)
         );
 
-        for (KodiTreeItemValue<?> v : values) {
-            result.add(new FilterableKodiTreeItem(v, null));
+        for (KodiTreeItemValue<?> v : treeItemValues) {
+            treeItems.add(new FilterableKodiTreeItem(v, null));
             executeItemValue(v);
         }
 
-        return result;
+        return treeItems;
     }
 
     <R> void executeItemValue(KodiTreeItemValue<R> itemValue) {
