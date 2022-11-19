@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,7 +66,7 @@ public class NfoFileParser {
 
     public NfoRoot parse(Path filePath) throws IOException {
         long lineCount;
-        try (Stream<String> stream = Files.lines(filePath)) {
+        try (Stream<String> stream = Files.lines(filePath, Charset.forName("UTF-8"))) {
             lineCount = stream.filter(s -> !s.isBlank()).count();
         }catch (Exception e){
             log.debug("Cannot count lines, reason: {}", e.getLocalizedMessage());
