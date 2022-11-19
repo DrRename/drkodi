@@ -95,15 +95,7 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
     }
 
     String getTitleFromNfoFile(Path nfoFile){
-        try {
-            var xmlModel = nfoFileParser.parse(nfoFile);
-            if (xmlModel == null || xmlModel.getMovie() == null)
-                return null;
-            return xmlModel.getMovie().getTitle();
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-        }
-        return "<n/a>";
+        return new NfoFileTitleExtractor(nfoFileParser).getTitleFromNfoFile(nfoFile);
     }
 
     @Override
