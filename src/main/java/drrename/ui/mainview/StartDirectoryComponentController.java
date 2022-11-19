@@ -79,8 +79,8 @@ public class StartDirectoryComponentController implements Initializable, Applica
         if (Files.isReadable(inputPath)) {
             if (Files.isDirectory(inputPath)) {
                 if (Files.isWritable(inputPath)) {
-                    this.inputPath.set(inputPath);
                     ready.set(true);
+                    this.inputPath.set(inputPath);
                 } else {
                     log.debug("cannot write to {}", inputPath);
                     ready.set(false);
