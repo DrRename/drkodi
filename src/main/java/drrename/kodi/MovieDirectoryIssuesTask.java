@@ -93,7 +93,7 @@ class MovieDirectoryIssuesTask extends Task<Void> {
         var fixableStatusChecker = new FixableStatusChecker<>(itemValue);
         fixableStatusChecker.setOnFailed(itemValue::defaultTaskFailed);
         fixableStatusChecker.setOnSucceeded(event -> statusCheckerSucceeded(itemValue, event));
-        log.debug("Running {}", itemValue);
+//        log.debug("Running {}", itemValue);
         getExecutor().execute(fixableStatusChecker);
     }
 
