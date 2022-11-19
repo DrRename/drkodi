@@ -60,9 +60,9 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
     private final Executor executor;
 
-    private ChangeListener<? super Boolean> missingNfoFileIsWarningListener;
+    private final ChangeListener<? super Boolean> missingNfoFileIsWarningListener;
 
-    private ChangeListener<? super Boolean> defaultNfoFileNameIsWarningListener;
+    private final ChangeListener<? super Boolean> defaultNfoFileNameIsWarningListener;
 
     public KodiTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath);
@@ -96,10 +96,12 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     }
 
     public void setWarningsConfig(WarningsConfig warningsConfig) {
+        // Remove listener from old object
         if (this.warningsConfig != null) {
             this.warningsConfig.missingNfoFileIsWarningProperty().removeListener(missingNfoFileIsWarningListener);
             this.warningsConfig.defaultNfoFileNameIsWarningProperty().removeListener(defaultNfoFileNameIsWarningListener);
         }
+        // Add listener to new object
         this.warningsConfig = warningsConfig;
         if (this.warningsConfig != null) {
             this.warningsConfig.missingNfoFileIsWarningProperty().addListener(missingNfoFileIsWarningListener);
@@ -107,6 +109,7 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         }
     }
 
+    @Deprecated
     public void triggerStatusCheck() {
         // Start the processing cascade:
         // - check status: worker thread
@@ -117,11 +120,11 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
         getExecutor().execute(fixableStatusChecker);
     }
 
-    protected void defaultTaskFailed(WorkerStateEvent workerStateEvent) {
+    public void defaultTaskFailed(WorkerStateEvent workerStateEvent) {
         log.error(workerStateEvent.getSource().getException().getLocalizedMessage(), workerStateEvent.getSource().getException());
     }
 
-    protected void statusCheckerSucceeded(WorkerStateEvent event) {
+    public void statusCheckerSucceeded(WorkerStateEvent event) {
 //        log.debug("Status checker succeeded, updating status on thread {}", Thread.currentThread());
         updateStatus((R) event.getSource().getValue());
     }
@@ -227,7 +230,7 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
     }
 
     public boolean isWarning() {
-        return warning.get();
+        return warning.get() == null ? false : warning.get();
     }
 
     public ObjectProperty<Boolean> warningProperty() {
