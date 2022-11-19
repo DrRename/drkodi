@@ -22,7 +22,7 @@ package drrename.kodi;
 
 public interface KodiIssue<R> extends Fixable<R> {
 
-    String getMovieName();
+    String getMovieNameFromFolder();
 
     String getIdentifier();
 

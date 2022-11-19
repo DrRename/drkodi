@@ -46,7 +46,7 @@ public class NfoFileNameIssue extends FxKodiIssue<NfoFileNameCheckResult> {
     @Override
     public void fix(NfoFileNameCheckResult result) throws FixFailedException {
         try {
-            DrRenameUtil.rename(result.getNfoFiles().get(0), getMovieName() + KodiConstants.NFO_FILE_EXTENSION);
+            DrRenameUtil.rename(result.getNfoFiles().get(0), getMovieNameFromFolder() + KodiConstants.NFO_FILE_EXTENSION);
         } catch (IOException e) {
             throw new FixFailedException(e);
         }

@@ -60,7 +60,7 @@ public class MediaFileNameIssue extends FxKodiIssue<MediaFileNameCheckResult> {
         String fileNameString = file.getFileName().toString();
         var baseName = FilenameUtils.getBaseName(fileNameString);
         var extension = FilenameUtils.getExtension(fileNameString);
-        var newPath = file.resolveSibling(getMovieName() + "." + extension);
+        var newPath = file.resolveSibling(getMovieNameFromFolder() + "." + extension);
         log.debug("Renaming from {} to {}", file, newPath);
         try {
             DrRenameUtil.rename(file, newPath.getFileName().toString());

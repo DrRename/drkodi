@@ -99,7 +99,7 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
 
     private Node buildGraphic2() {
         VBox box = new VBox(4);
-        Button button = new Button("Fix to \"" + getMovieName() + ".nfo\"");
+        Button button = new Button("Fix to \"" + getMovieNameFromFolder() + ".nfo\"");
         VBox.setVgrow(button, Priority.ALWAYS);
         button.setMaxWidth(500);
         button.setOnAction(event ->
