@@ -20,12 +20,14 @@
 
 package drrename.ui.kodi;
 
-import drrename.kodi.*;
+import drrename.kodi.KodiCollectService;
+import drrename.kodi.KodiUtil;
+import drrename.kodi.MovieDbClientFactory;
+import drrename.kodi.WarningsConfig;
 import drrename.ui.mainview.controller.TabController;
 import drrename.util.FXUtil;
 import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.WorkerStateEvent;
@@ -41,8 +43,6 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
-
-
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -154,16 +154,8 @@ public class KodiToolsController implements Initializable {
         progressBar.progressProperty().bind(kodiCollectService.progressProperty());
         progressBar.visibleProperty().bind(kodiCollectService.runningProperty());
 
-        tabController.startDirectoryComponentController.readyProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue)
-                    serviceStarter.startService();
-                else {
-                    cancelAllAndClearUi();
-                }
-            }
-        });
+        tabController.startDirectoryComponentController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
+
         treeView.setCellFactory(this::treeViewCellFactoryCallback);
 
         treeView.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<Integer>) c -> {
@@ -183,14 +175,19 @@ public class KodiToolsController implements Initializable {
         });
 
 
-
         warningsConfig = new WarningsConfig();
         warningsConfig.missingNfoFileIsWarningProperty().bind(checkBoxMissingNfoFileIsAWarning.selectedProperty());
         warningsConfig.defaultNfoFileNameIsWarningProperty().bind(checkBoxDefaultNfoFileNameIsAWarning.selectedProperty());
 
 
+    }
 
-
+    private void getNewInputPathChangeListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
+        if (tabController.startDirectoryComponentController.isReady()) {
+            serviceStarter.startService();
+        } else {
+            cancelAllAndClearUi();
+        }
     }
 
     private void initTreeRoot() {
