@@ -441,20 +441,9 @@ public class RenameController implements Initializable {
     private void registerInputChangeListener() {
         replaceStringFromChangeListener = (e, o, n) -> Platform.runLater(this::updatePreview);
         replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updatePreview);
-        tabController.startDirectoryComponentController.readyProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue) {
-                    Path n = tabController.startDirectoryComponentController.getInputPath();
-                    if (n != null) loadedPaths.setAll(n);
-                    updateInputView();
-                }
-                else {
-                    cancelCurrentOperation();
-                    clearView();
-                }
-            }
-        });
+
+        tabController.startDirectoryComponentController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
+
         ignoreDirectoriesChangeListener = (e, o, n) -> entriesService.setFilterDirectories(n);
         ignoreHiddenFilesChangeListener = (e, o, n) -> entriesService.setFilterHiddenFiles(n);
         showOnlyChangingChangeListener = (e, o, n) -> entriesService.setShowOnlyChainging(n);
@@ -475,6 +464,16 @@ public class RenameController implements Initializable {
         goCancelButtonsComponentController.buttonGo.disableProperty().bind(renamingService.runningProperty().or(previewService.runningProperty()).or(loadPathsService.runningProperty()).or(tabController.startDirectoryComponentController.readyProperty().not()));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(renamingService.runningProperty().not());
 
+    }
+
+    private void getNewInputPathChangeListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
+        if (tabController.startDirectoryComponentController.isReady()) {
+            loadedPaths.setAll(newValue);
+            updateInputView();
+        } else {
+            cancelCurrentOperation();
+            clearView();
+        }
     }
 
     private void inputReady(ChangeListener<Boolean> changeListener){
