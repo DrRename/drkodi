@@ -58,8 +58,7 @@ public class FilterableTreeItem<T> extends TreeItem<T> {
 
     public FilterableTreeItem(T value, Node graphic) {
         super(value, graphic);
-        sourceChildren = FXCollections.observableList(new ArrayList<>(){
-        },this::getExtractorCallback);
+        sourceChildren = FXCollections.observableList(new ArrayList<>(),this::getExtractorCallback);
         filteredChildren = new FilteredList<>(sourceChildren);
         predicate = new SimpleObjectProperty<>();
         init();

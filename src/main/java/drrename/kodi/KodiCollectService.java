@@ -14,7 +14,7 @@ import java.nio.file.Path;
 @Getter
 @Setter
 @org.springframework.stereotype.Service
-public class MovieDirectoryCollectorService extends Service<Void> {
+public class KodiCollectService extends Service<Void> {
 
     private Path directory;
 
