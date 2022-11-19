@@ -63,13 +63,13 @@ public class SubdirsTreeItemValue extends KodiTreeItemValue<SubdirsCheckResult> 
         return checker.checkDir(getRenamingPath().getOldPath());
     }
 
-    protected void statusCheckerSucceeded(WorkerStateEvent event) {
+    public void statusCheckerSucceeded(WorkerStateEvent event) {
         log.debug("Status checker succeeded, updating status on thread {}", Thread.currentThread());
         checkResult = (SubdirsCheckResult) event.getSource().getValue();
         updateStatus(checkResult);
     }
 
-    protected void defaultTaskFailed(WorkerStateEvent workerStateEvent) {
+    public void defaultTaskFailed(WorkerStateEvent workerStateEvent) {
         log.error(workerStateEvent.getSource().getException().getLocalizedMessage(), workerStateEvent.getSource().getException());
     }
 

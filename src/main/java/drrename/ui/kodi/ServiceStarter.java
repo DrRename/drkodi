@@ -59,7 +59,7 @@ public abstract class ServiceStarter<S extends Service<?>> {
     }
 
     private void resetAndStart() {
-        log.debug("Resetting service {}", service);
+        log.debug("Resetting service {} with state {}", service, service.getState());
         service.setOnReady(event -> doStartService());
         service.reset();
     }

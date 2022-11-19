@@ -45,7 +45,7 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
     public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath, executor, warningsConfig);
         nfoFileParser = new NfoFileParser();
-        triggerStatusCheck();
+//        triggerStatusCheck();
     }
 
     @Override

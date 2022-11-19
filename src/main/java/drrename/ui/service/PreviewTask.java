@@ -30,8 +30,10 @@ public class PreviewTask extends Task<List<RenamingControl>> {
         applicationEventPublisher.publishEvent(event);
         long cnt = 0;
         for (final RenamingControl p : beans) {
-            if (Thread.currentThread().isInterrupted())
-                throw new InterruptedException("Cancelled");
+                if (isCancelled()) {
+                    updateMessage("Cancelled");
+                    break;
+                }
             String newName = p.preview(renamingStrategy);
             if (!p.getOldPath().getFileName().toString().equals(newName)) {
                 applicationEventPublisher.publishEvent(new FilePreviewEvent(p));

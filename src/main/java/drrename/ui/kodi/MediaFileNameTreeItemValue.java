@@ -43,7 +43,7 @@ public class MediaFileNameTreeItemValue extends KodiTreeItemValue<MediaFileNameC
     public MediaFileNameTreeItemValue(RenamingPath path, Executor executor, WarningsConfig warningsConfig) {
         super(path, executor, warningsConfig);
         this.delegate = new MediaFileNameIssue(path);
-        triggerStatusCheck();
+//        triggerStatusCheck();
     }
 
     @Override

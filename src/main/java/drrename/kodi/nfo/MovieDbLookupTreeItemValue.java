@@ -62,7 +62,7 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
         this.factory = factory;
         this.imagesClient = factory.getImagesClient();
         this.config = factory.getConfig();
-        triggerStatusCheck();
+//        triggerStatusCheck();
 
     }
 

@@ -40,7 +40,7 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
     public NfoFileNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig){
         super(moviePath, executor, warningsConfig);
         delegate = new NfoFileNameIssue(moviePath);
-        triggerStatusCheck();
+//        triggerStatusCheck();
     }
 
     private void triggerFixer(){

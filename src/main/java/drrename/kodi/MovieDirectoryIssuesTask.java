@@ -1,11 +1,12 @@
 package drrename.kodi;
 
 import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
-import drrename.ui.kodi.*;
 import drrename.model.RenamingPath;
+import drrename.ui.kodi.*;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -49,7 +51,7 @@ class MovieDirectoryIssuesTask extends Task<Void> {
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
 
             for (Path path : ds) {
-                if (Thread.interrupted()) {
+                if (isCancelled()) {
                     log.info("Cancelling");
                     break;
                 }
@@ -70,13 +72,33 @@ class MovieDirectoryIssuesTask extends Task<Void> {
         return null;
     }
 
-    List<FilterableKodiTreeItem> buildChildItems(RenamingPath renamingPath){
+    List<FilterableKodiTreeItem> buildChildItems(RenamingPath renamingPath) {
         List<FilterableKodiTreeItem> result = new ArrayList<>();
-        result.add(new FilterableKodiTreeItem(new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory, warningsConfig), null));
-        result.add(new FilterableKodiTreeItem(new NfoFileNameTreeItemValue(renamingPath, executor, warningsConfig), null));
-        result.add(new FilterableKodiTreeItem(new MediaFileNameTreeItemValue(renamingPath, executor, warningsConfig), null));
-        result.add(new FilterableKodiTreeItem(new NfoFileContentMovieNameTreeItemValue(renamingPath, executor, warningsConfig), null));
+        List<KodiTreeItemValue<?>> values = Arrays.asList(
+                new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory, warningsConfig),
+                new NfoFileNameTreeItemValue(renamingPath, executor, warningsConfig),
+                new MediaFileNameTreeItemValue(renamingPath, executor, warningsConfig),
+                new NfoFileContentMovieNameTreeItemValue(renamingPath, executor, warningsConfig)
+        );
+
+        for (KodiTreeItemValue<?> v : values) {
+            result.add(new FilterableKodiTreeItem(v, null));
+            executeItemValue(v);
+        }
+
         return result;
+    }
+
+    <R> void executeItemValue(KodiTreeItemValue<R> itemValue) {
+        var fixableStatusChecker = new FixableStatusChecker<>(itemValue);
+        fixableStatusChecker.setOnFailed(itemValue::defaultTaskFailed);
+        fixableStatusChecker.setOnSucceeded(event -> statusCheckerSucceeded(itemValue, event));
+        log.debug("Running {}", itemValue);
+        getExecutor().execute(fixableStatusChecker);
+    }
+
+    <R> void statusCheckerSucceeded(KodiTreeItemValue<R> itemValue, WorkerStateEvent event) {
+        itemValue.updateStatus((R) event.getSource().getValue());
     }
 
 }
