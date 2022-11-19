@@ -78,7 +78,7 @@ public class MediaFileNameTreeItemValue extends KodiTreeItemValue<MediaFileNameC
 
     private Node buildGraphic2() {
         VBox box = new VBox(4);
-        Button button = new Button("Rename all to \"" + getMovieName() + ".<extension>\"");
+        Button button = new Button("Rename all to \"" + getMovieNameFromFolder() + ".<extension>\"");
         VBox.setVgrow(button, Priority.ALWAYS);
         button.setMaxWidth(500);
         button.setOnAction(event ->

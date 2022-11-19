@@ -27,8 +27,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -189,7 +187,7 @@ public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ": " + getMovieName();
+        return getClass().getSimpleName() + ": " + getMovieNameFromFolder();
     }
 
     // Getter / Setter  //
