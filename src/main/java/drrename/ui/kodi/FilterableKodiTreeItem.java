@@ -46,7 +46,7 @@ public class FilterableKodiTreeItem extends FilterableTreeItem<KodiTreeItemValue
     }
 
     protected Observable[] getExtractorCallback(TreeItem<KodiTreeItemValue<?>> item) {
-        return DrRenameUtil.concatenate(new Observable[]{item.getValue().messageProperty()}, extractor);
+        return DrRenameUtil.concatenate(new Observable[]{item.getValue().warningProperty()}, extractor);
     }
 
     public void add(FilterableKodiTreeItem childItem) {
