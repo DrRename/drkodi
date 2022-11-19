@@ -90,6 +90,7 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
 
     @Override
     public void updateStatus(Object checkStatusResult) {
+        // Ignore
     }
 
     @Override
@@ -111,26 +112,7 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
     }
 
     private void runOpenFolderCommandMacOs(Path path) {
-        runCommand(new String[]{"open", "-R", path.toString()});
-    }
-
-    private void runCommand(String[] command) {
-        log.debug("Running {}", Arrays.toString(command));
-        try {
-            Process process = Runtime.getRuntime().exec(command);
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                log.debug("Process out: {}", line);
-            }
-            final BufferedReader bufferedReader2 = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            String line2;
-            while ((line2 = bufferedReader2.readLine()) != null) {
-                log.debug("Process err: {}", line2);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        new CommandRunner().runCommand(new String[]{"open", "-R", path.toString()});
     }
 
     @Override
