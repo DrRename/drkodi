@@ -23,7 +23,6 @@ package drrename.ui.kodi;
 import drrename.kodi.*;
 import drrename.ui.mainview.controller.TabController;
 import drrename.util.FXUtil;
-import drrename.ui.mainview.GoCancelButtonsComponentController;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -41,7 +40,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 
@@ -86,7 +84,7 @@ public class KodiToolsController implements Initializable {
 
     Stage imageStage;
 
-    private final MovieDirectoryCollectorService service;
+    private final KodiCollectService kodiCollectService;
 
     private final Executor executor;
 
@@ -96,9 +94,9 @@ public class KodiToolsController implements Initializable {
 
     private WarningsConfig warningsConfig;
 
-    private class KodiServiceStarter extends ServiceStarter<MovieDirectoryCollectorService> {
+    private class KodiServiceStarter extends ServiceStarter<KodiCollectService> {
 
-        public KodiServiceStarter(MovieDirectoryCollectorService service) {
+        public KodiServiceStarter(KodiCollectService service) {
             super(service);
         }
 
@@ -108,7 +106,7 @@ public class KodiToolsController implements Initializable {
         }
 
         @Override
-        protected void doInitService(MovieDirectoryCollectorService service) {
+        protected void doInitService(KodiCollectService service) {
             service.setDirectory(tabController.startDirectoryComponentController.getInputPath());
             service.setExecutor(executor);
             service.setRootTreeItem(treeRoot);
@@ -131,12 +129,12 @@ public class KodiToolsController implements Initializable {
 
     private final KodiServiceStarter serviceStarter;
 
-    public KodiToolsController(TabController tabController, MovieDirectoryCollectorService service, Executor executor, MovieDbClientFactory movieDbClientFactory) {
+    public KodiToolsController(TabController tabController, KodiCollectService kodiCollectService, Executor executor, MovieDbClientFactory movieDbClientFactory) {
         this.tabController = tabController;
-        this.service = service;
+        this.kodiCollectService = kodiCollectService;
         this.executor = executor;
         this.movieDbClientFactory = movieDbClientFactory;
-        this.serviceStarter = new KodiServiceStarter(service);
+        this.serviceStarter = new KodiServiceStarter(kodiCollectService);
     }
 
 
@@ -153,8 +151,8 @@ public class KodiToolsController implements Initializable {
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
 
-        progressBar.progressProperty().bind(service.progressProperty());
-        progressBar.visibleProperty().bind(service.runningProperty());
+        progressBar.progressProperty().bind(kodiCollectService.progressProperty());
+        progressBar.visibleProperty().bind(kodiCollectService.runningProperty());
 
         tabController.startDirectoryComponentController.readyProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -207,8 +205,8 @@ public class KodiToolsController implements Initializable {
     }
 
     private void cancelAllAndClearUi() {
-        service.setOnCancelled(event -> clearUi());
-        service.cancel();
+        kodiCollectService.setOnCancelled(event -> clearUi());
+        kodiCollectService.cancel();
         clearUi();
     }
 
