@@ -26,9 +26,12 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
+@Setter
 @Getter
 public abstract class FxKodiIssue<R> implements KodiIssue<R> {
 
@@ -37,6 +40,8 @@ public abstract class FxKodiIssue<R> implements KodiIssue<R> {
     private final BooleanProperty fixable;
 
     private final StringProperty message;
+
+    private String movieNameFromNfo;
 
     public FxKodiIssue(RenamingPath renamingPath){
         this.renamingPath = renamingPath;
@@ -62,6 +67,10 @@ public abstract class FxKodiIssue<R> implements KodiIssue<R> {
     @Override
     public String getMovieNameFromFolder() {
         return getRenamingPath() == null ? null : getRenamingPath().getMovieName();
+    }
+
+    public String getMovieName(){
+        return StringUtils.isNotBlank(movieNameFromNfo) ? movieNameFromNfo : getMovieNameFromFolder();
     }
 
     // FX Getter / Setter //
