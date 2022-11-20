@@ -19,7 +19,7 @@
 
 package drrename.kodi;
 
-public enum MovieFileNameType {
+public enum MediaFileNameType {
     MATCHES_DIR_NAME("Media file names match directory name"), EXCEPTION("Failed to get media names"){
         @Override
         public boolean isWarning() {
@@ -39,7 +39,7 @@ public enum MovieFileNameType {
 
     private final String name;
 
-    MovieFileNameType(String name){
+    MediaFileNameType(String name){
         this.name = name;
     }
 

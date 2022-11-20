@@ -85,7 +85,7 @@ public class MovieDbQuerier {
                 getOnlineTitles().add(buildNameString(searchResultDto.getTitle(), searchResultDto.getReleaseDate()));
                 getOnlineTitles().add(buildNameString(searchResultDto.getOriginalTitle(), searchResultDto.getReleaseDate()));
                 try {
-                    ResponseEntity<TranslationsDto> translations = client.getTranslations(searchResultDto.getId(), "ca540140c89af81851d4026286942896");
+                    ResponseEntity<TranslationsDto> translations = client.getTranslations("ca540140c89af81851d4026286942896", searchResultDto.getId());
                     if (translations.getBody() != null) {
                         for (TranslationDto translationDto : translations.getBody().getTranslations()) {
                             String iso1 = translationDto.getIso3166();

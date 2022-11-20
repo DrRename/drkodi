@@ -45,18 +45,18 @@ public class MediaFileNameChecker {
             for(Path mediaFile : mediaFiles){
                 String baseName = FilenameUtils.getBaseName(mediaFile.getFileName().toString());
                 if(!baseName.equals(movieName)){
-                    return new MediaFileNameCheckResult(MovieFileNameType.INVALID_MEDIA_FILE_NAME, mediaFiles);
+                    return new MediaFileNameCheckResult(MediaFileNameType.INVALID_MEDIA_FILE_NAME, mediaFiles);
                 }
             }
             if(!mediaFiles.isEmpty()){
-                return new MediaFileNameCheckResult(MovieFileNameType.MATCHES_DIR_NAME, mediaFiles);
+                return new MediaFileNameCheckResult(MediaFileNameType.MATCHES_DIR_NAME, mediaFiles);
             }
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);
-            return new MediaFileNameCheckResult(MovieFileNameType.EXCEPTION, Collections.emptyList());
+            return new MediaFileNameCheckResult(MediaFileNameType.EXCEPTION, Collections.emptyList());
 
         }
-        return new MediaFileNameCheckResult(MovieFileNameType.NO_MEDIA_FILES_FOUND, Collections.emptyList());
+        return new MediaFileNameCheckResult(MediaFileNameType.NO_MEDIA_FILES_FOUND, Collections.emptyList());
     }
 
     static List<Path> findAllVideoFiles(Path directory) throws IOException {

@@ -1,6 +1,8 @@
 package drrename.kodi;
 
 import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
+import drrename.kodi.nfo.NfoFileCollector;
+import drrename.kodi.nfo.NfoFileParser;
 import drrename.model.RenamingPath;
 import drrename.ui.kodi.*;
 import javafx.application.Platform;
@@ -10,6 +12,7 @@ import javafx.concurrent.WorkerStateEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -48,6 +51,7 @@ class MovieDirectoryIssuesTask extends Task<Void> {
     @Override
     protected Void call() throws Exception {
         verifyState();
+        var nfoFileParser = new NfoFileParser();
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
 
             for (Path path : ds) {
@@ -62,7 +66,22 @@ class MovieDirectoryIssuesTask extends Task<Void> {
                     }
 
                     var renamingPath = new RenamingPath(path);
-                    var item = new MovieTreeItemFilterable(new MovieTreeItemValue(renamingPath, executor, warningsConfig), extractor);
+                    var itemValue = new MovieTreeItemValue(renamingPath, executor, warningsConfig);
+
+                    var nfoFiles = new NfoFileCollector().collectNfoFiles(path);
+                    if(!nfoFiles.isEmpty()){
+                        Path firstNfoFile = nfoFiles.get(0);
+                        String movieNameFromNfoFile = new NfoFileTitleExtractor(nfoFileParser).getTitleFromNfoFile(firstNfoFile);
+                        if(StringUtils.isNotBlank(movieNameFromNfoFile)){
+                            var movieDBClient = movieDbClientFactory.getNewMovieDbChecker().getClient();
+                        }
+                        if(StringUtils.isNotBlank(movieNameFromNfoFile)){
+                            itemValue.setMovieNameFromNfo(movieNameFromNfoFile);
+                        }
+                    }
+
+
+                    var item = new MovieTreeItemFilterable(itemValue, extractor);
                     List<FilterableKodiTreeItem> childItems = buildChildItems(renamingPath);
                     childItems.forEach(childItem -> Platform.runLater(() -> item.getSourceChildren().add(childItem)));
                     Platform.runLater(() -> getRootTreeItem().getSourceChildren().add(item));

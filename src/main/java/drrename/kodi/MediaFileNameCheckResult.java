@@ -32,7 +32,7 @@ import java.util.List;
 @Setter
 public class MediaFileNameCheckResult {
 
-    private final MovieFileNameType type;
+    private final MediaFileNameType type;
 
     private final List<Path> mediaFiles;
 
