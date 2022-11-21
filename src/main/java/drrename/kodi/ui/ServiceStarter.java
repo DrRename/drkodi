@@ -22,9 +22,7 @@ package drrename.kodi.ui;
 
 
 import javafx.concurrent.Service;
-import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +36,9 @@ public abstract class ServiceStarter<S extends Service<?>> {
         if(checkPreConditions()){
             log.debug("Preparing UI");
             prepareUi();
+            log.debug("Init Service {}", service);
             initService(service);
+            log.debug("Restarting Service {}", service);
             service.restart();
         } else {
             log.warn("Cannot start, pre conditions failed");
