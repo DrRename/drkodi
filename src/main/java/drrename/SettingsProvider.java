@@ -66,6 +66,7 @@ public class SettingsProvider {
         } catch (IOException e) {
             log.debug("Failed to load settings from {} ({})", settingsPath, e.getLocalizedMessage());
         }
+        log.debug("Settings loaded from {}", settingsPath);
         return settings;
     }
 
