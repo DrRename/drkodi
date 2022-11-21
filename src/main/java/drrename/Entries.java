@@ -34,20 +34,18 @@ import javafx.collections.transformation.FilteredList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 
 @Slf4j
 @Component
-public class EntriesService {
+public class Entries {
 
     static final String LOADED = "mainview.status.loaded.text";
 
@@ -123,7 +121,7 @@ public class EntriesService {
 
     private final static Predicate<RenamingControl> onlyChanging = RenamingControl::isWillChange;
 
-    public EntriesService(ResourceBundle resourceBundle, AppConfig appConfig, Executor executor) {
+    public Entries(ResourceBundle resourceBundle, AppConfig appConfig, Executor executor) {
         this.resourceBundle = resourceBundle;
         this.appConfig = appConfig;
         entries = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{item.newPathProperty(), item.exceptionProperty(), item.fileTypeProperty(), item.filteredProperty(), item.willChangeProperty()}));
