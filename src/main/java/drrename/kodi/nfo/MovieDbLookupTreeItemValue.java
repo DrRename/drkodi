@@ -24,7 +24,7 @@ import drrename.kodi.ui.KodiTreeItemValue;
 import drrename.util.DrRenameUtil;
 import drrename.config.TheMovieDbConfig;
 import drrename.kodi.*;
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;

@@ -18,11 +18,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.mainview.controller;
+package drrename.ui;
 
 import drrename.ui.FxApplicationStyle;
-import drrename.ui.mainview.StartDirectoryComponentController;
-import drrename.ui.settingsview.SettingsController;
+import drrename.ui.StartDirectoryComponentController;
+import drrename.ui.SettingsController;
 import drrename.util.FXUtil;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -32,7 +32,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.BorderPane;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;

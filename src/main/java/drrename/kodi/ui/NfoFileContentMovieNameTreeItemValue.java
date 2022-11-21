@@ -25,7 +25,7 @@ import drrename.kodi.NfoFileNameCheckResult;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.kodi.nfo.NfoFileParser;
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import drrename.util.DrRenameUtil;
 import javafx.scene.Node;
 import javafx.scene.control.Button;

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
-      fx:controller="drrename.ui.mainview.RenameController">
+      fx:controller="drrename.ui.RenameController">
     <BorderPane fx:id="layer01" VBox.vgrow="ALWAYS">
         <padding>
             <Insets top="4" right="4" bottom="4" left="4"/>

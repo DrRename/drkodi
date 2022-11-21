@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="drrename.ui.mainview.ReplacementStringComponentController">
+      fx:controller="drrename.ui.ReplacementStringComponentController">
         <padding>
             <Insets top="4" right="4" bottom="4" left="4"/>
         </padding>

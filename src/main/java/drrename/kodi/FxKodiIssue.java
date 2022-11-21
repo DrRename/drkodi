@@ -20,7 +20,7 @@
 
 package drrename.kodi;
 
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;

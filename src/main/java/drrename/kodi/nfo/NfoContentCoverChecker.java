@@ -19,8 +19,8 @@
 
 package drrename.kodi.nfo;
 
-import drrename.mime.FileTypeByMimeProvider;
-import drrename.model.nfo.NfoRoot;
+import drrename.FileTypeByMimeProvider;
+import drrename.kodi.NfoRoot;
 
 import java.io.IOException;
 import java.nio.file.Files;

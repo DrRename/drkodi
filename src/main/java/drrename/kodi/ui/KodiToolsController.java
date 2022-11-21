@@ -21,7 +21,7 @@
 package drrename.kodi.ui;
 
 import drrename.kodi.*;
-import drrename.ui.mainview.controller.TabController;
+import drrename.ui.TabController;
 import drrename.util.FXUtil;
 import javafx.application.Platform;
 import javafx.beans.Observable;

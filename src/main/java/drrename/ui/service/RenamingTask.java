@@ -3,7 +3,7 @@ package drrename.ui.service;
 import drrename.config.AppConfig;
 import drrename.event.FileRenamedEvent;
 import drrename.event.StartingRenameEvent;
-import drrename.model.RenamingControl;
+import drrename.RenamingControl;
 import drrename.strategy.RenamingStrategy;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;

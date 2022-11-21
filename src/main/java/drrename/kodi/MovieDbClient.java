@@ -20,8 +20,8 @@
 
 package drrename.kodi;
 
-import drrename.model.themoviedb.SearchResultsDto;
-import drrename.model.themoviedb.TranslationsDto;
+import drrename.kodi.themoviedb.SearchResultsDto;
+import drrename.kodi.themoviedb.TranslationsDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

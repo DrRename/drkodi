@@ -21,7 +21,7 @@
 package drrename.kodi.ui;
 
 import drrename.util.DrRenameUtil;
-import drrename.ui.FilterableTreeItem;
+import drrename.kodi.FilterableTreeItem;
 import javafx.beans.Observable;
 import javafx.scene.control.TreeItem;
 import lombok.extern.slf4j.Slf4j;

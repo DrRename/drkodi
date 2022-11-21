@@ -19,24 +19,15 @@
 
 package drrename.event;
 
-import drrename.model.RenamingControl;
+import drrename.RenamingControl;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 
-@RequiredArgsConstructor
-@Data
-public class NewRenamingEntryEvent {
+@Deprecated
+public record NewRenamingEntryEvent(UUID uuid, List<RenamingControl> renamingEntries) {
 
-   private final UUID uuid;
-
-   private final List<RenamingControl> renamingEntries;
-
-   public NewRenamingEntryEvent(UUID uuid, RenamingControl renamingEntries) {
-      this(uuid, Collections.singletonList(renamingEntries));
-   }
 }

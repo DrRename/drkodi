@@ -23,7 +23,6 @@ package drrename;
 import drrename.config.AppConfig;
 import drrename.event.FileRenamedEvent;
 import drrename.event.NewRenamingEntryEvent;
-import drrename.model.RenamingControl;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
@@ -194,13 +193,6 @@ public class Entries {
 
     private void updateRenamedFileTypesLabel() {
         statusRenamedFileTypes.set(String.format(resourceBundle.getString(RENAMED_TYPES), renamedImageEntries.size(), renamedVideosEntries.size()));
-    }
-
-    @Deprecated
-    @EventListener
-    public void onFileEntryEvent(NewRenamingEntryEvent event) {
-        var hans = new ArrayList<>(event.getRenamingEntries());
-        Platform.runLater(() -> entries.addAll(hans));
     }
 
     @EventListener
