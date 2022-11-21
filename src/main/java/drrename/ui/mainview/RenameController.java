@@ -20,7 +20,7 @@
 
 package drrename.ui.mainview;
 
-import drrename.EntriesService;
+import drrename.Entries;
 import drrename.FileTypeProvider;
 import drrename.config.AppConfig;
 import drrename.event.MainViewButtonCancelEvent;
@@ -102,7 +102,7 @@ public class RenameController implements Initializable {
 
     private final Executor executor;
     private final RenamingService renamingService;
-    private final EntriesService entriesService;
+    private final Entries entries;
     private final FxWeaver fxWeaver;
     private final BooleanProperty draggingOver = new SimpleBooleanProperty();
     private final ListProperty<Path> loadedPaths = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -185,7 +185,7 @@ public class RenameController implements Initializable {
     private ProgressBar progressBar;
     private RenamingConfig renamingConfig;
 
-    public RenameController(TabController tabController, AppConfig config, LoadPathsService loadPathsService, PreviewService previewService, FileTypeService fileTypeService, ResourceBundle resourceBundle, RenamingStrategies renamingStrategies, Executor executor, RenamingService renamingService, EntriesService entriesService, FxWeaver fxWeaver) {
+    public RenameController(TabController tabController, AppConfig config, LoadPathsService loadPathsService, PreviewService previewService, FileTypeService fileTypeService, ResourceBundle resourceBundle, RenamingStrategies renamingStrategies, Executor executor, RenamingService renamingService, Entries entries, FxWeaver fxWeaver) {
         this.tabController = tabController;
         this.config = config;
         this.loadPathsService = loadPathsService;
@@ -195,7 +195,7 @@ public class RenameController implements Initializable {
         this.renamingStrategies = renamingStrategies;
         this.executor = executor;
         this.renamingService = renamingService;
-        this.entriesService = entriesService;
+        this.entries = entries;
         this.fxWeaver = fxWeaver;
         this.renamingServiceStarter = new RenamingServiceStarter(renamingService);
         this.loadServiceStarter = new LoadServiceStarter(loadPathsService);
@@ -236,7 +236,7 @@ public class RenameController implements Initializable {
             applyRandomColors();
 
 
-        entriesService.getEntriesFiltered().addListener((ListChangeListener<RenamingControl>) c -> {
+        entries.getEntriesFiltered().addListener((ListChangeListener<RenamingControl>) c -> {
             while (c.next()) {
 
                     Collection<RenamingControl> removeFinal = new LinkedHashSet<>(c.getRemoved());
@@ -262,12 +262,12 @@ public class RenameController implements Initializable {
     }
 
     private void configureStatusLabels() {
-        statusLabelLoaded.textProperty().bind(entriesService.statusLoadedProperty());
-        statusLabelLoadedFileTypes.textProperty().bind(entriesService.statusLoadedFileTypesProperty());
-        statusLabelFilesWillRename.textProperty().bind((entriesService.statusWillRenameProperty()));
-        statusLabelFilesWillRenameFileTypes.textProperty().bind(entriesService.statusWillRenameFileTypesProperty());
-        statusLabelRenamed.textProperty().bind(entriesService.statusRenamedProperty());
-        statusLabelRenamedFileTypes.textProperty().bind(entriesService.statusRenamedFileTypesProperty());
+        statusLabelLoaded.textProperty().bind(entries.statusLoadedProperty());
+        statusLabelLoadedFileTypes.textProperty().bind(entries.statusLoadedFileTypesProperty());
+        statusLabelFilesWillRename.textProperty().bind((entries.statusWillRenameProperty()));
+        statusLabelFilesWillRenameFileTypes.textProperty().bind(entries.statusWillRenameFileTypesProperty());
+        statusLabelRenamed.textProperty().bind(entries.statusRenamedProperty());
+        statusLabelRenamedFileTypes.textProperty().bind(entries.statusRenamedFileTypesProperty());
     }
 
     private void configureButtons() {
@@ -295,9 +295,9 @@ public class RenameController implements Initializable {
         tabController.startDirectoryComponentController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
         tabController.startDirectoryComponentController.readyProperty().addListener(this::getNewReadyChangeListener);
 
-        ignoreDirectoriesChangeListener = (e, o, n) -> entriesService.setFilterDirectories(n);
-        ignoreHiddenFilesChangeListener = (e, o, n) -> entriesService.setFilterHiddenFiles(n);
-        showOnlyChangingChangeListener = (e, o, n) -> entriesService.setShowOnlyChainging(n);
+        ignoreDirectoriesChangeListener = (e, o, n) -> entries.setFilterDirectories(n);
+        ignoreHiddenFilesChangeListener = (e, o, n) -> entries.setFilterHiddenFiles(n);
+        showOnlyChangingChangeListener = (e, o, n) -> entries.setShowOnlyChainging(n);
         textFieldReplacementStringFrom.textProperty().addListener(replaceStringFromChangeListener);
         textFieldReplacementStringTo.textProperty().addListener(replaceStringToChangeListener);
         ignoreDirectories.selectedProperty().addListener(ignoreDirectoriesChangeListener);
@@ -447,8 +447,8 @@ public class RenameController implements Initializable {
     }
 
     private void clearView() {
-        entriesService.getEntries().clear();
-        entriesService.getEntriesRenamed().clear();
+        entries.getEntries().clear();
+        entries.getEntriesRenamed().clear();
     }
 
     private void cancelCurrentOperation() {
@@ -505,7 +505,7 @@ public class RenameController implements Initializable {
 
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-            entriesService.entriesProperty().set((ObservableList<RenamingControl>) workerStateEvent.getSource().getValue());
+            entries.entriesProperty().set((ObservableList<RenamingControl>) workerStateEvent.getSource().getValue());
             updateFileTypeInfo();
             updatePreview();
         }
@@ -551,7 +551,7 @@ public class RenameController implements Initializable {
         @Override
         protected void doInitService(PreviewService service) {
 // Set all entries, filter-state might have changed
-            service.setRenamingEntries(new ArrayList<>(entriesService.getEntries()));
+            service.setRenamingEntries(new ArrayList<>(entries.getEntries()));
             progressBar.progressProperty().bind(service.progressProperty());
             var strat = initAndGetStrategy();
             if (strat != null)
@@ -587,7 +587,7 @@ public class RenameController implements Initializable {
 
         @Override
         protected void doInitService(FileTypeService service) {
-            fileTypeService.setRenamingEntries(entriesService.getEntries());
+            fileTypeService.setRenamingEntries(entries.getEntries());
             fileTypeService.setFileTypeProvider(initAndGetFileTypeStrategy());
         }
 
@@ -622,7 +622,7 @@ public class RenameController implements Initializable {
         protected void doInitService(RenamingService service) {
             final RenamingStrategy s = initAndGetStrategy();
             if (s != null) {
-                service.setRenamingEntries(new ArrayList<>(entriesService.getEntriesFiltered()));
+                service.setRenamingEntries(new ArrayList<>(entries.getEntriesFiltered()));
                 service.setStrategy(s);
                 progressBar.progressProperty().bind(service.progressProperty());
             } else {
@@ -632,7 +632,7 @@ public class RenameController implements Initializable {
 
         @Override
         protected void prepareUi() {
-            entriesService.getEntriesRenamed().clear();
+            entries.getEntriesRenamed().clear();
         }
 
         @Override
