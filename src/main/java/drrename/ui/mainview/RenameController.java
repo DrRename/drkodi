@@ -51,6 +51,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -504,6 +505,7 @@ public class RenameController implements Initializable {
 
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
+            entriesService.entriesProperty().set((ObservableList<RenamingControl>) workerStateEvent.getSource().getValue());
             updateFileTypeInfo();
             updatePreview();
         }

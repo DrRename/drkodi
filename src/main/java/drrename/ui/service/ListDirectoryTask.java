@@ -5,6 +5,9 @@ import drrename.event.NewRenamingEntryEvent;
 import drrename.event.StartingListFilesEvent;
 import drrename.event.SynchronousUuidEvent;
 import drrename.model.RenamingControl;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,57 +21,36 @@ import java.util.List;
 import java.util.Objects;
 
 @Slf4j
-public class ListDirectoryTask extends Task<List<RenamingControl>> {
+public class ListDirectoryTask extends Task<ObservableList<RenamingControl>> {
 
     private final Path dir;
 
-    private final ApplicationEventPublisher eventPublisher;
-
-    public ListDirectoryTask(final Path dir, ApplicationEventPublisher eventPublisher) {
+    public ListDirectoryTask(final Path dir) {
         this.dir = Objects.requireNonNull(dir);
-        this.eventPublisher = Objects.requireNonNull(eventPublisher);
         if (!Files.isDirectory(dir))
             throw new IllegalArgumentException(dir + " not a directory");
     }
 
     @Override
-    protected List<RenamingControl> call() throws IOException {
-        return getEntries(dir);
-    }
-
-    List<RenamingControl> getEntries(final Path dir) throws IOException {
-        List<RenamingControl> result = new ArrayList<>();
-        SynchronousUuidEvent event = new StartingListFilesEvent();
-        log.debug("Publishing event {}", event);
-        eventPublisher.publishEvent(event);
-
-        List<RenamingControl> smallList = new ArrayList<>();
+    protected ObservableList<RenamingControl> call() throws IOException {
+        ObservableList<RenamingControl> result = FXCollections.observableArrayList();
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (Path path : stream) {
-                if (Thread.interrupted()) {
+                if (isCancelled()) {
                     break;
                 }
                 RenamingControl newEntry = new RenamingControl(path);
                 result.add(newEntry);
-                smallList.add(newEntry);
-                if(smallList.size() > 3) {
-                    eventPublisher.publishEvent(new NewRenamingEntryEvent(event.getUuid(), smallList));
-                    smallList.clear();
-                }
+                Platform.runLater(new Runnable() {
+                    @Override public void run() {
+                        updateValue(result);
+                    }
+                });
+
             }
         }
-        // publish 'left-overs'
-        eventPublisher.publishEvent(new NewRenamingEntryEvent(event.getUuid(), smallList));
-        smallList.clear();
-        event = new ListFilesFinishedEvent();
-        log.debug("Publishing event {}", event);
-        eventPublisher.publishEvent(event);
         return result;
-    }
-
-    private void publishSubset() {
-
     }
 }
 

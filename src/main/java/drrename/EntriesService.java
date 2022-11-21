@@ -33,6 +33,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -45,7 +46,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 
 @Slf4j
-@Service
+@Component
 public class EntriesService {
 
     static final String LOADED = "mainview.status.loaded.text";
@@ -197,6 +198,7 @@ public class EntriesService {
         statusRenamedFileTypes.set(String.format(resourceBundle.getString(RENAMED_TYPES), renamedImageEntries.size(), renamedVideosEntries.size()));
     }
 
+    @Deprecated
     @EventListener
     public void onFileEntryEvent(NewRenamingEntryEvent event) {
         var hans = new ArrayList<>(event.getRenamingEntries());
@@ -209,10 +211,71 @@ public class EntriesService {
         Platform.runLater(() -> entriesRenamed.addAll(hans));
     }
 
-    // Getter / Setter
+    // FX Getter / Setter //
+
 
     public ObservableList<RenamingControl> getEntries() {
         return entries.get();
+    }
+
+    public ListProperty<RenamingControl> entriesProperty() {
+        return entries;
+    }
+
+    public void setEntries(ObservableList<RenamingControl> entries) {
+        this.entries.set(entries);
+    }
+
+    public boolean isFilterHiddenFiles() {
+        return filterHiddenFiles.get();
+    }
+
+    public BooleanProperty filterHiddenFilesProperty() {
+        return filterHiddenFiles;
+    }
+
+    public void setFilterHiddenFiles(boolean filterHiddenFiles) {
+        this.filterHiddenFiles.set(filterHiddenFiles);
+    }
+
+    public boolean isFilterDirectories() {
+        return filterDirectories.get();
+    }
+
+    public BooleanProperty filterDirectoriesProperty() {
+        return filterDirectories;
+    }
+
+    public void setFilterDirectories(boolean filterDirectories) {
+        this.filterDirectories.set(filterDirectories);
+    }
+
+    public boolean isShowOnlyChainging() {
+        return showOnlyChainging.get();
+    }
+
+    public BooleanProperty showOnlyChaingingProperty() {
+        return showOnlyChainging;
+    }
+
+    public void setShowOnlyChainging(boolean showOnlyChainging) {
+        this.showOnlyChainging.set(showOnlyChainging);
+    }
+
+    public ObservableList<RenamingControl> getEntriesFiltered() {
+        return entriesFiltered.get();
+    }
+
+    public ListProperty<RenamingControl> entriesFilteredProperty() {
+        return entriesFiltered;
+    }
+
+    public ObservableList<RenamingControl> getEntriesRenamed() {
+        return entriesRenamed.get();
+    }
+
+    public ListProperty<RenamingControl> entriesRenamedProperty() {
+        return entriesRenamed;
     }
 
     public String getStatusLoaded() {
@@ -261,49 +324,5 @@ public class EntriesService {
 
     public StringProperty statusRenamedFileTypesProperty() {
         return statusRenamedFileTypes;
-    }
-
-    public boolean isFilterHiddenFiles() {
-        return filterHiddenFiles.get();
-    }
-
-    public BooleanProperty filterHiddenFilesProperty() {
-        return filterHiddenFiles;
-    }
-
-    public void setFilterHiddenFiles(boolean filterHiddenFiles) {
-        this.filterHiddenFiles.set(filterHiddenFiles);
-    }
-
-    public FilteredList<RenamingControl> getEntriesFiltered() {
-        return (FilteredList<RenamingControl>) entriesFiltered.get();
-    }
-
-    public boolean isFilterDirectories() {
-        return filterDirectories.get();
-    }
-
-    public BooleanProperty filterDirectoriesProperty() {
-        return filterDirectories;
-    }
-
-    public void setFilterDirectories(boolean filterDirectories) {
-        this.filterDirectories.set(filterDirectories);
-    }
-
-    public boolean isShowOnlyChainging() {
-        return showOnlyChainging.get();
-    }
-
-    public BooleanProperty showOnlyChaingingProperty() {
-        return showOnlyChainging;
-    }
-
-    public void setShowOnlyChainging(boolean showOnlyChainging) {
-        this.showOnlyChainging.set(showOnlyChainging);
-    }
-
-    public List<RenamingControl> getEntriesRenamed() {
-        return entriesRenamed;
     }
 }
