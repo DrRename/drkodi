@@ -4,7 +4,6 @@ import drrename.event.NewRenamingEntryEvent;
 import drrename.event.StartingListFilesEvent;
 import drrename.model.RenamingControl;
 import javafx.concurrent.Task;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -12,8 +11,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
-@RequiredArgsConstructor
+
 @Slf4j
 public class ListFilesTask extends Task<List<RenamingControl>> {
 
@@ -21,11 +21,15 @@ public class ListFilesTask extends Task<List<RenamingControl>> {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    public ListFilesTask(Collection<Path> files, ApplicationEventPublisher eventPublisher) {
+        this.files = Objects.requireNonNull(files);
+        this.eventPublisher = eventPublisher;
+    }
+
 
     @Override
     protected List<RenamingControl> call() {
         return getEntries(files);
-
     }
 
     List<RenamingControl> getEntries(final Collection<Path> files) {
@@ -34,7 +38,7 @@ public class ListFilesTask extends Task<List<RenamingControl>> {
         log.debug("Publishing event {}", event);
         eventPublisher.publishEvent(event);
         for (final Path f : files) {
-            if (Thread.interrupted()) {
+            if (isCancelled()) {
                 break;
             }
             var newEntry = new RenamingControl(f);

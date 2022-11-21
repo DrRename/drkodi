@@ -19,8 +19,8 @@
 
 package drrename.kodi;
 
-import drrename.ui.kodi.FilterableKodiTreeItem;
-import drrename.ui.kodi.MovieTreeItemValue;
+import drrename.kodi.ui.FilterableKodiTreeItem;
+import drrename.kodi.ui.MovieTreeItemValue;
 import javafx.beans.Observable;
 
 public class MovieTreeItemFilterable extends FilterableKodiTreeItem {

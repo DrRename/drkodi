@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
 import drrename.kodi.*;
 import drrename.model.RenamingPath;
@@ -44,7 +44,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public abstract class KodiTreeItemValue<R> extends FxKodiIssue<R> {
 
-    private final StringProperty buttonText;
+    protected final StringProperty buttonText;
 
     private final ObjectProperty<Boolean> warning;
 

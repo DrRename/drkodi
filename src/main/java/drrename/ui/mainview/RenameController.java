@@ -32,8 +32,8 @@ import drrename.strategy.RenamingConfig;
 import drrename.strategy.RenamingStrategies;
 import drrename.strategy.RenamingStrategy;
 import drrename.strategy.SimpleRenamingConfig;
-import drrename.ui.kodi.KodiToolsController;
-import drrename.ui.kodi.ServiceStarter;
+import drrename.kodi.ui.KodiToolsController;
+import drrename.kodi.ui.ServiceStarter;
 import drrename.ui.mainview.controller.FileListComponentController;
 import drrename.ui.mainview.controller.TabController;
 import drrename.ui.service.FileTypeService;
@@ -51,7 +51,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.concurrent.Service;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,7 +100,15 @@ public class RenameController implements Initializable {
     private final RenamingStrategies renamingStrategies;
 
     private final Executor executor;
-
+    private final RenamingService renamingService;
+    private final EntriesService entriesService;
+    private final FxWeaver fxWeaver;
+    private final BooleanProperty draggingOver = new SimpleBooleanProperty();
+    private final ListProperty<Path> loadedPaths = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final LoadServiceStarter loadServiceStarter;
+    private final PreviewServiceStarter previewServiceStarter;
+    private final FileTypeServiceStarter fileTypeServiceStarter;
+    private final RenamingServiceStarter renamingServiceStarter;
     public HBox goCancelButtonsComponent;
 
     public BorderPane buttonPane;
@@ -109,11 +116,6 @@ public class RenameController implements Initializable {
     public VBox fileListComponent;
 
     public HBox replacementStringComponent;
-
-    private final RenamingService renamingService;
-
-    private final EntriesService entriesService;
-
     public ListView<Control> leftContent;
 
     public ListView<Control> rightContent;
@@ -151,22 +153,9 @@ public class RenameController implements Initializable {
     public Label selectedStrategyLabel;
 
     public CheckBox includeExtension;
-
-    private ChangeListener<? super String> replaceStringFromChangeListener;
-
-    private ChangeListener<? super String> replaceStringToChangeListener;
-
-    private ChangeListener<? super Boolean> ignoreDirectoriesChangeListener;
-
-    private ChangeListener<? super Boolean> ignoreHiddenFilesChangeListener;
-
-    private ChangeListener<? super Boolean> showOnlyChangingChangeListener;
-
-    private ChangeListener<? super String> textFieldChangeListener;
-
-    @FXML
-    private ProgressBar progressBar;
-
+    public GoCancelButtonsComponentController goCancelButtonsComponentController;
+    public FileListComponentController fileListComponentController;
+    public ReplacementStringComponentController replacementStringComponentController;
     @FXML
     Node layer01;
 
@@ -185,158 +174,15 @@ public class RenameController implements Initializable {
 
     @FXML
     Node filterBox;
-
-    private final FxWeaver fxWeaver;
-
-    public GoCancelButtonsComponentController goCancelButtonsComponentController;
-
-    public FileListComponentController fileListComponentController;
-
-    public ReplacementStringComponentController replacementStringComponentController;
-
-    private final BooleanProperty draggingOver = new SimpleBooleanProperty();
-
-    private final ListProperty<Path> loadedPaths = new SimpleListProperty<>(FXCollections.observableArrayList());
-
+    private ChangeListener<? super String> replaceStringFromChangeListener;
+    private ChangeListener<? super String> replaceStringToChangeListener;
+    private ChangeListener<? super Boolean> ignoreDirectoriesChangeListener;
+    private ChangeListener<? super Boolean> ignoreHiddenFilesChangeListener;
+    private ChangeListener<? super Boolean> showOnlyChangingChangeListener;
+    private ChangeListener<? super String> textFieldChangeListener;
+    @FXML
+    private ProgressBar progressBar;
     private RenamingConfig renamingConfig;
-
-    private class LoadServiceStarter extends ServiceStarter<LoadPathsService> {
-
-        public LoadServiceStarter(LoadPathsService service) {
-            super(service);
-        }
-
-        @Override
-        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-            updateFileTypeInfo();
-            updatePreview();
-        }
-
-        @Override
-        protected void doInitService(LoadPathsService service) {
-            service.setFiles(new ArrayList<>(loadedPaths));
-            progressBar.progressProperty().bind(service.progressProperty());
-        }
-
-        @Override
-        public void startService() {
-            super.startService();
-        }
-
-        @Override
-        protected void prepareUi() {
-            clearView();
-        }
-
-        @Override
-        protected boolean checkPreConditions() {
-            return true;
-        }
-    }
-
-    private class PreviewServiceStarter extends ServiceStarter<PreviewService> {
-
-        public PreviewServiceStarter(PreviewService service) {
-            super(service);
-        }
-
-        @Override
-        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-
-        }
-
-        @Override
-        protected void doInitService(PreviewService service) {
-// Set all entries, filter-state might have changed
-            service.setRenamingEntries(new ArrayList<>(entriesService.getEntries()));
-            progressBar.progressProperty().bind(service.progressProperty());
-            var strat = initAndGetStrategy();
-            if (strat != null)
-                service.setRenamingStrategy(strat);
-        }
-
-        @Override
-        protected void prepareUi() {
-
-        }
-
-        @Override
-        protected boolean checkPreConditions() {
-            return true;
-        }
-    }
-
-    private class FileTypeServiceStarter extends ServiceStarter<FileTypeService> {
-
-        public FileTypeServiceStarter(FileTypeService service) {
-            super(service);
-        }
-
-        @Override
-        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-
-        }
-
-        @Override
-        protected void doInitService(FileTypeService service) {
-            fileTypeService.setRenamingEntries(entriesService.getEntries());
-            fileTypeService.setFileTypeProvider(initAndGetFileTypeStrategy());
-        }
-
-        @Override
-        protected void prepareUi() {
-
-        }
-
-        @Override
-        protected boolean checkPreConditions() {
-            return true;
-        }
-    }
-
-    private class RenamingServiceStarter extends ServiceStarter<RenamingService> {
-
-        public RenamingServiceStarter(RenamingService service) {
-            super(service);
-        }
-
-        @Override
-        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-            updatePreview();
-        }
-
-        @Override
-        protected void doInitService(RenamingService service) {
-            final RenamingStrategy s = initAndGetStrategy();
-            if (s != null) {
-                service.setRenamingEntries(new ArrayList<>(entriesService.getEntriesFiltered()));
-                service.setStrategy(s);
-                progressBar.progressProperty().bind(service.progressProperty());
-            } else {
-                log.warn("Cannot init service, no renaming strategy selected");
-            }
-        }
-
-        @Override
-        protected void prepareUi() {
-            entriesService.getEntriesRenamed().clear();
-        }
-
-        @Override
-        protected boolean checkPreConditions() {
-            return true;
-        }
-    }
-
-    private final LoadServiceStarter loadServiceStarter;
-
-    private final PreviewServiceStarter previewServiceStarter;
-
-    private final FileTypeServiceStarter fileTypeServiceStarter;
-
-    private final RenamingServiceStarter renamingServiceStarter;
-
-
 
     public RenameController(TabController tabController, AppConfig config, LoadPathsService loadPathsService, PreviewService previewService, FileTypeService fileTypeService, ResourceBundle resourceBundle, RenamingStrategies renamingStrategies, Executor executor, RenamingService renamingService, EntriesService entriesService, FxWeaver fxWeaver) {
         this.tabController = tabController;
@@ -356,6 +202,9 @@ public class RenameController implements Initializable {
         this.fileTypeServiceStarter = new FileTypeServiceStarter(fileTypeService);
     }
 
+    public static String getRandomColorString() {
+        return String.format("#%06x", new Random().nextInt(256 * 256 * 256));
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -443,6 +292,7 @@ public class RenameController implements Initializable {
         replaceStringToChangeListener = (e, o, n) -> Platform.runLater(this::updatePreview);
 
         tabController.startDirectoryComponentController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
+        tabController.startDirectoryComponentController.readyProperty().addListener(this::getNewReadyChangeListener);
 
         ignoreDirectoriesChangeListener = (e, o, n) -> entriesService.setFilterDirectories(n);
         ignoreHiddenFilesChangeListener = (e, o, n) -> entriesService.setFilterHiddenFiles(n);
@@ -466,24 +316,37 @@ public class RenameController implements Initializable {
 
     }
 
-    private void getNewInputPathChangeListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
-        if (tabController.startDirectoryComponentController.isReady()) {
-            loadedPaths.setAll(newValue);
-            updateInputView();
+    private void getNewReadyChangeListener(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        if (newValue != null && newValue) {
+
         } else {
             cancelCurrentOperation();
             clearView();
         }
     }
 
-    private void inputReady(ChangeListener<Boolean> changeListener){
+    private void getNewInputPathChangeListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
+
+        if(tabController.startDirectoryComponentController.isReady()){
+            loadedPaths.setAll(newValue);
+            updateInputView();
+
+
+    } else {
+        cancelCurrentOperation();
+        clearView();
+    }
+
+    }
+
+    private void inputReady(ChangeListener<Boolean> changeListener) {
 
     }
 
     private void initServices() {
-        setLoadingServiceCallbacks();
-        setRenamingServiceCallbacks();
-        setPreviewServiceCallbacks();
+        loadPathsService.setExecutor(executor);
+        previewService.setExecutor(executor);
+        fileTypeService.setExecutor(executor);
         registerStateChangeListeners();
     }
 
@@ -493,7 +356,6 @@ public class RenameController implements Initializable {
         fileTypeService.runningProperty().addListener((observable, oldValue, newValue) -> fileTypeServiceStateChanged(newValue));
         renamingService.runningProperty().addListener((observable, oldValue, newValue) -> renamingServiceStatusChange(newValue));
     }
-
 
     private void loadingFilesServiceStausChanged(Boolean newValue) {
         if (newValue) loadingFilesStatusLabel.setText(String.format(resourceBundle.getString(LOADING_FILES)));
@@ -516,30 +378,13 @@ public class RenameController implements Initializable {
     }
 
 
-    private void setLoadingServiceCallbacks() {
-        loadPathsService.setOnFailed(e -> {
-            log.error(e + ", " + renamingService.getException());
-        });
-    }
 
-    private void setPreviewServiceCallbacks() {
-        previewService.setOnFailed(e -> {
-            log.error(e + ", " + renamingService.getException());
-        });
-    }
 
-    private void setRenamingServiceCallbacks() {
-        renamingService.setOnFailed(e -> {
-            log.error(e + ", " + renamingService.getException());
-        });
-    }
+
+
 
     private void applyRandomColors() {
         Stream.of(layer01, layer02_3, comboboxBox, filterAndButtonPane, buttonPane, filterBox, goCancelButtonsComponent, statusLabelLoaded, statusLabelLoadedFileTypes, statusLabelFilesWillRename, statusLabelFilesWillRename, statusBox).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
-    }
-
-    public static String getRandomColorString() {
-        return String.format("#%06x", new Random().nextInt(256 * 256 * 256));
     }
 
     private void addToContent(final Collection<? extends RenamingControl> renamingBeans) {
@@ -588,9 +433,6 @@ public class RenameController implements Initializable {
         loadServiceStarter.startService();
     }
 
-
-
-
     private void updatePreview() {
         previewServiceStarter.startService();
     }
@@ -599,14 +441,9 @@ public class RenameController implements Initializable {
         fileTypeServiceStarter.startService();
     }
 
-
-
     private FileTypeProvider initAndGetFileTypeStrategy() {
         return new FileTypeByMimeProvider();
     }
-
-
-
 
     private void clearView() {
         entriesService.getEntries().clear();
@@ -654,9 +491,151 @@ public class RenameController implements Initializable {
     public void handleMenuItemAbout(ActionEvent actionEvent) {
     }
 
-
     public void handleMenuItemSettings(ActionEvent actionEvent) {
         SettingsController controller = fxWeaver.loadController(SettingsController.class, resourceBundle);
         controller.show();
+    }
+
+    private class LoadServiceStarter extends ServiceStarter<LoadPathsService> {
+
+        public LoadServiceStarter(LoadPathsService service) {
+            super(service);
+        }
+
+        @Override
+        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
+            updateFileTypeInfo();
+            updatePreview();
+        }
+
+        @Override
+        protected void doInitService(LoadPathsService service) {
+            service.setFiles(new ArrayList<>(loadedPaths));
+            progressBar.progressProperty().bind(service.progressProperty());
+        }
+
+        @Override
+        protected void onCancelled(WorkerStateEvent workerStateEvent) {
+
+        }
+
+        @Override
+        protected void prepareUi() {
+            clearView();
+        }
+
+        @Override
+        protected boolean checkPreConditions() {
+            return true;
+        }
+    }
+
+    private class PreviewServiceStarter extends ServiceStarter<PreviewService> {
+
+        public PreviewServiceStarter(PreviewService service) {
+            super(service);
+        }
+
+        @Override
+        protected void onCancelled(WorkerStateEvent workerStateEvent) {
+
+        }
+
+        @Override
+        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
+
+        }
+
+        @Override
+        protected void doInitService(PreviewService service) {
+// Set all entries, filter-state might have changed
+            service.setRenamingEntries(new ArrayList<>(entriesService.getEntries()));
+            progressBar.progressProperty().bind(service.progressProperty());
+            var strat = initAndGetStrategy();
+            if (strat != null)
+                service.setRenamingStrategy(strat);
+        }
+
+        @Override
+        protected void prepareUi() {
+
+        }
+
+        @Override
+        protected boolean checkPreConditions() {
+            return true;
+        }
+    }
+
+    private class FileTypeServiceStarter extends ServiceStarter<FileTypeService> {
+
+        public FileTypeServiceStarter(FileTypeService service) {
+            super(service);
+        }
+
+        @Override
+        protected void onCancelled(WorkerStateEvent workerStateEvent) {
+
+        }
+
+        @Override
+        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
+
+        }
+
+        @Override
+        protected void doInitService(FileTypeService service) {
+            fileTypeService.setRenamingEntries(entriesService.getEntries());
+            fileTypeService.setFileTypeProvider(initAndGetFileTypeStrategy());
+        }
+
+        @Override
+        protected void prepareUi() {
+
+        }
+
+        @Override
+        protected boolean checkPreConditions() {
+            return true;
+        }
+    }
+
+    private class RenamingServiceStarter extends ServiceStarter<RenamingService> {
+
+        public RenamingServiceStarter(RenamingService service) {
+            super(service);
+        }
+
+        @Override
+        protected void onCancelled(WorkerStateEvent workerStateEvent) {
+
+        }
+
+        @Override
+        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
+            updatePreview();
+        }
+
+        @Override
+        protected void doInitService(RenamingService service) {
+            final RenamingStrategy s = initAndGetStrategy();
+            if (s != null) {
+                service.setRenamingEntries(new ArrayList<>(entriesService.getEntriesFiltered()));
+                service.setStrategy(s);
+                progressBar.progressProperty().bind(service.progressProperty());
+            } else {
+                log.warn("Cannot init service, no renaming strategy selected");
+            }
+        }
+
+        @Override
+        protected void prepareUi() {
+            entriesService.getEntriesRenamed().clear();
+        }
+
+        @Override
+        protected boolean checkPreConditions() {
+            return true;
+        }
     }
 }

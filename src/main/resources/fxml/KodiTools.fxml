@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
-      fx:controller="drrename.ui.kodi.KodiToolsController" fx:id="root" maxHeight="Infinity"
+      fx:controller="drrename.kodi.ui.KodiToolsController" fx:id="root" maxHeight="Infinity"
       prefHeight="400.0" prefWidth="600.0" spacing="4" >
 
     <padding>

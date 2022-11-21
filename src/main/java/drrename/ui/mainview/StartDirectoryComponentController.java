@@ -80,7 +80,6 @@ public class StartDirectoryComponentController implements Initializable, Applica
             if (Files.isDirectory(inputPath)) {
                 if (Files.isWritable(inputPath)) {
                     ready.set(true);
-                    this.inputPath.set(inputPath);
                 } else {
                     log.debug("cannot write to {}", inputPath);
                     ready.set(false);
@@ -93,6 +92,7 @@ public class StartDirectoryComponentController implements Initializable, Applica
             log.debug("cannot read {}", inputPath);
             ready.set(false);
         }
+        this.inputPath.set(inputPath);
         log.debug("Ready-state now {}", ready.get());
     }
 

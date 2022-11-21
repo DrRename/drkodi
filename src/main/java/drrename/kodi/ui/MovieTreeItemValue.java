@@ -18,26 +18,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.WarningsConfig;
 import drrename.model.RenamingPath;
+import drrename.util.DrRenameUtil;
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.Parent;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SystemUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.concurrent.Executor;
 
 @Slf4j
@@ -48,20 +41,10 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
     }
 
     @Override
-    protected HBox buildGraphic() {
-
-        HBox box = new HBox(2);
+    protected Parent buildGraphic() {
 
         if(SystemUtils.IS_OS_MAC) {
-            Button button = new Button("Open in finder");
-            button.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    runOpenFolderCommandMacOs(getRenamingPath().getOldPath());
-                }
-            });
-           box.getChildren().add(button);
-            return box;
+            return DrRenameUtil.getOpenInFinderButton(getRenamingPath().getOldPath());
         }
         return null;
 
@@ -100,7 +83,7 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
 
     @Override
     public String getIdentifier() {
-        return getRenamingPath().getMovieName();
+        return getMovieNameFromFolder() + (getMovieNameFromNfo() != null ? ", " + getMovieNameFromNfo() : "");
     }
 
     protected void initWarning(FilterableKodiTreeItem treeItem) {
@@ -111,12 +94,5 @@ public class MovieTreeItemValue extends KodiTreeItemValue<Object> {
         return treeItem.getSourceChildren().stream().map(TreeItem::getValue).filter(v -> v.warningProperty().get() != null).anyMatch(KodiTreeItemValue::isWarning);
     }
 
-    private void runOpenFolderCommandMacOs(Path path) {
-        new CommandRunner().runCommand(new String[]{"open", "-R", path.toString()});
-    }
 
-    @Override
-    public HBox getGraphic() {
-        return (HBox) super.getGraphic();
-    }
 }

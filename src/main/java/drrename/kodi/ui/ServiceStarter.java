@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
 
 import javafx.concurrent.Service;
@@ -38,49 +38,26 @@ public abstract class ServiceStarter<S extends Service<?>> {
         if(checkPreConditions()){
             log.debug("Preparing UI");
             prepareUi();
-            if(service.getState().equals(Worker.State.READY)){
-                doStartService();
-            }
-            else if(service.getState().equals(Worker.State.SCHEDULED) || service.getState().equals(Worker.State.RUNNING)){
-                log.debug("Scheduled or running, cancelling service {}", service);
-                cancelResetAndStart();
-            }
-            else {
-                resetAndStart();
-            }
+            initService(service);
+            service.restart();
         } else {
             log.warn("Cannot start, pre conditions failed");
         }
     }
 
-    private void cancelResetAndStart() {
-        service.setOnCancelled(event -> resetAndStart());
-        service.cancel();
-    }
-
-    private void resetAndStart() {
-        log.debug("Resetting service {} with state {}", service, service.getState());
-        service.setOnReady(event -> doStartService());
-        service.reset();
-    }
-
-    private void doStartService() {
-        log.debug("Init service {}", service);
-        initService(service);
-        log.debug("Starting service {}", service);
-        service.start();
-    }
-
     protected final void initService(S service){
         service.setOnFailed(this::handleFailed);
         service.setOnSucceeded(this::onSucceeded);
+        service.setOnCancelled(this::onCancelled);
         doInitService(service);
     }
+
+    protected abstract  void onCancelled(WorkerStateEvent workerStateEvent);
 
     protected abstract void onSucceeded(WorkerStateEvent workerStateEvent);
 
     private void handleFailed(WorkerStateEvent e) {
-            log.error("Service {} failed with exception {}", service, service.getException());
+        log.error("{} failed with reason {}", e.getSource(), e.getSource().getException());
     }
 
     protected abstract void doInitService(S service);

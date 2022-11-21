@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.WarningsConfig;

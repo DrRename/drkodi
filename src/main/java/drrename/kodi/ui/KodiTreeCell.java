@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -30,7 +30,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Path;
