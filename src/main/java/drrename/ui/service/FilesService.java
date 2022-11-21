@@ -27,12 +27,6 @@ public abstract class FilesService<V> extends Service<V> {
     }
 
     @Override
-    public void reset() {
-        super.reset();
-        this.renamingEntries = new ArrayList<>();
-    }
-
-    @Override
     public String toString() {
         return getClass().getSimpleName() + " file cnt: " + (renamingEntries == null ? 0 : renamingEntries.size());
     }

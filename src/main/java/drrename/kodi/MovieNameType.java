@@ -18,29 +18,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi;
 
-import drrename.kodi.nfo.NfoFileParser;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+public enum MovieNameType {
 
-import java.io.IOException;
-import java.nio.file.Path;
+    FOLDER("Folder"), NFO("NFO (hard coded)"), NFO_URL("NFO (from URL)");
 
-@Slf4j
-@RequiredArgsConstructor
-public class NfoFileTitleExtractor {
+    private final String name;
 
-    private final NfoFileParser nfoFileParser;
+    MovieNameType(String name){
+        this.name = name;
+    }
 
-    public String getTitleFromNfoFile(Path nfoFile){
-        try {
-            var xmlModel = nfoFileParser.parse(nfoFile);
-            if (xmlModel != null && xmlModel.getMovie() != null)
-                return xmlModel.getMovie().getTitle();
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-        }
-        return null;
+    @Override
+    public String toString() {
+        return name;
     }
 }

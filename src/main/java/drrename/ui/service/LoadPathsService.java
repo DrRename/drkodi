@@ -43,10 +43,6 @@ public class LoadPathsService extends Service<List<RenamingControl>> {
         this.files = files;
     }
 
-    @Override
-    public void reset() {
-        super.reset();
-        this.files = null;
-    }
+
 }
 

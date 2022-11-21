@@ -73,6 +73,13 @@ public abstract class FxKodiIssue<R> implements KodiIssue<R> {
         return StringUtils.isNotBlank(movieNameFromNfo) ? movieNameFromNfo : getMovieNameFromFolder();
     }
 
+    public MovieNameType getMovieNameType(){
+        if(StringUtils.isNotBlank(getMovieNameFromNfo())){
+            return MovieNameType.NFO;
+        }
+        return MovieNameType.FOLDER;
+    }
+
     // FX Getter / Setter //
 
     @Override

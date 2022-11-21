@@ -18,12 +18,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
-import drrename.kodi.KodiCollectService;
-import drrename.kodi.KodiUtil;
-import drrename.kodi.MovieDbClientFactory;
-import drrename.kodi.WarningsConfig;
+import drrename.kodi.*;
 import drrename.ui.mainview.controller.TabController;
 import drrename.util.FXUtil;
 import javafx.application.Platform;
@@ -49,6 +46,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -86,6 +84,8 @@ public class KodiToolsController implements Initializable {
 
     private final KodiCollectService kodiCollectService;
 
+    private final KodiAddChildItemsService kodiAddChildItemsService;
+
     private final Executor executor;
 
     private FilterableKodiRootTreeItem treeRoot;
@@ -94,25 +94,45 @@ public class KodiToolsController implements Initializable {
 
     private WarningsConfig warningsConfig;
 
-    private class KodiServiceStarter extends ServiceStarter<KodiCollectService> {
+    private class KodiCollectServiceStarter extends ServiceStarter<KodiCollectService> {
 
-        public KodiServiceStarter(KodiCollectService service) {
+        public KodiCollectServiceStarter(KodiCollectService service) {
             super(service);
+        }
+
+        @Override
+        protected void onCancelled(WorkerStateEvent workerStateEvent) {
+            kodiAddChildItemsService.cancel();
         }
 
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
 
+            List<MovieTreeItemFilterable> result = (List<MovieTreeItemFilterable>) workerStateEvent.getSource().getValue();
+            if (result != null) {
+                treeRoot.getSourceChildren().addAll(result);
+                kodiAddChildItemsService.reset();
+                kodiAddChildItemsService.setItemValues(result);
+                kodiAddChildItemsService.setWarningsConfig(warningsConfig);
+                kodiAddChildItemsService.setOnFailed(this::onFailed);
+                progressBar.progressProperty().bind(kodiAddChildItemsService.progressProperty());
+                kodiAddChildItemsService.start();
+            } else {
+                log.error("Got no result from {} with state {}", workerStateEvent.getSource(), workerStateEvent.getSource().getState());
+            }
+        }
+
+        private void onFailed(WorkerStateEvent workerStateEvent) {
+            log.error("{} failed with reason {}", workerStateEvent.getSource(), workerStateEvent.getSource().getException());
         }
 
         @Override
         protected void doInitService(KodiCollectService service) {
             service.setDirectory(tabController.startDirectoryComponentController.getInputPath());
-            service.setExecutor(executor);
             service.setRootTreeItem(treeRoot);
-            service.setMovieDbClientFactory(movieDbClientFactory);
             service.setWarningsConfig(warningsConfig);
             service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
+            progressBar.progressProperty().bind(service.progressProperty());
 
         }
 
@@ -127,14 +147,15 @@ public class KodiToolsController implements Initializable {
         }
     }
 
-    private final KodiServiceStarter serviceStarter;
+    private final KodiCollectServiceStarter serviceStarter;
 
-    public KodiToolsController(TabController tabController, KodiCollectService kodiCollectService, Executor executor, MovieDbClientFactory movieDbClientFactory) {
+    public KodiToolsController(TabController tabController, KodiCollectService kodiCollectService, KodiAddChildItemsService kodiAddChildItemsService, Executor executor, MovieDbClientFactory movieDbClientFactory) {
         this.tabController = tabController;
         this.kodiCollectService = kodiCollectService;
+        this.kodiAddChildItemsService = kodiAddChildItemsService;
         this.executor = executor;
         this.movieDbClientFactory = movieDbClientFactory;
-        this.serviceStarter = new KodiServiceStarter(kodiCollectService);
+        this.serviceStarter = new KodiCollectServiceStarter(kodiCollectService);
     }
 
 
@@ -146,15 +167,18 @@ public class KodiToolsController implements Initializable {
         mainStage.setScene(new Scene(root));
         mainStage.setTitle("Kodi Tools");
 
+        kodiCollectService.setExecutor(executor);
+        kodiAddChildItemsService.setExecutor(executor);
+
         initTreeRoot();
 
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
 
-        progressBar.progressProperty().bind(kodiCollectService.progressProperty());
-        progressBar.visibleProperty().bind(kodiCollectService.runningProperty());
+        progressBar.visibleProperty().bind(kodiCollectService.runningProperty().or(kodiAddChildItemsService.runningProperty()));
 
         tabController.startDirectoryComponentController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
+
 
         treeView.setCellFactory(this::treeViewCellFactoryCallback);
 
@@ -183,6 +207,7 @@ public class KodiToolsController implements Initializable {
     }
 
     private void getNewInputPathChangeListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
+
         if (tabController.startDirectoryComponentController.isReady()) {
             serviceStarter.startService();
         } else {
@@ -202,7 +227,7 @@ public class KodiToolsController implements Initializable {
     }
 
     private void cancelAllAndClearUi() {
-        kodiCollectService.setOnCancelled(event -> clearUi());
+        kodiAddChildItemsService.cancel();;
         kodiCollectService.cancel();
         clearUi();
     }
@@ -211,7 +236,7 @@ public class KodiToolsController implements Initializable {
 
         treeRoot.getSourceChildren().clear();
         // for some reason, always one element is left in the children list
-        treeRoot.getChildren().clear();
+//        treeRoot.getChildren().clear();
         log.debug("UI cleared. Elements left: {}, {}", treeRoot.getSourceChildren(), treeRoot.getChildren());
 
     }

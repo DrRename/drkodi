@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.NfoFileNameCheckResult;
@@ -26,11 +26,14 @@ import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.kodi.nfo.NfoFileParser;
 import drrename.model.RenamingPath;
+import drrename.util.DrRenameUtil;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SystemUtils;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -53,9 +56,29 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
         return new NfoContentTitleChecker().checkDir(getRenamingPath().getOldPath());
     }
 
+    protected void updateButtonText(boolean canFix, boolean isWarning) {
+        if (isWarning) {
+            if(SystemUtils.IS_OS_MAC) {
+               buttonText.set("Open in finder");
+            } else
+                buttonText.set("Fix manually");
+        } else {
+            buttonText.set("OK");
+        }
+    }
+
+    protected Node buildGraphic() {
+        Button button = (Button) super.buildGraphic();
+        if(isWarning() && SystemUtils.IS_OS_MAC) {
+        button.disableProperty().unbind();
+        button.setDisable(false);
+        }
+        return button;
+    }
+
     @Override
     public void fix(NfoFileNameCheckResult result) throws FixFailedException {
-        throw new IllegalStateException("Cannot fix");
+        DrRenameUtil.runOpenFolderCommandMacOs(result.getNfoFiles().get(0));
     }
 
     @Override
@@ -63,7 +86,8 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
         if(result == null){
             return;
         }
-//        log.debug("Updating status");
+        // 'fixable' to 'true', on order for the button to show up
+//        setFixable(SystemUtils.IS_OS_MAC);
         setCheckResult(result);
         setWarning(calculateWarning());
     }

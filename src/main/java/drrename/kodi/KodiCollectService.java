@@ -1,34 +1,38 @@
 package drrename.kodi;
 
-import drrename.ui.kodi.FilterableKodiRootTreeItem;
+import drrename.kodi.ui.FilterableKodiRootTreeItem;
 import javafx.beans.Observable;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.Executor;
 
+@RequiredArgsConstructor
 @Slf4j
-@Getter
 @Setter
 @org.springframework.stereotype.Service
-public class KodiCollectService extends Service<Void> {
+public class KodiCollectService extends Service<List<MovieTreeItemFilterable>> {
 
     private Path directory;
 
     private FilterableKodiRootTreeItem rootTreeItem;
 
-    private MovieDbClientFactory movieDbClientFactory;
+    private final MovieDbClientFactory movieDbClientFactory;
+
+    private final Executor executor;
 
     private WarningsConfig warningsConfig;
 
     private Observable[] extractor;
 
     @Override
-    protected Task<Void> createTask() {
-        return new MovieDirectoryIssuesTask(directory, rootTreeItem, getExecutor(), movieDbClientFactory, warningsConfig, extractor);
+    protected Task<List<MovieTreeItemFilterable>> createTask() {
+        return new KodiToolsCollectTask(directory, rootTreeItem, executor, movieDbClientFactory, warningsConfig, extractor);
     }
 
 }

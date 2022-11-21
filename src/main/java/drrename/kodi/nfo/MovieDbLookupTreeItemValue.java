@@ -20,7 +20,7 @@
 package drrename.kodi.nfo;
 
 import drrename.kodi.MovieDbImagesClient;
-import drrename.ui.kodi.KodiTreeItemValue;
+import drrename.kodi.ui.KodiTreeItemValue;
 import drrename.util.DrRenameUtil;
 import drrename.config.TheMovieDbConfig;
 import drrename.kodi.*;

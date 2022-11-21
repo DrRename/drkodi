@@ -18,22 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.kodi;
+package drrename.kodi.ui;
 
-import drrename.kodi.WarningsConfig;
-import javafx.beans.Observable;
-import javafx.scene.control.TreeView;
-
-import java.util.concurrent.Executor;
-
-/**
- * The root value of the Kodi {@link TreeView}.
- *
- * @see KodiRootTreeItemValue
- */
-public class FilterableKodiRootTreeItem extends FilterableKodiTreeItem {
-
-    public FilterableKodiRootTreeItem(Executor executor, WarningsConfig warningsConfig, Observable[] extractor) {
-        super(new KodiRootTreeItemValue(executor, warningsConfig), extractor);
-    }
+public class NfoFiles {
 }
