@@ -19,6 +19,7 @@
 
 package drrename.mime;
 
+import drrename.FileTypeByMimeProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

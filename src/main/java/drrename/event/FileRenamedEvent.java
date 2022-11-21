@@ -19,7 +19,7 @@
 
 package drrename.event;
 
-import drrename.model.RenamingControl;
+import drrename.RenamingControl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

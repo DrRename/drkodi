@@ -25,7 +25,7 @@ import drrename.kodi.SubdirsCheckResult;
 import drrename.kodi.SubdirsChecker;
 import drrename.kodi.WarningsConfig;
 import drrename.util.DrRenameUtil;
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
 import lombok.extern.slf4j.Slf4j;
 

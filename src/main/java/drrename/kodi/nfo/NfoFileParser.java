@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import drrename.model.nfo.NfoRoot;
+import drrename.kodi.NfoRoot;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

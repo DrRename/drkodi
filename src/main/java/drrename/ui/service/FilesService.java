@@ -1,6 +1,6 @@
 package drrename.ui.service;
 
-import drrename.model.RenamingControl;
+import drrename.RenamingControl;
 import javafx.concurrent.Service;
 
 import java.util.ArrayList;

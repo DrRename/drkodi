@@ -19,7 +19,7 @@
 
 package drrename.kodi.nfo;
 
-import drrename.model.nfo.NfoRoot;
+import drrename.kodi.NfoRoot;
 
 import java.nio.file.Path;
 

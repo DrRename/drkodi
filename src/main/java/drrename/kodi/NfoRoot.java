@@ -17,7 +17,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.model.nfo;
+package drrename.kodi;
 
 import lombok.Getter;
 import lombok.Setter;

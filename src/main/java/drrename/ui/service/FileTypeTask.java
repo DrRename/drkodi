@@ -1,7 +1,7 @@
 package drrename.ui.service;
 
 import drrename.FileTypeProvider;
-import drrename.model.RenamingControl;
+import drrename.RenamingControl;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;

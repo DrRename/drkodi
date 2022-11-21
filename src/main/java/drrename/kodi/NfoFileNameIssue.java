@@ -22,7 +22,7 @@ package drrename.kodi;
 
 import drrename.util.DrRenameUtil;
 import drrename.kodi.nfo.*;
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

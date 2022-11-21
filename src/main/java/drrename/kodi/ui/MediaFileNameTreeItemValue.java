@@ -21,7 +21,7 @@
 package drrename.kodi.ui;
 
 import drrename.kodi.*;
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;

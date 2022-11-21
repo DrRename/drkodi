@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.settingsview;
+package drrename.ui;
 
 import drrename.Settings;
 import drrename.SettingsProvider;

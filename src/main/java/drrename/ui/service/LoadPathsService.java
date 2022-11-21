@@ -1,12 +1,11 @@
 package drrename.ui.service;
 
-import drrename.model.RenamingControl;
+import drrename.RenamingControl;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.ApplicationEventPublisher;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

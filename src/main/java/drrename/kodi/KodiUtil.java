@@ -22,7 +22,7 @@ package drrename.kodi;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import drrename.model.nfo.NfoFileXmlModel;
+import drrename.kodi.NfoFileXmlModel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

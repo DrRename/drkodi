@@ -24,7 +24,7 @@ import drrename.kodi.FixableStatusChecker;
 import drrename.kodi.MovieDbClientFactory;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;

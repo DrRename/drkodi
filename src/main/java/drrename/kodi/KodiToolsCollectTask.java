@@ -5,7 +5,7 @@ import drrename.kodi.nfo.NfoFileParser;
 import drrename.kodi.ui.FilterableKodiRootTreeItem;
 import drrename.kodi.ui.MovieTreeItemValue;
 import drrename.kodi.ui.NfoFileTitleExtractor;
-import drrename.model.RenamingPath;
+import drrename.RenamingPath;
 import javafx.beans.Observable;
 import javafx.concurrent.Task;
 import lombok.Getter;

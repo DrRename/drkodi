@@ -19,7 +19,7 @@
 
 package drrename.kodi;
 
-import drrename.mime.FileTypeByMimeProvider;
+import drrename.FileTypeByMimeProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

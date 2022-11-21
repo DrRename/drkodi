@@ -24,8 +24,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="drrename.ui.mainview.controller.TabController" fx:id="root">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="drrename.ui.TabController" fx:id="root">
 
 
 

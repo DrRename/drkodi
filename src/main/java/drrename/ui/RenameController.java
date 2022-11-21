@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.ui.mainview;
+package drrename.ui;
 
 import drrename.Entries;
 import drrename.FileTypeProvider;
@@ -26,21 +26,18 @@ import drrename.config.AppConfig;
 import drrename.event.MainViewButtonCancelEvent;
 import drrename.event.MainViewButtonGoEvent;
 import drrename.filecreator.DummyFileCreatorController;
-import drrename.mime.FileTypeByMimeProvider;
-import drrename.model.RenamingControl;
+import drrename.FileTypeByMimeProvider;
+import drrename.RenamingControl;
 import drrename.strategy.RenamingConfig;
 import drrename.strategy.RenamingStrategies;
 import drrename.strategy.RenamingStrategy;
 import drrename.strategy.SimpleRenamingConfig;
 import drrename.kodi.ui.KodiToolsController;
 import drrename.kodi.ui.ServiceStarter;
-import drrename.ui.mainview.controller.FileListComponentController;
-import drrename.ui.mainview.controller.TabController;
 import drrename.ui.service.FileTypeService;
 import drrename.ui.service.LoadPathsService;
 import drrename.ui.service.PreviewService;
 import drrename.ui.service.RenamingService;
-import drrename.ui.settingsview.SettingsController;
 import drrename.util.FXUtil;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

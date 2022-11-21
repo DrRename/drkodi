@@ -17,30 +17,24 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.model.themoviedb;
+package drrename.kodi;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.time.LocalDate;
+@ToString
+@Getter
+@Setter
+public class NfoFileXmlModel {
+    @ToString
+    @Getter
+    @Setter
+    public static class Art {
+        String poster;
+    }
 
-@Data
-public class SearchResultDto {
-
-    @JsonProperty("original_title")
-    String originalTitle;
-
-    @JsonProperty("title")
+    Art art;
+    String year;
     String title;
-
-    @JsonProperty("overview")
-    String overview;
-
-    Number id;
-
-    @JsonProperty("release_date")
-    LocalDate releaseDate;
-
-    @JsonProperty("poster_path")
-    String posterPath;
 }

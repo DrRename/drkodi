@@ -19,7 +19,7 @@
 
 package drrename.event;
 
-import drrename.model.RenamingControl;
+import drrename.RenamingControl;
 
 public record FilePreviewEvent(RenamingControl renamingControl) {
 
