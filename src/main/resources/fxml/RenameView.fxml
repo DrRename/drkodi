@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import drrename.ui.ProgressAndStatusGridPane?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
-      fx:controller="drrename.ui.RenameController">
+      fx:controller="drrename.ui.RenameController" spacing="4">
     <BorderPane fx:id="layer01" VBox.vgrow="ALWAYS">
-        <padding>
-            <Insets top="4" right="4" bottom="4" left="4"/>
-        </padding>
         <center>
             <fx:include fx:id="fileListComponent" source="FileListComponent.fxml"/>
         </center>
         <bottom>
             <VBox fx:id="layer02_3">
                 <fx:include fx:id="replacementStringComponent" source="ReplacementStringComponent.fxml"/>
-                <GridPane fx:id="comboboxBox" hgap="8" vgap="8">
+                <GridPane fx:id="comboboxBox" hgap="4" vgap="4">
                     <padding>
                         <Insets top="4" right="4" bottom="4" left="4"/>
                     </padding>
@@ -42,9 +40,7 @@
                     </padding>
                     <left>
                         <VBox HBox.hgrow="ALWAYS" fx:id="filterBox" spacing="4">
-                            <padding>
-                                <Insets top="4" right="4" bottom="4" left="4"/>
-                            </padding>
+
                             <CheckBox fx:id="ignoreHiddenFiles" text="%filter.ignore-hidden"/>
                             <CheckBox fx:id="ignoreDirectories" text="%filter.directories"/>
                             <CheckBox fx:id="includeExtension" text="%filter.extension"/>
@@ -53,6 +49,9 @@
                     </left>
                     <center>
                         <VBox fx:id="statusBox" alignment="CENTER">
+                            <padding>
+                                <Insets top="4" right="4" bottom="4" left="4"/>
+                            </padding>
                             <Label fx:id="statusLabelLoaded">
                             </Label>
                             <Label fx:id="statusLabelLoadedFileTypes">
@@ -82,22 +81,9 @@
                         </BorderPane>
                     </right>
                 </BorderPane>
-                <HBox alignment="CENTER" spacing="4">
-                    <padding>
-                        <Insets top="8" right="8" bottom="8" left="8"/>
-                    </padding>
-                    <Label fx:id="loadingFilesStatusLabel">
-                    </Label>
-                    <Label fx:id="fileTypeStatusLabel">
-                    </Label>
-                    <Label fx:id="previewFilesStatusLabel">
-                    </Label>
-                    <Label fx:id="renameFilesStatusLabel">
-                    </Label>
-                    <ProgressBar fx:id="progressBar" prefWidth="100"
-                                 style="-fx-border-width: 0; -fx-border-style: hidden;"
-                    />
-                </HBox>
+
+                <ProgressAndStatusGridPane fx:id="progressAndStatusGridPane"/>
+
             </VBox>
         </bottom>
     </BorderPane>

@@ -38,12 +38,12 @@ public abstract class RenamingStrategyProto implements RenamingStrategy {
 
     @Override
     public String getName() {
-        return String.format(String.format(getResourceBundle().getString(getNameId())));
+        return String.format(getResourceBundle().getString(getNameId()));
     }
 
     @Override
     public String getHelpText() {
-        return String.format(String.format(getResourceBundle().getString(getHelpTextId())));
+        return String.format(getResourceBundle().getString(getHelpTextId()));
     }
 
     protected abstract String getNameId();

@@ -19,11 +19,10 @@
 
 package drrename.filecreator;
 
+import drrename.DrRenameService;
+import drrename.Tasks;
 import drrename.config.AppConfig;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -33,36 +32,45 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
+import java.util.ResourceBundle;
 
-@RequiredArgsConstructor
+
 @Slf4j
-@Getter
 @Setter
 @Component
-public class FileCreatorService extends Service<Void> {
-
-    private final AppConfig config;
+public class FileCreatorService extends DrRenameService<Void> {
 
     private String wordSeparator;
+
     private long fileCnt;
+
     private Path directory;
+
+    public FileCreatorService(AppConfig appConfig, ResourceBundle resourceBundle) {
+        super(appConfig, resourceBundle);
+    }
 
     @Override
     protected Task<Void> createTask() {
-        return new Task<Void>() {
+        return new Task<>() {
             @Override
             protected Void call() throws Exception {
+                log.debug("Starting");
                 for (int i = 1; i <= fileCnt; i++) {
-                    if (Thread.interrupted()) {
+                    if (isCancelled()) {
+                        log.debug("Cancelled");
+                        updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
                         break;
                     }
                     String randomName = generateRandomName();
                     Path p = Paths.get(directory.toString(), randomName);
                     Files.createFile(p);
-                    if (config.isDebug())
-                        Thread.sleep(config.getLoopDelayMs());
                     updateProgress(i, fileCnt);
+                    if (getAppConfig().isDebug())
+                        Thread.sleep(getAppConfig().getLoopDelayMs());
                 }
+                log.debug("Completed");
+                updateMessage(null);
                 return null;
             }
         };
@@ -71,7 +79,7 @@ public class FileCreatorService extends Service<Void> {
     private String generateRandomName() {
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
-        long wordCnt = config.getWordCnt();
+        long wordCnt = getAppConfig().getWordCnt();
         for (int i = 1; i < wordCnt; i++) {
             String word = generateRandomWord();
             sb.append(word);
@@ -92,13 +100,5 @@ public class FileCreatorService extends Service<Void> {
     private String generateRandomFileExtension() {
         return RandomStringUtils.randomAlphabetic(3, 4).toLowerCase();
 
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        this.fileCnt = 0;
-        this.directory = null;
-        this.wordSeparator = null;
     }
 }

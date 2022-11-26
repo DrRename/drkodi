@@ -19,21 +19,24 @@
 
 package drrename.filecreator;
 
+import drrename.config.AppConfig;
 import drrename.event.DummyFileCreatorButtonCancelEvent;
 import drrename.event.DummyFileCreatorButtonGoEvent;
-import drrename.ui.GoCancelButtonsComponentController;
-import drrename.ui.TabController;
+import drrename.kodi.ui.ServiceStarter;
+import drrename.ui.*;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.converter.NumberStringConverter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.event.EventListener;
@@ -42,30 +45,80 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-@RequiredArgsConstructor
 @Slf4j
 @Component
-@FxmlView("/fxml/DummyFileCreator.fxml")
-public class DummyFileCreatorController implements Initializable {
+@FxmlView("/fxml/DummyFileCreatorView.fxml")
+public class DummyFileCreatorController extends DebuggableController implements Initializable, DrRenameController {
+
+    // Spring injected //
 
     private final TabController tabController;
 
-    public GoCancelButtonsComponentController goCancelButtonsComponentController;
-
-    public TextField filesCnt;
-
-    public TextField wordSeparator;
-
-    public ProgressBar progressBar;
-
-    public Parent root;
-
     private final FileCreatorService fileCreatorService;
+
+    public BorderPane buttonPane;
+
+    public GridPane inputGridPane;
+
+    //
+
+    // FXML injected //
+
+    @FXML
+    GoCancelButtonsComponentController goCancelButtonsComponentController;
+
+    @FXML
+    TextField filesCnt;
+
+    @FXML
+    TextField wordSeparator;
+
+    @FXML
+    Parent root;
+
+    @FXML
+    ProgressAndStatusGridPane progressAndStatusGridPane;
+
+    // Default fields //
+
+    private final FileCreatorServiceStarter serviceStarter;
 
     private Stage stage;
 
+    private final Label progressStatusLabel;
+
+    //
+
+    // Nested classes //
+
+    private class FileCreatorServiceStarter extends ServiceStarter<FileCreatorService> {
+
+        public FileCreatorServiceStarter(FileCreatorService service) {
+            super(service);
+        }
+
+        @Override
+        protected void doInitService(FileCreatorService service) {
+            service.setFileCnt((long) filesCnt.getTextFormatter().getValue());
+            service.setDirectory(tabController.startDirectoryController.getInputPath());
+            service.setWordSeparator(wordSeparator.getText());
+            progressAndStatusGridPane.getProgressBar().progressProperty().bind(fileCreatorService.progressProperty());
+        }
+    }
+
+    //
+
+    public DummyFileCreatorController(TabController tabController, FileCreatorService fileCreatorService, AppConfig appConfig) {
+        super(appConfig);
+        this.tabController = tabController;
+        this.fileCreatorService = fileCreatorService;
+        this.serviceStarter = new FileCreatorServiceStarter(fileCreatorService);
+        this.progressStatusLabel = new Label();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        super.initialize(url, resourceBundle);
         stage = new Stage();
         stage.setScene(new Scene(root));
         stage.initStyle(StageStyle.UTILITY);
@@ -73,12 +126,20 @@ public class DummyFileCreatorController implements Initializable {
         TextFormatter<Number> textFormatter = new TextFormatter<>(new NumberStringConverter());
         wordSeparator.setText("_");
         filesCnt.setTextFormatter(textFormatter);
-        goCancelButtonsComponentController.buttonGo.disableProperty().bind(fileCreatorService.runningProperty().or(tabController.startDirectoryComponentController.readyProperty().not().or(filesCnt.textProperty().isEmpty())));
+        goCancelButtonsComponentController.buttonGo.disableProperty().bind(fileCreatorService.runningProperty().or(tabController.startDirectoryController.readyProperty().not().or(filesCnt.textProperty().isEmpty())));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(fileCreatorService.runningProperty().not());
-        goCancelButtonsComponentController.setButtonCancelActionEventFactory( DummyFileCreatorButtonCancelEvent::new);
+        goCancelButtonsComponentController.setButtonCancelActionEventFactory(DummyFileCreatorButtonCancelEvent::new);
         goCancelButtonsComponentController.setButtonGoActionEventFactory(DummyFileCreatorButtonGoEvent::new);
-        progressBar.visibleProperty().bind(fileCreatorService.runningProperty());
+        if (!getAppConfig().isDebug())
+            progressAndStatusGridPane.getProgressBar().visibleProperty().bind(fileCreatorService.runningProperty());
 
+        progressAndStatusGridPane.getProgressStatusBox().getChildren().add(progressStatusLabel);
+
+    }
+
+    @Override
+    protected Parent[] getUiElementsForRandomColor() {
+        return new Parent[]{inputGridPane, buttonPane, progressAndStatusGridPane, progressAndStatusGridPane.getProgressStatusBox()};
     }
 
     public void show() {
@@ -86,7 +147,7 @@ public class DummyFileCreatorController implements Initializable {
     }
 
     @EventListener
-    public void onButtonGo(DummyFileCreatorButtonGoEvent event){
+    public void onButtonGo(DummyFileCreatorButtonGoEvent event) {
         handleDummyFileCreatorButtonGo(event.getActionEvent());
     }
 
@@ -100,23 +161,27 @@ public class DummyFileCreatorController implements Initializable {
     }
 
     public void handleDummyFileCreatorButtonCancel(ActionEvent actionEvent) {
-        cancelService();
+        cancelCurrentOperation();
     }
 
     private void startService() {
-        log.debug("Starting service {}" ,fileCreatorService);
-        fileCreatorService.cancel();
-        fileCreatorService.reset();
-        fileCreatorService.setFileCnt((long) filesCnt.getTextFormatter().getValue());
-        fileCreatorService.setDirectory(tabController.startDirectoryComponentController.getInputPath());
-        fileCreatorService.setWordSeparator(wordSeparator.getText());
-        progressBar.progressProperty().bind(fileCreatorService.progressProperty());
-        fileCreatorService.start();
-    }
 
-    private void cancelService(){
-        fileCreatorService.cancel();
+        serviceStarter.startService();
     }
 
 
+    @Override
+    public void cancelCurrentOperation() {
+        fileCreatorService.cancel();
+    }
+
+    @Override
+    public void clearView() {
+
+    }
+
+    @Override
+    public void updateInputView() {
+
+    }
 }

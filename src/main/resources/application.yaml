@@ -5,10 +5,11 @@ spring:
 logging:
   level:
     root: info
-    drrename.kodi: debug
+    drrename: debug
     com:
       ulisesbocchio: warn
     drrename.kodi.nfo.NfoFileCollector: info
+    drrename.kodi.nfo.NfoFileParser: info
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
 
@@ -27,9 +28,9 @@ app:
     initialHeight: 600
     override-locale: de
   word-cnt: 3
-  loop-delay-ms: 500
-  reset-delay-ms: 1000
-  debug: false
+  loop-delay-ms: 100
+  reset-delay-ms: 500
+  debug: true
   kodi:
     themoviedb:
       base-url: https://api.themoviedb.org/3

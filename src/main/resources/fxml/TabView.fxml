@@ -20,44 +20,42 @@
   ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+<?import drrename.ui.ProgressAndStatusGridPane?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="drrename.ui.TabController" fx:id="root">
 
+    <padding>
+        <Insets top="0" right="0" bottom="20" left="0"/>
+    </padding>
 
+    <MenuBar fx:id="menuBar">
+        <Menu text="File">
+            <!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
+            <MenuItem text="Settings" onAction="#handleMenuItemSettings" accelerator="Shortcut+S"/>
+        </Menu>
+    </MenuBar>
 
-        <MenuBar fx:id="menuBar">
-            <Menu text="File">
-                <!--            <MenuItem text="About" onAction="#handleMenuItemAbout" accelerator="Shortcut+A"/>-->
-                <MenuItem text="Settings" onAction="#handleMenuItemSettings" accelerator="Shortcut+S"/>
-            </Menu>
-        </MenuBar>
-
-
-
-        <VBox VBox.vgrow="ALWAYS" maxHeight="Infinity" >
-            <fx:include fx:id="startDirectoryComponent" source="StartDirectoryComponent.fxml"/>
+    <VBox VBox.vgrow="ALWAYS" maxHeight="Infinity">
+        <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
             <TabPane fx:id="tabPane" maxHeight="Infinity" VBox.vgrow="ALWAYS" >
                 <tabs>
                     <Tab fx:id="renameTab" text="Rename" closable="false">
-                        <fx:include fx:id="mainController" source="RenameView.fxml"/>
+                        <fx:include fx:id="rename" source="RenameView.fxml"/>
                     </Tab>
                     <Tab fx:id="kodiToolsTab" text="Kodi Tools" closable="false">
-                        <fx:include fx:id="kodiToolsController" source="KodiTools.fxml"/>
+                        <fx:include fx:id="kodiTools" source="KodiTools.fxml"/>
                     </Tab>
                     <Tab fx:id="dummyFileTab" text="File Creator" closable="false">
-                        <fx:include fx:id="dummyFileCreatorController" source="DummyFileCreator.fxml"/>
+                        <fx:include fx:id="dummyFileCreator" source="DummyFileCreatorView.fxml"/>
                     </Tab>
                 </tabs>
             </TabPane>
         </VBox>
 
-
-
-
-
+    <ProgressAndStatusGridPane fx:id="progressAndStatusGrid"/>
 
 </VBox>

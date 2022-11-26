@@ -56,7 +56,6 @@ public class GoCancelButtonsComponentController implements Initializable, Applic
     public void initialize(URL url, ResourceBundle resourceBundle) {
         buttonGo.setDefaultButton(true);
         buttonGo.setDisable(true);
-
     }
 
     @Override

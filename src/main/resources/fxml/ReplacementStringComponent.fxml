@@ -7,17 +7,17 @@
 <?import javafx.scene.layout.HBox?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="drrename.ui.ReplacementStringComponentController">
-        <padding>
-            <Insets top="4" right="4" bottom="4" left="4"/>
-        </padding>
-        <TextField fx:id="textFieldReplacementStringFrom"
-                   promptText="Search and replace this string, if applicable"
-                   HBox.hgrow="ALWAYS">
-            <tooltip>
-                <Tooltip
-                        text="If applicable, search and replace this string."/>
-            </tooltip>
+      fx:controller="drrename.ui.ReplacementStringComponentController" spacing="4">
+    <padding>
+        <Insets top="4" right="4" bottom="4" left="4"/>
+    </padding>
+    <TextField fx:id="textFieldReplacementStringFrom"
+               promptText="Search and replace this string, if applicable"
+               HBox.hgrow="ALWAYS">
+        <tooltip>
+            <Tooltip
+                    text="If applicable, search and replace this string."/>
+        </tooltip>
         </TextField>
         <TextField fx:id="textFieldReplacementStringTo"
                    promptText="Replace with this string, if applicable"

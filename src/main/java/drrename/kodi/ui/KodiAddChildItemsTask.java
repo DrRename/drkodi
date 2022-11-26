@@ -20,13 +20,15 @@
 
 package drrename.kodi.ui;
 
+import drrename.DrRenameTask;
+import drrename.RenamingPath;
+import drrename.Tasks;
+import drrename.config.AppConfig;
 import drrename.kodi.FixableStatusChecker;
 import drrename.kodi.MovieDbClientFactory;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
-import drrename.RenamingPath;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 
 @Slf4j
-@RequiredArgsConstructor
-public class KodiAddChildItemsTask extends Task<Void> {
+public class KodiAddChildItemsTask extends DrRenameTask<Void> {
 
     private final List<? extends FilterableKodiTreeItem> itemValues;
 
@@ -48,21 +50,35 @@ public class KodiAddChildItemsTask extends Task<Void> {
 
     private final MovieDbClientFactory movieDbClientFactory;
 
+    public KodiAddChildItemsTask(AppConfig config, ResourceBundle resourceBundle, List<? extends FilterableKodiTreeItem> itemValues, Executor executor, WarningsConfig warningsConfig, MovieDbClientFactory movieDbClientFactory) {
+        super(config, resourceBundle);
+        this.itemValues = itemValues;
+        this.executor = executor;
+        this.warningsConfig = warningsConfig;
+        this.movieDbClientFactory = movieDbClientFactory;
+    }
+
+
     @Override
     protected Void call() throws Exception {
 
+        log.debug("Starting");
         int cnt = 0;
-        for(FilterableKodiTreeItem itemValue : itemValues){
+        for (FilterableKodiTreeItem itemValue : itemValues) {
             if (isCancelled()) {
-                updateMessage("Cancelled");
-                log.info("Cancelled");
+                log.debug("Cancelled");
+                updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
                 break;
             }
             var childItems = buildChildItems(itemValue.getValue().getRenamingPath());
             updateProgress(++cnt, itemValues.size());
             Platform.runLater(() -> childItems.forEach(childItem -> itemValue.getSourceChildren().add(childItem)));
+            if (getConfig().isDebug()) {
+                Thread.sleep(getConfig().getLoopDelayMs());
+            }
         }
-
+        log.debug("Finished");
+        updateMessage(null);
         return null;
     }
 
@@ -87,9 +103,11 @@ public class KodiAddChildItemsTask extends Task<Void> {
         var fixableStatusChecker = new FixableStatusChecker<>(itemValue);
         fixableStatusChecker.setOnFailed(itemValue::defaultTaskFailed);
         fixableStatusChecker.setOnSucceeded(event -> statusCheckerSucceeded(itemValue, event));
+        // execute synchronously on current background thread
         fixableStatusChecker.run();
     }
 
+    @SuppressWarnings("unchecked")
     <R> void statusCheckerSucceeded(KodiTreeItemValue<R> itemValue, WorkerStateEvent event) {
         itemValue.updateStatus((R) event.getSource().getValue());
     }
