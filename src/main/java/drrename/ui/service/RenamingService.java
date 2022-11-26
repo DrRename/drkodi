@@ -1,53 +1,41 @@
 package drrename.ui.service;
 
-import drrename.config.AppConfig;
+import drrename.DrRenameService;
+import drrename.Entries;
 import drrename.RenamingControl;
+import drrename.config.AppConfig;
 import drrename.strategy.RenamingStrategy;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 
-@RequiredArgsConstructor
+
 @Component
+@Setter
 @Slf4j
-public class RenamingService extends Service<List<RenamingControl>> {
+public class RenamingService extends DrRenameService<Void> {
 
-    private final AppConfig appConfig;
+    static final String RENAMING_FILES = "mainview.status.renaming_files";
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final Entries entries;
 
     private List<RenamingControl> renamingEntries;
+
     private RenamingStrategy strategy;
 
-    public List<RenamingControl> getRenamingEntries() {
-
-        return renamingEntries;
-    }
-
-    public void setRenamingEntries(final List<RenamingControl> renamingEntries) {
-
-        this.renamingEntries = renamingEntries;
-    }
-
-    public RenamingStrategy getStrategy() {
-
-        return strategy;
-    }
-
-    public void setStrategy(final RenamingStrategy strategy) {
-
-        this.strategy = strategy;
+    public RenamingService(AppConfig appConfig, ResourceBundle resourceBundle, Entries entries) {
+        super(appConfig, resourceBundle);
+        this.entries = entries;
     }
 
     @Override
-    protected Task<List<RenamingControl>> createTask() {
+    protected Task<Void> createTask() {
 
-        return new RenamingTask(renamingEntries, strategy, appConfig, applicationEventPublisher);
+        return new RenamingTask(getAppConfig(), getResourceBundle(), renamingEntries, strategy, entries);
     }
 }

@@ -26,7 +26,7 @@ public class CapitalizeFirstStrategy extends RenamingStrategyProto {
 
     @Override
     public String getHelpText() {
-        return String.format(String.format(getResourceBundle().getString(getNameId())));
+        return String.format(getResourceBundle().getString(getNameId()));
     }
 
     @Override

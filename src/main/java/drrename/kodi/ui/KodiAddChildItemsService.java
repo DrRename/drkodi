@@ -20,31 +20,37 @@
 
 package drrename.kodi.ui;
 
+import drrename.DrRenameService;
+import drrename.config.AppConfig;
 import drrename.kodi.MovieDbClientFactory;
 import drrename.kodi.WarningsConfig;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 
-@org.springframework.stereotype.Service
+@Component
 @Setter
-@RequiredArgsConstructor
-public class KodiAddChildItemsService extends Service<Void> {
+public class KodiAddChildItemsService extends DrRenameService<Void> {
+
+    static final String MESSAGE = "kodi.add-child-items";
 
     private List<? extends FilterableKodiTreeItem> itemValues;
-
-    private final Executor executor;
 
     private WarningsConfig warningsConfig;
 
     private final MovieDbClientFactory movieDbClientFactory;
 
+    public KodiAddChildItemsService(AppConfig appConfig, ResourceBundle resourceBundle, MovieDbClientFactory movieDbClientFactory) {
+        super(appConfig, resourceBundle);
+        this.movieDbClientFactory = movieDbClientFactory;
+    }
+
     @Override
     protected Task<Void> createTask() {
-        return new KodiAddChildItemsTask(itemValues, executor, warningsConfig, movieDbClientFactory);
+        return new KodiAddChildItemsTask(getAppConfig(), getResourceBundle(), itemValues, getExecutor(),warningsConfig,movieDbClientFactory);
     }
 }

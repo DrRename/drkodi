@@ -20,21 +20,28 @@
 
 package drrename.kodi.ui;
 
-import drrename.kodi.*;
-import drrename.ui.TabController;
+import drrename.config.AppConfig;
+import drrename.kodi.KodiCollectService;
+import drrename.kodi.KodiUtil;
+import drrename.kodi.MovieTreeItemFilterable;
+import drrename.kodi.WarningsConfig;
+import drrename.ui.DebuggableController;
+import drrename.ui.DrRenameController;
+import drrename.ui.ProgressAndStatusGridPane;
 import drrename.util.FXUtil;
 import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +53,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -55,32 +61,11 @@ import java.util.function.Predicate;
 @Slf4j
 @Component
 @FxmlView("/fxml/KodiTools.fxml")
-public class KodiToolsController implements Initializable {
+public class KodiToolsController extends DebuggableController implements DrRenameController {
 
     public static final int imageStageXOffset = 600;
 
-    private final TabController tabController;
-
-    public Parent root;
-
-    public ProgressBar progressBar;
-
-    public TreeView<KodiTreeItemValue<?>> treeView;
-
-    public Button buttonExpandAll;
-
-    public Button buttonCollapseAll;
-
-    public CheckBox checkBoxHideEmpty;
-
-
-    public CheckBox checkBoxMissingNfoFileIsAWarning;
-
-    public CheckBox checkBoxDefaultNfoFileNameIsAWarning;
-
-    private Stage mainStage;
-
-    Stage imageStage;
+    // Spring injected //
 
     private final KodiCollectService kodiCollectService;
 
@@ -88,11 +73,72 @@ public class KodiToolsController implements Initializable {
 
     private final Executor executor;
 
+    //
+
+    // FXML injected //
+
+    @FXML
+    Parent root;
+
+    @FXML
+    TreeView<KodiTreeItemValue<?>> treeView;
+
+    @FXML
+    Button buttonExpandAll;
+
+    @FXML
+    Button buttonCollapseAll;
+
+    @FXML
+    CheckBox checkBoxHideEmpty;
+
+    @FXML
+    CheckBox checkBoxMissingNfoFileIsAWarning;
+
+    @FXML
+    CheckBox checkBoxDefaultNfoFileNameIsAWarning;
+
+    @FXML
+    HBox buttonBox;
+
+    @FXML
+    ProgressAndStatusGridPane progressAndStatusGridPane;
+
+    @FXML
+    Stage mainStage;
+
+    @FXML
+    Stage imageStage;
+
+    // Default fields //
+
     private FilterableKodiRootTreeItem treeRoot;
 
-    private final MovieDbClientFactory movieDbClientFactory;
-
     private WarningsConfig warningsConfig;
+
+    private final KodiCollectServiceStarter serviceStarter;
+
+    private final KodiAddChildItemsServiceStarter kodiAddChildItemsServiceStarter;
+
+    private final Label progressLabel;
+
+    //
+
+    // Nested classes //
+
+    private class KodiAddChildItemsServiceStarter extends ServiceStarter<KodiAddChildItemsService> {
+
+        public KodiAddChildItemsServiceStarter(KodiAddChildItemsService service) {
+            super(service);
+        }
+
+        @Override
+        protected void doInitService(KodiAddChildItemsService service) {
+            service.setWarningsConfig(warningsConfig);
+            progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
+            progressLabel.textProperty().bind(service.messageProperty());
+        }
+    }
 
     private class KodiCollectServiceStarter extends ServiceStarter<KodiCollectService> {
 
@@ -108,31 +154,25 @@ public class KodiToolsController implements Initializable {
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
 
-            List<MovieTreeItemFilterable> result = (List<MovieTreeItemFilterable>) workerStateEvent.getSource().getValue();
+            @SuppressWarnings("unchecked")
+            ObservableList<MovieTreeItemFilterable> result = (ObservableList<MovieTreeItemFilterable>) workerStateEvent.getSource().getValue();
+
             if (result != null) {
                 treeRoot.getSourceChildren().addAll(result);
-                kodiAddChildItemsService.reset();
                 kodiAddChildItemsService.setItemValues(result);
-                kodiAddChildItemsService.setWarningsConfig(warningsConfig);
-                kodiAddChildItemsService.setOnFailed(this::onFailed);
-                progressBar.progressProperty().bind(kodiAddChildItemsService.progressProperty());
-                kodiAddChildItemsService.start();
+                kodiAddChildItemsServiceStarter.startService();
             } else {
                 log.error("Got no result from {} with state {}", workerStateEvent.getSource(), workerStateEvent.getSource().getState());
             }
         }
 
-        private void onFailed(WorkerStateEvent workerStateEvent) {
-            log.error("{} failed with reason {}", workerStateEvent.getSource(), workerStateEvent.getSource().getException());
-        }
-
         @Override
         protected void doInitService(KodiCollectService service) {
-            service.setDirectory(tabController.startDirectoryComponentController.getInputPath());
             service.setRootTreeItem(treeRoot);
             service.setWarningsConfig(warningsConfig);
             service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
-            progressBar.progressProperty().bind(service.progressProperty());
+            progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
+            progressLabel.textProperty().bind(service.messageProperty());
 
         }
 
@@ -140,28 +180,26 @@ public class KodiToolsController implements Initializable {
         protected void prepareUi() {
             clearUi();
         }
-
-        @Override
-        protected boolean checkPreConditions() {
-           return true;
-        }
     }
 
-    private final KodiCollectServiceStarter serviceStarter;
+    //
 
-    public KodiToolsController(TabController tabController, KodiCollectService kodiCollectService, KodiAddChildItemsService kodiAddChildItemsService, Executor executor, MovieDbClientFactory movieDbClientFactory) {
-        this.tabController = tabController;
+    public KodiToolsController(KodiCollectService kodiCollectService, KodiAddChildItemsService kodiAddChildItemsService, Executor executor, AppConfig appConfig) {
+        super(appConfig);
         this.kodiCollectService = kodiCollectService;
         this.kodiAddChildItemsService = kodiAddChildItemsService;
         this.executor = executor;
-        this.movieDbClientFactory = movieDbClientFactory;
         this.serviceStarter = new KodiCollectServiceStarter(kodiCollectService);
+        this.kodiAddChildItemsServiceStarter = new KodiAddChildItemsServiceStarter(kodiAddChildItemsService);
+        this.progressLabel = new Label();
     }
-
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        super.initialize(url, resourceBundle);
+
         mainStage = new Stage();
         imageStage = new Stage();
         mainStage.setScene(new Scene(root));
@@ -175,10 +213,8 @@ public class KodiToolsController implements Initializable {
         buttonExpandAll.setDisable(true);
         buttonCollapseAll.setDisable(true);
 
-        progressBar.visibleProperty().bind(kodiCollectService.runningProperty().or(kodiAddChildItemsService.runningProperty()));
-
-        tabController.startDirectoryComponentController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
-
+        if (!getAppConfig().isDebug())
+            progressAndStatusGridPane.getProgressBar().visibleProperty().bind(kodiCollectService.runningProperty().or(kodiAddChildItemsService.runningProperty()));
 
         treeView.setCellFactory(this::treeViewCellFactoryCallback);
 
@@ -203,16 +239,13 @@ public class KodiToolsController implements Initializable {
         warningsConfig.missingNfoFileIsWarningProperty().bind(checkBoxMissingNfoFileIsAWarning.selectedProperty());
         warningsConfig.defaultNfoFileNameIsWarningProperty().bind(checkBoxDefaultNfoFileNameIsAWarning.selectedProperty());
 
+        progressAndStatusGridPane.getProgressStatusBox().getChildren().add(progressLabel);
 
     }
 
-    private void getNewInputPathChangeListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
-
-        if (tabController.startDirectoryComponentController.isReady()) {
-            serviceStarter.startService();
-        } else {
-            cancelAllAndClearUi();
-        }
+    @Override
+    protected Parent[] getUiElementsForRandomColor() {
+        return new Parent[]{root, treeView, buttonBox, progressAndStatusGridPane, progressAndStatusGridPane.getProgressStatusBox()};
     }
 
     private void initTreeRoot() {
@@ -226,12 +259,6 @@ public class KodiToolsController implements Initializable {
         treeView.setRoot(treeRoot);
     }
 
-    private void cancelAllAndClearUi() {
-        kodiAddChildItemsService.cancel();;
-        kodiCollectService.cancel();
-        clearUi();
-    }
-
     private void clearUi() {
 
         treeRoot.getSourceChildren().clear();
@@ -239,6 +266,23 @@ public class KodiToolsController implements Initializable {
 //        treeRoot.getChildren().clear();
         log.debug("UI cleared. Elements left: {}, {}", treeRoot.getSourceChildren(), treeRoot.getChildren());
 
+    }
+
+    @Override
+    public void cancelCurrentOperation() {
+        kodiAddChildItemsService.cancel();
+        ;
+        kodiCollectService.cancel();
+    }
+
+    @Override
+    public void clearView() {
+        clearUi();
+    }
+
+    @Override
+    public void updateInputView() {
+        serviceStarter.startService();
     }
 
     private TreeCell<KodiTreeItemValue<?>> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue<?>> kodiTreeItemContentTreeView) {

@@ -1,46 +1,51 @@
 package drrename.ui.service;
 
-import drrename.event.FilePreviewEvent;
-import drrename.event.StartingPreviewEvent;
+import drrename.DrRenameTask;
 import drrename.RenamingControl;
+import drrename.Tasks;
+import drrename.config.AppConfig;
 import drrename.strategy.RenamingStrategy;
-import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Slf4j
-@RequiredArgsConstructor
-public class PreviewTask extends Task<List<RenamingControl>> {
+public class PreviewTask extends DrRenameTask<Void> {
 
     private final List<RenamingControl> beans;
+
     private final RenamingStrategy renamingStrategy;
-    private final ApplicationEventPublisher applicationEventPublisher;
+
+    public PreviewTask(AppConfig config, ResourceBundle resourceBundle, List<RenamingControl> beans, RenamingStrategy renamingStrategy) {
+        super(config, resourceBundle);
+        this.beans = beans;
+        this.renamingStrategy = renamingStrategy;
+    }
 
     @Override
-    protected List<RenamingControl> call() throws Exception {
+    protected Void call() throws Exception {
 
-        List<RenamingControl> result = new ArrayList<>();
-        if (beans == null) return result;
-        var event = new StartingPreviewEvent();
-        log.debug("Publishing event {}", event);
-        applicationEventPublisher.publishEvent(event);
+        log.debug("Starting");
+        updateMessage(String.format(getResourceBundle().getString(PreviewService.LOADING_PREVIEVS)));
         long cnt = 0;
         for (final RenamingControl p : beans) {
-                if (isCancelled()) {
-                    updateMessage("Cancelled");
-                    break;
-                }
-            String newName = p.preview(renamingStrategy);
-            if (!p.getOldPath().getFileName().toString().equals(newName)) {
-                applicationEventPublisher.publishEvent(new FilePreviewEvent(p));
-                result.add(p);
+            if (isCancelled()) {
+                log.debug("Cancelled");
+                updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+                break;
             }
+            String newName = p.preview(renamingStrategy);
             updateProgress(cnt++, beans.size());
+            if (getConfig().isDebug()) {
+
+                Thread.sleep(getConfig().getLoopDelayMs());
+
+            }
         }
-        return result;
+        log.debug("Finished");
+        updateMessage(null);
+        return null;
     }
 }

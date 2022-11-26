@@ -34,27 +34,32 @@ public abstract class ServiceStarter<S extends Service<?>> {
 
     public void startService(){
         if(checkPreConditions()){
-            log.debug("Preparing UI");
+            service.cancel();
+            service.reset();
             prepareUi();
-            log.debug("Init Service {}", service);
             initService(service);
-            log.debug("Restarting Service {}", service);
-            service.restart();
+            log.debug("Starting Service {}", service);
+            service.start();
         } else {
             log.warn("Cannot start, pre conditions failed");
         }
     }
 
-    protected final void initService(S service){
+    protected final void initService(S service) {
         service.setOnFailed(this::handleFailed);
         service.setOnSucceeded(this::onSucceeded);
         service.setOnCancelled(this::onCancelled);
         doInitService(service);
     }
 
-    protected abstract  void onCancelled(WorkerStateEvent workerStateEvent);
+    protected void onCancelled(WorkerStateEvent workerStateEvent) {
+        // do nothing per default
+    }
 
-    protected abstract void onSucceeded(WorkerStateEvent workerStateEvent);
+    protected void onSucceeded(WorkerStateEvent workerStateEvent) {
+
+
+    }
 
     private void handleFailed(WorkerStateEvent e) {
         log.error("{} failed with reason {}", e.getSource(), e.getSource().getException());
@@ -62,7 +67,12 @@ public abstract class ServiceStarter<S extends Service<?>> {
 
     protected abstract void doInitService(S service);
 
-    protected abstract void prepareUi();
+    protected void prepareUi() {
+        // nothing to prepare per default
+    }
 
-    protected abstract boolean checkPreConditions();
+    protected boolean checkPreConditions() {
+        // ready-to-start per default
+        return true;
+    }
 }

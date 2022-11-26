@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~     Dr.Rename - A Minimalistic Batch Renamer
+  ~
+  ~     Copyright (C) 2022
+  ~
+  ~     This file is part of Dr.Rename.
+  ~
+  ~     You can redistribute it and/or modify it under the terms of the GNU Affero
+  ~     General Public License as published by the Free Software Foundation, either
+  ~     version 3 of the License, or (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful, but WITHOUT
+  ~     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+  ~     for more details.
+  ~
+  ~     You should have received a copy of the GNU Affero General Public License
+  ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="drrename.ui.ProgressAndStatusGridComponentController"
+          hgap="4" vgap="4">
+    <padding>
+        <Insets top="4" right="4" bottom="4" left="4"/>
+    </padding>
+    <fx:define>
+        <ColumnConstraints fx:id="colConstraints2" percentWidth="100"/>
+    </fx:define>
+    <columnConstraints>
+        <fx:reference source="colConstraints2"/>
+        <fx:reference source="colConstraints2"/>
+    </columnConstraints>
+    <ProgressBar fx:id="progressBar" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <HBox fx:id="progressStatusBox" alignment="CENTER" spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <padding>
+            <Insets top="4" right="4" bottom="4" left="4"/>
+        </padding>
+    </HBox>
+</GridPane>

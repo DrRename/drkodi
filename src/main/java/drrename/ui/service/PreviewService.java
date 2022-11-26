@@ -1,26 +1,25 @@
 package drrename.ui.service;
 
-import drrename.RenamingControl;
+import drrename.config.AppConfig;
 import javafx.concurrent.Task;
-import org.springframework.context.ApplicationEventPublisher;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.ResourceBundle;
+
 
 @Service
-public class PreviewService extends StrategyService<List<RenamingControl>> {
+public class PreviewService extends StrategyService<Void> {
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+    static final String LOADING_PREVIEVS = "mainview.status.loading_previews";
 
-    public PreviewService(final Executor taskExecutor, ApplicationEventPublisher applicationEventPublisher) {
-        this.applicationEventPublisher = applicationEventPublisher;
-        setExecutor(taskExecutor);
+    public PreviewService(AppConfig appConfig, ResourceBundle resourceBundle) {
+        super(appConfig, resourceBundle);
     }
 
     @Override
-    protected Task<List<RenamingControl>> createTask() {
+    protected Task<Void> createTask() {
 
-        return new PreviewTask(getRenamingEntries(), getRenamingStrategy(), applicationEventPublisher);
+        return new PreviewTask(getAppConfig(), getResourceBundle(),getRenamingEntries(), getRenamingStrategy());
     }
 }

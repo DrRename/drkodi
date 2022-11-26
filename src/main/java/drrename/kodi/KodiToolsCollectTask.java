@@ -1,34 +1,34 @@
 package drrename.kodi;
 
+import drrename.DrRenameTask;
+import drrename.Entries;
+import drrename.RenamingPath;
+import drrename.config.AppConfig;
 import drrename.kodi.nfo.NfoFileCollector;
 import drrename.kodi.nfo.NfoFileParser;
 import drrename.kodi.ui.FilterableKodiRootTreeItem;
 import drrename.kodi.ui.MovieTreeItemValue;
 import drrename.kodi.ui.NfoFileTitleExtractor;
-import drrename.RenamingPath;
 import javafx.beans.Observable;
-import javafx.concurrent.Task;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 
-@RequiredArgsConstructor
 @Getter
 @Slf4j
-class KodiToolsCollectTask extends Task<List<MovieTreeItemFilterable>> {
+class KodiToolsCollectTask extends DrRenameTask<ObservableList<MovieTreeItemFilterable>> {
 
-    private final Path directory;
+    private final Entries entries;
 
     private final FilterableKodiRootTreeItem rootTreeItem;
 
@@ -40,46 +40,45 @@ class KodiToolsCollectTask extends Task<List<MovieTreeItemFilterable>> {
 
     private final Observable[] extractor;
 
-    private void verifyState() {
-        Objects.requireNonNull(directory);
-        if (!Files.isDirectory(directory)) {
-            throw new IllegalArgumentException(directory.getFileName() + " is not a directory");
-        }
-        Objects.requireNonNull(rootTreeItem);
-        Objects.requireNonNull(executor);
+    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, FilterableKodiRootTreeItem rootTreeItem, Executor executor, MovieDbClientFactory movieDbClientFactory, WarningsConfig warningsConfig, Observable[] extractor) {
+        super(config, resourceBundle);
+        this.entries = entries;
+        this.rootTreeItem = rootTreeItem;
+        this.executor = executor;
+        this.movieDbClientFactory = movieDbClientFactory;
+        this.warningsConfig = warningsConfig;
+        this.extractor = extractor;
     }
 
     @Override
-    protected List<MovieTreeItemFilterable> call() throws Exception {
-        verifyState();
-        List<MovieTreeItemFilterable> result = new ArrayList<>();
+    protected ObservableList<MovieTreeItemFilterable> call() throws Exception {
+        log.debug("Starting");
+        updateMessage(String.format(getResourceBundle().getString(KodiCollectService.MESSAGE)));
+        ObservableList<MovieTreeItemFilterable> result = FXCollections.observableArrayList();
         var nfoFileParser = new NfoFileParser();
-        log.debug("Taking a look at {}", directory);
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
 
-            for (Path path : ds) {
-                if (isCancelled()) {
-                    updateMessage("Cancelled");
-                    log.info("Cancelled");
-                    break;
-                }
-                if (Files.isDirectory(path)) {
-                    if (path.getFileName().toString().startsWith("@")) {
-                        log.debug("Ignoring {}", path);
-                        continue;
-                    }
-
-                    var renamingPath = new RenamingPath(path);
-                    var itemValue = new MovieTreeItemValue(renamingPath, executor, warningsConfig);
-
-                    checkNfoName(path, nfoFileParser, itemValue);
-
-                    var item = new MovieTreeItemFilterable(itemValue, extractor);
-                    result.add(item);
-                }
+        int cnt = 0;
+        for (RenamingPath renamingPath : entries.getEntriesFiltered()) {
+            if (isCancelled()) {
+                log.debug("Cancelled");
+                updateMessage("Cancelled.");
+                break;
+            }
+            if (Files.isDirectory(renamingPath.getOldPath())) {
+                var itemValue = new MovieTreeItemValue(renamingPath, executor, warningsConfig);
+                checkNfoName(renamingPath.getOldPath(), nfoFileParser, itemValue);
+                var item = new MovieTreeItemFilterable(itemValue, extractor);
+                result.add(item);
+            }
+            updateProgress(++cnt, entries.getEntriesFiltered().size());
+            if (getConfig().isDebug()) {
+                Thread.sleep(getConfig().getLoopDelayMs());
             }
         }
+
         result.sort(Comparator.comparing(o -> o.getValue().getRenamingPath().getMovieName()));
+        updateMessage(null);
+        log.debug("Finished");
         return result;
     }
 
@@ -93,5 +92,4 @@ class KodiToolsCollectTask extends Task<List<MovieTreeItemFilterable>> {
             }
         }
     }
-
 }

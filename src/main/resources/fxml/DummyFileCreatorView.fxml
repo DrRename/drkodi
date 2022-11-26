@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import drrename.ui.ProgressAndStatusGridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:id="root" fx:controller="drrename.filecreator.DummyFileCreatorController" minWidth="120" minHeight="120">
+
+
+    <GridPane vgap="4" hgap="4" fx:id="inputGridPane">
+        <padding>
+            <Insets top="4" right="4" bottom="4" left="4"/>
+        </padding>
+        <Label text="How many files?" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="filesCnt" prefWidth="100" promptText="Enter the number of desired  test files"
+                   GridPane.columnIndex="1" GridPane.rowIndex="0"
+                   GridPane.halignment="RIGHT" GridPane.hgrow="always" GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="Enter the number of desired  test files"/>
+            </tooltip>
+            </TextField>
+            <Label text="Separate words by" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="wordSeparator" promptText="Enter a word-separating string" GridPane.columnIndex="1"
+                       GridPane.rowIndex="1"
+                       GridPane.halignment="RIGHT" GridPane.hgrow="always" GridPane.vgrow="always">
+                <tooltip>
+                    <Tooltip text="Enter a word-separating string"/>
+                </tooltip>
+            </TextField>
+        </GridPane>
+
+    <BorderPane fx:id="buttonPane">
+        <padding>
+            <Insets top="4" right="4" bottom="4" left="4"/>
+        </padding>
+        <right>
+            <fx:include fx:id="goCancelButtonsComponent" source="GoCancelButtonsComponent.fxml"/>
+        </right>
+    </BorderPane>
+
+    <ProgressAndStatusGridPane fx:id="progressAndStatusGridPane"/>
+
+</VBox>

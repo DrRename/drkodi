@@ -1,28 +1,26 @@
 package drrename.ui.service;
 
+import drrename.DrRenameService;
 import drrename.RenamingControl;
-import javafx.concurrent.Service;
+import drrename.config.AppConfig;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public abstract class FilesService<V> extends Service<V> {
+@Getter
+public abstract class FilesService<V> extends DrRenameService<V> {
 
     private List<RenamingControl> renamingEntries;
 
-    public FilesService() {
-
+    public FilesService(AppConfig appConfig, ResourceBundle resourceBundle) {
+        super(appConfig, resourceBundle);
         this.renamingEntries = new ArrayList<>();
     }
 
-    public List<RenamingControl> getRenamingEntries() {
-
-        return renamingEntries;
-    }
-
     public void setRenamingEntries(final Collection<? extends RenamingControl> renamingEntries) {
-
         this.renamingEntries = new ArrayList<>(renamingEntries);
     }
 
