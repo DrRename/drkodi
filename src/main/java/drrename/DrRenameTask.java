@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 @RequiredArgsConstructor
 public abstract class DrRenameTask<T> extends Task<T> {
 
-    private final AppConfig config;
+    private final AppConfig appConfig;
 
     private final ResourceBundle resourceBundle;
 }

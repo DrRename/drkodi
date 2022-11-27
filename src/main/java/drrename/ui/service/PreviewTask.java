@@ -5,7 +5,6 @@ import drrename.RenamingControl;
 import drrename.Tasks;
 import drrename.config.AppConfig;
 import drrename.strategy.RenamingStrategy;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -38,10 +37,16 @@ public class PreviewTask extends DrRenameTask<Void> {
             }
             String newName = p.preview(renamingStrategy);
             updateProgress(cnt++, beans.size());
-            if (getConfig().isDebug()) {
-
-                Thread.sleep(getConfig().getLoopDelayMs());
-
+            if (getAppConfig().isDebug()) {
+                try {
+                    Thread.sleep(getAppConfig().getLoopDelayMs());
+                } catch (InterruptedException e) {
+                    if (isCancelled()) {
+                        log.debug("Cancelled");
+                        updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+                        break;
+                    }
+                }
             }
         }
         log.debug("Finished");

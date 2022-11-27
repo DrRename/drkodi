@@ -6,7 +6,6 @@ import drrename.RenamingControl;
 import drrename.Tasks;
 import drrename.config.AppConfig;
 import javafx.application.Platform;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Path;
@@ -38,8 +37,16 @@ public class ListFilesTask extends DrRenameTask<Void> {
                 break;
             }
             handleNewEntry(++cnt, new RenamingControl(f));
-            if (getConfig().isDebug()) {
-                Thread.sleep(getConfig().getLoopDelayMs());
+            if (getAppConfig().isDebug()) {
+                try {
+                    Thread.sleep(getAppConfig().getLoopDelayMs());
+                } catch (InterruptedException e) {
+                    if (isCancelled()) {
+                        log.debug("Cancelled");
+                        updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+                        break;
+                    }
+                }
             }
         }
         log.debug("Finished");

@@ -66,8 +66,17 @@ public class FileCreatorService extends DrRenameService<Void> {
                     Path p = Paths.get(directory.toString(), randomName);
                     Files.createFile(p);
                     updateProgress(i, fileCnt);
-                    if (getAppConfig().isDebug())
-                        Thread.sleep(getAppConfig().getLoopDelayMs());
+                    if (getAppConfig().isDebug()) {
+                        try {
+                            Thread.sleep(getAppConfig().getLoopDelayMs());
+                        } catch (InterruptedException e) {
+                            if (isCancelled()) {
+                                log.debug("Cancelled");
+                                updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+                                break;
+                            }
+                        }
+                    }
                 }
                 log.debug("Completed");
                 updateMessage(null);

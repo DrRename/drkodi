@@ -21,8 +21,6 @@
 package drrename;
 
 import drrename.config.AppConfig;
-import drrename.event.FileRenamedEvent;
-import drrename.event.NewRenamingEntryEvent;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
@@ -31,13 +29,11 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -193,12 +189,6 @@ public class Entries {
 
     private void updateRenamedFileTypesLabel() {
         statusRenamedFileTypes.set(String.format(resourceBundle.getString(RENAMED_TYPES), renamedImageEntries.size(), renamedVideosEntries.size()));
-    }
-
-    @EventListener
-    public void onFileRenamedEvent(FileRenamedEvent event) {
-        var hans = new ArrayList<>(event.getRenamedEntries());
-        Platform.runLater(() -> entriesRenamed.addAll(hans));
     }
 
     // FX Getter / Setter //

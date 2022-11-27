@@ -20,8 +20,6 @@ public class RenamingTask extends DrRenameTask<Void> {
 
 	private final RenamingStrategy strategy;
 
-
-
 	private final Entries entries;
 
 	public RenamingTask(AppConfig config, ResourceBundle resourceBundle, List<RenamingControl> elements, RenamingStrategy strategy, Entries entries) {
@@ -51,8 +49,17 @@ public class RenamingTask extends DrRenameTask<Void> {
 				}
 			}
 			updateProgress(++cnt, elements.size());
-			if (getConfig().isDebug())
-				Thread.sleep(getConfig().getLoopDelayMs());
+			if (getAppConfig().isDebug()) {
+				try {
+					Thread.sleep(getAppConfig().getLoopDelayMs());
+				} catch (InterruptedException e) {
+					if (isCancelled()) {
+						log.debug("Cancelled");
+						updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+						break;
+					}
+				}
+			}
 
 		}
 		log.debug("Finished");
