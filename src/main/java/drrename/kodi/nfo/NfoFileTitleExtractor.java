@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.ui;
+package drrename.kodi.nfo;
 
 import drrename.kodi.nfo.NfoFileParser;
 import lombok.RequiredArgsConstructor;

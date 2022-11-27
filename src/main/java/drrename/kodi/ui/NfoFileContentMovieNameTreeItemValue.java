@@ -26,6 +26,7 @@ import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.kodi.nfo.NfoFileParser;
 import drrename.RenamingPath;
+import drrename.kodi.nfo.NfoFileTitleExtractor;
 import drrename.util.DrRenameUtil;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -48,7 +49,6 @@ public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoF
     public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath, executor, warningsConfig);
         nfoFileParser = new NfoFileParser();
-//        triggerStatusCheck();
     }
 
     @Override
