@@ -22,7 +22,7 @@ package drrename.kodi.nfo;
 
 import drrename.util.DrRenameUtil;
 import drrename.kodi.FixFailedException;
-import drrename.kodi.NfoFileNameCheckResult;
+import drrename.kodi.NfoFileCheckResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public class NfoFileNameFixer {
 
-    private final NfoFileNameCheckResult checkResult;
+    private final NfoFileCheckResult checkResult;
 
     public void fix(String movieName) throws FixFailedException {
         final Path nfoFile = checkResult.getNfoFiles().get(0);
