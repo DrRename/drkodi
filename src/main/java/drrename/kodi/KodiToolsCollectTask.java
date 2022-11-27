@@ -8,7 +8,7 @@ import drrename.kodi.nfo.NfoFileCollector;
 import drrename.kodi.nfo.NfoFileParser;
 import drrename.kodi.ui.FilterableKodiRootTreeItem;
 import drrename.kodi.ui.MovieTreeItemValue;
-import drrename.kodi.ui.NfoFileTitleExtractor;
+import drrename.kodi.nfo.NfoFileTitleExtractor;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 
