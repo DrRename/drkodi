@@ -18,44 +18,34 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.ui;
 
-import drrename.util.DrRenameUtil;
-import drrename.kodi.nfo.*;
 import drrename.RenamingPath;
-import lombok.Getter;
+import drrename.kodi.NfoFileCheckResult;
+import drrename.kodi.WarningsConfig;
+import drrename.kodi.nfo.NfoContentTitleChecker;
+import drrename.kodi.nfo.NfoContentYearChecker;
+import drrename.kodi.nfo.NfoFileTitleExtractor;
+import drrename.kodi.nfo.NfoFileYearExtractor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
+import java.nio.file.Path;
+import java.util.concurrent.Executor;
 
-@Getter
 @Slf4j
-public class NfoFileNameIssue extends FxKodiIssue<NfoFileCheckResult> {
+public class NfoFileContentMovieYearTreeItemValue extends NfoFileContentTreeItemValue {
 
-    private NfoFileCheckResult checkResult;
-
-    public NfoFileNameIssue(RenamingPath moviePath) {
-        super(moviePath);
+    public NfoFileContentMovieYearTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
+        super(moviePath, executor, warningsConfig);
     }
 
     @Override
     public NfoFileCheckResult checkStatus() {
-            return new NfoFileNameChecker().checkDir(getRenamingPath().getOldPath());
+        return new NfoContentYearChecker().checkDir(getRenamingPath().getOldPath());
     }
 
-    @Override
-    public void fix(NfoFileCheckResult result) throws FixFailedException {
-        try {
-            DrRenameUtil.rename(result.getNfoFiles().get(0), getMovieNameFromFolder() + KodiConstants.NFO_FILE_EXTENSION);
-        } catch (IOException e) {
-            throw new FixFailedException(e);
-        }
-    }
-
-    @Override
-    public void updateStatus(NfoFileCheckResult result) {
-        this.checkResult = result;
-
+    protected String getInfoFromNfo(Path nfoFile){
+        return new NfoFileYearExtractor(getNfoFileParser()).parseNfoFile(nfoFile);
     }
 
     @Override
@@ -65,6 +55,6 @@ public class NfoFileNameIssue extends FxKodiIssue<NfoFileCheckResult> {
 
     @Override
     public String getIdentifier() {
-        return "NFO File Name";
+        return "NFO File Content Movie Year";
     }
 }

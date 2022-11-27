@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheckResult> {
+public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileCheckResult> {
 
     private final NfoFileNameIssue delegate;
 
@@ -81,7 +81,7 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
     }
 
     @Override
-    public void updateStatus(NfoFileNameCheckResult result) {
+    public void updateStatus(NfoFileCheckResult result) {
         if(result == null){
             return;
         }
@@ -122,12 +122,12 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheck
 
 
     @Override
-    public NfoFileNameCheckResult checkStatus() {
+    public NfoFileCheckResult checkStatus() {
         return delegate.checkStatus();
     }
 
     @Override
-    public void fix(NfoFileNameCheckResult result) throws FixFailedException {
+    public void fix(NfoFileCheckResult result) throws FixFailedException {
         delegate.fix(result);
     }
 }

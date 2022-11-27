@@ -18,27 +18,34 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi;
+package drrename.kodi.nfo;
 
-import drrename.kodi.nfo.NfoFileCheckResultType;
-import lombok.Getter;
+import drrename.kodi.NfoRoot;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Path;
-import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
-@Getter
-@Setter
-public class NfoFileNameCheckResult {
+public abstract class AbstractNfoFileExtractor {
 
-    private final NfoFileCheckResultType type;
+    private final NfoFileParser nfoFileParser;
 
-    private final List<Path> nfoFiles;
-
-    public NfoFileNameCheckResult(NfoFileCheckResultType type, Path path){
-        this(type, List.of(path));
+    public String parseNfoFile(Path nfoFile){
+        try {
+            var xmlModel = nfoFileParser.parse(nfoFile);
+            if (xmlModel != null && xmlModel.getMovie() != null)
+                return parseNfoModel(xmlModel);
+        } catch (ClosedByInterruptException e){
+            // it's ok.
+        } catch (IOException e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
+        return null;
     }
 
+    protected abstract String parseNfoModel(NfoRoot xmlModel);
 }

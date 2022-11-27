@@ -46,7 +46,7 @@ public enum NfoFileCheckResultType {
             return true;
         }
     }
-    , INVALID_YEAR("Invalid year"){
+    , INVALID_YEAR("Year does not match"){
         @Override
         public boolean isWarning(WarningsConfig warningsConfig) {
             return true;

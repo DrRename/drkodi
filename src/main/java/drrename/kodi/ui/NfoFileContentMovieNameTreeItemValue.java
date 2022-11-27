@@ -20,12 +20,12 @@
 
 package drrename.kodi.ui;
 
+import drrename.RenamingPath;
 import drrename.kodi.FixFailedException;
-import drrename.kodi.NfoFileNameCheckResult;
+import drrename.kodi.NfoFileCheckResult;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;
 import drrename.kodi.nfo.NfoFileParser;
-import drrename.RenamingPath;
 import drrename.kodi.nfo.NfoFileTitleExtractor;
 import drrename.util.DrRenameUtil;
 import javafx.scene.Node;
@@ -39,87 +39,20 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
-@Setter
-@Getter
 @Slf4j
-public class NfoFileContentMovieNameTreeItemValue extends KodiTreeItemValue<NfoFileNameCheckResult> {
-
-    private final NfoFileParser nfoFileParser;
+public class NfoFileContentMovieNameTreeItemValue extends NfoFileContentTreeItemValue {
 
     public NfoFileContentMovieNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig) {
         super(moviePath, executor, warningsConfig);
-        nfoFileParser = new NfoFileParser();
     }
 
     @Override
-    public NfoFileNameCheckResult checkStatus() {
+    public NfoFileCheckResult checkStatus() {
         return new NfoContentTitleChecker().checkDir(getRenamingPath().getOldPath());
     }
 
-    protected void updateButtonText(boolean canFix, boolean isWarning) {
-        if (isWarning) {
-            if(SystemUtils.IS_OS_MAC) {
-               buttonText.set("Open in finder");
-            } else
-                buttonText.set("Fix manually");
-        } else {
-            buttonText.set("OK");
-        }
-    }
-
-    protected Node buildGraphic() {
-        Button button = (Button) super.buildGraphic();
-        if(isWarning() && SystemUtils.IS_OS_MAC) {
-        button.disableProperty().unbind();
-        button.setDisable(false);
-        }
-        return button;
-    }
-
-    @Override
-    public void fix(NfoFileNameCheckResult result) throws FixFailedException {
-        DrRenameUtil.runOpenFolderCommandMacOs(result.getNfoFiles().get(0));
-    }
-
-    @Override
-    public void updateStatus(NfoFileNameCheckResult result) {
-        if(result == null){
-            return;
-        }
-        // 'fixable' to 'true', on order for the button to show up
-//        setFixable(SystemUtils.IS_OS_MAC);
-        setCheckResult(result);
-        setWarning(calculateWarning());
-    }
-
-    private boolean calculateWarning() {
-        if(getCheckResult() == null){
-            return false;
-        }
-//        log.debug("Calculating warning");
-        return getCheckResult().getType().isWarning(getWarningsConfig());
-    }
-
-    @Override
-    protected String buildNewMessage(Boolean newValue) {
-        String additionalInfo = getAdditionalMessageInfo();
-        if(additionalInfo != null)
-            return getCheckResult().getType() + ": " + getAdditionalMessageInfo();
-        return getCheckResult().getType() + ".";
-    }
-
-    private String getAdditionalMessageInfo() {
-        if(getCheckResult().getType() == null || getCheckResult().getNfoFiles().isEmpty())
-            return null;
-        var validNfoFiles = getCheckResult().getNfoFiles().stream().map(this::getTitleFromNfoFile).filter(Objects::nonNull).toList();
-        if(validNfoFiles.isEmpty()){
-            return null;
-        }
-        return String.join(", ", validNfoFiles);
-    }
-
-    String getTitleFromNfoFile(Path nfoFile){
-        return new NfoFileTitleExtractor(nfoFileParser).getTitleFromNfoFile(nfoFile);
+    protected String getInfoFromNfo(Path nfoFile){
+        return new NfoFileTitleExtractor(getNfoFileParser()).parseNfoFile(nfoFile);
     }
 
     @Override

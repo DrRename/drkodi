@@ -85,7 +85,7 @@ class KodiToolsCollectTask extends DrRenameTask<ObservableList<MovieTreeItemFilt
         var nfoFiles = new NfoFileCollector().collectNfoFiles(path);
         if(!nfoFiles.isEmpty()){
             Path firstNfoFile = nfoFiles.get(0);
-            String movieNameFromNfoFile = new NfoFileTitleExtractor(nfoFileParser).getTitleFromNfoFile(firstNfoFile);
+            String movieNameFromNfoFile = new NfoFileTitleExtractor(nfoFileParser).parseNfoFile(firstNfoFile);
             if(StringUtils.isNotBlank(movieNameFromNfoFile)){
                 itemValue.setMovieNameFromNfo(movieNameFromNfoFile);
             }

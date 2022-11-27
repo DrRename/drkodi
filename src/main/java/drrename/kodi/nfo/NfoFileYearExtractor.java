@@ -21,7 +21,6 @@
 package drrename.kodi.nfo;
 
 import drrename.kodi.NfoRoot;
-import drrename.kodi.nfo.NfoFileParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,14 +29,14 @@ import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Path;
 
 @Slf4j
-public class NfoFileTitleExtractor extends AbstractNfoFileExtractor {
+public class NfoFileYearExtractor extends AbstractNfoFileExtractor {
 
-    public NfoFileTitleExtractor(NfoFileParser nfoFileParser) {
+    public NfoFileYearExtractor(NfoFileParser nfoFileParser) {
         super(nfoFileParser);
     }
 
     @Override
     protected String parseNfoModel(NfoRoot xmlModel) {
-        return xmlModel.getMovie().getTitle();
+        return xmlModel.getMovie().getYear();
     }
 }

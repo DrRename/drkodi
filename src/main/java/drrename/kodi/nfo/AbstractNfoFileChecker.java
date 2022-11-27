@@ -20,7 +20,7 @@
 
 package drrename.kodi.nfo;
 
-import drrename.kodi.NfoFileNameCheckResult;
+import drrename.kodi.NfoFileCheckResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -30,21 +30,21 @@ import java.util.Collections;
 @Slf4j
 public abstract class AbstractNfoFileChecker {
 
-    public NfoFileNameCheckResult checkDir(Path directory) {
+    public NfoFileCheckResult checkDir(Path directory) {
         String movieName = directory.getFileName().toString();
         try {
             var nfoFiles = new NfoFileCollector().collectNfoFiles(directory);
             if (nfoFiles.isEmpty()) {
-                return new NfoFileNameCheckResult(NfoFileCheckResultType.NO_FILE, Collections.emptyList());
+                return new NfoFileCheckResult(NfoFileCheckResultType.NO_FILE, Collections.emptyList());
             }
             if (nfoFiles.size() > 1) {
-                return new NfoFileNameCheckResult(NfoFileCheckResultType.MULTIPLE_FILES, nfoFiles);
+                return new NfoFileCheckResult(NfoFileCheckResultType.MULTIPLE_FILES, nfoFiles);
             } else {
-                return new NfoFileNameCheckResult(checkFile(movieName, nfoFiles.get(0)), nfoFiles.get(0));
+                return new NfoFileCheckResult(checkFile(movieName, nfoFiles.get(0)), nfoFiles.get(0));
             }
         } catch (IOException e) {
             log.error(e.getLocalizedMessage(), e);
-            return new NfoFileNameCheckResult(NfoFileCheckResultType.EXCEPTION, Collections.emptyList());
+            return new NfoFileCheckResult(NfoFileCheckResultType.EXCEPTION, Collections.emptyList());
         }
     }
 

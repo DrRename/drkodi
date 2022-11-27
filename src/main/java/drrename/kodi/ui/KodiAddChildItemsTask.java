@@ -88,7 +88,8 @@ public class KodiAddChildItemsTask extends DrRenameTask<Void> {
                 new MovieDbLookupTreeItemValue(renamingPath, executor, movieDbClientFactory, warningsConfig),
                 new NfoFileNameTreeItemValue(renamingPath, executor, warningsConfig),
                 new MediaFileNameTreeItemValue(renamingPath, executor, warningsConfig),
-                new NfoFileContentMovieNameTreeItemValue(renamingPath, executor, warningsConfig)
+                new NfoFileContentMovieNameTreeItemValue(renamingPath, executor, warningsConfig),
+                new NfoFileContentMovieYearTreeItemValue(renamingPath, executor, warningsConfig)
         );
 
         for (KodiTreeItemValue<?> v : treeItemValues) {
