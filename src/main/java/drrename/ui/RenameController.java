@@ -25,8 +25,6 @@ import drrename.FileTypeByMimeProvider;
 import drrename.FileTypeProvider;
 import drrename.RenamingControl;
 import drrename.config.AppConfig;
-import drrename.event.MainViewButtonCancelEvent;
-import drrename.event.MainViewButtonGoEvent;
 import drrename.kodi.ui.ServiceStarter;
 import drrename.strategy.RenamingConfig;
 import drrename.strategy.RenamingStrategies;
@@ -51,7 +49,6 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -351,8 +348,8 @@ public class RenameController extends DebuggableController implements Initializa
 
     private void configureButtons() {
         goCancelButtonsComponentController.buttonGo.setTooltip(new Tooltip(getResourceBundle().getString("mainview.button.go.tooltip")));
-        goCancelButtonsComponentController.setButtonCancelActionEventFactory(MainViewButtonCancelEvent::new);
-        goCancelButtonsComponentController.setButtonGoActionEventFactory(MainViewButtonGoEvent::new);
+        goCancelButtonsComponentController.buttonGo.setOnAction(this::handleButtonActionGo);
+        goCancelButtonsComponentController.buttonCancel.setOnAction(this::handleButtonActionCancel);
     }
 
     private void initRenamingStrategies() {
@@ -465,16 +462,6 @@ public class RenameController extends DebuggableController implements Initializa
         previewService.cancel();
         renamingService.cancel();
         fileTypeService.cancel();
-    }
-
-    @EventListener
-    public void onButtonGoEvent(MainViewButtonGoEvent event) {
-        handleButtonActionGo(event.getActionEvent());
-    }
-
-    @EventListener
-    public void onButtonCancelEvent(MainViewButtonCancelEvent event) {
-        handleButtonActionCancel(event.getActionEvent());
     }
 
     private RenamingStrategy initAndGetStrategy() {

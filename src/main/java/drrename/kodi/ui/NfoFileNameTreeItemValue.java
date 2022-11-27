@@ -20,8 +20,8 @@
 
 package drrename.kodi.ui;
 
-import drrename.kodi.*;
 import drrename.RenamingPath;
+import drrename.kodi.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -40,7 +40,6 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileCheckResu
     public NfoFileNameTreeItemValue(RenamingPath moviePath, Executor executor, WarningsConfig warningsConfig){
         super(moviePath, executor, warningsConfig);
         delegate = new NfoFileNameIssue(moviePath);
-//        triggerStatusCheck();
     }
 
     private void triggerFixer(){
@@ -85,7 +84,6 @@ public class NfoFileNameTreeItemValue extends KodiTreeItemValue<NfoFileCheckResu
         if(result == null){
             return;
         }
-//        log.debug("Updating status");
         delegate.updateStatus(result);
         setCheckResult(result);
         setWarning(calculateWarning());

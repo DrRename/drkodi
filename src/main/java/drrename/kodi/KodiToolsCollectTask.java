@@ -3,12 +3,13 @@ package drrename.kodi;
 import drrename.DrRenameTask;
 import drrename.Entries;
 import drrename.RenamingPath;
+import drrename.Tasks;
 import drrename.config.AppConfig;
 import drrename.kodi.nfo.NfoFileCollector;
 import drrename.kodi.nfo.NfoFileParser;
+import drrename.kodi.nfo.NfoFileTitleExtractor;
 import drrename.kodi.ui.FilterableKodiRootTreeItem;
 import drrename.kodi.ui.MovieTreeItemValue;
-import drrename.kodi.nfo.NfoFileTitleExtractor;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,8 +71,16 @@ class KodiToolsCollectTask extends DrRenameTask<ObservableList<MovieTreeItemFilt
                 result.add(item);
             }
             updateProgress(++cnt, entries.getEntriesFiltered().size());
-            if (getConfig().isDebug()) {
-                Thread.sleep(getConfig().getLoopDelayMs());
+            if (getAppConfig().isDebug()) {
+                try {
+                    Thread.sleep(getAppConfig().getLoopDelayMs());
+                } catch (InterruptedException e) {
+                    if (isCancelled()) {
+                        log.debug("Cancelled");
+                        updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+                        break;
+                    }
+                }
             }
         }
 

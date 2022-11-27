@@ -25,12 +25,12 @@ import drrename.RenamingPath;
 import drrename.Tasks;
 import drrename.config.AppConfig;
 import drrename.kodi.FixableStatusChecker;
+import drrename.kodi.IssueFixer;
 import drrename.kodi.MovieDbClientFactory;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.MovieDbLookupTreeItemValue;
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -73,8 +73,16 @@ public class KodiAddChildItemsTask extends DrRenameTask<Void> {
             var childItems = buildChildItems(itemValue.getValue().getRenamingPath());
             updateProgress(++cnt, itemValues.size());
             Platform.runLater(() -> childItems.forEach(childItem -> itemValue.getSourceChildren().add(childItem)));
-            if (getConfig().isDebug()) {
-                Thread.sleep(getConfig().getLoopDelayMs());
+            if (getAppConfig().isDebug()) {
+                try {
+                    Thread.sleep(getAppConfig().getLoopDelayMs());
+                } catch (InterruptedException e) {
+                    if (isCancelled()) {
+                        log.debug("Cancelled");
+                        updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+                        break;
+                    }
+                }
             }
         }
         log.debug("Finished");
@@ -111,5 +119,16 @@ public class KodiAddChildItemsTask extends DrRenameTask<Void> {
     @SuppressWarnings("unchecked")
     <R> void statusCheckerSucceeded(KodiTreeItemValue<R> itemValue, WorkerStateEvent event) {
         itemValue.updateStatus((R) event.getSource().getValue());
+    }
+
+    <R> void triggerFixer(KodiTreeItemValue<R> itemValue, Executor executor){
+        var fixableFixer = new IssueFixer<>(itemValue, itemValue.getCheckResult());
+        fixableFixer.setOnFailed(this::defaultTaskFailed);
+        fixableFixer.setOnSucceeded(itemValue::fixSucceeded);
+        executor.execute(fixableFixer);
+    }
+
+    void defaultTaskFailed(WorkerStateEvent workerStateEvent) {
+        log.error(workerStateEvent.getSource().getException().getLocalizedMessage(), workerStateEvent.getSource().getException());
     }
 }

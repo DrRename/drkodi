@@ -46,8 +46,16 @@ public class ListDirectoryTask extends DrRenameTask<Void> {
                 }
                 var entry = new RenamingControl(path);
                 handleNewEntry(entry);
-                if (getConfig().isDebug()) {
-                    Thread.sleep(getConfig().getLoopDelayMs());
+                if (getAppConfig().isDebug()) {
+                    try {
+                        Thread.sleep(getAppConfig().getLoopDelayMs());
+                    } catch (InterruptedException e) {
+                        if (isCancelled()) {
+                            log.debug("Cancelled");
+                            updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
+                            break;
+                        }
+                    }
                 }
             }
         }

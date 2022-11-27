@@ -20,8 +20,6 @@
 package drrename.filecreator;
 
 import drrename.config.AppConfig;
-import drrename.event.DummyFileCreatorButtonCancelEvent;
-import drrename.event.DummyFileCreatorButtonGoEvent;
 import drrename.kodi.ui.ServiceStarter;
 import drrename.ui.*;
 import javafx.event.ActionEvent;
@@ -39,7 +37,6 @@ import javafx.stage.StageStyle;
 import javafx.util.converter.NumberStringConverter;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -128,8 +125,8 @@ public class DummyFileCreatorController extends DebuggableController implements 
         filesCnt.setTextFormatter(textFormatter);
         goCancelButtonsComponentController.buttonGo.disableProperty().bind(fileCreatorService.runningProperty().or(tabController.startDirectoryController.readyProperty().not().or(filesCnt.textProperty().isEmpty())));
         goCancelButtonsComponentController.buttonCancel.disableProperty().bind(fileCreatorService.runningProperty().not());
-        goCancelButtonsComponentController.setButtonCancelActionEventFactory(DummyFileCreatorButtonCancelEvent::new);
-        goCancelButtonsComponentController.setButtonGoActionEventFactory(DummyFileCreatorButtonGoEvent::new);
+        goCancelButtonsComponentController.buttonCancel.setOnAction(this::handleDummyFileCreatorButtonCancel);
+        goCancelButtonsComponentController.buttonGo.setOnAction(this::handleDummyFileCreatorButtonGo);
         if (!getAppConfig().isDebug())
             progressAndStatusGridPane.getProgressBar().visibleProperty().bind(fileCreatorService.runningProperty());
 
@@ -144,16 +141,6 @@ public class DummyFileCreatorController extends DebuggableController implements 
 
     public void show() {
         stage.show(); //(3)
-    }
-
-    @EventListener
-    public void onButtonGo(DummyFileCreatorButtonGoEvent event) {
-        handleDummyFileCreatorButtonGo(event.getActionEvent());
-    }
-
-    @EventListener
-    public void onButtonCancel(DummyFileCreatorButtonCancelEvent event){
-        handleDummyFileCreatorButtonCancel(event.getActionEvent());
     }
 
     public void handleDummyFileCreatorButtonGo(ActionEvent actionEvent) {
