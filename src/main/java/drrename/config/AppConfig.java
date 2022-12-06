@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "app")
 public class AppConfig {
 
-    private boolean debug;
+    private boolean debug = true;
 
     /**
      * Time to sleep within loops. Can be used to slow down file generation or other features that support this property, for example when debugging.
@@ -39,4 +39,9 @@ public class AppConfig {
      * Number of words a newly generated word should have.
      */
     private long wordCnt;
+
+    public AppConfig setDebug(boolean debug) {
+        this.debug = debug;
+        return this;
+    }
 }
