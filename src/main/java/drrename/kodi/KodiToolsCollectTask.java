@@ -84,6 +84,7 @@ class KodiToolsCollectTask extends DrRenameTask<ObservableList<StaticMovieData>>
         result.sort(Comparator.comparing(kodiElement -> kodiElement.getRenamingPath().getOldPath()));
         updateMessage(null);
         log.debug("Finished");
+         entries.getEntries().clear();
         return result;
     }
 

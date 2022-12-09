@@ -64,7 +64,7 @@ public class NfoUtil {
 
     public static Integer getMovieYear(NfoRoot item) {
         var nfoMovie = getNfoMovie(item);
-        return nfoMovie == null ? null : Integer.parseInt(nfoMovie.getYear());
+        return (nfoMovie == null || StringUtils.isBlank(nfoMovie.getYear())) ? null : Integer.parseInt(nfoMovie.getYear());
     }
 
     public static List<MovieDbGenre> getGenres(NfoRoot item) {

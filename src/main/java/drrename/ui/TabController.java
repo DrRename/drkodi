@@ -33,8 +33,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -85,7 +87,7 @@ public class TabController extends DebuggableController implements Initializable
 
 
     @FXML
-    public Parent root;
+    public Pane root;
 
     @FXML
     public Label loadingFilesStatusLabel;
@@ -151,14 +153,14 @@ public class TabController extends DebuggableController implements Initializable
 
         super.initialize(url, resourceBundle);
 
-        log.debug("FXML injected controllers: {}, {}, {}, {}", startDirectoryController,  kodiToolsController);
+        log.debug("FXML injected controllers: {}, {}", startDirectoryController,  kodiToolsController);
         FXUtil.initAppMenu(menuBar);
         applicationStyle.currentStyleSheetProperty().addListener(this::themeChanged);
         Platform.runLater(() -> applyTheme(null, applicationStyle.getCurrentStyleSheet()));
         startDirectoryController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
         startDirectoryController.readyProperty().addListener(this::getNewReadyChangeListener);
 
-        /*if (!appConfig.isDebug()) */
+        if (!getAppConfig().isDebug())
         progressAndStatusGrid.visibleProperty().bind(loadPathsService.runningProperty());
 
         loadPathsService.setExecutor(executor);
