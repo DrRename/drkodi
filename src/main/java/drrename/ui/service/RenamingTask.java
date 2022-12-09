@@ -1,9 +1,6 @@
 package drrename.ui.service;
 
-import drrename.DrRenameTask;
-import drrename.Entries;
-import drrename.RenamingControl;
-import drrename.Tasks;
+import drrename.*;
 import drrename.config.AppConfig;
 import drrename.strategy.RenamingStrategy;
 import javafx.application.Platform;
@@ -15,6 +12,8 @@ import java.util.ResourceBundle;
 
 @Slf4j
 public class RenamingTask extends DrRenameTask<Void> {
+
+	static final Renamer renamer = new Renamer();
 
 	private final List<RenamingControl> elements;
 
@@ -43,7 +42,7 @@ public class RenamingTask extends DrRenameTask<Void> {
 				break;
 			}
 			if (b.isWillChange()) {
-				Path p = b.rename(strategy);
+				Path p = renamer.rename(b, strategy);
 				if (!b.getOldPath().equals(p)) {
 					handleEntry(b);
 				}

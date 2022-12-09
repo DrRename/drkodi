@@ -22,7 +22,7 @@ package drrename.kodi.ui;
 
 import drrename.kodi.FixFailedException;
 import drrename.kodi.WarningsConfig;
-import drrename.RenamingPath;
+import drrename.commons.RenamingPath;
 import drrename.util.DrRenameUtil;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Parent;

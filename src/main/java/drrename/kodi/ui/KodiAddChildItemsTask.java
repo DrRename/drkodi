@@ -20,8 +20,8 @@
 
 package drrename.kodi.ui;
 
+import drrename.commons.RenamingPath;
 import drrename.DrRenameTask;
-import drrename.RenamingPath;
 import drrename.Tasks;
 import drrename.config.AppConfig;
 import drrename.kodi.FixableStatusChecker;

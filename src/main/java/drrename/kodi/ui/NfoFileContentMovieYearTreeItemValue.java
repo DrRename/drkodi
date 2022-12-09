@@ -20,7 +20,7 @@
 
 package drrename.kodi.ui;
 
-import drrename.RenamingPath;
+import drrename.commons.RenamingPath;
 import drrename.kodi.NfoFileCheckResult;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.nfo.NfoContentTitleChecker;

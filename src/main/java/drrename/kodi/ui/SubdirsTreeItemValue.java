@@ -20,12 +20,12 @@
 
 package drrename.kodi.ui;
 
+import drrename.commons.RenamingPath;
 import drrename.kodi.FixFailedException;
 import drrename.kodi.SubdirsCheckResult;
 import drrename.kodi.SubdirsChecker;
 import drrename.kodi.WarningsConfig;
 import drrename.util.DrRenameUtil;
-import drrename.RenamingPath;
 import javafx.concurrent.WorkerStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
