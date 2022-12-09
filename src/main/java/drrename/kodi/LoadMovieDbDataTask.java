@@ -50,7 +50,7 @@ public class LoadMovieDbDataTask extends KodiTask {
             log.info("Data complete for {}, will not query TheMovieDb", element);
             return;
         }
-        log.info("Starting query for {}", element);
+        log.debug("Starting query for {}", element);
         WebSearchResults movieDbMovieSearchResult = querier2.query(element.getMovieTitle(), null);
         log.debug("Found {} matches for {}", movieDbMovieSearchResult.getSearchResults().keySet().size(), element.getMovieTitle());
         Platform.runLater(() -> element.setWebSearchResult(movieDbMovieSearchResult));

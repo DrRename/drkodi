@@ -150,7 +150,7 @@ public class Movie extends DynamicMovieData {
             return;
         }
         if (!isDataLoadingComplete()) {
-            log.info("Data loading incomplete, will not query TheMovieDb");
+            log.debug("Data loading incomplete, will not query TheMovieDb");
             return;
         }
         if (isDataComplete()) {

@@ -36,7 +36,7 @@ public class WebQuerierTask extends Task<WebSearchResults> {
 
     @Override
     protected WebSearchResults call() throws Exception {
-        log.info("Starting query for {}", movie);
+        log.debug("Starting query for {}", movie);
         var searchString = prepareSearchString(movie.getMovieTitle());
         WebSearchResults movieDbMovieSearchResult = querier2.query(searchString, null);
         log.debug("Found {} matches for '{}'", movieDbMovieSearchResult.getSearchResults().keySet().size(), searchString);
