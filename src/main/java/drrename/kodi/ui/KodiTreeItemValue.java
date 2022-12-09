@@ -20,8 +20,9 @@
 
 package drrename.kodi.ui;
 
+
+import drrename.commons.RenamingPath;
 import drrename.kodi.*;
-import drrename.RenamingPath;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

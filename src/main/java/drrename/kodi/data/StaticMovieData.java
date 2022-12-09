@@ -20,7 +20,9 @@
 
 package drrename.kodi.data;
 
-import drrename.RenamingPath;
+
+
+import drrename.commons.RenamingPath;
 import drrename.SearchResultMapper;
 import drrename.kodi.KodiUtil;
 import drrename.kodi.MovieDbGenre;

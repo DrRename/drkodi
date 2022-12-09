@@ -27,4 +27,5 @@ open module drrename {
     requires spring.web;
     requires com.jthemedetector;
     requires org.mapstruct;
+    requires drrename.commons;
 }

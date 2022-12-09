@@ -19,7 +19,8 @@
 
 package drrename.kodi.nfo;
 
-import drrename.RenamingPath;
+import drrename.Renamer;
+import drrename.commons.RenamingPath;
 import drrename.config.TheMovieDbConfig;
 import drrename.kodi.*;
 import drrename.kodi.ui.KodiTreeItemValue;
@@ -160,7 +161,8 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
         log.debug("Triggering fixing on thread {}", Thread.currentThread());
         try {
             var renameResult = DrRenameUtil.rename(getRenamingPath().getOldPath(), fixConfig.newName);
-            Platform.runLater(() -> getRenamingPath().commitRename(renameResult));
+            var renamer = new Renamer();
+            Platform.runLater(() -> renamer.commitRename(getRenamingPath(), renameResult));
         } catch (IOException e) {
             throw new FixFailedException(e);
         }

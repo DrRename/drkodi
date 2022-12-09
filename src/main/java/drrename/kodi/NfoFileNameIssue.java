@@ -20,9 +20,10 @@
 
 package drrename.kodi;
 
+import drrename.commons.RenamingPath;
 import drrename.util.DrRenameUtil;
 import drrename.kodi.nfo.*;
-import drrename.RenamingPath;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

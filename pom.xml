@@ -6,22 +6,21 @@
         <version>2.7.5</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
-    <groupId>app.drrename</groupId>
-    <artifactId>drrename</artifactId>
+    <groupId>app.koditools</groupId>
+    <artifactId>kodi-tools</artifactId>
     <version>0.14.1-SNAPSHOT</version>
-    <name>DrRename</name>
-    <description>Minimalistic Batch-Rename Tool.</description>
+    <name>KodiTools</name>
+    <description>Minimalistic Media Library Tool</description>
     <properties>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <github-user>drrename</github-user>
-        <github-repo>drrename</github-repo>
+        <github-repo>kodi-tools</github-repo>
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
         <java.version>17</java.version>
         <javafx.version>19</javafx.version>
         <spring-boot.version>2.7.4</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
-        <sonar.coverage.exclusions>src/main/java/drrename/PrimaryStageInitializer.java</sonar.coverage.exclusions>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/${github-user}/${github-repo}.git</connection>
@@ -219,6 +218,11 @@
             <groupId>com.github.Dansoftowner</groupId>
             <artifactId>jSystemThemeDetector</artifactId>
             <version>3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>drrename</groupId>
+            <artifactId>drrename-commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <profiles>

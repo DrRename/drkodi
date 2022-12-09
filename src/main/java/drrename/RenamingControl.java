@@ -20,6 +20,9 @@
 
 package drrename;
 
+
+
+import drrename.commons.RenamingPath;
 import drrename.ui.Styles;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;

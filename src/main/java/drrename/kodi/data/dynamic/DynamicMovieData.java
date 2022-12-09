@@ -20,7 +20,8 @@
 
 package drrename.kodi.data.dynamic;
 
-import drrename.RenamingPath;
+
+import drrename.commons.RenamingPath;
 import drrename.kodi.KodiUtil;
 import drrename.kodi.NfoRoot;
 import drrename.kodi.data.QualifiedNfoData;
