@@ -22,7 +22,6 @@ package drrename.kodi.ui;
 
 import drrename.config.AppConfig;
 import drrename.kodi.KodiCollectService;
-import drrename.kodi.KodiSuggestionsService;
 import drrename.kodi.KodiUtil;
 import drrename.kodi.WarningsConfig;
 import drrename.kodi.data.Movie;
@@ -32,6 +31,7 @@ import drrename.kodi.ui.control.HansBox;
 import drrename.ui.DebuggableController;
 import drrename.ui.DrRenameController;
 import drrename.ui.ProgressAndStatusGridPane;
+import drrename.ui.UiUtil;
 import drrename.ui.config.UiConfig;
 import javafx.application.Platform;
 import javafx.beans.Observable;
@@ -42,17 +42,15 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
@@ -97,11 +95,11 @@ public class KodiToolsController extends DebuggableController implements DrRenam
     // FXML injected //
 
     @FXML
-    Parent root;
+    Pane root;
 
 
     @FXML
-    ScrollPane scrollPane;
+    ListView<HansBox> listView;
 
 //    @FXML
 //    Button buttonExpandAll;
@@ -144,9 +142,7 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
 //    private final FlowPane flowPane;
 
-    private final VBox listView;
 
-    private final KodiUiElementBuilder uiElementBuilder;
 
     //
 
@@ -178,7 +174,7 @@ public class KodiToolsController extends DebuggableController implements DrRenam
                     new HansBox(e, executor, getAppConfig(), kodiUiConfig)
                 ).toList();
 
-                listView.getChildren().setAll(result2);
+                listView.getItems().setAll(result2);
 //                kodiSuggestionsService.setElements(result);
 //                kodiSuggestionsServiceStarter.startService();
 
@@ -219,9 +215,8 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 //        this.kodiSuggestionsService = kodiSuggestionsService;
         this.progressLabel = new Label();
 //        this.flowPane = new FlowPane();
-        this.listView = new VBox(20);
-        this.listView.setPadding(new Insets(4,4,4,4));
-        this.uiElementBuilder = new KodiUiElementBuilder(appConfig, kodiUiConfig);
+
+
     }
 
 
@@ -274,25 +269,58 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
 //        listView.setPadding(new Insets(5, 5, 5, 5));
 
-//
-//
-        scrollPane.setContent(listView);
 
-        scrollPane.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+//        VBox.setVgrow(listView, Priority.ALWAYS);
+//        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+//        listView.setMaxHeight(Double.MAX_VALUE);
+//        scrollPane.setFitToHeight(true);
+//        scrollPane.setContent(listView);
+//        scrollPane.setFitToWidth(true);
+
+//        scrollPane.setFitToHeight(true);
+//        scrollPane.setFitToWidth(true);
+
+//        scrollPane.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
+//                listView.setPrefWidth(bounds.getWidth());
+//                listView.setPrefHeight(bounds.getHeight());
+//            }
+//        });
+
+
+//        UiUtil.applyDebug(scrollPane, getAppConfig());
+        UiUtil.applyDebug(listView, getAppConfig());
+
+//            root.setMinHeight(10);
+//            root.setMinWidth(10);
+
+        listView.setCellFactory(new Callback<ListView<HansBox>, ListCell<HansBox>>() {
             @Override
-            public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
-                listView.setPrefWidth(bounds.getWidth());
-                listView.setPrefHeight(bounds.getHeight());
+            public ListCell<HansBox> call(ListView<HansBox> param) {
+                ListCell<HansBox> lc = new ListCell<>() {
+
+                    @Override
+                    protected void updateItem(HansBox item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            setGraphic(item);
+                        }
+                    }
+                };
+                lc.prefWidthProperty().bind(listView.widthProperty().subtract(20));
+                return lc;
             }
         });
-//
-
 
     }
 
     @Override
     protected Parent[] getUiElementsForRandomColor() {
-        return new Parent[]{root, listView/*, flowPane*/, buttonBox, progressAndStatusGridPane, progressAndStatusGridPane.getProgressStatusBox()};
+        return new Parent[]{root, listView, progressAndStatusGridPane, progressAndStatusGridPane.getProgressStatusBox()};
     }
 
 //    private void initTreeRoot() {
@@ -313,7 +341,8 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 ////        treeRoot.getChildren().clear();
 //        log.debug("UI cleared. Elements left: {}, {}", treeRoot.getSourceChildren(), treeRoot.getChildren());
 
-        listView.getChildren().clear();
+
+        listView.getItems().clear();
 
     }
 
