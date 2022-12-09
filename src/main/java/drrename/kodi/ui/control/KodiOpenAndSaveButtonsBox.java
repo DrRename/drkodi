@@ -23,12 +23,13 @@ package drrename.kodi.ui.control;
 import drrename.kodi.data.Movie;
 import drrename.util.DrRenameUtil;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.util.concurrent.Executor;
 
-public class KodiOpenAndSaveButtonsBox extends HBox  {
+public class KodiOpenAndSaveButtonsBox extends FlowPane {
 
     public KodiOpenAndSaveButtonsBox(Movie item, Executor executor){
         if (SystemUtils.IS_OS_MAC) {

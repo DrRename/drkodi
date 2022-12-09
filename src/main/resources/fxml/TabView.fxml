@@ -22,14 +22,16 @@
 
 <?import drrename.ui.ProgressAndStatusGridPane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="drrename.ui.TabController" fx:id="root">
 
     <padding>
-        <Insets top="0" right="0" bottom="20" left="0"/>
+        <Insets top="4" right="4" bottom="4" left="4"/>
     </padding>
 
     <MenuBar fx:id="menuBar">
@@ -39,12 +41,9 @@
         </Menu>
     </MenuBar>
 
-    <VBox VBox.vgrow="ALWAYS" maxHeight="Infinity">
-        <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
+    <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
 
-                        <fx:include fx:id="kodiTools" source="KodiTools.fxml"/>
-
-        </VBox>
+    <fx:include fx:id="kodiTools" source="KodiTools.fxml"/>
 
     <ProgressAndStatusGridPane fx:id="progressAndStatusGrid"/>
 
