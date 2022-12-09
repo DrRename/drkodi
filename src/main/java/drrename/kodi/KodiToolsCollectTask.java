@@ -1,6 +1,7 @@
 package drrename.kodi;
 
 import drrename.*;
+import drrename.commons.RenamingPath;
 import drrename.config.AppConfig;
 import drrename.kodi.data.Movie;
 import drrename.kodi.data.StaticMovieData;

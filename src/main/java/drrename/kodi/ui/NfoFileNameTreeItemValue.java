@@ -20,7 +20,8 @@
 
 package drrename.kodi.ui;
 
-import drrename.RenamingPath;
+
+import drrename.commons.RenamingPath;
 import drrename.kodi.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;

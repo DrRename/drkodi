@@ -20,7 +20,7 @@
 
 package drrename.kodi.ui;
 
-import drrename.RenamingPath;
+import drrename.commons.RenamingPath;
 import drrename.SearchResultMapperImpl;
 import drrename.kodi.NfoMovie;
 import drrename.kodi.NfoRoot;
