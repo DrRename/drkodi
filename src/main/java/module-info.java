@@ -26,4 +26,5 @@ open module drrename {
     requires spring.cloud.openfeign.core;
     requires spring.web;
     requires com.jthemedetector;
+    requires org.mapstruct;
 }

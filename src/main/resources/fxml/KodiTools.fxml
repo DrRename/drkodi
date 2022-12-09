@@ -9,24 +9,24 @@
       fx:controller="drrename.kodi.ui.KodiToolsController" fx:id="root" maxHeight="Infinity"
       prefHeight="400.0" prefWidth="600.0" spacing="4">
 
-    <TreeView fx:id="treeView" maxHeight="Infinity" VBox.vgrow="ALWAYS"/>
+    <ScrollPane fx:id="scrollPane" maxHeight="Infinity" VBox.vgrow="ALWAYS"/>
 
     <HBox fx:id="buttonBox" spacing="4" alignment="TOP_LEFT" VBox.vgrow="NEVER">
         <padding>
             <Insets top="4" right="4" bottom="4" left="4"/>
         </padding>
-        <Button fx:id="buttonExpandAll" prefWidth="120" minWidth="50"
-                onAction="#handleButtonExpandAll" text="Expand all">
-            <tooltip>
-                <Tooltip text="Expand all"/>
-            </tooltip>
-        </Button>
-        <Button fx:id="buttonCollapseAll" prefWidth="120" minWidth="50"
-                onAction="#handleButtonCollapseAll" text="Collapse all">
-            <tooltip>
-                <Tooltip text="Expand all"/>
-            </tooltip>
-        </Button>
+<!--        <Button fx:id="buttonExpandAll" prefWidth="120" minWidth="50"-->
+<!--                onAction="#handleButtonExpandAll" text="Expand all">-->
+<!--            <tooltip>-->
+<!--                <Tooltip text="Expand all"/>-->
+<!--            </tooltip>-->
+<!--        </Button>-->
+<!--        <Button fx:id="buttonCollapseAll" prefWidth="120" minWidth="50"-->
+<!--                onAction="#handleButtonCollapseAll" text="Collapse all">-->
+<!--            <tooltip>-->
+<!--                <Tooltip text="Expand all"/>-->
+<!--            </tooltip>-->
+<!--        </Button>-->
         <VBox spacing="4">
             <CheckBox fx:id="checkBoxHideEmpty" text="Show only warnings"/>
             <CheckBox fx:id="checkBoxMissingNfoFileIsAWarning" text="Missing NFO file is a warning"/>

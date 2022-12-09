@@ -20,8 +20,8 @@
 
 package drrename.kodi.ui;
 
-import drrename.util.DrRenameUtil;
 import drrename.kodi.FilterableTreeItem;
+import drrename.util.DrRenameUtil;
 import javafx.beans.Observable;
 import javafx.scene.control.TreeItem;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class FilterableKodiTreeItem extends FilterableTreeItem<KodiTreeItemValue
 
     @Override
     protected Comparator<TreeItem<KodiTreeItemValue<?>>> getComparator() {
-        return Comparator.comparing(o -> o.getValue().getRenamingPath().getMovieName());
+        return Comparator.comparing(o -> o.getValue().getRenamingPath().getFileName());
     }
 
     protected Observable[] getExtractorCallback(TreeItem<KodiTreeItemValue<?>> item) {

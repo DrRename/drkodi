@@ -36,15 +36,15 @@ public class NfoContentTitleChecker extends NfoContentChecker {
         return NfoFileCheckResultType.INVALID_TITLE;
     }
 
-    static boolean verifyTitle(Path moviePath, NfoRoot xmlFileContent) {
+    public static boolean verifyTitle(Path moviePath, NfoRoot xmlFileContent) {
         return verifyTitle(moviePath.getFileName().toString(), xmlFileContent);
     }
 
-    static boolean verifyTitle(String movieTitle, NfoRoot xmlFileContent) {
+    public static boolean verifyTitle(String movieTitle, NfoRoot xmlFileContent) {
         return xmlFileContent != null && xmlFileContent.getMovie() != null && xmlFileContent.getMovie().getTitle() != null && verifyTitle(movieTitle, xmlFileContent.getMovie().getTitle());
     }
 
-    static boolean verifyTitle(String movieTitle, String nfoMovieTitle) {
+    public static boolean verifyTitle(String movieTitle, String nfoMovieTitle) {
         String substring = movieTitle;
         if(movieTitle.contains("(")){
             substring = movieTitle.substring(0, movieTitle.indexOf(" ("));

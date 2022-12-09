@@ -27,3 +27,16 @@
     -fx-prompt-text-fill: derive(-fx-control-inner-background,+80%);
 }
 
+.kodi-warning-box-value {
+    -fx-font-family: 'monospaced';
+    -fx-text-fill: GRAY_9;
+    -fx-font-size: 11px;
+}
+
+.kodi-link {
+    -fx-text-fill: white;
+}
+.kodi-link:hover{
+    -fx-text-fill: #3488e3;
+}
+

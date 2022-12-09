@@ -18,19 +18,24 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.themoviedb;
+package drrename.kodi.ui.control;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 
-@Data
-public class TranslationDto {
+public class KodiWarningValueLabel extends Label {
 
-    @JsonProperty("iso_3166_1")
-    String iso3166;
 
-    @JsonProperty("iso_639_1")
-    String iso639;
 
-    TranslationData data;
+    public KodiWarningValueLabel(String value, ObservableValue<? extends String> observableValue) {
+
+        // Current value
+        setText(value);
+
+        // init listeners
+        textProperty().bind(observableValue);
+
+        getStyleClass().add("kodi-warning-box-value");
+    }
 }

@@ -1,0 +1,14 @@
+<movie>
+    <art>
+        <poster>folder.jpg</poster>
+    </art>
+    <year>1942</year>
+    <premiered>1943</premiered>
+    <country>Country1</country>
+    <country>Country2</country>
+    <genre>Kids</genre>
+    <genre>Family</genre>
+    <title>Bambi</title>
+    <uniqueid type="tmdb">3170</uniqueid>
+</movie>
+https://www.themoviedb.org/movie/3170

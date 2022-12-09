@@ -10,8 +10,9 @@ logging:
       ulisesbocchio: warn
     drrename.kodi.nfo.NfoFileCollector: info
     drrename.kodi.nfo.NfoFileParser: info
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
+    drrename.kodi.ui.control: info
+#  pattern:
+#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
 
 feign:
   client:
@@ -19,19 +20,23 @@ feign:
       default:
         connectTimeout: 10000
         readTimeout: 10000
-        loggerLevel: none
+        loggerLevel: basic
 
 app:
   ui:
     appTitle: "Dr.Rename"
     initialWidth: 600
     initialHeight: 600
+    imageHeight: 200
     override-locale: de
   word-cnt: 3
-  loop-delay-ms: 100
+  loop-delay-ms: 300
   reset-delay-ms: 500
   debug: false
   kodi:
+    ui:
+      imageHeight: 265
+      searchImageHeight: 100
     themoviedb:
       base-url: https://api.themoviedb.org/3
       include-adult: true

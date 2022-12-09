@@ -66,7 +66,7 @@ public abstract class FxKodiIssue<R> implements KodiIssue<R> {
 
     @Override
     public String getMovieNameFromFolder() {
-        return getRenamingPath() == null ? null : getRenamingPath().getMovieName();
+        return getRenamingPath() == null ? null : getRenamingPath().getFileName();
     }
 
     public String getMovieName(){

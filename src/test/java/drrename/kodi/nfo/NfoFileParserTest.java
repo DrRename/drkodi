@@ -20,6 +20,7 @@
 
 package drrename.kodi.nfo;
 
+import drrename.kodi.NfoRoot;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,5 +45,11 @@ class NfoFileParserTest {
         var result = new NfoFileParser().parse(Paths.get("src/test/resources/kodi/Some Movie (2000)/wrong-format.nfo"));
         assertNull(result.getUrl());
         assertNull(result.getMovie());
+    }
+
+    @Test
+    void parse01() throws IOException {
+        NfoRoot result = new NfoFileParser().parse(Paths.get("src/test/resources/kodi/nfo/complete.nfo"));
+        System.out.println(result);
     }
 }

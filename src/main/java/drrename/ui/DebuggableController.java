@@ -27,9 +27,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.stream.Stream;
 
 @Getter
 @RequiredArgsConstructor
@@ -38,10 +36,6 @@ public abstract class DebuggableController implements Initializable {
     private final AppConfig appConfig;
 
     private ResourceBundle resourceBundle;
-
-    public static String getRandomColorString() {
-        return String.format("#%06x", new Random().nextInt(256 * 256 * 256));
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -55,8 +49,8 @@ public abstract class DebuggableController implements Initializable {
         applyRandomColors(getUiElementsForRandomColor());
     }
 
-    protected void applyRandomColors(Parent[] elements) {
-        Stream.of(elements).forEach(l -> l.setStyle("-fx-background-color: " + getRandomColorString()));
+    protected void applyRandomColors(Parent... elements) {
+        UiUtil.applyRandomColors(elements);
     }
 
 }

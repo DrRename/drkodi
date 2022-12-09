@@ -20,6 +20,7 @@
 
 package drrename.kodi.themoviedb;
 
+import drrename.kodi.data.json.TranslationDto;
 import lombok.Data;
 
 import java.util.List;

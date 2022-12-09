@@ -22,13 +22,14 @@ package drrename.kodi;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import drrename.kodi.NfoFileXmlModel;
+import drrename.kodi.data.StaticMovieData;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +37,9 @@ import java.util.regex.Pattern;
 public class KodiUtil {
 
     public static String getMovieNameFromDirectoryName(String directoryName){
+        if(directoryName == null){
+            return null;
+        }
         if(directoryName.contains("(")) {
             return directoryName.substring(0, directoryName.indexOf("(")).trim();
         }
@@ -43,6 +47,9 @@ public class KodiUtil {
     }
 
     public static Integer getMovieYearFromDirectoryName(String directoryName) {
+        if(directoryName == null){
+            return null;
+        }
         Pattern p = Pattern.compile("\\(\\d+\\)");
         Matcher m = p.matcher(directoryName);
         if(m.find()) {
@@ -55,7 +62,7 @@ public class KodiUtil {
         XmlMapper mapper = new XmlMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
-            NfoFileXmlModel xmlFileContent = mapper.readValue(nfoFile.toFile(), NfoFileXmlModel.class);
+            NfoMovie xmlFileContent = mapper.readValue(nfoFile.toFile(), NfoMovie.class);
             if(xmlFileContent.getArt() != null && xmlFileContent.getArt().getPoster() != null)
                 return nfoFile.getParent().resolve(xmlFileContent.getArt().getPoster());
         } catch (JsonParseException e) {
@@ -72,5 +79,21 @@ public class KodiUtil {
             }
         }
         return false;
+    }
+
+    public static Path getDefaultNfoPath(StaticMovieData staticMovieData){
+        return getDefaultNfoPath(staticMovieData.getRenamingPath().getOldPath());
+    }
+
+    public static Path getDefaultNfoPath(Path movieDirectory){
+        return Paths.get(movieDirectory.toString(), "movie.nfo");
+    }
+
+    public static Path getDefaultImagePath(StaticMovieData staticMovieData){
+        return getDefaultImagePath(staticMovieData.getRenamingPath().getOldPath());
+    }
+
+    public static Path getDefaultImagePath(Path moviePath){
+        return Paths.get(moviePath.toString(), "folder" + ".jpg");
     }
 }

@@ -30,14 +30,86 @@
     src: url('opensans_bold.ttf');
 }
 
-.kodi-tree-cell:warning {
-    -fx-background-color: rgba(227, 163, 89, 0.58);
-}
+/*.kodi-tree-cell:warning {*/
+/*    -fx-background-color: rgba(227, 163, 89, 0.58);*/
+/*}*/
 
 .root {
+
+    GRAY_0: #1F2122;
+    GRAY_1: #35393B;
+    GRAY_2: #494E51;
+    GRAY_3: #585E62;
+    GRAY_4: #71797E;
+    GRAY_5: #8E989E;
+    GRAY_6: #9FAAB1;
+    GRAY_7: #BEC9CF;
+    GRAY_8: #D3DCE1;
+    GRAY_9: #EDF3F7;
+
     -fx-font-family: 'Open Sans Regular';
 }
 
-.warning-text {
-    -fx-font-family: 'Open Sans SemiBold';
+/*.warning-text {*/
+/*    -fx-font-family: 'Open Sans SemiBold';*/
+/*}*/
+
+.kodi-box {
+    -fx-border-style: solid hidden hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: gray;
+    -fx-padding: 0 8 8 0;
 }
+
+.kodi-movie-name {
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+    -fx-underline: true;
+}
+
+.kodi-movie-year {
+    -fx-font-size: 20px;
+    -fx-font-weight: 400;
+}
+
+.kodi-movie-title-year {
+    -fx-underline: true;
+}
+
+.kodi-warning-box {
+    -fx-padding: 4px;
+    -fx-background-color: rgba(227, 163, 89, 0.58);
+
+}
+
+.kodi-warning-box-key {
+
+}
+
+.kodi-warning-box-value {
+    -fx-font-family: 'monospaced';
+    -fx-font-size: 11px;
+
+}
+
+.kodi-genre {
+    -fx-border-radius: 4;
+    -fx-border-width:1;
+    -fx-border-color: white;
+    -fx-padding: 2px;
+}
+
+.kodi-image-large {
+    -fx-padding: 4px;
+}
+
+.kodi-plot {
+    -fx-font-style: italic;
+}
+
+.kodi-tagline {
+    -fx-font-style: italic;
+}
+
+
+
