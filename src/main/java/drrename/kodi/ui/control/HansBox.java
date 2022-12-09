@@ -25,6 +25,8 @@ import drrename.kodi.data.Movie;
 import drrename.ui.UiUtil;
 import drrename.kodi.ui.SearchResultsAndTitleBox;
 import drrename.kodi.ui.config.KodiUiConfig;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.concurrent.Executor;
@@ -39,6 +41,10 @@ public class HansBox extends VBox {
 
         // layout
         getStyleClass().add("kodi-box");
+
+
+
+//        setVgrow(this, Priority.ALWAYS);
 
 
     }

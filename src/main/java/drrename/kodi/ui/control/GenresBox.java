@@ -25,28 +25,31 @@ import drrename.kodi.data.Movie;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 
 @Slf4j
-public class GenresBox extends HBox {
+public class GenresBox extends FlowPane {
     public GenresBox(Movie kodiMovie) {
+
         setContent(kodiMovie.getGenres());
 
         kodiMovie.genresProperty().addListener(new ListChangeListener<MovieDbGenre>() {
             @Override
             public void onChanged(Change<? extends MovieDbGenre> c) {
-                while(c.next()){
+                while (c.next()) {
                     log.debug("Genres changed: {}", c);
                 }
                 setContent(c.getList());
             }
         });
 
-        setSpacing(4);
-        setPadding(new Insets(4,4,4,4));
+        setVgap(4);
+        setHgap(4);
+        setPadding(new Insets(4, 4, 4, 4));
+
         visibleProperty().bind(kodiMovie.genresProperty().isNotNull());
         managedProperty().bind(visibleProperty());
     }
