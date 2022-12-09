@@ -77,8 +77,6 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
     // Spring injected //
 
-    private final UiConfig uiConfig;
-
     private final KodiUiConfig kodiUiConfig;
 
     private final KodiCollectService kodiCollectService;
@@ -154,34 +152,6 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
     // Nested classes //
 
-    private class KodiSuggestionsServiceStarter extends ServiceStarter<KodiSuggestionsService> {
-
-        public KodiSuggestionsServiceStarter(KodiSuggestionsService service) {
-            super(service);
-        }
-
-        @Override
-        protected void doInitService(KodiSuggestionsService service) {
-            service.setExecutor(executor);
-            progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
-            progressLabel.textProperty().bind(service.messageProperty());
-        }
-    }
-
-    private class KodiAddChildItemsServiceStarter extends ServiceStarter<KodiAddChildItemsService> {
-
-        public KodiAddChildItemsServiceStarter(KodiAddChildItemsService service) {
-            super(service);
-        }
-
-        @Override
-        protected void doInitService(KodiAddChildItemsService service) {
-            service.setWarningsConfig(warningsConfig);
-            progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
-            progressLabel.textProperty().bind(service.messageProperty());
-        }
-    }
-
     private class KodiCollectServiceStarter extends ServiceStarter<KodiCollectService> {
 
         public KodiCollectServiceStarter(KodiCollectService service) {
@@ -242,7 +212,6 @@ public class KodiToolsController extends DebuggableController implements DrRenam
         this.executor = executor;
         this.serviceStarter = new KodiCollectServiceStarter(kodiCollectService);
 //        KodiAddChildItemsServiceStarter kodiAddChildItemsServiceStarter = new KodiAddChildItemsServiceStarter(kodiAddChildItemsService);
-        this.uiConfig = uiConfig;
         this.kodiUiConfig = kodiUiConfig;
 //        this.kodiSuggestionsServiceStarter = new KodiSuggestionsServiceStarter(kodiSuggestionsService);
 //        this.movieDbConfig = movieDbConfig;
