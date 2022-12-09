@@ -35,13 +35,14 @@ public class ProgressAndStatusGridPane extends GridPane {
     public ProgressAndStatusGridPane(){
         this.progressBar = new ProgressBar();
         this.progressStatusBox = new HBox(4);
-        this.progressStatusBox.setPadding(new Insets(4,4,4,4));
+//        this.progressStatusBox.setPadding(new Insets(4,4,4,4));
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setPercentWidth(100);
         getColumnConstraints().addAll(columnConstraints, columnConstraints);
         setPadding(new Insets(4,4,4,4));
         add(progressBar, 0, 0);
         add(progressStatusBox, 1, 0);
+
     }
 
     public ProgressBar getProgressBar() {
