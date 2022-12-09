@@ -20,13 +20,13 @@
 
 package drrename.kodi;
 
-import drrename.util.DrRenameUtil;
 import drrename.config.TheMovieDbConfig;
+import drrename.kodi.data.json.SearchResultDto;
+import drrename.kodi.data.json.TranslationDto;
 import drrename.kodi.nfo.MovieDbCheckType;
 import drrename.kodi.nfo.MovieDbLookupCheckResult;
-import drrename.kodi.themoviedb.SearchResultDto;
-import drrename.kodi.themoviedb.TranslationDto;
 import drrename.kodi.themoviedb.TranslationsDto;
+import drrename.util.DrRenameUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -115,4 +115,6 @@ public class MovieDbQuerier {
         }
        return title + " (" + date.getYear() + ")";
     }
+
+
 }

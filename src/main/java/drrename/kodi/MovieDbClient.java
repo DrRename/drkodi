@@ -20,7 +20,7 @@
 
 package drrename.kodi;
 
-import drrename.kodi.themoviedb.SearchResultsDto;
+import drrename.kodi.data.SearchResultsDto;
 import drrename.kodi.themoviedb.TranslationsDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +38,6 @@ public interface MovieDbClient {
     @RequestMapping(method = RequestMethod.GET, value = "/movie/{id}/translations", produces = "application/json")
     ResponseEntity<TranslationsDto> getTranslations(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/movie{id}", produces = "application/json")
-    ResponseEntity<SearchResultsDto> getDetails(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id, @RequestParam(name = "langauge", required = false) String language, @RequestParam(name = "query") String query);
+    @RequestMapping(method = RequestMethod.GET, value = "/movie/{id}", produces = "application/json")
+    ResponseEntity<MovieDetailsDto> getDetails(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id, @RequestParam(name = "langauge", required = false) String language);
 }

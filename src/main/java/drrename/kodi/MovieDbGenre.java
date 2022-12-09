@@ -18,12 +18,18 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.themoviedb;
+package drrename.kodi;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
-public class TranslationData {
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+public class MovieDbGenre {
 
-    String title;
+    Number id;
+
+    String name;
 }

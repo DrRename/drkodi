@@ -28,7 +28,7 @@ import lombok.ToString;
 @Setter
 public class NfoRoot {
 
-    public NfoFileXmlModel movie;
+    NfoMovie movie;
 
-    public String url;
+    String url;
 }

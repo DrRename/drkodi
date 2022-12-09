@@ -118,6 +118,14 @@ public class TabController extends DebuggableController implements Initializable
         }
 
         @Override
+        protected void prepareUi() {
+            super.prepareUi();
+            renameController.clearView();
+            kodiToolsController.clearView();
+
+        }
+
+        @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
             renameController.updateFileTypeInfo();
             renameController.updatePreview();

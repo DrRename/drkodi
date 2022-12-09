@@ -1,61 +1,58 @@
 package drrename.kodi;
 
-import drrename.DrRenameTask;
-import drrename.Entries;
-import drrename.RenamingPath;
-import drrename.Tasks;
+import drrename.*;
 import drrename.config.AppConfig;
-import drrename.kodi.nfo.NfoFileCollector;
-import drrename.kodi.nfo.NfoFileParser;
-import drrename.kodi.nfo.NfoFileTitleExtractor;
+import drrename.kodi.data.Movie;
+import drrename.kodi.data.StaticMovieData;
 import drrename.kodi.ui.FilterableKodiRootTreeItem;
-import drrename.kodi.ui.MovieTreeItemValue;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 
 @Getter
 @Slf4j
-class KodiToolsCollectTask extends DrRenameTask<ObservableList<MovieTreeItemFilterable>> {
+class KodiToolsCollectTask extends DrRenameTask<ObservableList<StaticMovieData>> {
 
     private final Entries entries;
 
-    private final FilterableKodiRootTreeItem rootTreeItem;
+//    private final FilterableKodiRootTreeItem rootTreeItem;
 
     private final Executor executor;
 
-    private final MovieDbClientFactory movieDbClientFactory;
+//    private final MovieDbClientFactory movieDbClientFactory;
 
     private final WarningsConfig warningsConfig;
 
     private final Observable[] extractor;
 
-    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, FilterableKodiRootTreeItem rootTreeItem, Executor executor, MovieDbClientFactory movieDbClientFactory, WarningsConfig warningsConfig, Observable[] extractor) {
+    private final SearchResultMapper mapper;
+
+    private final MovieDbQuerier2 movieDbQuerier2;
+
+    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, FilterableKodiRootTreeItem rootTreeItem, Executor executor/*, MovieDbClientFactory movieDbClientFactory*/, WarningsConfig warningsConfig, Observable[] extractor, SearchResultMapper mapper, MovieDbQuerier2 movieDbQuerier2) {
         super(config, resourceBundle);
         this.entries = entries;
-        this.rootTreeItem = rootTreeItem;
+//        this.rootTreeItem = rootTreeItem;
         this.executor = executor;
-        this.movieDbClientFactory = movieDbClientFactory;
+//        this.movieDbClientFactory = movieDbClientFactory;
         this.warningsConfig = warningsConfig;
         this.extractor = extractor;
+        this.mapper = mapper;
+        this.movieDbQuerier2 = movieDbQuerier2;
     }
 
     @Override
-    protected ObservableList<MovieTreeItemFilterable> call() throws Exception {
+    protected ObservableList<StaticMovieData> call() throws Exception {
         log.debug("Starting");
         updateMessage(String.format(getResourceBundle().getString(KodiCollectService.MESSAGE)));
-        ObservableList<MovieTreeItemFilterable> result = FXCollections.observableArrayList();
-        var nfoFileParser = new NfoFileParser();
+        ObservableList<StaticMovieData> result = FXCollections.observableArrayList();
 
         int cnt = 0;
         for (RenamingPath renamingPath : entries.getEntriesFiltered()) {
@@ -64,12 +61,11 @@ class KodiToolsCollectTask extends DrRenameTask<ObservableList<MovieTreeItemFilt
                 updateMessage("Cancelled.");
                 break;
             }
-            if (Files.isDirectory(renamingPath.getOldPath())) {
-                var itemValue = new MovieTreeItemValue(renamingPath, executor, warningsConfig);
-                checkNfoName(renamingPath.getOldPath(), nfoFileParser, itemValue);
-                var item = new MovieTreeItemFilterable(itemValue, extractor);
-                result.add(item);
+            if(!Files.isDirectory(renamingPath.getOldPath())){
+                continue;
             }
+            StaticMovieData staticMovieData = new Movie(renamingPath, mapper, getExecutor(), movieDbQuerier2);
+            result.add(staticMovieData);
             updateProgress(++cnt, entries.getEntriesFiltered().size());
             if (getAppConfig().isDebug()) {
                 try {
@@ -84,20 +80,20 @@ class KodiToolsCollectTask extends DrRenameTask<ObservableList<MovieTreeItemFilt
             }
         }
 
-        result.sort(Comparator.comparing(o -> o.getValue().getRenamingPath().getMovieName()));
+        result.sort(Comparator.comparing(kodiElement -> kodiElement.getRenamingPath().getOldPath()));
         updateMessage(null);
         log.debug("Finished");
         return result;
     }
 
-    private void checkNfoName(Path path, NfoFileParser nfoFileParser, MovieTreeItemValue itemValue) throws IOException {
-        var nfoFiles = new NfoFileCollector().collectNfoFiles(path);
-        if(!nfoFiles.isEmpty()){
-            Path firstNfoFile = nfoFiles.get(0);
-            String movieNameFromNfoFile = new NfoFileTitleExtractor(nfoFileParser).parseNfoFile(firstNfoFile);
-            if(StringUtils.isNotBlank(movieNameFromNfoFile)){
-                itemValue.setMovieNameFromNfo(movieNameFromNfoFile);
-            }
-        }
-    }
+//    private void checkNfoName(Path path, NfoFileParser nfoFileParser, MovieTreeItemValue itemValue) throws IOException {
+//        var nfoFiles = new NfoFileCollector().collectNfoFiles(path);
+//        if(!nfoFiles.isEmpty()){
+//            Path firstNfoFile = nfoFiles.get(0);
+//            String movieNameFromNfoFile = new NfoFileTitleExtractor(nfoFileParser).parseNfoFile(firstNfoFile);
+//            if(StringUtils.isNotBlank(movieNameFromNfoFile)){
+//                itemValue.setMovieNameFromNfo(movieNameFromNfoFile);
+//            }
+//        }
+//    }
 }

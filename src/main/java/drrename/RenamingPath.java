@@ -44,19 +44,20 @@ public class RenamingPath {
 
     protected final BooleanProperty filtered;
 
-    protected final StringProperty movieName;
+
+    protected final StringProperty fileName;
     private final ChangeListener<? super Path> listener;
 
     public RenamingPath(final Path path) {
         listener = new ChangeListener<Path>() {
             @Override
             public void changed(ObservableValue<? extends Path> observableValue, Path path, Path t1) {
-                movieName.set(t1.getFileName().toString());
+                fileName.set(t1.getFileName().toString());
             }
         };
         this.oldPath = new SimpleObjectProperty<>();
         this.newPath = new SimpleStringProperty();
-        this.movieName = new SimpleStringProperty();
+        this.fileName = new SimpleStringProperty();
         this.exception = new SimpleObjectProperty<>();
         this.willChange = new SimpleBooleanProperty();
         this.filtered = new SimpleBooleanProperty();
@@ -102,16 +103,16 @@ public class RenamingPath {
     // Getter / Setter //
 
 
-    public String getMovieName() {
-        return movieName.get();
+    public String getFileName() {
+        return fileName.get();
     }
 
-    public StringProperty movieNameProperty() {
-        return movieName;
+    public StringProperty fileNameProperty() {
+        return fileName;
     }
 
-    public void setMovieName(String movieName) {
-        this.movieName.set(movieName);
+    public void setFileName(String fileName) {
+        this.fileName.set(fileName);
     }
 
     public Path getOldPath() {

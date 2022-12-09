@@ -22,26 +22,35 @@ package drrename.kodi.ui;
 
 import drrename.config.AppConfig;
 import drrename.kodi.KodiCollectService;
+import drrename.kodi.KodiSuggestionsService;
 import drrename.kodi.KodiUtil;
-import drrename.kodi.MovieTreeItemFilterable;
 import drrename.kodi.WarningsConfig;
+import drrename.kodi.data.Movie;
+import drrename.kodi.data.StaticMovieData;
+import drrename.kodi.ui.config.KodiUiConfig;
+import drrename.kodi.ui.control.HansBox;
 import drrename.ui.DebuggableController;
 import drrename.ui.DrRenameController;
 import drrename.ui.ProgressAndStatusGridPane;
-import drrename.util.FXUtil;
+import drrename.ui.config.UiConfig;
 import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.collections.ListChangeListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +62,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -67,11 +77,22 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
     // Spring injected //
 
+    private final UiConfig uiConfig;
+
+    private final KodiUiConfig kodiUiConfig;
+
     private final KodiCollectService kodiCollectService;
 
-    private final KodiAddChildItemsService kodiAddChildItemsService;
+//    private final KodiAddChildItemsService kodiAddChildItemsService;
 
     private final Executor executor;
+
+//    private final TheMovieDbConfig movieDbConfig;
+
+//    private final MovieDbClient movieDbClient;
+
+//    private final KodiSuggestionsService kodiSuggestionsService;
+
 
     //
 
@@ -80,14 +101,15 @@ public class KodiToolsController extends DebuggableController implements DrRenam
     @FXML
     Parent root;
 
-    @FXML
-    TreeView<KodiTreeItemValue<?>> treeView;
 
     @FXML
-    Button buttonExpandAll;
+    ScrollPane scrollPane;
 
-    @FXML
-    Button buttonCollapseAll;
+//    @FXML
+//    Button buttonExpandAll;
+//
+//    @FXML
+//    Button buttonCollapseAll;
 
     @FXML
     CheckBox checkBoxHideEmpty;
@@ -112,19 +134,39 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
     // Default fields //
 
-    private FilterableKodiRootTreeItem treeRoot;
+//    private FilterableKodiRootTreeItem treeRoot;
 
     private WarningsConfig warningsConfig;
 
     private final KodiCollectServiceStarter serviceStarter;
 
-    private final KodiAddChildItemsServiceStarter kodiAddChildItemsServiceStarter;
+//    private final KodiSuggestionsServiceStarter kodiSuggestionsServiceStarter;
 
     private final Label progressLabel;
+
+//    private final FlowPane flowPane;
+
+    private final VBox listView;
+
+    private final KodiUiElementBuilder uiElementBuilder;
 
     //
 
     // Nested classes //
+
+    private class KodiSuggestionsServiceStarter extends ServiceStarter<KodiSuggestionsService> {
+
+        public KodiSuggestionsServiceStarter(KodiSuggestionsService service) {
+            super(service);
+        }
+
+        @Override
+        protected void doInitService(KodiSuggestionsService service) {
+            service.setExecutor(executor);
+            progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
+            progressLabel.textProperty().bind(service.messageProperty());
+        }
+    }
 
     private class KodiAddChildItemsServiceStarter extends ServiceStarter<KodiAddChildItemsService> {
 
@@ -146,21 +188,30 @@ public class KodiToolsController extends DebuggableController implements DrRenam
             super(service);
         }
 
-        @Override
-        protected void onCancelled(WorkerStateEvent workerStateEvent) {
-            kodiAddChildItemsService.cancel();
-        }
+//        @Override
+//        protected void onCancelled(WorkerStateEvent workerStateEvent) {
+//            kodiSuggestionsService.cancel();
+//        }
 
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
 
             @SuppressWarnings("unchecked")
-            ObservableList<MovieTreeItemFilterable> result = (ObservableList<MovieTreeItemFilterable>) workerStateEvent.getSource().getValue();
+            List<Movie> result = (ObservableList<Movie>) workerStateEvent.getSource().getValue();
+
+
 
             if (result != null) {
-                treeRoot.getSourceChildren().addAll(result);
-                kodiAddChildItemsService.setItemValues(result);
-                kodiAddChildItemsServiceStarter.startService();
+
+                // TODO: maybe do this on a worker thread
+                List<HansBox> result2 = result.stream().map(e ->
+                    new HansBox(e, executor, getAppConfig(), kodiUiConfig)
+                ).toList();
+
+                listView.getChildren().setAll(result2);
+//                kodiSuggestionsService.setElements(result);
+//                kodiSuggestionsServiceStarter.startService();
+
             } else {
                 log.error("Got no result from {} with state {}", workerStateEvent.getSource(), workerStateEvent.getSource().getState());
             }
@@ -168,7 +219,7 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
         @Override
         protected void doInitService(KodiCollectService service) {
-            service.setRootTreeItem(treeRoot);
+//            service.setRootTreeItem(treeRoot);
             service.setWarningsConfig(warningsConfig);
             service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
             progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
@@ -184,14 +235,24 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
     //
 
-    public KodiToolsController(KodiCollectService kodiCollectService, KodiAddChildItemsService kodiAddChildItemsService, Executor executor, AppConfig appConfig) {
+    public KodiToolsController(KodiCollectService kodiCollectService, /*KodiAddChildItemsService kodiAddChildItemsService,*/ Executor executor, AppConfig appConfig, UiConfig uiConfig, KodiUiConfig kodiUiConfig/*, TheMovieDbConfig movieDbConfig, MovieDbClient movieDbClient, KodiSuggestionsService kodiSuggestionsService*/) {
         super(appConfig);
         this.kodiCollectService = kodiCollectService;
-        this.kodiAddChildItemsService = kodiAddChildItemsService;
+//        this.kodiAddChildItemsService = kodiAddChildItemsService;
         this.executor = executor;
         this.serviceStarter = new KodiCollectServiceStarter(kodiCollectService);
-        this.kodiAddChildItemsServiceStarter = new KodiAddChildItemsServiceStarter(kodiAddChildItemsService);
+//        KodiAddChildItemsServiceStarter kodiAddChildItemsServiceStarter = new KodiAddChildItemsServiceStarter(kodiAddChildItemsService);
+        this.uiConfig = uiConfig;
+        this.kodiUiConfig = kodiUiConfig;
+//        this.kodiSuggestionsServiceStarter = new KodiSuggestionsServiceStarter(kodiSuggestionsService);
+//        this.movieDbConfig = movieDbConfig;
+//        this.movieDbClient = movieDbClient;
+//        this.kodiSuggestionsService = kodiSuggestionsService;
         this.progressLabel = new Label();
+//        this.flowPane = new FlowPane();
+        this.listView = new VBox(20);
+        this.listView.setPadding(new Insets(4,4,4,4));
+        this.uiElementBuilder = new KodiUiElementBuilder(appConfig, kodiUiConfig);
     }
 
 
@@ -206,33 +267,33 @@ public class KodiToolsController extends DebuggableController implements DrRenam
         mainStage.setTitle("Kodi Tools");
 
         kodiCollectService.setExecutor(executor);
-        kodiAddChildItemsService.setExecutor(executor);
+//        kodiAddChildItemsService.setExecutor(executor);
 
-        initTreeRoot();
+//        initTreeRoot();
 
-        buttonExpandAll.setDisable(true);
-        buttonCollapseAll.setDisable(true);
+//        buttonExpandAll.setDisable(true);
+//        buttonCollapseAll.setDisable(true);
 
         if (!getAppConfig().isDebug())
-            progressAndStatusGridPane.getProgressBar().visibleProperty().bind(kodiCollectService.runningProperty().or(kodiAddChildItemsService.runningProperty()));
+            progressAndStatusGridPane.getProgressBar().visibleProperty().bind(kodiCollectService.runningProperty()/*.or(kodiAddChildItemsService.runningProperty())*/);
 
-        treeView.setCellFactory(this::treeViewCellFactoryCallback);
-
-        treeView.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<Integer>) c -> {
-            imageStage.close();
-            while (c.next()) {
-                if (c.getAddedSubList().isEmpty()) {
-                    continue;
-                }
-                var hans = treeView.getTreeItem(c.getAddedSubList().get(0)).getValue();
-                log.debug("Selection changed: {} ({})", hans, hans.getClass());
-//                if (hans instanceof NfoFileTreeItemValue peter) {
-//                    log.debug("Handling {}", peter);
-//                    Path nfoFile = peter.getNfoFile();
-//                    executor.execute(() -> showImage(nfoFile));
+//        treeView.setCellFactory(this::treeViewCellFactoryCallback);
+//
+//        treeView.getSelectionModel().getSelectedIndices().addListener((ListChangeListener<Integer>) c -> {
+//            imageStage.close();
+//            while (c.next()) {
+//                if (c.getAddedSubList().isEmpty()) {
+//                    continue;
 //                }
-            }
-        });
+//                var hans = treeView.getTreeItem(c.getAddedSubList().get(0)).getValue();
+//                log.debug("Selection changed: {} ({})", hans, hans.getClass());
+////                if (hans instanceof NfoFileTreeItemValue peter) {
+////                    log.debug("Handling {}", peter);
+////                    Path nfoFile = peter.getNfoFile();
+////                    executor.execute(() -> showImage(nfoFile));
+////                }
+//            }
+//        });
 
 
         warningsConfig = new WarningsConfig();
@@ -241,37 +302,56 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
         progressAndStatusGridPane.getProgressStatusBox().getChildren().add(progressLabel);
 
+
+//        listView.setPadding(new Insets(5, 5, 5, 5));
+
+//
+//
+        scrollPane.setContent(listView);
+
+        scrollPane.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+            @Override
+            public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
+                listView.setPrefWidth(bounds.getWidth());
+                listView.setPrefHeight(bounds.getHeight());
+            }
+        });
+//
+
+
     }
 
     @Override
     protected Parent[] getUiElementsForRandomColor() {
-        return new Parent[]{root, treeView, buttonBox, progressAndStatusGridPane, progressAndStatusGridPane.getProgressStatusBox()};
+        return new Parent[]{root, listView/*, flowPane*/, buttonBox, progressAndStatusGridPane, progressAndStatusGridPane.getProgressStatusBox()};
     }
 
-    private void initTreeRoot() {
-        treeRoot = new FilterableKodiRootTreeItem(executor, warningsConfig, null);
-        treeRoot.setExpanded(true);
-        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemValue<?>>>) e -> {
-            buttonExpandAll.setDisable(e.getList().isEmpty());
-            buttonCollapseAll.setDisable(e.getList().isEmpty());
-        });
-        treeRoot.setPredicate(buildHideEmptyPredicate());
-        treeView.setRoot(treeRoot);
-    }
+//    private void initTreeRoot() {
+//        treeRoot = new FilterableKodiRootTreeItem(executor, warningsConfig, null);
+//        treeRoot.setExpanded(true);
+//        treeRoot.getChildren().addListener((ListChangeListener<? super TreeItem<KodiTreeItemValue<?>>>) e -> {
+//            buttonExpandAll.setDisable(e.getList().isEmpty());
+//            buttonCollapseAll.setDisable(e.getList().isEmpty());
+//        });
+//        treeRoot.setPredicate(buildHideEmptyPredicate());
+////        treeView.setRoot(treeRoot);
+//    }
 
     private void clearUi() {
 
-        treeRoot.getSourceChildren().clear();
-        // for some reason, always one element is left in the children list
-//        treeRoot.getChildren().clear();
-        log.debug("UI cleared. Elements left: {}, {}", treeRoot.getSourceChildren(), treeRoot.getChildren());
+//        treeRoot.getSourceChildren().clear();
+//        // for some reason, always one element is left in the children list
+////        treeRoot.getChildren().clear();
+//        log.debug("UI cleared. Elements left: {}, {}", treeRoot.getSourceChildren(), treeRoot.getChildren());
+
+        listView.getChildren().clear();
 
     }
 
     @Override
     public void cancelCurrentOperation() {
-        kodiAddChildItemsService.cancel();
-        ;
+//        kodiAddChildItemsService.cancel();
+
         kodiCollectService.cancel();
     }
 
@@ -285,9 +365,9 @@ public class KodiToolsController extends DebuggableController implements DrRenam
         serviceStarter.startService();
     }
 
-    private TreeCell<KodiTreeItemValue<?>> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue<?>> kodiTreeItemContentTreeView) {
-        return new KodiTreeCell(treeView);
-    }
+//    private TreeCell<KodiTreeItemValue<?>> treeViewCellFactoryCallback(TreeView<KodiTreeItemValue<?>> kodiTreeItemContentTreeView) {
+//        return new KodiTreeCell(treeView);
+//    }
 
     private void showImage(Path nfoFile) {
         if (nfoFile != null && Files.exists(nfoFile) && Files.isReadable(nfoFile)) {
@@ -331,11 +411,20 @@ public class KodiToolsController extends DebuggableController implements DrRenam
         mainStage.show();
     }
 
-    public void handleButtonExpandAll(ActionEvent actionEvent) {
-        FXUtil.expandTreeView(treeView.getRoot(), true);
+
+    private <T> Pane buildFolderNameBox(StaticMovieData item) {
+        Pane result = new HBox();
+        Label folderNameLabel2 = new Label(item.getMovieTitleFromFolder());
+        result.getChildren().add(folderNameLabel2);
+        result.getStyleClass().add("kodi-folder-name");
+        return result;
     }
 
-    public void handleButtonCollapseAll(ActionEvent actionEvent) {
-        FXUtil.expandTreeView(treeView.getRoot(), false);
-    }
+//    public void handleButtonExpandAll(ActionEvent actionEvent) {
+//        FXUtil.expandTreeView(treeView.getRoot(), true);
+//    }
+//
+//    public void handleButtonCollapseAll(ActionEvent actionEvent) {
+//        FXUtil.expandTreeView(treeView.getRoot(), false);
+//    }
 }

@@ -18,14 +18,29 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.themoviedb;
+package drrename.kodi.data;
 
-import lombok.Data;
+import drrename.kodi.NfoRoot;
 
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-@Data
-public class SearchResultsDto {
+public class QualifiedNfoData extends Qualified<NfoRoot> {
 
-   List<SearchResultDto> results;
+    public static QualifiedNfoData from(NfoRoot nfoRoot) {
+        Qualified.Type type;
+        if(nfoRoot == null){
+            type = Qualified.Type.NOT_FOUND;
+        }
+        else  {
+            type = Qualified.Type.OK;
+        }
+        return new QualifiedNfoData(nfoRoot, type);
+    }
+
+    public QualifiedNfoData(NfoRoot element, Type type) {
+        super(element, type);
+    }
+
+
 }

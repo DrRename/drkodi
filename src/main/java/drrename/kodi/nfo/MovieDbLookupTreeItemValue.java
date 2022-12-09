@@ -19,12 +19,11 @@
 
 package drrename.kodi.nfo;
 
-import drrename.kodi.MovieDbImagesClient;
-import drrename.kodi.ui.KodiTreeItemValue;
-import drrename.util.DrRenameUtil;
+import drrename.RenamingPath;
 import drrename.config.TheMovieDbConfig;
 import drrename.kodi.*;
-import drrename.RenamingPath;
+import drrename.kodi.ui.KodiTreeItemValue;
+import drrename.util.DrRenameUtil;
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.Node;
@@ -80,7 +79,7 @@ public class MovieDbLookupTreeItemValue extends KodiTreeItemValue<MovieDbLookupC
     public MovieDbLookupCheckResult checkStatus() {
 //        log.debug("Triggering check status on thread {}", Thread.currentThread());
         try {
-            return factory.getNewMovieDbChecker().query(KodiUtil.getMovieNameFromDirectoryName(getRenamingPath().getMovieName()), KodiUtil.getMovieYearFromDirectoryName(getRenamingPath().getMovieName()));
+            return factory.getNewMovieDbChecker().query(KodiUtil.getMovieNameFromDirectoryName(getRenamingPath().getFileName()), KodiUtil.getMovieYearFromDirectoryName(getRenamingPath().getFileName()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

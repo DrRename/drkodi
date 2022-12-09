@@ -1,0 +1,14 @@
+<movie>
+  <art>
+    <poster>folder.jpg</poster>
+  </art>
+  <year>1942</year>
+  <plot>Bambi's tale unfolds from season to season as the young prince of the forest learns about life, love, and friends.</plot>
+  <genre>Animation</genre>
+  <genre>Drama</genre>
+  <genre>Family</genre>
+  <title>Bambi</title>
+  <tagline>A great love story.</tagline>
+  <uniqueid type="tmdb">3170</uniqueid>
+</movie>
+https://www.themoviedb.org/movie/3170

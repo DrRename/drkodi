@@ -18,30 +18,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename.kodi.themoviedb;
+package drrename.kodi.ui.control;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import drrename.config.AppConfig;
+import drrename.kodi.data.StaticMovieData;
+import drrename.ui.UiUtil;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 
-import java.time.LocalDate;
+public class MovieTitleAndYearBox extends HBox {
 
-@Data
-public class SearchResultDto {
+    public MovieTitleAndYearBox(StaticMovieData element, AppConfig appConfig) {
 
-    @JsonProperty("original_title")
-    String originalTitle;
+        // content
+        getChildren().add(UiUtil.applyDebug(new MovieTitleLabel(element), appConfig));
+        getChildren().add(UiUtil.applyDebug(new MovieYearLabel(element), appConfig));
 
-    @JsonProperty("title")
-    String title;
-
-    @JsonProperty("overview")
-    String overview;
-
-    Number id;
-
-    @JsonProperty("release_date")
-    LocalDate releaseDate;
-
-    @JsonProperty("poster_path")
-    String posterPath;
+        // layout
+        getStyleClass().add("kodi-movie-title-year");
+        setSpacing(4);
+        setAlignment(Pos.TOP_LEFT);
+    }
 }
