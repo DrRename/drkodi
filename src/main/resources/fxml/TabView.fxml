@@ -41,19 +41,9 @@
 
     <VBox VBox.vgrow="ALWAYS" maxHeight="Infinity">
         <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
-            <TabPane fx:id="tabPane" maxHeight="Infinity" VBox.vgrow="ALWAYS" >
-                <tabs>
-                    <Tab fx:id="renameTab" text="Rename" closable="false">
-                        <fx:include fx:id="rename" source="RenameView.fxml"/>
-                    </Tab>
-                    <Tab fx:id="kodiToolsTab" text="Kodi Tools" closable="false">
+
                         <fx:include fx:id="kodiTools" source="KodiTools.fxml"/>
-                    </Tab>
-                    <Tab fx:id="dummyFileTab" text="File Creator" closable="false">
-                        <fx:include fx:id="dummyFileCreator" source="DummyFileCreatorView.fxml"/>
-                    </Tab>
-                </tabs>
-            </TabPane>
+
         </VBox>
 
     <ProgressAndStatusGridPane fx:id="progressAndStatusGrid"/>
