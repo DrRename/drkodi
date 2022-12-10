@@ -27,7 +27,7 @@ import drrename.kodi.WarningsConfig;
 import drrename.kodi.data.Movie;
 import drrename.kodi.data.StaticMovieData;
 import drrename.kodi.ui.config.KodiUiConfig;
-import drrename.kodi.ui.control.HansBox;
+import drrename.kodi.ui.control.KodiBox;
 import drrename.ui.DebuggableController;
 import drrename.ui.DrRenameController;
 import drrename.ui.ProgressAndStatusGridPane;
@@ -35,14 +35,9 @@ import drrename.ui.UiUtil;
 import drrename.ui.config.UiConfig;
 import javafx.application.Platform;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -99,7 +94,7 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
 
     @FXML
-    ListView<HansBox> listView;
+    ListView<KodiBox> listView;
 
 //    @FXML
 //    Button buttonExpandAll;
@@ -170,8 +165,8 @@ public class KodiToolsController extends DebuggableController implements DrRenam
             if (result != null) {
 
                 // TODO: maybe do this on a worker thread
-                List<HansBox> result2 = result.stream().map(e ->
-                    new HansBox(e, executor, getAppConfig(), kodiUiConfig)
+                List<KodiBox> result2 = result.stream().map(e ->
+                    new KodiBox(e, getAppConfig(), kodiUiConfig)
                 ).toList();
 
                 listView.getItems().setAll(result2);
@@ -267,7 +262,7 @@ public class KodiToolsController extends DebuggableController implements DrRenam
         progressAndStatusGridPane.getProgressStatusBox().getChildren().add(progressLabel);
 
 
-//        listView.setPadding(new Insets(5, 5, 5, 5));
+//        listView.setPadding(new Insets(4, 4, 4, 4));
 
 
 //        VBox.setVgrow(listView, Priority.ALWAYS);
@@ -295,13 +290,13 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 //            root.setMinHeight(10);
 //            root.setMinWidth(10);
 
-        listView.setCellFactory(new Callback<ListView<HansBox>, ListCell<HansBox>>() {
+        listView.setCellFactory(new Callback<ListView<KodiBox>, ListCell<KodiBox>>() {
             @Override
-            public ListCell<HansBox> call(ListView<HansBox> param) {
-                ListCell<HansBox> lc = new ListCell<>() {
+            public ListCell<KodiBox> call(ListView<KodiBox> param) {
+                ListCell<KodiBox> lc = new ListCell<>() {
 
                     @Override
-                    protected void updateItem(HansBox item, boolean empty) {
+                    protected void updateItem(KodiBox item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setText(null);
@@ -311,7 +306,7 @@ public class KodiToolsController extends DebuggableController implements DrRenam
                         }
                     }
                 };
-                lc.prefWidthProperty().bind(listView.widthProperty().subtract(20));
+                lc.prefWidthProperty().bind(listView.widthProperty().subtract(18));
                 return lc;
             }
         });

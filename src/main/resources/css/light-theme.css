@@ -2,3 +2,10 @@
     -fx-background-color: rgba(227, 163, 89, 0.58);
     -fx-font-family: 'Open Sans SemiBold';
 }
+
+.kodi-genre {
+    -fx-border-radius: 4;
+    -fx-border-width:1;
+    -fx-border-color: darkgray;
+    -fx-padding: 2px;
+}

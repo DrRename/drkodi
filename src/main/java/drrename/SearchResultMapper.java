@@ -33,6 +33,7 @@ import java.time.LocalDate;
 @Mapper(componentModel = "spring")
 public interface SearchResultMapper {
 
+    @Mapping(target = "plot", source="searchResultDto.overview")
     SearchResult map(SearchResultDto searchResultDto, byte[] imageData, Image image);
 
     default Integer mapReleaseDateToYear(LocalDate localDate){

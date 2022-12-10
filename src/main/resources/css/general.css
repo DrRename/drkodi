@@ -19,15 +19,23 @@
  */
 
 @font-face {
-    src: url('opensans_regular.ttf');
+    src: url('Ubuntu-Regular.ttf');
 }
 
 @font-face {
-    src: url('opensans_semibold.ttf');
+    src: url('Ubuntu-Bold.ttf');
 }
 
 @font-face {
-    src: url('opensans_bold.ttf');
+    src: url('Ubuntu-Italic.ttf');
+}
+
+@font-face {
+    src: url('UbuntuMono-Regular.ttf');
+}
+
+@font-face {
+    src: url('UbuntuMono-Bold.ttf');
 }
 
 /*.kodi-tree-cell:warning {*/
@@ -47,7 +55,7 @@
     GRAY_8: #D3DCE1;
     GRAY_9: #EDF3F7;
 
-    -fx-font-family: 'Open Sans Regular';
+    -fx-font-family: 'Ubuntu Regular';
 }
 
 /*.warning-text {*/
@@ -56,9 +64,10 @@
 
 .kodi-box {
     -fx-border-style: solid hidden hidden hidden;
-    -fx-border-width: 1;
+    -fx-border-width: 2;
     -fx-border-color: gray;
-    -fx-padding: 0 8 8 0;
+
+
 }
 
 .kodi-movie-name {
@@ -79,6 +88,7 @@
 .kodi-warning-box {
     -fx-padding: 4px;
     -fx-background-color: rgba(227, 163, 89, 0.58);
+    -fx-font-family: 'Ubuntu Bold';
 
 }
 
@@ -87,9 +97,7 @@
 }
 
 .kodi-warning-box-value {
-    -fx-font-family: 'monospaced';
-    -fx-font-size: 11px;
-
+    -fx-font-family: 'Ubuntu Mono Bold';
 }
 
 .kodi-genre {
@@ -100,7 +108,7 @@
 }
 
 .kodi-image-large {
-    -fx-padding: 4px;
+
 }
 
 .kodi-plot {

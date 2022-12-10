@@ -23,6 +23,7 @@ package drrename.kodi.ui.control;
 import drrename.config.AppConfig;
 import drrename.kodi.data.StaticMovieData;
 import drrename.ui.UiUtil;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 
@@ -38,5 +39,6 @@ public class MovieTitleAndYearBox extends HBox {
         getStyleClass().add("kodi-movie-title-year");
         setSpacing(4);
         setAlignment(Pos.TOP_LEFT);
+        setPadding(new Insets(8,8,8,0));
     }
 }

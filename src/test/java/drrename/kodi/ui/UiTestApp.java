@@ -27,7 +27,7 @@ import drrename.config.AppConfig;
 import drrename.kodi.LoadImageTask;
 import drrename.kodi.data.*;
 import drrename.kodi.ui.config.KodiUiConfig;
-import drrename.kodi.ui.control.HansBox;
+import drrename.kodi.ui.control.KodiBox;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -84,7 +84,7 @@ public class UiTestApp extends Application {
     private void fillUi() throws Exception {
         for(Movie element : data){
 //            element.getSearchResults().addAll(buildSearchResults());
-            Platform.runLater(() -> view.getChildren().add(new HansBox(element, executor, new AppConfig(), new KodiUiConfig())));
+            Platform.runLater(() -> view.getChildren().add(new KodiBox(element, new AppConfig(), new KodiUiConfig())));
         }
     }
 

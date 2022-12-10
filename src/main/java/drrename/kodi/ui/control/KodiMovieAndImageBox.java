@@ -26,18 +26,16 @@ import drrename.ui.UiUtil;
 import drrename.kodi.ui.config.KodiUiConfig;
 import javafx.scene.layout.HBox;
 
-import java.util.concurrent.Executor;
-
 public class KodiMovieAndImageBox extends HBox {
 
-    public KodiMovieAndImageBox(Movie kodiMovie, Executor executor, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
+    public KodiMovieAndImageBox(Movie kodiMovie, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
 
         var imageBox = new ImageBox(kodiMovie, kodiUiConfig.getImageHeight());
         imageBox.getStyleClass().add("kodi-image-large");
 
         getChildren().addAll(
                 UiUtil.applyDebug(imageBox, appConfig),
-                UiUtil.applyDebug(new KodiMovieInfoBox(kodiMovie, appConfig, executor), appConfig));
+                UiUtil.applyDebug(new KodiMovieInfoBox(kodiMovie, appConfig), appConfig));
 
 
     }

@@ -28,13 +28,13 @@ public class KodiWarningValueLabel extends Label {
 
 
 
-    public KodiWarningValueLabel(String value, ObservableValue<? extends String> observableValue) {
+    public KodiWarningValueLabel(String value) {
 
         // Current value
         setText(value);
 
         // init listeners
-        textProperty().bind(observableValue);
+        // warnings are re-recreated, we do not need to listen for changes
 
         getStyleClass().add("kodi-warning-box-value");
     }

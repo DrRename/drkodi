@@ -32,8 +32,6 @@ import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.Executor;
-
 @Slf4j
 @RequiredArgsConstructor
 public class KodiUiElementBuilder {
@@ -66,13 +64,13 @@ public class KodiUiElementBuilder {
     }
 
 
-    Node buildKodiElementNode(Movie item, Executor executor, int imageHeight) {
+    Node buildKodiElementNode(Movie item, int imageHeight) {
         HBox imageAndElementNode = new HBox(4);
 
         VBox result = new VBox();
         result.setFillWidth(true);
         result.getStyleClass().add("kodi-box");
-        result.getChildren().addAll(applyDebug(new KodiMovieInfoBox(item, appConfig, executor)), applyDebug(new KodiWarningBox(item, appConfig)), applyDebug(new SearchResultsAndTitleBox(item, appConfig, kodiUiConfig)));
+        result.getChildren().addAll(applyDebug(new KodiMovieInfoBox(item, appConfig)), applyDebug(new KodiWarningBox(item, appConfig)), applyDebug(new SearchResultsAndTitleBox(item, appConfig, kodiUiConfig)));
 
         var imageBox = new ImageBox(item, imageHeight);
         imageBox.getStyleClass().add("kodi-image-large");
