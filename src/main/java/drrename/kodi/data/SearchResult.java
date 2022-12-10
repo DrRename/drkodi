@@ -34,6 +34,8 @@ public class SearchResult {
 
     private final StringProperty plot;
 
+    private final StringProperty tagline;
+
     private final ObjectProperty<Integer> releaseDate;
 
     private final ObjectProperty<Image> image;
@@ -47,6 +49,7 @@ public class SearchResult {
         this.image = new SimpleObjectProperty<>(searchResult.getImage());
         this.imageData = new SimpleObjectProperty<>(searchResult.getImageData());
         this.plot= new SimpleStringProperty(searchResult.getPlot());
+        this.tagline = new SimpleStringProperty(searchResult.getTagline());
     }
 
     public SearchResult() {
@@ -56,6 +59,7 @@ public class SearchResult {
         this.image = new SimpleObjectProperty<>();
         this.imageData = new SimpleObjectProperty<>();
         this.plot= new SimpleStringProperty();
+        this.tagline = new SimpleStringProperty();
     }
 
     @Override
@@ -138,5 +142,17 @@ public class SearchResult {
 
     public void setPlot(String plot) {
         this.plot.set(plot);
+    }
+
+    public String getTagline() {
+        return tagline.get();
+    }
+
+    public StringProperty taglineProperty() {
+        return tagline;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline.set(tagline);
     }
 }

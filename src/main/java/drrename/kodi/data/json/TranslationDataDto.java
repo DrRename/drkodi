@@ -28,4 +28,6 @@ public class TranslationDataDto {
     String title;
 
     String overview;
+
+    String tagline;
 }

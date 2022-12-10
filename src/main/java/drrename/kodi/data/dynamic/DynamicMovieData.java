@@ -170,11 +170,12 @@ public class DynamicMovieData extends StaticMovieData {
         log.debug("Setting NFO data to {}", newValue);
         setMovieTitleFromNfo(NfoUtil.getMovieTitle(newValue.getElement()));
         setMovieYearFromNfo(NfoUtil.getMovieYear(newValue.getElement()));
-        Optional.ofNullable(NfoUtil.getGenres(newValue.getElement())).ifPresent(g -> getGenres().addAll(g));
+        Optional.ofNullable(NfoUtil.getGenres(newValue.getElement())).ifPresent(g -> getGenres().setAll(g));
         setPlot(NfoUtil.getPlot(newValue.getElement()));
         setTagline(NfoUtil.getTagline(newValue.getElement()));
         Path path = NfoUtil.getImagePath(getRenamingPath().getOldPath(), newValue.getElement());
         setImagePath(QualifiedPath.from(path));
+        setMovieDbId(NfoUtil.getId2(newValue.getElement()));
     }
 
 

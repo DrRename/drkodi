@@ -187,6 +187,8 @@ public class StaticMovieData {
                         if (translationDto != null && StringUtils.isNotBlank(translationDto.getData().getTitle())) {
                             searchResult = new SearchResult(searchResult);
                             searchResult.setTitle(translationDto.getData().getTitle());
+                            searchResult.setPlot(translationDto.getData().getOverview());
+                            searchResult.setTagline(translationDto.getData().getTagline());
                             getSearchResults().add(searchResult);
                         }
                     }
@@ -199,6 +201,14 @@ public class StaticMovieData {
 
     public void takeOverSearchResultData(SearchResult searchResult) {
         log.debug("Taking over data for {} from {}", getMovieTitle(), searchResult);
+        setMovieTitleFromWeb(searchResult.getTitle());
+        if(searchResult.getReleaseDate() != null)
+        setMovieYearFromWeb(searchResult.getReleaseDate());
+        if(!StringUtils.isBlank(searchResult.getTagline()))
+        setTagline(searchResult.getTagline());
+        if(!StringUtils.isBlank(searchResult.getPlot()))
+        setPlot(searchResult.getPlot());
+        if(searchResult.getId() != null)
         setMovieDbId(searchResult.getId());
 
     }
@@ -245,6 +255,10 @@ public class StaticMovieData {
         data.setMovie(new NfoMovie());
         data.getMovie().setArt(new NfoMovie.Art());
         setNfoData(QualifiedNfoData.from(data));
+    }
+
+    public void clearData() {
+        initEmptyNfoData();
     }
 
     protected void setDefaultImagePath() {

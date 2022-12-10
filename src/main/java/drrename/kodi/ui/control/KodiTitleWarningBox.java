@@ -34,12 +34,15 @@ public class KodiTitleWarningBox extends HBox {
         Label label1 = new KodiWarningKeyLabel("Folder title does not match:");
 
         // NFO value is displayed, and we have a mismatch, so display folder name
-        Label label2 = new KodiWarningValueLabel(staticMovieData.getMovieTitleFromFolder(), staticMovieData.movieTitleFromFolderProperty());
+        Label label2 = new KodiWarningValueLabel(staticMovieData.getMovieTitleFromFolder());
 
         getChildren().add(UiUtil.applyDebug(label1, appConfig));
         getChildren().add(UiUtil.applyDebug(label2, appConfig));
 
         setAlignment(Pos.CENTER_LEFT);
+        setSpacing(4);
+
+
 
     }
 }

@@ -40,7 +40,7 @@ public class SearchResultsAndTitleBox extends VBox {
 
        // formatting
 
-        setPadding(new Insets(4,4,4,4));
+//        setPadding(new Insets(4,4,4,4));
 
         // behaviour
 

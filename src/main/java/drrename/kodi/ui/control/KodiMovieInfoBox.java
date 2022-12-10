@@ -24,19 +24,18 @@ import drrename.config.AppConfig;
 import drrename.kodi.data.Movie;
 import drrename.ui.UiUtil;
 import drrename.kodi.ui.KodiWarningBox;
+import javafx.geometry.Insets;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.concurrent.Executor;
-
 public class KodiMovieInfoBox extends VBox {
 
-    public KodiMovieInfoBox(Movie kodiMovie, AppConfig appConfig, Executor executor) {
+    public KodiMovieInfoBox(Movie kodiMovie, AppConfig appConfig) {
 
         // content
 
         getChildren().add(UiUtil.applyDebug(new MovieTitleAndYearBox(kodiMovie, appConfig), appConfig));
-        getChildren().add(UiUtil.applyDebug(new KodiOpenAndSaveButtonsBox(kodiMovie, executor), appConfig));
+        getChildren().add(UiUtil.applyDebug(new KodiOpenAndSaveButtonsBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new TaglineBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new PlotBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new GenresBox(kodiMovie), appConfig));
@@ -45,6 +44,7 @@ public class KodiMovieInfoBox extends VBox {
         // layout
 
         VBox.setVgrow(this, Priority.ALWAYS);
+        setPadding(new Insets(4,4,4,4));
 
     }
 }

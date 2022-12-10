@@ -22,10 +22,16 @@ package drrename.kodi.ui.control;
 
 import drrename.kodi.MovieDbGenre;
 import drrename.kodi.data.Movie;
+import drrename.util.DrRenameUtil;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -50,7 +56,7 @@ public class GenresBox extends FlowPane {
         setHgap(4);
         setPadding(new Insets(4, 4, 4, 4));
 
-        visibleProperty().bind(kodiMovie.genresProperty().isNotNull());
+        visibleProperty().bind(kodiMovie.genresProperty().isNotNull().and(kodiMovie.genresProperty().emptyProperty().not()));
         managedProperty().bind(visibleProperty());
     }
 
@@ -59,11 +65,27 @@ public class GenresBox extends FlowPane {
         for(MovieDbGenre genre : genres){
             getChildren().add(buildGenreNode(genre));
         }
+        getChildren().add(buildAddGenreButton());
     }
 
     private Label buildGenreNode(MovieDbGenre genre) {
         Label label = new Label(genre.getName());
         label.getStyleClass().add("kodi-genre");
         return label;
+    }
+
+    private Node buildAddGenreButton() {
+        HBox result = new HBox();
+
+        TextField input = new TextField();
+        input.setPrefWidth(100);
+
+        Button button = new Button("Add");
+        button.setOnAction(event -> {
+
+        });
+        result.getChildren().add(input);
+        result.getChildren().add(button);
+        return result;
     }
 }

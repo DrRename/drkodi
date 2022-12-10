@@ -5,14 +5,14 @@ spring:
 logging:
   level:
     root: info
-    drrename: debug
+    drrename: info
     com:
       ulisesbocchio: warn
     drrename.kodi.nfo.NfoFileCollector: info
     drrename.kodi.nfo.NfoFileParser: info
     drrename.kodi.ui.control: info
-#  pattern:
-#    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
 
 feign:
   client:
@@ -23,6 +23,7 @@ feign:
         loggerLevel: basic
 
 app:
+  debug: false
   ui:
     appTitle: "Dr.Rename"
     initialWidth: 600
@@ -32,7 +33,6 @@ app:
   word-cnt: 3
   loop-delay-ms: 300
   reset-delay-ms: 500
-  debug: false
   kodi:
     ui:
       imageHeight: 265
@@ -40,7 +40,7 @@ app:
     themoviedb:
       base-url: https://api.themoviedb.org/3
       include-adult: true
-      number-of-max-suggestions: 5
+      number-of-max-suggestions: 8
       images:
         base-url: https://image.tmdb.org/t/p
 

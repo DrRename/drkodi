@@ -21,9 +21,8 @@
 package drrename.kodi.data;
 
 
-
-import drrename.commons.RenamingPath;
 import drrename.SearchResultMapper;
+import drrename.commons.RenamingPath;
 import drrename.kodi.*;
 import drrename.kodi.data.dynamic.DynamicMovieData;
 import drrename.kodi.data.json.WebSearchResults;
@@ -35,8 +34,11 @@ import javafx.scene.image.Image;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 @Setter
@@ -154,7 +156,7 @@ public class Movie extends DynamicMovieData {
             return;
         }
         if (isDataComplete()) {
-            log.info("Data complete, will not query TheMovieDb");
+            log.debug("Data complete, will not query TheMovieDb");
             return;
         }
         var task = new WebQuerierTask(movieDbQuerier2, this);
@@ -182,13 +184,23 @@ public class Movie extends DynamicMovieData {
         task.setOnSucceeded(event -> {
             MovieDbDetails movieDbDetails = (MovieDbDetails) event.getSource().getValue();
             // TODO: use mapper
-            getGenres().setAll(movieDbDetails.getGenres());
-            setTagline(movieDbDetails.getTaline());
-            setPlot(movieDbDetails.getOverview());
-            setMovieTitleFromWeb(movieDbDetails.getTitle());
-            setMovieYearFromWeb(movieDbDetails.getReleaseDate());
-            setImage(movieDbDetails.getImage());
-            setImageData(ImageData.from(movieDbDetails.getImageData()));
+
+            Set<MovieDbGenre> genreSet = new LinkedHashSet<>(getGenres());
+            genreSet.addAll(movieDbDetails.getGenres());
+            getGenres().setAll(genreSet);
+            if (getMovieYearFromWeb() == null) {
+                setMovieYearFromWeb(movieDbDetails.getReleaseDate());
+            }
+            if (getImage() == null)
+                setImage(movieDbDetails.getImage());
+            if (!Qualified.isOk(getImageData()))
+                setImageData(ImageData.from(movieDbDetails.getImageData()));
+            if (StringUtils.isBlank(getMovieTitleFromWeb())) {
+                setMovieTitleFromWeb(movieDbDetails.getTitle());
+            }
+            if (StringUtils.isBlank(getTagline())) {
+                setTagline(movieDbDetails.getTaline());
+            }
         });
         executeTask(task);
     }
@@ -243,14 +255,14 @@ public class Movie extends DynamicMovieData {
             executor.execute(task);
     }
 
-    public void writeNfoDataAndImage(Executor executor) {
+    public void writeNfoDataAndImage() {
 
         copyToNfo();
-        writeImageToFile(executor);
+        writeImageToFile();
         executeNfoFileWriterTask();
     }
 
-    private void writeImageToFile(Executor executor) {
+    private void writeImageToFile() {
         if (!Qualified.isOk(getImageData())) {
             log.warn("No image to write");
             return;
