@@ -47,7 +47,7 @@ public class LoadMovieDbDataTask extends KodiTask {
     @Override
     protected void handleElement(Movie element) throws Exception {
         if (element.isDataComplete()) {
-            log.info("Data complete for {}, will not query TheMovieDb", element);
+            log.debug("Data complete for {}, will not query TheMovieDb", element);
             return;
         }
         log.debug("Starting query for {}", element);

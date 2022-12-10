@@ -24,23 +24,29 @@ import drrename.kodi.data.Movie;
 import drrename.util.DrRenameUtil;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import org.apache.commons.lang3.SystemUtils;
-
-import java.util.concurrent.Executor;
 
 public class KodiOpenAndSaveButtonsBox extends FlowPane {
 
-    public KodiOpenAndSaveButtonsBox(Movie item, Executor executor){
+    public KodiOpenAndSaveButtonsBox(Movie item){
         if (SystemUtils.IS_OS_MAC) {
             Hyperlink button = new Hyperlink("Open in finder");
             button.setOnAction(event -> DrRenameUtil.runOpenFolderCommandMacOs(item.getRenamingPath().getOldPath()));
+            button.getStyleClass().add("kodi-link");
             getChildren().add(button);
         }
-        Hyperlink button = new Hyperlink("Save to NFO");
+        Hyperlink button = new Hyperlink("Clear Data");
         button.setOnAction(event -> {
-            item.writeNfoDataAndImage(executor);
+            item.clearData();
         });
+        button.getStyleClass().add("kodi-link");
         getChildren().add(button);
+         button = new Hyperlink("Save to NFO");
+        button.setOnAction(event -> {
+            item.writeNfoDataAndImage();
+        });
+        button.getStyleClass().add("kodi-link");
+        getChildren().add(button);
+
     }
 }
