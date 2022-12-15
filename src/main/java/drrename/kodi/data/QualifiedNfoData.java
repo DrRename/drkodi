@@ -30,7 +30,7 @@ public class QualifiedNfoData extends Qualified<NfoRoot> {
     public static QualifiedNfoData from(NfoRoot nfoRoot) {
         Qualified.Type type;
         if(nfoRoot == null){
-            type = Qualified.Type.NOT_FOUND;
+            type = Type.INVALID;
         }
         else  {
             type = Qualified.Type.OK;

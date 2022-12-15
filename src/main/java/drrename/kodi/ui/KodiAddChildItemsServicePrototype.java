@@ -20,7 +20,7 @@
 
 package drrename.kodi.ui;
 
-import drrename.DrRenameService;
+import drrename.ServicePrototype;
 import drrename.config.AppConfig;
 import drrename.kodi.MovieDbClientFactory;
 import drrename.kodi.WarningsConfig;
@@ -30,11 +30,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
 
 @Component
 @Setter
-public class KodiAddChildItemsService extends DrRenameService<Void> {
+public class KodiAddChildItemsServicePrototype extends ServicePrototype<Void> {
 
     static final String MESSAGE = "kodi.add-child-items";
 
@@ -44,7 +43,7 @@ public class KodiAddChildItemsService extends DrRenameService<Void> {
 
     private final MovieDbClientFactory movieDbClientFactory;
 
-    public KodiAddChildItemsService(AppConfig appConfig, ResourceBundle resourceBundle, MovieDbClientFactory movieDbClientFactory) {
+    public KodiAddChildItemsServicePrototype(AppConfig appConfig, ResourceBundle resourceBundle, MovieDbClientFactory movieDbClientFactory) {
         super(appConfig, resourceBundle);
         this.movieDbClientFactory = movieDbClientFactory;
     }

@@ -1,9 +1,10 @@
 package drrename.ui.service;
 
-import drrename.DrRenameTask;
+import drrename.PrototypeTask;
 import drrename.Entries;
 import drrename.RenamingControl;
 import drrename.Tasks;
+import drrename.commons.RenamingPath;
 import drrename.config.AppConfig;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -20,7 +21,7 @@ import java.util.ResourceBundle;
  * {@code Entries}.
  */
 @Slf4j
-public class ListDirectoryTask extends DrRenameTask<Void> {
+public class ListDirectoryTask extends PrototypeTask<Void> {
 
     private final Path dir;
 
@@ -36,7 +37,7 @@ public class ListDirectoryTask extends DrRenameTask<Void> {
     protected Void call() throws Exception {
         checkState();
         log.debug("Starting");
-        updateMessage(String.format(getResourceBundle().getString(LoadPathsService.LOADING_FILES)));
+        updateMessage(String.format(getResourceBundle().getString(LoadPathsServicePrototype.LOADING_FILES)));
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (Path path : stream) {
                 if (isCancelled()) {
@@ -44,7 +45,7 @@ public class ListDirectoryTask extends DrRenameTask<Void> {
                     updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
                     break;
                 }
-                var entry = new RenamingControl(path);
+                var entry = new RenamingPath(path);
                 handleNewEntry(entry);
                 if (getAppConfig().isDebug()) {
                     try {
@@ -64,9 +65,9 @@ public class ListDirectoryTask extends DrRenameTask<Void> {
         return null;
     }
 
-    protected void handleNewEntry(RenamingControl renamingControl) {
+    protected void handleNewEntry(RenamingPath element) {
         Platform.runLater(() -> {
-            entries.getEntries().add(renamingControl);
+            entries.getEntries().add(element);
         });
     }
 

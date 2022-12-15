@@ -21,7 +21,7 @@
 package drrename.kodi.ui;
 
 import drrename.commons.RenamingPath;
-import drrename.DrRenameTask;
+import drrename.PrototypeTask;
 import drrename.Tasks;
 import drrename.config.AppConfig;
 import drrename.kodi.FixableStatusChecker;
@@ -40,7 +40,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class KodiAddChildItemsTask extends DrRenameTask<Void> {
+public class KodiAddChildItemsTask extends PrototypeTask<Void> {
 
     private final List<? extends FilterableKodiTreeItem> itemValues;
 

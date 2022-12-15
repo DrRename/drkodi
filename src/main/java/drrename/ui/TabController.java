@@ -24,7 +24,7 @@ import drrename.Entries;
 import drrename.config.AppConfig;
 import drrename.kodi.ui.KodiToolsController;
 import drrename.kodi.ui.ServiceStarter;
-import drrename.ui.service.LoadPathsService;
+import drrename.ui.service.LoadPathsServicePrototype;
 import drrename.util.FXUtil;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -33,7 +33,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
@@ -58,13 +57,13 @@ public class TabController extends DebuggableController implements Initializable
 
     private final FxWeaver fxWeaver;
 
-    private final ResourceBundle resourceBundle;
-
     private final FxApplicationStyle applicationStyle;
 
-    private final LoadPathsService loadPathsService;
+    private final LoadPathsServicePrototype loadPathsService;
 
     private final Executor executor;
+
+    private final Entries entries;
 
 
     //
@@ -75,8 +74,6 @@ public class TabController extends DebuggableController implements Initializable
 
     @FXML
     public StartDirectoryComponentController startDirectoryController;
-
-
 
     @FXML
     public KodiToolsController kodiToolsController;
@@ -90,10 +87,13 @@ public class TabController extends DebuggableController implements Initializable
     public Pane root;
 
     @FXML
-    public Label loadingFilesStatusLabel;
+    public ProgressAndStatusGridPane progressAndStatusGrid;
 
     @FXML
-    public ProgressAndStatusGridPane progressAndStatusGrid;
+    public Pane startDirectory;
+
+    @FXML
+    public Pane kodiTools;
 
     @FXML
     MenuBar menuBar;
@@ -108,15 +108,16 @@ public class TabController extends DebuggableController implements Initializable
 
     // Nested classes //
 
-    private class LoadServiceStarter extends ServiceStarter<LoadPathsService> {
+    private class LoadServiceStarter extends ServiceStarter<LoadPathsServicePrototype> {
 
-        public LoadServiceStarter(LoadPathsService service) {
+        public LoadServiceStarter(LoadPathsServicePrototype service) {
             super(service);
         }
 
         @Override
         protected void prepareUi() {
             super.prepareUi();
+            entries.getEntries().clear();
             kodiToolsController.clearView();
 
         }
@@ -128,7 +129,7 @@ public class TabController extends DebuggableController implements Initializable
         }
 
         @Override
-        protected void doInitService(LoadPathsService service) {
+        protected void doInitService(LoadPathsServicePrototype service) {
             progressAndStatusGrid.getProgressBar().progressProperty().bind(service.progressProperty());
             progressLabel.textProperty().bind(loadPathsService.messageProperty());
         }
@@ -136,13 +137,13 @@ public class TabController extends DebuggableController implements Initializable
 
     //
 
-    public TabController(FxWeaver fxWeaver, ResourceBundle resourceBundle, FxApplicationStyle applicationStyle, Entries entries, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig) {
+    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, Entries entries, LoadPathsServicePrototype loadPathsService, Executor executor, AppConfig appConfig) {
         super(appConfig);
         this.fxWeaver = fxWeaver;
-        this.resourceBundle = resourceBundle;
         this.applicationStyle = applicationStyle;
         this.loadPathsService = loadPathsService;
         this.executor = executor;
+        this.entries = entries;
         this.loadServiceStarter = new LoadServiceStarter(this.loadPathsService);
         this.progressLabel = new Label();
 
@@ -153,12 +154,10 @@ public class TabController extends DebuggableController implements Initializable
 
         super.initialize(url, resourceBundle);
 
-        log.debug("FXML injected controllers: {}, {}", startDirectoryController,  kodiToolsController);
         FXUtil.initAppMenu(menuBar);
-        applicationStyle.currentStyleSheetProperty().addListener(this::themeChanged);
-        Platform.runLater(() -> applyTheme(null, applicationStyle.getCurrentStyleSheet()));
+
         startDirectoryController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
-        startDirectoryController.readyProperty().addListener(this::getNewReadyChangeListener);
+        startDirectoryController.readyProperty().addListener(this::readyChangeListener);
 
         if (!getAppConfig().isDebug())
         progressAndStatusGrid.visibleProperty().bind(loadPathsService.runningProperty());
@@ -167,6 +166,9 @@ public class TabController extends DebuggableController implements Initializable
 
         progressAndStatusGrid.getProgressStatusBox().getChildren().add(progressLabel);
 
+        applicationStyle.currentStyleSheetProperty().addListener(this::themeChanged);
+        Platform.runLater(() -> applyTheme(null, applicationStyle.getCurrentStyleSheet()));
+
     }
 
     @Override
@@ -174,11 +176,10 @@ public class TabController extends DebuggableController implements Initializable
         return new Parent[]{progressAndStatusGrid, progressAndStatusGrid.getProgressStatusBox(), root};
     }
 
-    private void getNewReadyChangeListener(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+    private void readyChangeListener(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
         if (newValue != null && newValue) {
             // we are ready. Starting is triggered by input change listener
         } else {
-
             kodiToolsController.cancelCurrentOperationAndClearView();
         }
     }
@@ -202,7 +203,7 @@ public class TabController extends DebuggableController implements Initializable
     }
 
     public void handleMenuItemSettings(ActionEvent actionEvent) {
-        SettingsController controller = fxWeaver.loadController(SettingsController.class, resourceBundle);
+        SettingsController controller = fxWeaver.loadController(SettingsController.class, getResourceBundle());
         controller.show();
     }
 }

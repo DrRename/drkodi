@@ -27,6 +27,12 @@
     -fx-prompt-text-fill: derive(-fx-control-inner-background,+80%);
 }
 
+.kodi-box {
+    -fx-border-style: solid hidden hidden hidden;
+    -fx-border-width: 2;
+    -fx-border-color: white;
+}
+
 .kodi-link {
     -fx-text-fill: white;
 }

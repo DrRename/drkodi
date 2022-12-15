@@ -1,6 +1,6 @@
 package drrename.ui.service;
 
-import drrename.DrRenameTask;
+import drrename.PrototypeTask;
 import drrename.Entries;
 import drrename.RenamingControl;
 import drrename.Tasks;
@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 
 @Slf4j
-public class ListFilesTask extends DrRenameTask<Void> {
+public class ListFilesTask extends PrototypeTask<Void> {
 
     private final Collection<Path> files;
 
@@ -28,7 +28,7 @@ public class ListFilesTask extends DrRenameTask<Void> {
     @Override
     protected Void call() throws InterruptedException {
         log.debug("Starting");
-        updateMessage(String.format(getResourceBundle().getString(LoadPathsService.LOADING_FILES)));
+        updateMessage(String.format(getResourceBundle().getString(LoadPathsServicePrototype.LOADING_FILES)));
         int cnt = 0;
         for (final Path f : files) {
             if (isCancelled()) {

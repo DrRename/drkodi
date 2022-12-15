@@ -22,6 +22,7 @@ package drrename.ui;
 
 import drrename.config.AppConfig;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 import java.util.Locale;
 import java.util.Random;
@@ -42,7 +43,7 @@ public class UiUtil {
     }
 
 
-    public static Node applyDebug(Node node, AppConfig appConfig) {
+    public static <T extends Node> T applyDebug(T node, AppConfig appConfig) {
         if (appConfig != null && appConfig.isDebug()) {
             applyRandomColors(node);
         }
