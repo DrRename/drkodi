@@ -32,19 +32,18 @@ public class WebQuerierTask extends Task<WebSearchResults> {
 
     private final MovieDbQuerier2 querier2;
 
+    private final MovieTitleSearchNormalizer normalizer;
+
     private final Movie movie;
 
     @Override
     protected WebSearchResults call() throws Exception {
         log.debug("Starting query for {}", movie);
-        var searchString = prepareSearchString(movie.getMovieTitle());
+        var searchString = normalizer.normalize(movie.getMovieTitle());
         WebSearchResults movieDbMovieSearchResult = querier2.query(searchString, null);
         log.debug("Found {} matches for '{}'", movieDbMovieSearchResult.getSearchResults().keySet().size(), searchString);
         return movieDbMovieSearchResult;
     }
 
-    private String prepareSearchString(String movieTitle) {
-        String s = movieTitle.replaceAll("\\.+", "");
-        return s;
-    }
+
 }

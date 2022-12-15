@@ -20,6 +20,7 @@
 
 package drrename.kodi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import drrename.config.TheMovieDbConfig;
 import drrename.kodi.data.json.WebSearchResults;
 import drrename.kodi.data.json.SearchResultDto;
@@ -27,6 +28,7 @@ import drrename.kodi.data.json.TranslationDto;
 import drrename.kodi.themoviedb.TranslationsDto;
 import drrename.util.DrRenameUtil;
 import javafx.scene.image.Image;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +40,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
-
+@RequiredArgsConstructor
 @Slf4j
 @Component
 @Scope("prototype")
 public class MovieDbQuerier2 {
 
+    private final ObjectMapper objectMapper;
 
     private final MovieDbClient client;
 
@@ -53,12 +56,7 @@ public class MovieDbQuerier2 {
 
     private final ResourceBundle resourceBundle;
 
-    public MovieDbQuerier2(MovieDbClient client, MovieDbImagesClient imagesClient, TheMovieDbConfig config, ResourceBundle resourceBundle) {
-        this.client = client;
-        this.imagesClient = imagesClient;
-        this.config = config;
-        this.resourceBundle = resourceBundle;
-    }
+
 
     protected void reset() {
 
@@ -100,6 +98,9 @@ public class MovieDbQuerier2 {
 
     public WebSearchResults query(String searchString, Integer year) throws IOException {
         reset();
+
+        log.debug("Searching {}", searchString);
+
         WebSearchResults result = new WebSearchResults();
 
         var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);

@@ -1,6 +1,6 @@
 package drrename.ui.service;
 
-import drrename.DrRenameService;
+import drrename.ServicePrototype;
 import drrename.RenamingControl;
 import drrename.config.AppConfig;
 import lombok.Getter;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 @Getter
-public abstract class FilesService<V> extends DrRenameService<V> {
+public abstract class FilesServicePrototype<V> extends ServicePrototype<V> {
 
     private List<RenamingControl> renamingEntries;
 
-    public FilesService(AppConfig appConfig, ResourceBundle resourceBundle) {
+    public FilesServicePrototype(AppConfig appConfig, ResourceBundle resourceBundle) {
         super(appConfig, resourceBundle);
         this.renamingEntries = new ArrayList<>();
     }

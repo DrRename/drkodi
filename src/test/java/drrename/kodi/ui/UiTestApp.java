@@ -21,8 +21,8 @@
 package drrename.kodi.ui;
 
 import drrename.commons.RenamingPath;
-import drrename.SearchResultMapper;
-import drrename.SearchResultMapperImpl;
+import drrename.SearchResultDtoMapper;
+import drrename.SearchResultDtoMapperImpl;
 import drrename.config.AppConfig;
 import drrename.kodi.LoadImageTask;
 import drrename.kodi.data.*;
@@ -48,9 +48,10 @@ public class UiTestApp extends Application {
 
     static Executor executor = Executors.newSingleThreadExecutor();
 
-    SearchResultMapper mapper = new SearchResultMapperImpl();
+    SearchResultDtoMapper mapper = new SearchResultDtoMapperImpl();
 
-    List<Movie> data = List.of(new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper,executor, null),new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper, executor, null));
+    private SearchResultToMovieMapper searchResultToMovieMapper = new SearchResultToMovieMapperImpl(new ImageDataMapper());
+    List<Movie> data = List.of(new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper,executor, null, new FolderNameCompareNormalizer(new FolderNameCompareNormalizeConfiguration()), new MovieTitleSearchNormalizer(new SearchNormalizeConfiguration()), searchResultToMovieMapper),new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper, executor, null, new FolderNameCompareNormalizer(new FolderNameCompareNormalizeConfiguration()), new MovieTitleSearchNormalizer(new SearchNormalizeConfiguration()), searchResultToMovieMapper));
 
     VBox view;
 
@@ -83,7 +84,7 @@ public class UiTestApp extends Application {
 
     private void fillUi() throws Exception {
         for(Movie element : data){
-//            element.getSearchResults().addAll(buildSearchResults());
+            element.getSearchResults().addAll(buildSearchResults());
             Platform.runLater(() -> view.getChildren().add(new KodiBox(element, new AppConfig(), new KodiUiConfig())));
         }
     }
@@ -99,7 +100,7 @@ public class UiTestApp extends Application {
         var task2 = new LoadImageTask(searchResult.getImageData());
         searchResult.setImage(task2.call());
         result.add(searchResult);
-//        result.add(searchResult);
+        result.add(searchResult);
         return result;
     }
 

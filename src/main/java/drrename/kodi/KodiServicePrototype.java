@@ -18,20 +18,24 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drrename;
+package drrename.kodi;
 
+import drrename.ServicePrototype;
 import drrename.config.AppConfig;
-import javafx.concurrent.Task;
+import drrename.kodi.data.Movie;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Getter
-@RequiredArgsConstructor
-public abstract class DrRenameTask<T> extends Task<T> {
+@Setter
+public abstract class KodiServicePrototype<T> extends ServicePrototype<T> {
 
-    private final AppConfig appConfig;
+    private List<? extends Movie> elements;
 
-    private final ResourceBundle resourceBundle;
+    public KodiServicePrototype(AppConfig appConfig, ResourceBundle resourceBundle) {
+        super(appConfig, resourceBundle);
+    }
 }

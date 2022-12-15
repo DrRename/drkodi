@@ -21,19 +21,14 @@
 package drrename.kodi.data;
 
 
-
+import drrename.SearchResultDtoMapper;
 import drrename.commons.RenamingPath;
-import drrename.SearchResultMapper;
 import drrename.kodi.KodiUtil;
 import drrename.kodi.MovieDbGenre;
 import drrename.kodi.NfoMovie;
 import drrename.kodi.NfoRoot;
-import drrename.kodi.data.json.SearchResultDto;
 import drrename.kodi.data.json.WebSearchResults;
-import drrename.kodi.data.json.TranslationDto;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -45,7 +40,11 @@ import java.nio.file.Path;
 @Slf4j
 public class StaticMovieData {
 
-    private final SearchResultMapper mapper;
+    private final SearchResultDtoMapper mapper;
+
+    private final SearchResultToMovieMapper searchResultToMovieMapper;
+
+    private final FolderNameCompareNormalizer folderNameCompareNormalizer;
 
     // Underlying path
 
@@ -116,9 +115,11 @@ public class StaticMovieData {
 
     protected boolean writingToNfo = false;
 
-    public StaticMovieData(RenamingPath renamingPath, SearchResultMapper mapper) {
+    public StaticMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameCompareNormalizer folderNameCompareNormalizer) {
         this.renamingPath = renamingPath;
         this.mapper = mapper;
+        this.searchResultToMovieMapper = searchResultToMovieMapper;
+        this.folderNameCompareNormalizer = folderNameCompareNormalizer;
         this.movieTitleFromFolder = new SimpleStringProperty();
         this.movieTitleFromNfo = new SimpleStringProperty();
         this.nfoPath = new SimpleObjectProperty<>();
@@ -143,76 +144,65 @@ public class StaticMovieData {
     }
 
     private void init() {
-
         initMovieTitleAndMovieYear();
-
-        initWebProperties();
-
-
-
     }
-
 
     private void initMovieTitleAndMovieYear() {
-
         // init from folder name
-        setMovieTitleFromFolder(KodiUtil.getMovieNameFromDirectoryName(renamingPath.getFileName()));
-        setMovieYearFromFolder(KodiUtil.getMovieYearFromDirectoryName(renamingPath.getFileName()));
+        applyNewFolderName(getRenamingPath().getFileName());
+    }
 
-        // init title and year from folder
+    public void applyNewFolderName(String folderName) {
+        log.debug("Setting properties from new folder name {}", folderName);
+        setMovieTitleFromFolder(KodiUtil.getMovieNameFromDirectoryName(folderName));
+        setMovieYearFromFolder(KodiUtil.getMovieYearFromDirectoryName(folderName));
         setMovieTitle(getMovieTitleFromFolder());
         setMovieYear(getMovieYearFromFolder());
+        updateTitleWarnings();
+        updateYearWarnings();
+        if (Qualified.isOk(getNfoPath())) {
+            String currentNfoFileName = getNfoPath().getElement().getFileName().toString();
+            Path path = Path.of(getRenamingPath().getOldPath().toString(), currentNfoFileName);
+            log.debug("Updating NFO path to {}", path);
+            setNfoPath(QualifiedPath.from(path));
+
+        } else {
+            log.debug("NFO path invalid, will not update");
+        }
+
     }
 
-
-
-
-    @Deprecated
-    private void initWebProperties() {
-
-        // Web data changed, update all properties
-        webSearchResult.addListener(new ChangeListener<WebSearchResults>() {
-            @Override
-            public void changed(ObservableValue<? extends WebSearchResults> observable, WebSearchResults oldValue, WebSearchResults newValue) {
-                if (newValue != null) {
-                    for (Number id : newValue.getSearchResults().keySet()) {
-                        SearchResultDto searchResultDto = newValue.getSearchResults().get(id);
-                        TranslationDto translationDto = newValue.getTranslations().get(id);
-                        Image image = newValue.getImages().get(id);
-                        byte[] imageData = newValue.getImageData().get(id);
-
-                        SearchResult searchResult = mapper.map(searchResultDto, imageData, image);
-                        getSearchResults().add(searchResult);
-
-                        if (translationDto != null && StringUtils.isNotBlank(translationDto.getData().getTitle())) {
-                            searchResult = new SearchResult(searchResult);
-                            searchResult.setTitle(translationDto.getData().getTitle());
-                            searchResult.setPlot(translationDto.getData().getOverview());
-                            searchResult.setTagline(translationDto.getData().getTagline());
-                            getSearchResults().add(searchResult);
-                        }
-                    }
-                } else {
-                    getSearchResults().clear();
-                }
-            }
-        });
+    protected void updateTitleWarnings() {
+        log.debug("Recreating title warnings");
+        // first, clear/ filter out title warnings
+        getWarnings().removeIf(w -> KodiWarning.Type.TITLE_MISMATCH.equals(w.getType()));
+        // next, create new warnings if necessary
+        String folderValue = getMovieTitleFromFolder();
+        String normalizedValue = getFolderNameCompareNormalizer().normalize(getMovieTitle());
+        // TODO: make case sensitive equals configurable
+        if (folderValue != null && (!folderValue.equalsIgnoreCase(normalizedValue)) && !folderValue.equalsIgnoreCase(getMovieTitle())) {
+            log.debug("Title mismatch, folder: {}, title: {}", folderValue, normalizedValue);
+            getWarnings().add(new KodiWarning(KodiWarning.Type.TITLE_MISMATCH));
+        }
     }
+
+    protected void updateYearWarnings() {
+        log.debug("Recreating year warnings");
+        // filter out year warnings
+        getWarnings().removeIf(w -> KodiWarning.Type.YEAR_MISMATCH.equals(w.getType()));
+        // next, create new warnings if necessary
+        Integer folderValue = getMovieYearFromFolder();
+        Integer currentValue = getMovieYear();
+        if (folderValue != null && currentValue != null && !folderValue.equals(currentValue)) {
+            getWarnings().add(new KodiWarning(KodiWarning.Type.YEAR_MISMATCH));
+        }
+    }
+
 
     public void takeOverSearchResultData(SearchResult searchResult) {
         log.debug("Taking over data for {} from {}", getMovieTitle(), searchResult);
-        setMovieTitleFromWeb(searchResult.getTitle());
-        if(searchResult.getReleaseDate() != null)
-        setMovieYearFromWeb(searchResult.getReleaseDate());
-        if(!StringUtils.isBlank(searchResult.getTagline()))
-        setTagline(searchResult.getTagline());
-        if(!StringUtils.isBlank(searchResult.getPlot()))
-        setPlot(searchResult.getPlot());
-        if(searchResult.getId() != null)
-        setMovieDbId(searchResult.getId());
-
+        searchResultToMovieMapper.map(this, searchResult);
     }
-
 
 
     public void copyToNfo() {
@@ -298,6 +288,14 @@ public class StaticMovieData {
 
     public RenamingPath getRenamingPath() {
         return renamingPath;
+    }
+
+    public SearchResultDtoMapper getMapper() {
+        return mapper;
+    }
+
+    public FolderNameCompareNormalizer getFolderNameCompareNormalizer() {
+        return folderNameCompareNormalizer;
     }
 
     // FX Getter / Setter //

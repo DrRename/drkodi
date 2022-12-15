@@ -20,8 +20,8 @@
 
 package drrename.kodi.ui;
 
+import drrename.SearchResultDtoMapperImpl;
 import drrename.commons.RenamingPath;
-import drrename.SearchResultMapperImpl;
 import drrename.kodi.NfoMovie;
 import drrename.kodi.NfoRoot;
 import drrename.kodi.data.*;
@@ -37,7 +37,7 @@ public class KodiDataBuilder {
     static Executor executor = Executors.newSingleThreadExecutor();
 
     static StaticMovieData build(String title, Integer year){
-        StaticMovieData result = new Movie(new RenamingPath(Path.of("hans/dampf")), new SearchResultMapperImpl(), executor, null);
+        StaticMovieData result = new Movie(new RenamingPath(Path.of("hans/dampf")), new SearchResultDtoMapperImpl(), executor, null, new FolderNameCompareNormalizer(new FolderNameCompareNormalizeConfiguration()), new MovieTitleSearchNormalizer(new SearchNormalizeConfiguration()), new SearchResultToMovieMapperImpl(new ImageDataMapper()));
         result.setMovieTitle(title);
         result.setMovieYear(year);
         result.setNfoData(QualifiedNfoData.from(buildNfoData()));

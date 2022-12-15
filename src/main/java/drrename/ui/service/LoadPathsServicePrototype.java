@@ -1,7 +1,7 @@
 package drrename.ui.service;
 
 import drrename.Entries;
-import drrename.DrRenameService;
+import drrename.ServicePrototype;
 import drrename.RenamingControl;
 import drrename.config.AppConfig;
 import javafx.concurrent.Task;
@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
  */
 @Setter
 @Component
-public class LoadPathsService extends DrRenameService<Void> {
+public class LoadPathsServicePrototype extends ServicePrototype<Void> {
 
     static final String LOADING_FILES = "mainview.status.loading_files";
 
@@ -27,7 +27,7 @@ public class LoadPathsService extends DrRenameService<Void> {
 
     private final Entries entries;
 
-    public LoadPathsService(AppConfig appConfig, ResourceBundle resourceBundle, Entries entries) {
+    public LoadPathsServicePrototype(AppConfig appConfig, ResourceBundle resourceBundle, Entries entries) {
         super(appConfig, resourceBundle);
         this.entries = entries;
     }

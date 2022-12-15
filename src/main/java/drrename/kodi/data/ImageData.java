@@ -23,9 +23,9 @@ package drrename.kodi.data;
 public class ImageData extends Qualified<byte[]> {
 
     public static ImageData from(byte[] data) {
-        Qualified.Type type = Qualified.Type.INVALID;
+        Qualified.Type type;
         if(data == null){
-            type = Qualified.Type.NOT_FOUND;
+            type = Type.INVALID;
         } else {
             type = Type.OK;
         }

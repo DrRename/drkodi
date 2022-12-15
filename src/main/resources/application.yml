@@ -5,7 +5,7 @@ spring:
 logging:
   level:
     root: info
-    drrename: info
+    drrename: debug
     com:
       ulisesbocchio: warn
     drrename.kodi.nfo.NfoFileCollector: info
@@ -23,7 +23,7 @@ feign:
         loggerLevel: basic
 
 app:
-  debug: false
+  debug: true
   ui:
     appTitle: "Dr.Rename"
     initialWidth: 600
@@ -43,4 +43,20 @@ app:
       number-of-max-suggestions: 8
       images:
         base-url: https://image.tmdb.org/t/p
+  search:
+    normalize:
+      delete:
+        - ","
+        - "-"
+        - "'"
+      replace-with-space:
+        - "."
+  compare:
+    title:
+      delete:
+        - ","
+        - "'"
+        - ":"
+      replace-with-space:
+        - "."
 

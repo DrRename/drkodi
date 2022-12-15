@@ -8,11 +8,11 @@ import javafx.beans.property.SimpleObjectProperty;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public abstract class StrategyService<V> extends FilesService<V> {
+public abstract class StrategyServicePrototype<V> extends FilesServicePrototype<V> {
 
     protected final ObjectProperty<RenamingStrategy> renamingStrategy;
 
-    public StrategyService(AppConfig appConfig, ResourceBundle resourceBundle) {
+    public StrategyServicePrototype(AppConfig appConfig, ResourceBundle resourceBundle) {
         super(appConfig, resourceBundle);
         this.renamingStrategy = new SimpleObjectProperty<>();
     }

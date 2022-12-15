@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import drrename.kodi.data.StaticMovieData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -35,6 +36,13 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class KodiUtil {
+
+    public static String buildFolderNameString(String movieTitle, Integer movieYear){
+        if(movieYear == null){
+            return movieTitle;
+        }
+        return movieTitle + " (" + movieYear + ")";
+    }
 
     public static String getMovieNameFromDirectoryName(String directoryName){
         if(directoryName == null){

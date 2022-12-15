@@ -25,8 +25,13 @@ import drrename.kodi.data.StaticMovieData;
 import drrename.kodi.ui.config.KodiUiConfig;
 import drrename.kodi.ui.control.SearchResultsBox;
 import drrename.ui.UiUtil;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class SearchResultsAndTitleBox extends VBox {
@@ -35,12 +40,15 @@ public class SearchResultsAndTitleBox extends VBox {
 
         // content
 
+        var srb = new SearchResultsBox(staticMovieData, appConfig, kodiUiConfig);
         getChildren().add(UiUtil.applyDebug(new Label("MovieDB search results"), appConfig));
-        getChildren().add(UiUtil.applyDebug(new SearchResultsBox(staticMovieData, appConfig, kodiUiConfig), appConfig));
+        getChildren().add(UiUtil.applyDebug(srb, appConfig));
 
        // formatting
 
 //        setPadding(new Insets(4,4,4,4));
+
+
 
         // behaviour
 

@@ -31,12 +31,18 @@
 }
 
 @font-face {
+    src: url('Ubuntu-BoldItalic.ttf');
+}
+
+@font-face {
     src: url('UbuntuMono-Regular.ttf');
 }
 
 @font-face {
     src: url('UbuntuMono-Bold.ttf');
 }
+
+
 
 /*.kodi-tree-cell:warning {*/
 /*    -fx-background-color: rgba(227, 163, 89, 0.58);*/
@@ -66,8 +72,6 @@
     -fx-border-style: solid hidden hidden hidden;
     -fx-border-width: 2;
     -fx-border-color: gray;
-
-
 }
 
 .kodi-movie-name {
@@ -92,6 +96,14 @@
 
 }
 
+.kodi-warning-box-element {
+    -fx-padding: 4px;
+    -fx-border-style: solid hidden hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: gray;
+
+}
+
 .kodi-warning-box-key {
 
 }
@@ -101,6 +113,7 @@
 }
 
 .kodi-genre {
+    -fx-font-family: 'Ubuntu Mono Regular';
     -fx-border-radius: 4;
     -fx-border-width:1;
     -fx-border-color: white;
@@ -112,12 +125,25 @@
 }
 
 .kodi-plot {
-    -fx-font-style: italic;
+    -fx-font-family: 'Ubuntu Italic';
 }
 
 .kodi-tagline {
-    -fx-font-style: italic;
+    -fx-font-family: 'Ubuntu Bold Italic';
+    /*-fx-font-weight: bold;*/
 }
 
+.search-result-box {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.search-result-box:focused {
+    -fx-background-insets: 0;
+}
+
+.search-result-box.corner {
+    -fx-background-insets: 0;
+}
 
 

@@ -26,6 +26,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -127,6 +128,6 @@ public class DrRenameUtil {
     }
 
     public static void runOpenFolderCommandMacOs(Path path) {
-        new CommandRunner().runCommand(new String[]{"open", "-R", path.toString()});
+        new CommandRunner().runCommand(new String[]{"open", "-R", path + File.separator});
     }
 }
