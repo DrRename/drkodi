@@ -20,16 +20,16 @@ public class Renamer {
             Platform.runLater(() -> commitRename(renamingPath, newPath));
             return newPath;
         } catch (final Exception e) {
-            log.debug(e.getLocalizedMessage(), e);
+            log.debug("Failed to rename", e);
             Platform.runLater(() -> renamingPath.setException((e)));
             return renamingPath.getOldPath();
         }
     }
 
-    public void commitRename(RenamingPath renamingPath, Path newPath) {
+    public static void commitRename(RenamingPath renamingPath, Path newPath) {
         renamingPath.setOldPath(newPath);
         renamingPath.setException(null);
-        // for now set to false to see an immediate effect, preview service should be triggered and should update this any time soon again.
+        // for now set to 'false' to see an immediate effect, preview service should be triggered and should update this any time soon again.
         renamingPath.setWillChange(false);
     }
 }

@@ -21,17 +21,18 @@
 package drrename.kodi.data.dynamic;
 
 
+import drrename.SearchResultDtoMapper;
 import drrename.commons.RenamingPath;
 import drrename.kodi.KodiUtil;
-import drrename.kodi.NfoRoot;
-import drrename.kodi.data.QualifiedNfoData;
-import drrename.kodi.data.QualifiedPath;
-import drrename.kodi.data.KodiWarning;
-import drrename.SearchResultMapper;
-import drrename.kodi.data.StaticMovieData;
+import drrename.kodi.data.*;
+import drrename.kodi.data.json.SearchResultDto;
+import drrename.kodi.data.json.TranslationDto;
+import drrename.kodi.data.json.WebSearchResults;
 import drrename.kodi.nfo.NfoUtil;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -39,8 +40,8 @@ import java.util.Optional;
 @Slf4j
 public class DynamicMovieData extends StaticMovieData {
 
-    public DynamicMovieData(RenamingPath renamingPath, SearchResultMapper mapper) {
-        super(renamingPath, mapper);
+    public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameCompareNormalizer folderNameCompareNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
+        super(renamingPath, mapper, searchResultToMovieMapper, folderNameCompareNormalizer);
         registerDefaultListeners();
         registerListeners();
     }
@@ -50,13 +51,23 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void registerDefaultListeners() {
+        registerRenamingPathListeners();
         registerMovieTitleListeners();
         registerMovieYearListeners();
         registerMovieTitleFromFolderListeners();
         registerMovieYearFromFolderListeners();
         registerFolderNameListener();
-        initNfoDataListener();
+        registerNfoDataListener();
+        registerWebSearchResultsListener();
 
+    }
+
+    private void registerRenamingPathListeners() {
+        getRenamingPath().oldPathProperty().addListener(this::oldPathListener);
+    }
+
+    private void oldPathListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
+        applyNewFolderName(newValue.getFileName().toString());
     }
 
     private void registerMovieTitleListeners() {
@@ -86,22 +97,57 @@ public class DynamicMovieData extends StaticMovieData {
         getRenamingPath().fileNameProperty().addListener(this::folderNameListener);
     }
 
-    private void initNfoDataListener() {
+    private void registerNfoDataListener() {
 
         // NFO data changed, update all properties
         nfoDataProperty().addListener(this::nfoDataListener);
     }
 
+    private void registerWebSearchResultsListener() {
+        // Web data changed, update all properties
+        webSearchResultProperty().addListener(this::webSearchResultListener);
+    }
+
+    private void webSearchResultListener(ObservableValue<? extends WebSearchResults> observable, WebSearchResults oldValue, WebSearchResults newValue) {
+        if (newValue != null) {
+            for (Number id : newValue.getSearchResults().keySet()) {
+                SearchResultDto searchResultDto = newValue.getSearchResults().get(id);
+                TranslationDto translationDto = newValue.getTranslations().get(id);
+                Image image = newValue.getImages().get(id);
+                byte[] imageData = newValue.getImageData().get(id);
+
+                SearchResult searchResult = getMapper().map(searchResultDto, imageData, image);
+                getSearchResults().add(searchResult);
+
+                if (StringUtils.isNotBlank(searchResultDto.getOriginalTitle()) && !searchResultDto.getOriginalTitle().equalsIgnoreCase(searchResult.getTitle())) {
+                    SearchResult originalTitleCopy = getMapper().map(searchResultDto, imageData, image);
+                    originalTitleCopy.setTitle(searchResultDto.getOriginalTitle());
+                    getSearchResults().add(originalTitleCopy);
+                }
+
+                if (translationDto != null && StringUtils.isNotBlank(translationDto.getData().getTitle())) {
+                    searchResult = new SearchResult(searchResult);
+                    searchResult.setTitle(translationDto.getData().getTitle());
+                    searchResult.setPlot(translationDto.getData().getOverview());
+                    searchResult.setTagline(translationDto.getData().getTagline());
+                    getSearchResults().add(searchResult);
+                }
+            }
+        } else {
+            getSearchResults().clear();
+        }
+
+    }
 
 
     private void movieTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         log.debug("Movie title has changed from {} to {}", oldValue, newValue);
-        updateTitleWarnings(newValue);
+        updateTitleWarnings();
     }
 
     private void movieYearListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
         log.debug("Movie year has changed from {} to {}", oldValue, newValue);
-        updateYearWarnings(newValue);
+        updateYearWarnings();
     }
 
     private void movieTitleFromFolderListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -178,30 +224,5 @@ public class DynamicMovieData extends StaticMovieData {
         setMovieDbId(NfoUtil.getId2(newValue.getElement()));
     }
 
-
-
-    private void updateTitleWarnings(String newMovieTitle) {
-        log.debug("Recreating title warnings");
-        // first, clear/ filter out title warnings
-        getWarnings().removeIf(w -> KodiWarning.Type.TITLE_MISMATCH.equals(w.getType()));
-        // next, create new warnings if necessary
-        String folderValue = getMovieTitleFromFolder();
-        String currentValue = getMovieTitle();
-        if (folderValue != null && currentValue != null && !folderValue.equals(currentValue)) {
-            getWarnings().add(new KodiWarning(KodiWarning.Type.TITLE_MISMATCH));
-        }
-    }
-
-    private void updateYearWarnings(Integer newMovieYear) {
-        log.debug("Recreating year warnings");
-        // filter out year warnings
-        getWarnings().removeIf(w -> KodiWarning.Type.YEAR_MISMATCH.equals(w.getType()));
-        // next, create new warnings if necessary
-        Integer folderValue = getMovieYearFromFolder();
-        Integer currentValue = getMovieYear();
-        if (folderValue != null && currentValue != null && !folderValue.equals(currentValue)) {
-            getWarnings().add(new KodiWarning(KodiWarning.Type.YEAR_MISMATCH));
-        }
-    }
 
 }

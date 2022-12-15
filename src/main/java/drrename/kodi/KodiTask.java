@@ -20,7 +20,7 @@
 
 package drrename.kodi;
 
-import drrename.DrRenameTask;
+import drrename.PrototypeTask;
 import drrename.Tasks;
 import drrename.config.AppConfig;
 import drrename.kodi.data.Movie;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 @Getter
-public abstract class KodiTask extends DrRenameTask<Void> {
+public abstract class KodiTask extends PrototypeTask<Void> {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 

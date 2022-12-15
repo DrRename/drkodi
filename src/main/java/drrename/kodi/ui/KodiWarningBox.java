@@ -22,40 +22,36 @@ package drrename.kodi.ui;
 
 import drrename.config.AppConfig;
 import drrename.kodi.data.KodiWarning;
-import drrename.kodi.data.StaticMovieData;
+import drrename.kodi.data.Movie;
+import drrename.kodi.ui.control.KodiEmptyFolderWarningBox;
 import drrename.kodi.ui.control.KodiTitleWarningBox;
 import drrename.kodi.ui.control.KodiYearWarningBox;
 import drrename.ui.UiUtil;
 import javafx.collections.ListChangeListener;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class KodiWarningBox extends VBox {
 
-    public KodiWarningBox(StaticMovieData element, AppConfig appConfig){
-
-
+    public KodiWarningBox(Movie element, AppConfig appConfig) {
 
         // set initial value
         addWarnings(element, appConfig);
 
-// register listener
+        // register listener
 
-        element.warningsProperty().addListener(new ListChangeListener<KodiWarning>() {
-            @Override
-            public void onChanged(Change<? extends KodiWarning> c) {
-                while(c.next()){
-                    log.debug("Warnings changed, re-creating content");
-                }
-                addWarnings(element, appConfig);
+        element.warningsProperty().addListener((ListChangeListener<KodiWarning>) c -> {
+            while (c.next()) {
+                log.debug("Warnings changed, re-creating content");
             }
+            addWarnings(element, appConfig);
         });
 
 
         // set style
-
-
         getStyleClass().add("kodi-warning-box");
 
 
@@ -66,14 +62,19 @@ public class KodiWarningBox extends VBox {
     }
 
 
-    private void addWarnings(StaticMovieData element, AppConfig appConfig){
+    private void addWarnings(Movie element, AppConfig appConfig) {
         getChildren().clear();
         for (KodiWarning warning : element.getWarnings()) {
             switch (warning.getType()) {
-                case TITLE_MISMATCH ->   getChildren().add(UiUtil.applyDebug(new KodiTitleWarningBox(element, appConfig), appConfig));
-                case YEAR_MISMATCH -> getChildren().add(UiUtil.applyDebug(new KodiYearWarningBox(element, appConfig), appConfig));
+                case TITLE_MISMATCH ->
+                        getChildren().add(UiUtil.applyDebug(new KodiTitleWarningBox(element, appConfig), appConfig));
+                case YEAR_MISMATCH ->
+                        getChildren().add(UiUtil.applyDebug(new KodiYearWarningBox(element, appConfig), appConfig));
+                case EMTPY_FOLDER ->
+                        getChildren().add(UiUtil.applyDebug(new KodiEmptyFolderWarningBox(element, appConfig), appConfig));
             }
         }
+
     }
 
 

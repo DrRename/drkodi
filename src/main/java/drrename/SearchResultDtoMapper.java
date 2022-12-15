@@ -20,18 +20,23 @@
 
 package drrename;
 
-import drrename.config.AppConfig;
-import javafx.concurrent.Service;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
-import java.util.ResourceBundle;
+import drrename.kodi.data.SearchResult;
+import drrename.kodi.data.json.SearchResultDto;
+import javafx.scene.image.Image;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@RequiredArgsConstructor
-@Getter
-public abstract class DrRenameService<T> extends Service<T> {
+import java.time.LocalDate;
 
-    private final AppConfig appConfig;
+@Mapper(componentModel = "spring")
+public interface SearchResultDtoMapper {
 
-    private final ResourceBundle resourceBundle;
+    @Mapping(target = "plot", source="searchResultDto.overview")
+    SearchResult map(SearchResultDto searchResultDto, byte[] imageData, Image image);
+
+    default Integer mapReleaseDateToYear(LocalDate localDate){
+        return localDate == null ? null : localDate.getYear();
+    }
+
 }

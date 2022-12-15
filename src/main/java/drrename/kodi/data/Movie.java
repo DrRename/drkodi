@@ -21,23 +21,31 @@
 package drrename.kodi.data;
 
 
-import drrename.SearchResultMapper;
+import drrename.FileTypeByMimeProvider;
+import drrename.Renamer;
+import drrename.SearchResultDtoMapper;
 import drrename.commons.RenamingPath;
 import drrename.kodi.*;
 import drrename.kodi.data.dynamic.DynamicMovieData;
 import drrename.kodi.data.json.WebSearchResults;
-import javafx.application.Platform;
+import drrename.util.DrRenameUtil;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.image.Image;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
@@ -48,12 +56,16 @@ public class Movie extends DynamicMovieData {
 
     private final MovieDbQuerier2 movieDbQuerier2;
 
+    private final MovieTitleSearchNormalizer movieTitleSearchNormalizer;
+
+
     private Executor executor;
 
-    public Movie(RenamingPath renamingPath, SearchResultMapper mapper, Executor executor, MovieDbQuerier2 movieDbQuerier2) {
-        super(renamingPath, mapper);
+    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbQuerier2 movieDbQuerier2, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
+        super(renamingPath, mapper, folderNameCompareNormalizer, searchResultToMovieMapper);
         this.executor = executor;
         this.movieDbQuerier2 = movieDbQuerier2;
+        this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         init();
     }
 
@@ -66,7 +78,8 @@ public class Movie extends DynamicMovieData {
         // find and load NFO path
         executeNfoLoadTask();
         triggerWebSearch();
-
+        // trigger checks
+        triggerEmptyFolderCheck();
     }
 
     // Register Listeners //
@@ -82,13 +95,17 @@ public class Movie extends DynamicMovieData {
         nfoPathProperty().addListener(this::webSearchListener);
     }
 
+    private boolean searchingWeb;
+
     private void webSearchListener(ObservableValue<? extends Qualified<?>> observable, Qualified<?> oldValue, Qualified<?> newValue) {
+        if (searchingWeb) {
+            log.debug("Already searching, skipping change event");
+            return;
+        }
         if (newValue != null) {
-            // we need to wait for other listeners to complete the data loading, otherwise we might run the search too early.
-            Platform.runLater(() -> {
-                log.debug("Data OK, triggering web search");
-                triggerWebSearch();
-            });
+            log.debug("Data OK, triggering web search");
+            triggerWebSearch();
+
         }
     }
 
@@ -159,17 +176,21 @@ public class Movie extends DynamicMovieData {
             log.debug("Data complete, will not query TheMovieDb");
             return;
         }
-        var task = new WebQuerierTask(movieDbQuerier2, this);
-        task.setOnSucceeded(event -> setWebSearchResult((WebSearchResults) event.getSource().getValue()));
+        searchingWeb = true;
+        var task = new WebQuerierTask(movieDbQuerier2, getMovieTitleSearchNormalizer(), this);
+        task.setOnSucceeded(event -> {
+            setWebSearchResult((WebSearchResults) event.getSource().getValue());
+            searchingWeb = false;
+        });
         executor.execute(task);
     }
 
     private void initIdListener() {
         movieDbIdProperty().addListener(this::idListener);
 
-        if (getMovieDbId() != null && !isDetailsComplete()) {
-            createAndRunMovieDbDetailsTask(getMovieDbId());
-        }
+//        if (getMovieDbId() != null && !isDetailsComplete()) {
+//            createAndRunMovieDbDetailsTask(getMovieDbId());
+//        }
     }
 
     private void idListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -182,30 +203,21 @@ public class Movie extends DynamicMovieData {
     private void createAndRunMovieDbDetailsTask(Number newValue) {
         var task = new MovieDbDetailsTask(newValue, movieDbQuerier2);
         task.setOnSucceeded(event -> {
-            MovieDbDetails movieDbDetails = (MovieDbDetails) event.getSource().getValue();
-            // TODO: use mapper
-
-            Set<MovieDbGenre> genreSet = new LinkedHashSet<>(getGenres());
-            genreSet.addAll(movieDbDetails.getGenres());
-            getGenres().setAll(genreSet);
-            if (getMovieYearFromWeb() == null) {
-                setMovieYearFromWeb(movieDbDetails.getReleaseDate());
-            }
-            if (getImage() == null)
-                setImage(movieDbDetails.getImage());
-            if (!Qualified.isOk(getImageData()))
-                setImageData(ImageData.from(movieDbDetails.getImageData()));
-            if (StringUtils.isBlank(getMovieTitleFromWeb())) {
-                setMovieTitleFromWeb(movieDbDetails.getTitle());
-            }
-            if (StringUtils.isBlank(getTagline())) {
-                setTagline(movieDbDetails.getTaline());
-            }
+            takeOverMovieDetails(task.getValue());
         });
         executeTask(task);
     }
 
     //
+
+    public void takeOverMovieDetails(MovieDbDetails movieDbDetails){
+        // Only genres are updated here.
+        // The rest is already updated from the search result.
+
+        Set<MovieDbGenre> genreSet = new LinkedHashSet<>(getGenres());
+        genreSet.addAll(movieDbDetails.getGenres());
+        getGenres().setAll(genreSet);
+    }
 
     private void taskFailed(WorkerStateEvent event) {
         log.error("Task failed", event.getSource().getException());
@@ -273,5 +285,70 @@ public class Movie extends DynamicMovieData {
         executeImageWriterTask();
     }
 
+    @RequiredArgsConstructor
+    static class RenameTask extends Task<Path> {
 
+        private final Movie movie;
+
+        @Override
+        protected Path call() throws Exception {
+            String newName = KodiUtil.buildFolderNameString(movie.getMovieTitle(), movie.getMovieYear());
+            log.debug("Renaming from {} to {}", movie.getRenamingPath().getOldPath().getFileName(), newName);
+            return DrRenameUtil.rename(movie.getRenamingPath().getOldPath(), newName);
+        }
+    }
+
+    public void renameFolder() {
+        log.debug("Renaming folder");
+        var task = new RenameTask(this);
+        task.setOnSucceeded(event -> Renamer.commitRename(this.getRenamingPath(), task.getValue()));
+        executeTask(task);
+    }
+
+    @RequiredArgsConstructor
+    static class NoMediaFilesTask extends Task<Boolean> {
+
+        private final Movie movie;
+
+        @Override
+        protected Boolean call() throws Exception {
+            Path path = movie.getRenamingPath().getOldPath();
+            return findAllVideoFiles(path).isEmpty();
+
+        }
+
+        static List<Path> findAllVideoFiles(Path directory) throws IOException {
+            List<Path> result = new ArrayList<>();
+            try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
+                for (Path child : ds) {
+                    if(Files.isRegularFile(child)){
+                        String extension = FilenameUtils.getExtension(child.getFileName().toString());
+                        if("sub".equalsIgnoreCase(extension) || "idx".equalsIgnoreCase(extension)){
+//                        log.debug("Ignore sub/ idx files for now");
+                            continue;
+                        }
+                        var mediaType = new FileTypeByMimeProvider().getFileType(child);
+                        if(mediaType.startsWith("video")){
+                            result.add(child);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+    }
+
+    private void triggerEmptyFolderCheck() {
+        log.debug("Trigger media files check");
+        var task = new NoMediaFilesTask(this);
+        task.setOnSucceeded(event -> {
+                    if (task.getValue()) {
+                        log.warn("No media files found: {}", getRenamingPath().getOldPath());
+                        getWarnings().add(new KodiWarning(KodiWarning.Type.EMTPY_FOLDER));
+                    }
+
+                }
+        );
+        executeTask(task);
+    }
 }

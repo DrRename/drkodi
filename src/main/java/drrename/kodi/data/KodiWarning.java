@@ -27,7 +27,7 @@ import lombok.Getter;
 public class KodiWarning {
 
     public enum Type {
-        TITLE_MISMATCH("Title mismatch"), YEAR_MISMATCH("Year mismatch");
+        TITLE_MISMATCH("Title mismatch"), YEAR_MISMATCH("Year mismatch"), EMTPY_FOLDER("Empty folder");
         private final String message;
         Type(String message) {
             this.message = message;

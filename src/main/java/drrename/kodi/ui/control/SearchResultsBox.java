@@ -26,15 +26,14 @@ import drrename.kodi.data.SearchResult;
 import drrename.ui.UiUtil;
 import drrename.kodi.ui.config.KodiUiConfig;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SearchResultsBox extends FlowPane {
+public class SearchResultsBox extends HBox {
 
     public SearchResultsBox(StaticMovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig){
 
@@ -54,9 +53,10 @@ public class SearchResultsBox extends FlowPane {
             }
         });
 
-        // layout
-        setOrientation(Orientation.HORIZONTAL);
-        setAlignment(Pos.BASELINE_LEFT);
+
+
+
+
 
 //       setStyle("-fx-background-color: #da1919;");
 
@@ -72,10 +72,10 @@ public class SearchResultsBox extends FlowPane {
     private void setSearchResults(StaticMovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
         getChildren().clear();
         for(SearchResult searchResult : item.getSearchResults()){
-            var sr = new SearchResultBox(item, searchResult, appConfig, kodiUiConfig);
-//            VBox.setVgrow(sr, Priority.ALWAYS);
-//            sr.setMaxHeight(200);
-            getChildren().add(UiUtil.applyDebug(sr, appConfig));
+            if(searchResult.getImage() != null) {
+                var sr = new SearchResultBox(item, searchResult, appConfig, kodiUiConfig);
+                getChildren().add(UiUtil.applyDebug(sr, appConfig));
+            }
         }
     }
 }

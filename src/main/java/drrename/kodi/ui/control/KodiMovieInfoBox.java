@@ -25,6 +25,7 @@ import drrename.kodi.data.Movie;
 import drrename.ui.UiUtil;
 import drrename.kodi.ui.KodiWarningBox;
 import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -43,8 +44,10 @@ public class KodiMovieInfoBox extends VBox {
 
         // layout
 
-        VBox.setVgrow(this, Priority.ALWAYS);
+//        VBox.setVgrow(this, Priority.ALWAYS);
         setPadding(new Insets(4,4,4,4));
+
+        HBox.setHgrow(this, Priority.ALWAYS);
 
     }
 }

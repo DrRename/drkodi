@@ -21,50 +21,31 @@
 package drrename.kodi.ui.control;
 
 import drrename.config.AppConfig;
-import drrename.kodi.data.Movie;
 import drrename.kodi.data.StaticMovieData;
-import drrename.ui.UiUtil;
 import drrename.kodi.ui.KodiUiElementBuilder;
-import javafx.beans.binding.Bindings;
+import drrename.ui.UiUtil;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
-public class KodiYearWarningBox extends HBox {
+public class KodiEmptyFolderWarningBox extends HBox {
 
-    public KodiYearWarningBox(Movie staticMovieData, AppConfig appConfig){
+    public KodiEmptyFolderWarningBox(StaticMovieData staticMovieData, AppConfig appConfig){
 
-        Label label1 = new KodiWarningKeyLabel("Folder year does not match:");
-
-        // NFO value is displayed, and we have a mismatch, so display folder name
-        Label label2 = new KodiWarningValueLabel(staticMovieData.getMovieYearFromFolder().toString());
+        Label label1 = new KodiWarningKeyLabel("No media found");
 
         getChildren().add(UiUtil.applyDebug(label1, appConfig));
-        getChildren().add(UiUtil.applyDebug(label2, appConfig));
-        final Pane spacer = new Pane();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        getChildren().add(UiUtil.applyDebug(spacer, appConfig));
-        getChildren().add(UiUtil.applyDebug(buildRenameFolderButton(staticMovieData), appConfig));
 
-        setAlignment(Pos.CENTER_LEFT);
+        setAlignment(Pos.CENTER_RIGHT);
         setSpacing(4);
 
         getStyleClass().add("kodi-warning-box-element");
+//        HBox.setHgrow(this, Priority.ALWAYS);
 
     }
 
-    private Node buildRenameFolderButton(Movie element) {
-        Button button = new Button("Fix");
-        button.setOnAction(event -> {
-            element.renameFolder();
-        });
-        button.setMinWidth(40);
-        button.setAlignment(Pos.CENTER_RIGHT);
-        return button;
+    private String func(Integer movieYearFromFolder) {
+        return KodiUiElementBuilder.buildMovieYearString(movieYearFromFolder);
     }
-
 }

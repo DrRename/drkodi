@@ -29,12 +29,9 @@ import java.nio.file.Path;
 public class QualifiedPath extends Qualified<Path> {
 
     public static QualifiedPath from(Path path) {
-        Qualified.Type type = Qualified.Type.INVALID;
+        Qualified.Type type = Qualified.Type.OK;
         if(path == null){
-            type = Qualified.Type.NOT_FOUND;
-        }
-        else if(Files.isRegularFile(path)) {
-            type = Qualified.Type.OK;
+            type = Type.INVALID;
         }
         return new QualifiedPath(path, type);
     }

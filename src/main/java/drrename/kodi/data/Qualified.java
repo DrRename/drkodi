@@ -34,7 +34,7 @@ public class Qualified<T> {
     }
 
     public enum Type {
-        NOT_FOUND, INVALID, OK
+        INVALID, OK
     }
 
     public Qualified(T element, Type type) {

@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
-public class KodiSuggestionsService extends KodiService<Void> {
+public class KodiSuggestionsServicePrototype extends KodiServicePrototype<Void> {
 
     private final MovieDbQuerier2 querier2;
 
-    public KodiSuggestionsService(AppConfig appConfig, ResourceBundle resourceBundle, MovieDbQuerier2 querier2) {
+    public KodiSuggestionsServicePrototype(AppConfig appConfig, ResourceBundle resourceBundle, MovieDbQuerier2 querier2) {
         super(appConfig, resourceBundle);
         this.querier2 = querier2;
     }

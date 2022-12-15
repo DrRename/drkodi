@@ -20,24 +20,18 @@
 
 package drrename;
 
+import drrename.config.AppConfig;
+import javafx.concurrent.Task;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import drrename.kodi.data.SearchResult;
-import drrename.kodi.data.json.SearchResultDto;
-import javafx.scene.image.Image;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
+import java.util.ResourceBundle;
 
-import java.time.LocalDate;
+@Getter
+@RequiredArgsConstructor
+public abstract class PrototypeTask<T> extends Task<T> {
 
-@Mapper(componentModel = "spring")
-public interface SearchResultMapper {
+    private final AppConfig appConfig;
 
-    @Mapping(target = "plot", source="searchResultDto.overview")
-    SearchResult map(SearchResultDto searchResultDto, byte[] imageData, Image image);
-
-    default Integer mapReleaseDateToYear(LocalDate localDate){
-        return localDate == null ? null : localDate.getYear();
-    }
-
+    private final ResourceBundle resourceBundle;
 }

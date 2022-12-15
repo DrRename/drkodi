@@ -25,23 +25,49 @@ import drrename.kodi.data.Movie;
 import drrename.ui.UiUtil;
 import drrename.kodi.ui.SearchResultsAndTitleBox;
 import drrename.kodi.ui.config.KodiUiConfig;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 
+@Getter
 public class KodiBox extends VBox {
+
+    private final Movie movie;
 
     public KodiBox(Movie kodiMovie, AppConfig appConfig, KodiUiConfig kodiUiConfig){
 
+        this.movie = kodiMovie;
+
         // content
         getChildren().add(UiUtil.applyDebug(new KodiMovieAndImageBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
-        getChildren().add(UiUtil.applyDebug(new SearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
+
+
+        var john = new SearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig);
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(UiUtil.applyDebug(john, appConfig));
+        scrollPane.setFitToHeight(true);
+//        scrollPane.setFitToWidth(true);
+
+        scrollPane.getStyleClass().add("search-result-box");
+
+        scrollPane.minHeightProperty().bind(john.prefHeightProperty());
+
+
+        getChildren().add(UiUtil.applyDebug(scrollPane, appConfig));
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        VBox.setVgrow(john, Priority.ALWAYS);
 
         // layout
         getStyleClass().add("kodi-box");
 
 
 
-//        setVgrow(this, Priority.ALWAYS);
+//        setVgrow(scrollPane, Priority.ALWAYS);
 
 
     }
+
+
 }
