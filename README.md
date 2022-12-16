@@ -1,6 +1,6 @@
 # Dr.Kodi
 
-[![Build](https://github.com/drrename/drkodi/actions/workflows/build.yml/badge.svg)](https://github.com/drrename/drrename/actions/workflows/build.yml)
+[![Build](https://github.com/drrename/drkodi/actions/workflows/build.yml/badge.svg)](https://github.com/drrename/drkodi/actions/workflows/build.yml)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
