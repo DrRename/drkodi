@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import drrename.ui.ProgressAndStatusGridPane?>
+<?import drkodi.ui.ProgressAndStatusGridPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ScrollPane?>
@@ -8,7 +8,7 @@
 <?import javafx.scene.control.ListView?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
-      fx:controller="drrename.kodi.ui.KodiToolsController" fx:id="root" maxHeight="Infinity"
+      fx:controller="drkodi.ui.KodiToolsController" fx:id="root" maxHeight="Infinity"
       VBox.vgrow="ALWAYS">
 
     <ListView fx:id="listView" maxHeight="Infinity" AnchorPane.topAnchor="4" VBox.vgrow="ALWAYS"/>
