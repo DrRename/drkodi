@@ -1,46 +1,23 @@
-# Dr.Rename
+# Dr.Kodi
 
-[![Build](https://github.com/drrename/drrename/actions/workflows/build.yml/badge.svg)](https://github.com/drrename/drrename/actions/workflows/build.yml)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=bugs)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=alert_status)](https://sonarcloud.io/dashboard?id=DrRename_drrename)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drrename&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DrRename_drrename)
-[![Latest Release](https://img.shields.io/github/release/drrename/drrename.svg)](https://github.com/drrename/drrename/releases/latest)
+[![Build](https://github.com/drrename/drkodi/actions/workflows/build.yml/badge.svg)](https://github.com/drrename/drrename/actions/workflows/build.yml)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=bugs)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=alert_status)](https://sonarcloud.io/dashboard?id=DrRename_drkodi)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
+[![Latest Release](https://img.shields.io/github/release/drkodi/drkodi.svg)](https://github.com/drrename/drkodi/releases/latest)
 
-Minimalistic Batch-Renamer
+## Minimalistic Media Library Tool
 
-## Prerequirements
-
-You need to have Java **17** installed.
-
-## Installation and Starting
-
-Download [latest Release](https://github.com/drrename/drrename/releases/latest) and call `java -jar drrename-<current-version>.jar`. A double click on the jar-file could also work.
-
-Note that Java needs to be installed.
-
-## Examples
-
-1. Replace any space by an underscore ![example-replace-space-by-underscore.png](./screens/example-replace-space-by-underscore.png)
-
-### Pictures
-
-1. Get extension from MIME type. Note that this will also add missing extensions:
- ![example-add-missing-extension.png](./screens/example-missing-extension.png)
-
-## Kodi Tools
-
-Open Kodi Tools via `File` -> `Kodi Tools`.
-
-Kodi Tools help you to inspect and partly correct a [Kodi](https://kodi.tv/) media library.
-The library set up is expected to be as follows (taken from [Kodi Wiki](https://kodi.wiki/view/Naming_video_files/Movies)):
+Dr.Kodi helps you to inspect and partly correct a [Kodi](https://kodi.tv/) media library.
+Kodi media player expects the library set up to be as follows (taken from [Kodi Wiki](https://kodi.wiki/view/Naming_video_files/Movies)):
 
 > Each movie is saved in its own folder within the Source.
 All files and folders should be simply named with the name of the movie and the year in brackets. The name should match the name shown at the scraper site.
@@ -51,8 +28,6 @@ All files and folders should be simply named with the name of the movie and the 
 > + Most library related add-ons will only work correctly with this method.
 > + Some skins use modified file naming to display additional Media Flags. These apply to the filename, not the folder name.
 
-Kodi Tools perform the following checks:
+Dr.Kodi helps you to quickly detect and correct issues with the media library layout. For this, it perform the following checks:
 
 1. Look up the movie name (i.e., the *folder* name) on [theMovieDB](https://www.themoviedb.org/). If no movie matching the exact folder name could be found on theMovieDB, suggestions are available, those are offered as a quick fix. Localized titles are suggested depending on your [locale setting](link to locale).
-    
-   ![kodi-checks-themoviedb-01](./screens/kodi-checks-themoviedb-01.png)

@@ -19,7 +19,7 @@ feign:
         loggerLevel: basic
 
 app:
-  debug: true
+  debug: false
   ui:
     appTitle: "Dr.Kodi"
     initialWidth: 600
