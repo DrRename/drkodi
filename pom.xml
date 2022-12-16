@@ -222,7 +222,7 @@
         <dependency>
             <groupId>drrename</groupId>
             <artifactId>drrename-commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
     </dependencies>
     <profiles>
