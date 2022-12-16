@@ -44,6 +44,8 @@ jobs:
           -Dsonar.projectKey=DrRename_drkodi
           -Dsonar.organization=drrename
           -Dsonar.host.url=https://sonarcloud.io
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
