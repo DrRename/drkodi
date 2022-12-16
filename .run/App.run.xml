@@ -7,7 +7,7 @@
     <selectedOptions>
       <option name="environmentVariables" />
     </selectedOptions>
-    <option name="SPRING_BOOT_MAIN_CLASS" value="drrename.Launcher" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="drkodi.Launcher" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

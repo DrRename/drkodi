@@ -6,16 +6,16 @@
         <version>2.7.5</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
-    <groupId>app.koditools</groupId>
-    <artifactId>kodi-tools</artifactId>
-    <version>0.14.1-SNAPSHOT</version>
-    <name>KodiTools</name>
+    <groupId>app.drkodi</groupId>
+    <artifactId>drkodi</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>DrKodi</name>
     <description>Minimalistic Media Library Tool</description>
     <properties>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <github-user>drrename</github-user>
-        <github-repo>kodi-tools</github-repo>
+        <github-repo>drkodi</github-repo>
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
         <java.version>17</java.version>
         <javafx.version>19</javafx.version>

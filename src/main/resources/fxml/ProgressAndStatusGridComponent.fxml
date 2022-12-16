@@ -25,7 +25,7 @@
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="drrename.ui.ProgressAndStatusGridComponentController"
+          fx:controller="drkodi.ui.ProgressAndStatusGridComponentController"
           hgap="4" vgap="4">
     <padding>
         <Insets top="4" right="4" bottom="4" left="4"/>
