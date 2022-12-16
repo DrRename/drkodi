@@ -28,6 +28,7 @@ jobs:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
           cache: 'maven'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Cache SonarCloud packages
         uses: actions/cache@v2
         with:
@@ -44,8 +45,6 @@ jobs:
           -Dsonar.projectKey=DrRename_drkodi
           -Dsonar.organization=drrename
           -Dsonar.host.url=https://sonarcloud.io
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
