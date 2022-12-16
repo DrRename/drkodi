@@ -5,12 +5,8 @@ spring:
 logging:
   level:
     root: info
-    drrename: debug
     com:
       ulisesbocchio: warn
-    drrename.kodi.nfo.NfoFileCollector: info
-    drrename.kodi.nfo.NfoFileParser: info
-    drrename.kodi.ui.control: info
   pattern:
     console: "%d{HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
 
@@ -25,7 +21,7 @@ feign:
 app:
   debug: true
   ui:
-    appTitle: "Dr.Rename"
+    appTitle: "Dr.Kodi"
     initialWidth: 600
     initialHeight: 600
     imageHeight: 200
@@ -43,20 +39,27 @@ app:
       number-of-max-suggestions: 8
       images:
         base-url: https://image.tmdb.org/t/p
-  search:
-    normalize:
-      delete:
-        - ","
-        - "-"
-        - "'"
-      replace-with-space:
-        - "."
-  compare:
+
+  normalize:
     title:
-      delete:
-        - ","
-        - "'"
-        - ":"
-      replace-with-space:
-        - "."
+      write:
+        delete:
+          - ","
+          - "'"
+          - ":"
+        replace-with-space:
+      compare:
+        delete:
+          - ","
+          - "'"
+          - ":"
+        replace-with-space:
+          - "."
+      search:
+        delete:
+          - ","
+          - "-"
+          - "'"
+        replace-with-space:
+          - "."
 

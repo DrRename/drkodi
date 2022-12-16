@@ -1,5 +1,5 @@
 open module drrename {
-    exports drrename;
+    exports drkodi;
     requires java.sql;
     requires org.slf4j;
     requires lombok;
