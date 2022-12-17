@@ -120,17 +120,22 @@ public class DynamicMovieData extends StaticMovieData {
                 SearchResult searchResult = getSearchResultDtoMapper().map(searchResultDto, imageData, image);
                 getSearchResults().add(searchResult);
 
-                if (StringUtils.isNotBlank(searchResultDto.getOriginalTitle()) && !searchResultDto.getOriginalTitle().equalsIgnoreCase(searchResult.getTitle())) {
-                    SearchResult originalTitleCopy = getSearchResultDtoMapper().map(searchResultDto, imageData, image);
-                    originalTitleCopy.setTitle(searchResultDto.getOriginalTitle());
-                    getSearchResults().add(originalTitleCopy);
-                }
+//                if (StringUtils.isNotBlank(searchResultDto.getOriginalTitle()) && !searchResultDto.getOriginalTitle().equalsIgnoreCase(searchResult.getTitle())) {
+//                    SearchResult originalTitleCopy = getSearchResultDtoMapper().map(searchResultDto, imageData, image);
+//                    originalTitleCopy.setTitle(searchResultDto.getOriginalTitle());
+//                    getSearchResults().add(originalTitleCopy);
+//                }
 
-                if (translationDto != null && StringUtils.isNotBlank(translationDto.getData().getTitle())) {
+                if (translationDto != null) {
                     searchResult = new SearchResult(searchResult);
-                    searchResult.setTitle(translationDto.getData().getTitle());
+                    if(StringUtils.isNotBlank(searchResultDto.getOriginalTitle()))
+                        searchResult.setTitle(searchResultDto.getOriginalTitle());
+                    if(StringUtils.isNotBlank(translationDto.getData().getTitle()))
+                        searchResult.setTitle(translationDto.getData().getTitle());
+                    if(StringUtils.isNotBlank(translationDto.getData().getOverview()))
                     searchResult.setPlot(translationDto.getData().getOverview());
-                    searchResult.setTagline(translationDto.getData().getTagline());
+                    if(StringUtils.isNotBlank(translationDto.getData().getTagline()))
+                        searchResult.setTagline(translationDto.getData().getTagline());
                     getSearchResults().add(searchResult);
                 }
             }
