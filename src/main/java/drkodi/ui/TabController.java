@@ -63,6 +63,8 @@ public class TabController extends DebuggableController implements Initializable
 
     private final Entries entries;
 
+    private final ResourceBundle resourceBundle;
+
 
     //
 
@@ -74,7 +76,7 @@ public class TabController extends DebuggableController implements Initializable
     public StartDirectoryComponentController startDirectoryController;
 
     @FXML
-    public KodiToolsController kodiToolsController;
+    public MainViewController mainViewController;
 
 
 
@@ -91,7 +93,7 @@ public class TabController extends DebuggableController implements Initializable
     public Pane startDirectory;
 
     @FXML
-    public Pane kodiTools;
+    public Pane mainView;
 
     @FXML
     MenuBar menuBar;
@@ -116,13 +118,13 @@ public class TabController extends DebuggableController implements Initializable
         protected void prepareUi() {
             super.prepareUi();
             entries.getEntries().clear();
-            kodiToolsController.clearView();
+            mainViewController.clearView();
 
         }
 
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-            kodiToolsController.updateInputView();
+            mainViewController.updateInputView();
             log.debug("Service {} finished", workerStateEvent.getSource());
         }
 
@@ -135,13 +137,14 @@ public class TabController extends DebuggableController implements Initializable
 
     //
 
-    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, Entries entries, LoadPathsServicePrototype loadPathsService, Executor executor, AppConfig appConfig) {
+    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, Entries entries, LoadPathsServicePrototype loadPathsService, Executor executor, AppConfig appConfig, ResourceBundle resourceBundle) {
         super(appConfig);
         this.fxWeaver = fxWeaver;
         this.applicationStyle = applicationStyle;
         this.loadPathsService = loadPathsService;
         this.executor = executor;
         this.entries = entries;
+        this.resourceBundle = resourceBundle;
         this.loadServiceStarter = new LoadServiceStarter(this.loadPathsService);
         this.progressLabel = new Label();
 
@@ -178,7 +181,7 @@ public class TabController extends DebuggableController implements Initializable
         if (newValue != null && newValue) {
             // we are ready. Starting is triggered by input change listener
         } else {
-            kodiToolsController.cancelCurrentOperationAndClearView();
+            mainViewController.cancelCurrentOperationAndClearView();
         }
     }
 
@@ -201,7 +204,7 @@ public class TabController extends DebuggableController implements Initializable
     }
 
     public void handleMenuItemSettings(ActionEvent actionEvent) {
-        SettingsController controller = fxWeaver.loadController(SettingsController.class, getResourceBundle());
+        SettingsController controller = fxWeaver.loadController(SettingsController.class, resourceBundle);
         controller.show();
     }
 }
