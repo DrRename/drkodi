@@ -47,6 +47,9 @@ public class SearchResultBox extends VBox {
 
         setPadding(new Insets(4,4,4,4));
 
+//        visibleProperty().bind(kodieMovie.searchResultsProperty().emptyProperty().not());
+//        managedProperty().bind(visibleProperty());
+
 
     }
 

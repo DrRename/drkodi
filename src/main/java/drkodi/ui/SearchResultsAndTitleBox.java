@@ -45,7 +45,7 @@ public class SearchResultsAndTitleBox extends VBox {
 
         // behaviour
 
-        visibleProperty().bind(staticMovieData.searchResultsProperty().emptyProperty().not());
-        managedProperty().bind(visibleProperty());
+//        visibleProperty().bind(staticMovieData.searchResultsProperty().emptyProperty().not());
+//        managedProperty().bind(visibleProperty());
     }
 }

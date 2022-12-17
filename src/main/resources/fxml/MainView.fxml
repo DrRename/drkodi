@@ -9,7 +9,7 @@
       fx:controller="drkodi.ui.MainViewController" fx:id="root" maxHeight="Infinity"
       VBox.vgrow="ALWAYS">
 
-    <ListView fx:id="listView" maxHeight="Infinity" AnchorPane.topAnchor="4" VBox.vgrow="ALWAYS"/>
+    <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
 
     <ProgressAndStatusGridPane fx:id="progressAndStatusGridPane"/>
 
