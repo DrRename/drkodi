@@ -22,7 +22,7 @@ package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
 import drkodi.data.Movie;
-import drkodi.ui.KodiWarningBox;
+import drkodi.ui.WarningsBox;
 import drkodi.ui.UiUtil;
 import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
@@ -40,7 +40,7 @@ public class KodiMovieInfoBox extends VBox {
         getChildren().add(UiUtil.applyDebug(new TaglineBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new PlotBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new GenresBox(kodiMovie), appConfig));
-        getChildren().add(UiUtil.applyDebug(UiUtil.applyDebug(new KodiWarningBox(kodiMovie, appConfig), appConfig), appConfig));
+        getChildren().add(UiUtil.applyDebug(UiUtil.applyDebug(new WarningsBox(kodiMovie, appConfig), appConfig), appConfig));
 
         // layout
 

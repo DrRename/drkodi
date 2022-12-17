@@ -31,9 +31,9 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class KodiWarningBox extends VBox {
+public class WarningsBox extends VBox {
 
-    public KodiWarningBox(Movie element, AppConfig appConfig) {
+    public WarningsBox(Movie element, AppConfig appConfig) {
 
         // set initial value
         addWarnings(element, appConfig);
