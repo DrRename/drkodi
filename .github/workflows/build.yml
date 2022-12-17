@@ -26,28 +26,6 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
-          java-version: ${{ env.JAVA_VERSION }}
+          java-version: 17
           cache: 'maven'
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Build and Test
-        run: >
-          xvfb-run
-          mvn -B verify
-          jacoco:report
-          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-          -Pcoverage,dependency-check
-          -Dsonar.projectKey=DrRename_drkodi
-          -Dsonar.organization=drrename
-          -Dsonar.host.url=https://sonarcloud.io
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Jacoco Report
-        run: mvn -B test jacoco:report --file pom.xml
-      - name: Coveralls Report
-        run: mvn -B test coveralls:report --define repoToken=${{ secrets.COVERALL_REPO_SECRET }} --file pom.xml
+        run: mvn -B package --file pom.xml
