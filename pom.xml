@@ -16,8 +16,6 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <github-user>drrename</github-user>
         <github-repo>drkodi</github-repo>
-        <sonar.organization>drrename</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <main-class>org.springframework.boot.loader.JarLauncher</main-class>
         <java.version>17</java.version>
         <javafx.version>19</javafx.version>
