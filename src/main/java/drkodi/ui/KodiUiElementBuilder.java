@@ -70,7 +70,7 @@ public class KodiUiElementBuilder {
         VBox result = new VBox();
         result.setFillWidth(true);
         result.getStyleClass().add("kodi-box");
-        result.getChildren().addAll(applyDebug(new KodiMovieInfoBox(item, appConfig)), applyDebug(new KodiWarningBox(item, appConfig)), applyDebug(new SearchResultsAndTitleBox(item, appConfig, kodiUiConfig)));
+        result.getChildren().addAll(applyDebug(new KodiMovieInfoBox(item, appConfig)), applyDebug(new WarningsBox(item, appConfig)), applyDebug(new SearchResultsAndTitleBox(item, appConfig, kodiUiConfig)));
 
         var imageBox = new ImageBox(item, imageHeight);
         imageBox.getStyleClass().add("kodi-image-large");
