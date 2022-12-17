@@ -30,6 +30,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,5 +104,17 @@ public class KodiUtil {
 
     public static Path getDefaultImagePath(Path moviePath){
         return Paths.get(moviePath.toString(), "folder" + ".jpg");
+    }
+
+    public static List<Path> getSubdirs(Path path) throws IOException {
+        List<Path> subdirs = new ArrayList<>();
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
+            for (Path child : ds) {
+                if (Files.isDirectory(child)) {
+                    subdirs.add(child);
+                }
+            }
+        }
+        return subdirs;
     }
 }
