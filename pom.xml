@@ -30,9 +30,9 @@
     </scm>
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
+            <id>local-release-repo</id>
+            <name>alex-local</name>
+            <url>file://${user.home}/local-maven-repository</url>
         </repository>
     </distributionManagement>
     <build>
@@ -133,6 +133,11 @@
             <id>jitpack</id>
             <url>https://jitpack.io</url>
         </repository>
+            <repository>
+                <id>github</id>
+                <name>GitHub Packages</name>
+                <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
+            </repository>
     </repositories>
     <dependencies>
         <dependency>
