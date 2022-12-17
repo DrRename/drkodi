@@ -30,9 +30,9 @@
     </scm>
     <distributionManagement>
         <repository>
-            <id>local-release-repo</id>
-            <name>alex-local</name>
-            <url>file://${user.home}/local-maven-repository</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
         </repository>
     </distributionManagement>
     <build>
