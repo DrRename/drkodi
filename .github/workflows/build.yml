@@ -26,6 +26,6 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: ${{ env.JAVA_VERSION }}
           cache: 'maven'
         run: mvn -B package --file pom.xml
