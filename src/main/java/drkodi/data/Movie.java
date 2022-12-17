@@ -29,6 +29,7 @@ import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.MediaFilesPresentTask;
 import drkodi.task.RenameFolderToMovieTitleTask;
+import drkodi.task.SubdirsPresentTask;
 import drrename.commons.RenamingPath;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -76,6 +77,7 @@ public class Movie extends DynamicMovieData {
         triggerWebSearch();
         // trigger checks
         triggerEmptyFolderCheck();
+        triggerSubdirsCheck();
     }
 
     // Register Listeners //
@@ -295,6 +297,19 @@ public class Movie extends DynamicMovieData {
                     if (task.getValue()) {
                         log.info("No media files found: {}", getRenamingPath().getOldPath());
                         getWarnings().add(new KodiWarning(KodiWarning.Type.EMTPY_FOLDER));
+                    }
+                }
+        );
+        executeTask(task);
+    }
+
+    private void triggerSubdirsCheck() {
+        log.debug("Trigger subdirs check");
+        var task = new SubdirsPresentTask(this);
+        task.setOnSucceeded(event -> {
+                    if (task.getValue()) {
+                        log.info("Subdirs found in {}", getRenamingPath().getOldPath());
+                        getWarnings().add(new KodiWarning(KodiWarning.Type.SUBDIRS));
                     }
                 }
         );

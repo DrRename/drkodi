@@ -172,7 +172,7 @@ public class StaticMovieData {
     protected void updateTitleWarnings() {
         log.debug("Recreating title warnings");
         // first, clear/ filter out title warnings
-        getWarnings().removeIf(w -> KodiWarning.Type.TITLE_MISMATCH.equals(w.getType()));
+        getWarnings().removeIf(w -> KodiWarning.Type.TITLE_MISMATCH.equals(w.type()));
         // next, create new warnings if necessary
         String folderValue = getMovieTitleFromFolder();
         String normalizedValue = getFolderNameCompareNormalizer().normalize(getMovieTitle());
@@ -186,7 +186,7 @@ public class StaticMovieData {
     protected void updateYearWarnings() {
         log.debug("Recreating year warnings");
         // filter out year warnings
-        getWarnings().removeIf(w -> KodiWarning.Type.YEAR_MISMATCH.equals(w.getType()));
+        getWarnings().removeIf(w -> KodiWarning.Type.YEAR_MISMATCH.equals(w.type()));
         // next, create new warnings if necessary
         Integer folderValue = getMovieYearFromFolder();
         Integer currentValue = getMovieYear();
