@@ -22,10 +22,8 @@ package drkodi.ui;
 
 import drkodi.*;
 import drkodi.config.AppConfig;
-import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.KodiBox;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -57,24 +55,18 @@ import java.util.function.Predicate;
 
 @Slf4j
 @Component
-@FxmlView("/fxml/KodiTools.fxml")
-public class KodiToolsController extends DebuggableController implements DrRenameController {
+@FxmlView("/fxml/MainView.fxml")
+public class MainViewController extends DebuggableController implements DrRenameController {
 
     public static final int imageStageXOffset = 600;
 
     // Spring injected //
 
-    private final Entries entries;
-
-    private final KodiUiConfig kodiUiConfig;
-
     private final KodiCollectService kodiCollectService;
 
     private final Executor executor;
 
-    private final SearchResultDtoMapper searchResultDtoMapper;
-
-    private final MovieDbQuerier2 movieDbQuerier2;
+    private final ResourceBundle resourceBundle;
 
     //
 
@@ -83,19 +75,11 @@ public class KodiToolsController extends DebuggableController implements DrRenam
     @FXML
     Pane root;
 
-
     @FXML
     ListView<KodiBox> listView;
 
     @FXML
     CheckBox checkBoxHideEmpty;
-
-    @FXML
-    CheckBox checkBoxMissingNfoFileIsAWarning;
-
-    @FXML
-    CheckBox checkBoxDefaultNfoFileNameIsAWarning;
-
 
     @FXML
     ProgressAndStatusGridPane progressAndStatusGridPane;
@@ -108,18 +92,9 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
     // Default fields //
 
-//    private FilterableKodiRootTreeItem treeRoot;
-
-    private WarningsConfig warningsConfig;
-
     private final KodiCollectServiceStarter serviceStarter;
 
-//    private final KodiSuggestionsServiceStarter kodiSuggestionsServiceStarter;
-
     private final Label progressLabel;
-
-
-
 
 
     //
@@ -131,11 +106,6 @@ public class KodiToolsController extends DebuggableController implements DrRenam
         public KodiCollectServiceStarter(KodiCollectService service) {
             super(service);
         }
-
-//        @Override
-//        protected void onCancelled(WorkerStateEvent workerStateEvent) {
-//            kodiSuggestionsService.cancel();
-//        }
 
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
@@ -151,9 +121,6 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
         @Override
         protected void doInitService(KodiCollectService service) {
-//            service.setRootTreeItem(treeRoot);
-            service.setWarningsConfig(warningsConfig);
-            service.setExtractor(new Observable[]{checkBoxHideEmpty.selectedProperty()});
             progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
             progressLabel.textProperty().bind(service.messageProperty());
 
@@ -168,15 +135,12 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
     //
 
-    public KodiToolsController(KodiCollectService kodiCollectService, Executor executor, AppConfig appConfig, Entries entries, KodiUiConfig kodiUiConfig, SearchResultDtoMapper searchResultDtoMapper, MovieDbQuerier2 movieDbQuerier2) {
+    public MainViewController(KodiCollectService kodiCollectService, Executor executor, AppConfig appConfig, ResourceBundle resourceBundle) {
         super(appConfig);
         this.kodiCollectService = kodiCollectService;
         this.executor = executor;
         this.serviceStarter = new KodiCollectServiceStarter(kodiCollectService);
-        this.entries = entries;
-        this.kodiUiConfig = kodiUiConfig;
-        this.searchResultDtoMapper = searchResultDtoMapper;
-        this.movieDbQuerier2 = movieDbQuerier2;
+        this.resourceBundle = resourceBundle;
         this.progressLabel = new Label();
     }
 
@@ -196,10 +160,6 @@ public class KodiToolsController extends DebuggableController implements DrRenam
 
         if (!getAppConfig().isDebug())
             progressAndStatusGridPane.getProgressBar().visibleProperty().bind(kodiCollectService.runningProperty());
-
-        warningsConfig = new WarningsConfig();
-        warningsConfig.missingNfoFileIsWarningProperty().bind(checkBoxMissingNfoFileIsAWarning.selectedProperty());
-        warningsConfig.defaultNfoFileNameIsWarningProperty().bind(checkBoxDefaultNfoFileNameIsAWarning.selectedProperty());
 
         progressAndStatusGridPane.getProgressStatusBox().getChildren().add(progressLabel);
 

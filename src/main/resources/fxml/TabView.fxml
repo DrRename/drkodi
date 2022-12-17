@@ -42,7 +42,7 @@
 
     <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
 
-    <fx:include fx:id="kodiTools" source="KodiTools.fxml"/>
+    <fx:include fx:id="mainView" source="MainView.fxml"/>
 
     <ProgressAndStatusGridPane fx:id="progressAndStatusGrid"/>
 
