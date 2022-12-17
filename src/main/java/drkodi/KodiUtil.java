@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import drkodi.data.StaticMovieData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -116,5 +117,25 @@ public class KodiUtil {
             }
         }
         return subdirs;
+    }
+
+    public static List<Path> findAllVideoFiles(Path directory) throws IOException {
+        List<Path> result = new ArrayList<>();
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
+            for (Path child : ds) {
+                if(Files.isRegularFile(child)){
+                    String extension = FilenameUtils.getExtension(child.getFileName().toString());
+                    if("sub".equalsIgnoreCase(extension) || "idx".equalsIgnoreCase(extension)){
+//                        log.debug("Ignore sub/ idx files for now");
+                        continue;
+                    }
+                    var mediaType = new FileTypeByMimeProvider().getFileType(child);
+                    if(mediaType.startsWith("video")){
+                        result.add(child);
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

@@ -27,6 +27,7 @@ import drkodi.data.json.WebSearchResults;
 import drkodi.normalization.FolderNameCompareNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
+import drkodi.task.MediaFilesPresentTask;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drrename.commons.RenamingPath;
 import javafx.beans.value.ObservableValue;
@@ -34,18 +35,11 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.image.Image;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
@@ -294,48 +288,14 @@ public class Movie extends DynamicMovieData {
         executeTask(task);
     }
 
-    @RequiredArgsConstructor
-    static class NoMediaFilesTask extends Task<Boolean> {
-
-        private final Movie movie;
-
-        @Override
-        protected Boolean call() throws Exception {
-            Path path = movie.getRenamingPath().getOldPath();
-            return findAllVideoFiles(path).isEmpty();
-
-        }
-
-        static List<Path> findAllVideoFiles(Path directory) throws IOException {
-            List<Path> result = new ArrayList<>();
-            try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
-                for (Path child : ds) {
-                    if(Files.isRegularFile(child)){
-                        String extension = FilenameUtils.getExtension(child.getFileName().toString());
-                        if("sub".equalsIgnoreCase(extension) || "idx".equalsIgnoreCase(extension)){
-//                        log.debug("Ignore sub/ idx files for now");
-                            continue;
-                        }
-                        var mediaType = new FileTypeByMimeProvider().getFileType(child);
-                        if(mediaType.startsWith("video")){
-                            result.add(child);
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-    }
-
     private void triggerEmptyFolderCheck() {
         log.debug("Trigger media files check");
-        var task = new NoMediaFilesTask(this);
+        var task = new MediaFilesPresentTask(this);
         task.setOnSucceeded(event -> {
                     if (task.getValue()) {
                         log.info("No media files found: {}", getRenamingPath().getOldPath());
                         getWarnings().add(new KodiWarning(KodiWarning.Type.EMTPY_FOLDER));
                     }
-
                 }
         );
         executeTask(task);
