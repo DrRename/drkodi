@@ -21,6 +21,7 @@
 package drkodi.ui;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -35,6 +36,7 @@ public class ProgressAndStatusGridPane extends GridPane {
     public ProgressAndStatusGridPane(){
         this.progressBar = new ProgressBar();
         this.progressStatusBox = new HBox(4);
+        this.progressStatusBox.setAlignment(Pos.CENTER_RIGHT);
 //        this.progressStatusBox.setPadding(new Insets(4,4,4,4));
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setPercentWidth(100);
