@@ -69,7 +69,7 @@ public class WarningsBox extends VBox {
                         getChildren().add(UiUtil.applyDebug(new KodiYearWarningBox(element, appConfig), appConfig));
                 case EMTPY_FOLDER ->
                         getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("No media found", appConfig), appConfig));
-                case SUBDIRS ->  getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("Subdirs found", appConfig), appConfig));
+                case SUBDIRS ->  getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("Subdirectory found", appConfig), appConfig));
             }
         }
 
