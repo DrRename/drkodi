@@ -31,13 +31,11 @@ import drkodi.ui.control.KodiBox;
 import drrename.commons.RenamingPath;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -54,7 +52,7 @@ public class UiTestApp extends Application {
     private SearchResultToMovieMapper searchResultToMovieMapper = new SearchResultToMovieMapperImpl(new ImageDataMapper());
     List<Movie> data = List.of(new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper,executor, null, new FolderNameCompareNormalizer(new FolderNameCompareNormalizerConfiguration()), new MovieTitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())),new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper, executor, null, new FolderNameCompareNormalizer(new FolderNameCompareNormalizerConfiguration()), new MovieTitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())));
 
-    VBox view;
+    ListView<KodiBox> listView;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -66,18 +64,30 @@ public class UiTestApp extends Application {
     }
 
     private Scene buildScene() {
-        view = new VBox();
-        view.setFillWidth(true);
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(view);
-        scrollPane.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+        listView = new ListView<>();
+        listView.setCellFactory(new Callback<ListView<KodiBox>, ListCell<KodiBox>>() {
             @Override
-            public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
-                view.setPrefWidth(bounds.getWidth());
-                view.setPrefHeight(bounds.getHeight());
+            public ListCell<KodiBox> call(ListView<KodiBox> param) {
+                ListCell<KodiBox> lc = new ListCell<>() {
+
+                    @Override
+                    protected void updateItem(KodiBox item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            setGraphic(item);
+                        }
+                    }
+                };
+//                VBox.setVgrow(lc, Priority.ALWAYS);
+//                lc.setMaxHeight(Double.MAX_VALUE);
+                lc.prefWidthProperty().bind(listView.widthProperty().subtract(18));
+                return lc;
             }
         });
-        Scene scene = new Scene(scrollPane);
+        Scene scene = new Scene(listView);
         scene.getStylesheets().add("/css/general.css");
         scene.getStylesheets().add("/css/light-theme.css");
         return scene;
@@ -86,7 +96,7 @@ public class UiTestApp extends Application {
     private void fillUi() throws Exception {
         for(Movie element : data){
             element.getSearchResults().addAll(buildSearchResults());
-            Platform.runLater(() -> view.getChildren().add(new KodiBox(element, new AppConfig(), new KodiUiConfig())));
+            Platform.runLater(() -> listView.getItems().add(new KodiBox(element, new AppConfig(), new KodiUiConfig())));
         }
     }
 
