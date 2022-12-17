@@ -21,7 +21,6 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.StaticMovieData;
 import drkodi.ui.UiUtil;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -29,10 +28,7 @@ import javafx.scene.layout.HBox;
 
 public class GenericWarningsBox extends HBox {
 
-    private final String text;
-
-    public GenericWarningsBox(AppConfig appConfig, String text){
-        this.text = text;
+    public GenericWarningsBox(String text, AppConfig appConfig){
 
         Label label1 = new KodiWarningKeyLabel(text);
         getChildren().add(UiUtil.applyDebug(label1, appConfig));
