@@ -35,12 +35,9 @@ public abstract class DebuggableController implements Initializable {
 
     private final AppConfig appConfig;
 
-    private ResourceBundle resourceBundle;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if(appConfig.isDebug()) applyRandomColors();
-        this.resourceBundle = resourceBundle;
     }
 
     protected abstract Parent[] getUiElementsForRandomColor();

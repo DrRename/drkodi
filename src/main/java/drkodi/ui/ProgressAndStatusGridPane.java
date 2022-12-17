@@ -42,6 +42,8 @@ public class ProgressAndStatusGridPane extends GridPane {
         setPadding(new Insets(4,4,4,4));
         add(progressBar, 0, 0);
         add(progressStatusBox, 1, 0);
+        visibleProperty().bind(progressBar.visibleProperty());
+        managedProperty().bind(visibleProperty());
 
     }
 

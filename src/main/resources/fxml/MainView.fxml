@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import drkodi.ui.ProgressAndStatusGridPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:controller="drkodi.ui.MainViewController" fx:id="root" maxHeight="Infinity"
+      VBox.vgrow="ALWAYS">
+
+    <ListView fx:id="listView" maxHeight="Infinity" AnchorPane.topAnchor="4" VBox.vgrow="ALWAYS"/>
+
+    <ProgressAndStatusGridPane fx:id="progressAndStatusGridPane"/>
+
+</VBox>
