@@ -17,6 +17,7 @@ hs_err_pid*
 # Maven
 **/target/
 **/*.xml.releaseBackup
+/release.properties
 
 #Confidential
 secret.properties
