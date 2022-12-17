@@ -50,14 +50,16 @@ public class KodiBox extends VBox {
         scrollPane.setFitToHeight(true);
 //        scrollPane.setFitToWidth(true);
 
+        scrollPane.visibleProperty().bind(kodiMovie.searchResultsProperty().emptyProperty().not());
+        scrollPane.managedProperty().bind(scrollPane.visibleProperty());
+
         scrollPane.getStyleClass().add("search-result-box");
 
         scrollPane.minHeightProperty().bind(john.prefHeightProperty());
 
-
         getChildren().add(UiUtil.applyDebug(scrollPane, appConfig));
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        VBox.setVgrow(john, Priority.ALWAYS);
+//        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+//        VBox.setVgrow(john, Priority.ALWAYS);
 
         // layout
         getStyleClass().add("kodi-box");

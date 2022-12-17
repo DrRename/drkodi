@@ -60,8 +60,8 @@ public class SearchResultsBox extends HBox {
 
 
         // behaviour
-        visibleProperty().bind(item.searchResultsProperty().emptyProperty().not());
-        managedProperty().bind(visibleProperty());
+//        visibleProperty().bind(item.searchResultsProperty().emptyProperty().not());
+//        managedProperty().bind(visibleProperty());
 
 
     }
