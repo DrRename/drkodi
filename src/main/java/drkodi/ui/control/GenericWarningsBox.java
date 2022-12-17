@@ -18,20 +18,27 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.data;
+package drkodi.ui.control;
 
-import lombok.Getter;
+import drkodi.config.AppConfig;
+import drkodi.data.StaticMovieData;
+import drkodi.ui.UiUtil;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 
-public record KodiWarning(drkodi.data.KodiWarning.Type type) {
+public class GenericWarningsBox extends HBox {
 
-    public enum Type {
-        TITLE_MISMATCH("Title mismatch"), YEAR_MISMATCH("Year mismatch"), EMTPY_FOLDER("Empty folder"), SUBDIRS("Subdirectories present");
-        private final String message;
+    private final String text;
 
-        Type(String message) {
-            this.message = message;
-        }
+    public GenericWarningsBox(AppConfig appConfig, String text){
+        this.text = text;
+
+        Label label1 = new KodiWarningKeyLabel(text);
+        getChildren().add(UiUtil.applyDebug(label1, appConfig));
+        setAlignment(Pos.CENTER_LEFT);
+        setSpacing(4);
+        getStyleClass().add("kodi-warning-box-element");
     }
-
 
 }

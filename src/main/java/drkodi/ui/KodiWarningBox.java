@@ -23,7 +23,7 @@ package drkodi.ui;
 import drkodi.config.AppConfig;
 import drkodi.data.KodiWarning;
 import drkodi.data.Movie;
-import drkodi.ui.control.KodiEmptyFolderWarningBox;
+import drkodi.ui.control.GenericWarningsBox;
 import drkodi.ui.control.KodiTitleWarningBox;
 import drkodi.ui.control.KodiYearWarningBox;
 import javafx.collections.ListChangeListener;
@@ -62,13 +62,14 @@ public class KodiWarningBox extends VBox {
     private void addWarnings(Movie element, AppConfig appConfig) {
         getChildren().clear();
         for (KodiWarning warning : element.getWarnings()) {
-            switch (warning.getType()) {
+            switch (warning.type()) {
                 case TITLE_MISMATCH ->
                         getChildren().add(UiUtil.applyDebug(new KodiTitleWarningBox(element, appConfig), appConfig));
                 case YEAR_MISMATCH ->
                         getChildren().add(UiUtil.applyDebug(new KodiYearWarningBox(element, appConfig), appConfig));
                 case EMTPY_FOLDER ->
-                        getChildren().add(UiUtil.applyDebug(new KodiEmptyFolderWarningBox(element, appConfig), appConfig));
+                        getChildren().add(UiUtil.applyDebug(new GenericWarningsBox(appConfig, "No media found"), appConfig));
+                case SUBDIRS ->  getChildren().add(UiUtil.applyDebug(new GenericWarningsBox(appConfig, "Subdirs found"), appConfig));
             }
         }
 
