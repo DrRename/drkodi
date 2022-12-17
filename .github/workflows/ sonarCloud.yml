@@ -2,9 +2,7 @@ name: SonarCloud
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [ "main", "develop" ]
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -35,7 +33,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage,dependency-check
-          -Dsonar.projectKey=drrename_drkodi
-          -Dsonar.organization=drrename
-          -Dsonar.host.url=https://sonarcloud.io
+        run: mvn -B verify jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=drrename_drkodi -Dsonar.organization=drrename -Dsonar.host.url=https://sonarcloud.io
