@@ -32,7 +32,7 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
     private final KodiUiConfig kodiUiConfig;
 
 
-    private final MovieDbQuerier2 movieDbQuerier2;
+    private final MovieDbSearcher movieDbSearcher;
 
     private WarningsConfig warningsConfig;
 
@@ -44,13 +44,13 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
 
     private Observable[] extractor;
 
-    public KodiCollectService(AppConfig appConfig, ResourceBundle resourceBundle, Entries directory, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, KodiUiConfig kodiUiConfig, MovieDbQuerier2 movieDbQuerier2, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, MovieTitleSearchNormalizer normalizer) {
+    public KodiCollectService(AppConfig appConfig, ResourceBundle resourceBundle, Entries directory, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, KodiUiConfig kodiUiConfig, MovieDbSearcher movieDbSearcher, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, MovieTitleSearchNormalizer normalizer) {
         super(appConfig, resourceBundle);
         this.directory = directory;
         this.searchResultToMovieMapper = searchResultToMovieMapper;
         this.mapper = mapper;
         this.kodiUiConfig = kodiUiConfig;
-        this.movieDbQuerier2 = movieDbQuerier2;
+        this.movieDbSearcher = movieDbSearcher;
         this.folderNameCompareNormalizer = folderNameCompareNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
         this.normalizer = normalizer;
@@ -59,7 +59,7 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
 
     @Override
     protected Task<List<KodiBox>> createTask() {
-        return new KodiToolsCollectTask(getAppConfig(),getResourceBundle(),directory,getExecutor(),warningsConfig, kodiUiConfig, extractor, searchResultToMovieMapper, mapper, movieDbQuerier2, folderNameCompareNormalizer, normalizer, movieTitleWriteNormalizer);
+        return new KodiToolsCollectTask(getAppConfig(),getResourceBundle(),directory,getExecutor(),warningsConfig, kodiUiConfig, extractor, searchResultToMovieMapper, mapper, movieDbSearcher, folderNameCompareNormalizer, normalizer, movieTitleWriteNormalizer);
     }
 
 }
