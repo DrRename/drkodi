@@ -2,8 +2,10 @@ package drkodi.normalization;
 
 import drkodi.ProtoTypeNormalizer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class FolderNameCompareNormalizer extends ProtoTypeNormalizer {
@@ -16,7 +18,9 @@ public class FolderNameCompareNormalizer extends ProtoTypeNormalizer {
     }
 
     public String normalize(String movieTitle){
-        return super.normalize(movieTitle);
+        var result = super.normalize(movieTitle);
+        log.debug("Normalized from {} to {}", movieTitle, result);
+        return result;
     }
 
 
