@@ -36,7 +36,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -44,7 +43,7 @@ import java.util.ResourceBundle;
 @Slf4j
 @Component
 @Scope("prototype")
-public class MovieDbQuerier2 {
+public class MovieDbSearcher {
 
     private final ObjectMapper objectMapper;
 
@@ -62,7 +61,7 @@ public class MovieDbQuerier2 {
 
     }
 
-    public MovieDbDetails query(Number movieDbId){
+    public MovieDbDetails search(Number movieDbId){
         MovieDbDetails result = new MovieDbDetails();
         try {
             ResponseEntity<MovieDetailsDto> details = client.getDetails("ca540140c89af81851d4026286942896", movieDbId, null);
@@ -96,7 +95,7 @@ public class MovieDbQuerier2 {
         return result;
     }
 
-    public WebSearchResults query(String searchString, Integer year) throws IOException {
+    public WebSearchResults search(String searchString, Integer year) throws IOException {
         reset();
 
         log.debug("Searching {}", searchString);
@@ -147,13 +146,6 @@ public class MovieDbQuerier2 {
 //        ResponseEntity<byte[]> hans = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), "");
 
         return result;
-    }
-
-    private String buildNameString(String title, LocalDate date) {
-        if (date == null) {
-            return title;
-        }
-        return title + " (" + date.getYear() + ")";
     }
 
 

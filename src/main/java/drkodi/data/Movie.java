@@ -30,6 +30,7 @@ import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.MediaFilesPresentTask;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drkodi.task.SubdirsPresentTask;
+import drkodi.themoviedb.MovieDbSearchTask;
 import drrename.commons.RenamingPath;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -49,7 +50,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class Movie extends DynamicMovieData {
 
-    private final MovieDbQuerier2 movieDbQuerier2;
+    private final MovieDbSearcher movieDbSearcher;
 
     private final MovieTitleSearchNormalizer movieTitleSearchNormalizer;
 
@@ -57,10 +58,10 @@ public class Movie extends DynamicMovieData {
 
     private Executor executor;
 
-    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbQuerier2 movieDbQuerier2, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
+    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
         super(renamingPath, mapper, folderNameCompareNormalizer, searchResultToMovieMapper);
         this.executor = executor;
-        this.movieDbQuerier2 = movieDbQuerier2;
+        this.movieDbSearcher = movieDbSearcher;
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
         init();
@@ -162,7 +163,7 @@ public class Movie extends DynamicMovieData {
     }
 
     private void triggerWebSearch() {
-        if (movieDbQuerier2 == null) {
+        if (movieDbSearcher == null) {
             log.warn("Cannot perform web query");
             return;
         }
@@ -175,7 +176,7 @@ public class Movie extends DynamicMovieData {
             return;
         }
         searchingWeb = true;
-        var task = new WebQuerierTask(movieDbQuerier2, getMovieTitleSearchNormalizer(), this);
+        var task = new MovieDbSearchTask(movieDbSearcher, getMovieTitleSearchNormalizer(), this);
         task.setOnSucceeded(event -> {
             setWebSearchResult((WebSearchResults) event.getSource().getValue());
             searchingWeb = false;
@@ -199,7 +200,7 @@ public class Movie extends DynamicMovieData {
     }
 
     private void createAndRunMovieDbDetailsTask(Number newValue) {
-        var task = new MovieDbDetailsTask(newValue, movieDbQuerier2);
+        var task = new MovieDbDetailsTask(newValue, movieDbSearcher);
         task.setOnSucceeded(event -> {
             takeOverMovieDetails(task.getValue());
         });
@@ -295,7 +296,7 @@ public class Movie extends DynamicMovieData {
         var task = new MediaFilesPresentTask(this);
         task.setOnSucceeded(event -> {
                     if (task.getValue()) {
-                        log.info("No media files found: {}", getRenamingPath().getOldPath());
+                        log.debug("No media files found: {}", getRenamingPath().getOldPath());
                         getWarnings().add(new KodiWarning(KodiWarning.Type.EMTPY_FOLDER));
                     }
                 }
@@ -308,7 +309,7 @@ public class Movie extends DynamicMovieData {
         var task = new SubdirsPresentTask(this);
         task.setOnSucceeded(event -> {
                     if (task.getValue()) {
-                        log.info("Subdirs found in {}", getRenamingPath().getOldPath());
+                        log.debug("Subdirectories found in {}", getRenamingPath().getOldPath());
                         getWarnings().add(new KodiWarning(KodiWarning.Type.SUBDIRS));
                     }
                 }

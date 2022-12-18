@@ -5,6 +5,9 @@ spring:
 logging:
   level:
     root: info
+    drkodi:
+#      normalization: debug
+      themoviedb: debug
     com:
       ulisesbocchio: warn
   pattern:
@@ -55,11 +58,19 @@ app:
           - ":"
         replace-with-space:
           - "."
+          - "_"
       search:
         delete:
           - ","
           - "-"
           - "'"
+          - "1080p"
+          - "720p"
+          - "DL"
+          - "AC3"
+          - "BluRay"
+          - "x265"
         replace-with-space:
           - "."
+          - "_"
 

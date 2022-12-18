@@ -18,9 +18,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.data;
+package drkodi.themoviedb;
 
-import drkodi.MovieDbQuerier2;
+import drkodi.MovieDbSearcher;
+import drkodi.data.Movie;
 import drkodi.data.json.WebSearchResults;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import javafx.concurrent.Task;
@@ -29,9 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class WebQuerierTask extends Task<WebSearchResults> {
+public class MovieDbSearchTask extends Task<WebSearchResults> {
 
-    private final MovieDbQuerier2 querier2;
+    private final MovieDbSearcher movieDbSearcher;
 
     private final MovieTitleSearchNormalizer normalizer;
 
@@ -39,9 +40,9 @@ public class WebQuerierTask extends Task<WebSearchResults> {
 
     @Override
     protected WebSearchResults call() throws Exception {
-        log.debug("Starting query for {}", movie);
         var searchString = normalizer.normalize(movie.getMovieTitle());
-        WebSearchResults movieDbMovieSearchResult = querier2.query(searchString, null);
+        log.debug("Starting query for {}", searchString);
+        WebSearchResults movieDbMovieSearchResult = movieDbSearcher.search(searchString, null);
         log.debug("Found {} matches for '{}'", movieDbMovieSearchResult.getSearchResults().keySet().size(), searchString);
         return movieDbMovieSearchResult;
     }

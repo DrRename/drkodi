@@ -39,9 +39,9 @@ public class KodiSuggestionsTask extends KodiTask {
 
     private final List<KodiTask> subTasks;
 
-    private final MovieDbQuerier2 querier2;
+    private final MovieDbSearcher querier2;
 
-    public KodiSuggestionsTask(AppConfig appConfig, ResourceBundle resourceBundle, List<? extends Movie> elements, Executor executor, MovieDbQuerier2 querier2) {
+    public KodiSuggestionsTask(AppConfig appConfig, ResourceBundle resourceBundle, List<? extends Movie> elements, Executor executor, MovieDbSearcher querier2) {
         super(appConfig, resourceBundle, elements, -1);
         this.executor = executor;
         this.querier2 = querier2;
@@ -49,7 +49,7 @@ public class KodiSuggestionsTask extends KodiTask {
         setOnCancelled(this::mainTaskCancelled);
     }
 
-    public KodiSuggestionsTask(AppConfig appConfig, ResourceBundle resourceBundle, Movie element, Executor executor, MovieDbQuerier2 querier2) {
+    public KodiSuggestionsTask(AppConfig appConfig, ResourceBundle resourceBundle, Movie element, Executor executor, MovieDbSearcher querier2) {
         super(appConfig, resourceBundle, element, -1);
         this.executor = executor;
         this.querier2 = querier2;
