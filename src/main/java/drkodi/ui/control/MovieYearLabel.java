@@ -34,5 +34,6 @@ public class MovieYearLabel extends Label {
         element.movieYearProperty().addListener((observable, oldValue, newValue) -> setText(buildMovieYearString(newValue)));
         // set style
         getStyleClass().add("kodi-movie-year");
+        setMinWidth(80);
     }
 }

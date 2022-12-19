@@ -1,7 +1,8 @@
 package drkodi;
 
 import drkodi.config.AppConfig;
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
+import drkodi.themoviedb.MovieDbSearcher;
 import javafx.concurrent.Task;
 import org.springframework.stereotype.Component;
 

@@ -20,8 +20,7 @@
 
 package drkodi.themoviedb;
 
-import drkodi.MovieDbSearcher;
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
 import drkodi.data.json.WebSearchResults;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import javafx.concurrent.Task;
