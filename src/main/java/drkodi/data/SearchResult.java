@@ -42,13 +42,19 @@ public class SearchResult {
 
     private final ObjectProperty<byte[]> imageData;
 
+    private String originalTitle;
+
+    private String originalLanguage;
+
     public SearchResult(SearchResult searchResult) {
+        // TODO: use mapper
         this.id = new SimpleObjectProperty<>(searchResult.getId());
         this.title = new SimpleStringProperty(searchResult.getTitle());
+        this.originalTitle = searchResult.originalTitle;
         this.releaseDate = new SimpleObjectProperty<>(searchResult.getReleaseDate());
         this.image = new SimpleObjectProperty<>(searchResult.getImage());
         this.imageData = new SimpleObjectProperty<>(searchResult.getImageData());
-        this.plot= new SimpleStringProperty(searchResult.getPlot());
+        this.plot = new SimpleStringProperty(searchResult.getPlot());
         this.tagline = new SimpleStringProperty(searchResult.getTagline());
     }
 
@@ -69,8 +75,26 @@ public class SearchResult {
                 ", movieYear=" + releaseDate +
                 '}';
     }
-// FX Getter / Setter //
 
+    // Getter / Setter //
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    // FX Getter / Setter //
 
     public Number getId() {
         return id.get();

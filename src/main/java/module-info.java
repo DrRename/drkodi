@@ -1,5 +1,8 @@
 open module drrename {
     exports drkodi;
+    exports drkodi.themoviedb;
+    exports drkodi.data;
+    exports drkodi.data.dynamic;
     requires java.sql;
     requires org.slf4j;
     requires lombok;

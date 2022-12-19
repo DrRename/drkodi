@@ -20,6 +20,7 @@
 
 package drkodi;
 
+import drkodi.data.MovieDetailsDto;
 import drkodi.data.SearchResultsDto;
 import drkodi.themoviedb.TranslationsDto;
 import org.springframework.cloud.openfeign.FeignClient;

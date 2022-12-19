@@ -68,6 +68,9 @@ public class SearchResultsBox extends HBox {
 
     private void setSearchResults(StaticMovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
         getChildren().clear();
+        if(item.getSearchResults() == null){
+            return;
+        }
         for(SearchResult searchResult : item.getSearchResults()){
             if(searchResult.getImage() != null) {
                 var sr = new SearchResultBox(item, searchResult, appConfig, kodiUiConfig);

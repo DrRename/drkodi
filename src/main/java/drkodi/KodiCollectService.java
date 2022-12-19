@@ -5,6 +5,7 @@ import drkodi.data.SearchResultToMovieMapper;
 import drkodi.normalization.FolderNameCompareNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
+import drkodi.themoviedb.MovieDbSearcher;
 import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.KodiBox;
 import javafx.beans.Observable;

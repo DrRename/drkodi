@@ -21,21 +21,31 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
 import drkodi.ui.WarningsBox;
 import drkodi.ui.UiUtil;
 import javafx.geometry.Insets;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class KodiMovieInfoBox extends VBox {
 
+    private final ProgressBar progressBar;
+
     public KodiMovieInfoBox(Movie kodiMovie, AppConfig appConfig) {
+
+        this.progressBar = new ProgressBar();
+        this.progressBar.setMaxWidth(Double.MAX_VALUE);
+        this.progressBar.setPrefHeight(10);
+        this.progressBar.visibleProperty().bind(kodiMovie.runningProperty());
 
         // content
 
+        getChildren().add(progressBar);
         getChildren().add(UiUtil.applyDebug(new MovieTitleAndYearBox(kodiMovie, appConfig), appConfig));
+        getChildren().add(UiUtil.applyDebug(new MovieOriginalTitleLabel(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new KodiOpenAndSaveButtonsBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new TaglineBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new PlotBox(kodiMovie), appConfig));

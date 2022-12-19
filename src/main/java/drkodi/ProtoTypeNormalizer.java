@@ -15,6 +15,8 @@ public abstract class ProtoTypeNormalizer {
     protected abstract ProtoTypeNormalizerConfiguration getConfiguration();
 
     public String normalize(String movieTitle){
+        if(movieTitle == null)
+            return null;
         String result = movieTitle;
         for(String ex : getConfiguration().getReplaceWithSpace()){
             result = result.replace(ex, " ");

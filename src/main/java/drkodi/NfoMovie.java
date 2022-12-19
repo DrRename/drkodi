@@ -71,6 +71,8 @@ public class NfoMovie {
 
     String title;
 
+    String originaltitle;
+
     String tagline;
 
     UniqueId uniqueid;

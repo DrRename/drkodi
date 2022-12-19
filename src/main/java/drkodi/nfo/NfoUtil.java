@@ -23,7 +23,7 @@ package drkodi.nfo;
 import drkodi.MovieDbGenre;
 import drkodi.NfoMovie;
 import drkodi.NfoRoot;
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
 import drkodi.data.Qualified;
 import org.apache.commons.lang3.StringUtils;
 
@@ -62,6 +62,11 @@ public class NfoUtil {
         return nfoMovie == null ? null : nfoMovie.getTitle();
     }
 
+    public static String getMovieOriginalTitle(NfoRoot item) {
+        var nfoMovie = getNfoMovie(item);
+        return nfoMovie == null ? null : nfoMovie.getOriginaltitle();
+    }
+
     public static Integer getMovieYear(NfoRoot item) {
         var nfoMovie = getNfoMovie(item);
         return (nfoMovie == null || StringUtils.isBlank(nfoMovie.getYear())) ? null : Integer.parseInt(nfoMovie.getYear());
@@ -91,4 +96,6 @@ public class NfoUtil {
         var art = item.getArt();
         return art == null ? null : art.getPoster();
     }
+
+
 }

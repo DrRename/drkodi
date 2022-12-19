@@ -61,6 +61,8 @@ public class StaticMovieData {
 
     private final StringProperty movieTitleFromWeb;
 
+    private final StringProperty movieOriginalTitle;
+
     private final ObjectProperty<Integer> movieYearFromWeb;
 
     private final ObjectProperty<Image> image;
@@ -127,6 +129,7 @@ public class StaticMovieData {
         this.movieTitle = new SimpleStringProperty();
         this.movieYear = new SimpleObjectProperty<>();
         this.movieTitleFromWeb = new SimpleStringProperty();
+        this.movieOriginalTitle = new SimpleStringProperty();
         this.movieYearFromWeb = new SimpleObjectProperty<>();
         this.image = new SimpleObjectProperty<>();
         this.imageData = new SimpleObjectProperty<>();
@@ -144,7 +147,7 @@ public class StaticMovieData {
         initMovieTitleAndMovieYear();
     }
 
-    private void initMovieTitleAndMovieYear() {
+    protected void initMovieTitleAndMovieYear() {
         // init from folder name
         applyNewFolderName(getRenamingPath().getFileName());
     }
@@ -155,7 +158,7 @@ public class StaticMovieData {
         setMovieYearFromFolder(KodiUtil.getMovieYearFromDirectoryName(folderName));
         setMovieTitle(getMovieTitleFromFolder());
         setMovieYear(getMovieYearFromFolder());
-        updateTitleWarnings();
+        updateTitleWarnings(getMovieTitleFromFolder());
         updateYearWarnings();
         if (Qualified.isOk(getNfoPath())) {
             String currentNfoFileName = getNfoPath().getElement().getFileName().toString();
@@ -169,18 +172,43 @@ public class StaticMovieData {
 
     }
 
-    protected void updateTitleWarnings() {
+    protected void updateTitleWarnings(String newValue) {
         log.debug("Recreating title warnings");
         // first, clear/ filter out title warnings
         getWarnings().removeIf(w -> KodiWarning.Type.TITLE_MISMATCH.equals(w.type()));
         // next, create new warnings if necessary
-        String folderValue = getMovieTitleFromFolder();
-        String normalizedValue = getFolderNameCompareNormalizer().normalize(getMovieTitle());
+        String normalizedTitle = getFolderNameCompareNormalizer().normalize(newValue);
+        String normalizedOriginalTitle = getFolderNameCompareNormalizer().normalize(getMovieOriginalTitle());
+        check(normalizedTitle, normalizedOriginalTitle);
+    }
+
+    protected void updateOriginalTitleWarnings(String newValue) {
+        log.debug("Recreating original title warnings");
+        // first, clear/ filter out title warnings
+        getWarnings().removeIf(w -> KodiWarning.Type.TITLE_MISMATCH.equals(w.type()));
+        // next, create new warnings if necessary
+        String normalizedTitle = getFolderNameCompareNormalizer().normalize(getMovieTitle());
+        String normalizedOriginalTitle = getFolderNameCompareNormalizer().normalize(newValue);
+        check(normalizedTitle, normalizedOriginalTitle);
+    }
+
+    private void check(String normalizedTitle, String normalizedOriginalTitle) {
+        String folderName = getMovieTitleFromFolder();
         // TODO: make case sensitive equals configurable
-        if (folderValue != null && (!folderValue.equalsIgnoreCase(normalizedValue)) && !folderValue.equalsIgnoreCase(getMovieTitle())) {
-            log.debug("Title mismatch, folder: {}, title: {}", folderValue, normalizedValue);
+        if (folderName.equalsIgnoreCase(normalizedOriginalTitle) || folderName.equalsIgnoreCase(normalizedTitle)) {
+            if(folderName.equalsIgnoreCase(normalizedTitle)){
+                // ok
+                return;
+            }
+            log.debug("Original title mismatch, folder: {}, title: {}", folderName, normalizedOriginalTitle);
             getWarnings().add(new KodiWarning(KodiWarning.Type.TITLE_MISMATCH));
+        } else {
+            int wait = 0;
         }
+    }
+
+    private boolean movieTitleMismatch(String folderName, String normalizedTitle) {
+        return !folderName.equalsIgnoreCase(normalizedTitle) && !folderName.equalsIgnoreCase(getMovieTitle());
     }
 
     protected void updateYearWarnings() {
@@ -199,6 +227,7 @@ public class StaticMovieData {
     public void takeOverSearchResultData(SearchResult searchResult) {
         log.debug("Taking over data for {} from {}", getMovieTitle(), searchResult);
         searchResultToMovieMapper.map(this, searchResult);
+
     }
 
 
@@ -221,6 +250,7 @@ public class StaticMovieData {
         }
         getNfoData().getElement().getMovie().setUniqueid(new NfoMovie.UniqueId(getMovieDbId(), "tmdb"));
         getNfoData().getElement().getMovie().setTitle(getMovieTitle());
+        getNfoData().getElement().getMovie().setOriginaltitle(getMovieOriginalTitle());
         if(getMovieYear() != null)
             getNfoData().getElement().getMovie().setYear(getMovieYear().toString());
         getNfoData().getElement().getMovie().setPlot(getPlot());
@@ -237,15 +267,13 @@ public class StaticMovieData {
         return "https://www.themoviedb.org/movie/" + getMovieDbId();
     }
 
-    private void initEmptyNfoData() {
+    protected void initEmptyNfoData() {
+        writingToNfo = true;
         NfoRoot data = new NfoRoot();
         data.setMovie(new NfoMovie());
         data.getMovie().setArt(new NfoMovie.Art());
         setNfoData(QualifiedNfoData.from(data));
-    }
-
-    public void clearData() {
-        initEmptyNfoData();
+        writingToNfo = false;
     }
 
     protected void setDefaultImagePath() {
@@ -263,7 +291,7 @@ public class StaticMovieData {
     }
 
     public boolean isDataComplete() {
-        return isDataLoadingComplete() && getPlot() != null && Qualified.isOk(getImagePath());
+        return isDataLoadingComplete() && Qualified.isOk(getImagePath()) && StringUtils.isNotBlank(getMovieOriginalTitle());
     }
 
     public boolean isDataLoadingComplete(){
@@ -271,7 +299,7 @@ public class StaticMovieData {
     }
 
     public boolean isDetailsComplete(){
-        return !getGenres().isEmpty() && StringUtils.isNotBlank(getPlot());
+        return !getGenres().isEmpty();
     }
 
 
@@ -538,5 +566,15 @@ public class StaticMovieData {
         this.tagline.set(tagline);
     }
 
+    public String getMovieOriginalTitle() {
+        return movieOriginalTitle.get();
+    }
 
+    public StringProperty movieOriginalTitleProperty() {
+        return movieOriginalTitle;
+    }
+
+    public void setMovieOriginalTitle(String movieOriginalTitle) {
+        this.movieOriginalTitle.set(movieOriginalTitle);
+    }
 }

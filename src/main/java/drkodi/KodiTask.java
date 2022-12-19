@@ -21,7 +21,7 @@
 package drkodi;
 
 import drkodi.config.AppConfig;
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -21,12 +21,11 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
 import drkodi.ui.SearchResultsAndTitleBox;
 import drkodi.ui.UiUtil;
 import drkodi.ui.config.KodiUiConfig;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 

@@ -18,11 +18,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.data;
+package drkodi.data.dynamic;
 
 
 import drkodi.*;
-import drkodi.data.dynamic.DynamicMovieData;
+import drkodi.data.*;
 import drkodi.data.json.WebSearchResults;
 import drkodi.normalization.FolderNameCompareNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
@@ -30,15 +30,24 @@ import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.MediaFilesPresentTask;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drkodi.task.SubdirsPresentTask;
+import drkodi.themoviedb.MovieDbDetails;
 import drkodi.themoviedb.MovieDbSearchTask;
+import drkodi.themoviedb.MovieDbSearcher;
 import drrename.commons.RenamingPath;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.scene.image.Image;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
@@ -58,16 +67,39 @@ public class Movie extends DynamicMovieData {
 
     private Executor executor;
 
+    private final BooleanProperty running;
+
+    private ObservableList<Task<?>> runningTasks;
+
     public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
         super(renamingPath, mapper, folderNameCompareNormalizer, searchResultToMovieMapper);
         this.executor = executor;
         this.movieDbSearcher = movieDbSearcher;
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
+        this.running = new SimpleBooleanProperty();
+        this.runningTasks = FXCollections.observableArrayList();
         init();
     }
 
     private void init() {
+
+        runningTasks.addListener(new ListChangeListener<Task<?>>() {
+            @Override
+            public void onChanged(Change<? extends Task<?>> c) {
+                while(c.next()){
+
+                }
+                log.debug("Running tasks now {}", c.getList().size());
+                if(c.getList().isEmpty()){
+                    running.set(false);
+                } else {
+                    running.set(true);
+                }
+            }
+        });
+
+
         initNfoPathListener();
         initWebSearchListener();
         initImagePathListener();
@@ -181,7 +213,7 @@ public class Movie extends DynamicMovieData {
             setWebSearchResult((WebSearchResults) event.getSource().getValue());
             searchingWeb = false;
         });
-        executor.execute(task);
+        executeTask(task);
     }
 
     private void initIdListener() {
@@ -193,10 +225,10 @@ public class Movie extends DynamicMovieData {
     }
 
     private void idListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        log.debug("Got new TheMovieDB ID {}", newValue);
-        if (getMovieDbId() != null && !isDetailsComplete()) {
-            createAndRunMovieDbDetailsTask(getMovieDbId());
-        }
+//        log.debug("Got new TheMovieDB ID {}", newValue);
+//        if (getMovieDbId() != null && !isDetailsComplete()) {
+//            createAndRunMovieDbDetailsTask(getMovieDbId());
+//        }
     }
 
     private void createAndRunMovieDbDetailsTask(Number newValue) {
@@ -209,13 +241,18 @@ public class Movie extends DynamicMovieData {
 
     //
 
-    public void takeOverMovieDetails(MovieDbDetails movieDbDetails){
+    public void takeOverMovieDetails(MovieDbDetails movieDbDetails) {
         // Only genres are updated here.
         // The rest is already updated from the search result.
 
         Set<MovieDbGenre> genreSet = new LinkedHashSet<>(getGenres());
         genreSet.addAll(movieDbDetails.getGenres());
         getGenres().setAll(genreSet);
+
+        if (StringUtils.isBlank(getTagline()))
+            setTagline(movieDbDetails.getTaline());
+
+        writeNfoDataAndImage();
     }
 
     private void taskFailed(WorkerStateEvent event) {
@@ -228,6 +265,7 @@ public class Movie extends DynamicMovieData {
         task.setOnSucceeded(event -> setNfoPath(QualifiedPath.from((Path) event.getSource().getValue())));
         executeTask(task);
     }
+
 
     void loadNfoData(Path path) {
         var task = new LoadNfoTask2(path);
@@ -249,18 +287,39 @@ public class Movie extends DynamicMovieData {
     }
 
     private void executeNfoFileWriterTask() {
+        if (!Qualified.isOk(getNfoPath())) {
+            log.warn("Cannot write NFO file to path {}", getNfoPath());
+            return;
+        }
         var task = new NfoFileWriterTask(getNfoData().getElement(), getNfoPath().getElement());
         executeTask(task);
     }
 
     private void executeImageWriterTask() {
+        if (!Qualified.isOk(getImagePath())) {
+            log.warn("Cannot write image to path {}", getImagePath());
+            return;
+        }
         var task = new ImageWriterTask(getImageData().getElement(), getImagePath().getElement());
         executeTask(task);
     }
 
+
+
     protected void executeTask(Task<?> task) {
+        log.debug("Adding task {} to queue", task);
+        runningTasks.add(task);
         task.setOnFailed(this::taskFailed);
+        task.stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED || newState == Worker.State.FAILED || newState == Worker.State.CANCELLED) {
+                log.debug("Removing task {} from queue", task);
+                runningTasks.remove(task);
+            }
+        });
+
+        log.debug("Binding running property to task {}", task);
         if (executor == null) {
+            log.debug("No executor set, executing on current thread");
             task.run();
         } else
             executor.execute(task);
@@ -291,6 +350,34 @@ public class Movie extends DynamicMovieData {
         executeTask(task);
     }
 
+    public void clearData() {
+        initEmptyNfoData();
+        executeNfoFileWriterTask();
+        setMovieTitle(null);
+        setMovieDbId(null);
+        setNfoData(null);
+        setImageData(null);
+        getGenres().clear();
+        setImage(null);
+        setMovieYear(null);
+        setImagePath(null);
+        setMovieOriginalTitle(null);
+        setMovieTitleFromWeb(null);
+        setMovieYearFromWeb(null);
+        setPlot(null);
+        getSearchResults().clear();
+        setTagline(null);
+        getWarnings().clear();
+        initMovieTitleAndMovieYear();
+    }
+
+    @Override
+    public void takeOverSearchResultData(SearchResult searchResult) {
+        super.takeOverSearchResultData(searchResult);
+        createAndRunMovieDbDetailsTask(getMovieDbId());
+//        writeNfoDataAndImage();
+    }
+
     private void triggerEmptyFolderCheck() {
         log.debug("Trigger media files check");
         var task = new MediaFilesPresentTask(this);
@@ -315,5 +402,20 @@ public class Movie extends DynamicMovieData {
                 }
         );
         executeTask(task);
+    }
+
+    // FX Getter / Setter //
+
+
+    public boolean isRunning() {
+        return running.get();
+    }
+
+    public BooleanProperty runningProperty() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running.set(running);
     }
 }

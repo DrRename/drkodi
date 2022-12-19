@@ -24,6 +24,7 @@ import drkodi.NfoMovie;
 import drkodi.NfoRoot;
 import drkodi.SearchResultDtoMapperImpl;
 import drkodi.data.*;
+import drkodi.data.dynamic.Movie;
 import drkodi.normalization.*;
 import drrename.commons.RenamingPath;
 import javafx.collections.FXCollections;
