@@ -18,14 +18,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi;
+package drkodi.themoviedb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import drkodi.*;
 import drkodi.config.TheMovieDbConfig;
+import drkodi.data.MovieDetailsDto;
 import drkodi.data.json.SearchResultDto;
 import drkodi.data.json.TranslationDto;
 import drkodi.data.json.WebSearchResults;
-import drkodi.themoviedb.TranslationsDto;
 import drkodi.util.DrRenameUtil;
 import javafx.scene.image.Image;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +46,6 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class MovieDbSearcher {
 
-    private final ObjectMapper objectMapper;
-
     private final MovieDbClient client;
 
     private final MovieDbImagesClient imagesClient;
@@ -61,14 +60,14 @@ public class MovieDbSearcher {
 
     }
 
-    public MovieDbDetails search(Number movieDbId){
+    public MovieDbDetails lookup(Number movieDbId){
         MovieDbDetails result = new MovieDbDetails();
         try {
             ResponseEntity<MovieDetailsDto> details = client.getDetails("ca540140c89af81851d4026286942896", movieDbId, null);
             if(details.getBody() != null) {
-                result.genres = details.getBody().genres.stream().map(e -> new MovieDbGenre(e.id, e.name)).toList();
-                result.taline = details.getBody().taline;
-                result.overview = details.getBody().overview;
+                result.genres = details.getBody().getGenres().stream().map(e -> new MovieDbGenre(e.getId(), e.getName())).toList();
+                result.taline = details.getBody().getTaline();
+                result.overview = details.getBody().getOverview();
                 result.title = details.getBody().getTitle();
                 result.overview = details.getBody().getOverview();
                 result.plot = details.getBody().getPlot();

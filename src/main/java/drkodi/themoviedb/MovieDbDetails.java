@@ -18,8 +18,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi;
+package drkodi.themoviedb;
 
+import drkodi.MovieDbGenre;
 import javafx.scene.image.Image;
 import lombok.*;
 

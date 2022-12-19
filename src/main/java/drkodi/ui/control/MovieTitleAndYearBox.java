@@ -39,6 +39,6 @@ public class MovieTitleAndYearBox extends HBox {
         getStyleClass().add("kodi-movie-title-year");
         setSpacing(4);
         setAlignment(Pos.TOP_LEFT);
-        setPadding(new Insets(8,8,8,0));
+
     }
 }

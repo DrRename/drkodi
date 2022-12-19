@@ -31,6 +31,9 @@ public class SearchResultDto {
     @JsonProperty("original_title")
     String originalTitle;
 
+    @JsonProperty("original_language")
+    String originalLanguage;
+
     @JsonProperty("title")
     String title;
 

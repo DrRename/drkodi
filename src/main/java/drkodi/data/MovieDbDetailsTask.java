@@ -20,8 +20,8 @@
 
 package drkodi.data;
 
-import drkodi.MovieDbDetails;
-import drkodi.MovieDbSearcher;
+import drkodi.themoviedb.MovieDbDetails;
+import drkodi.themoviedb.MovieDbSearcher;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +35,7 @@ public class MovieDbDetailsTask extends Task<MovieDbDetails> {
     @Override
     protected MovieDbDetails call() throws Exception {
 
-        MovieDbDetails details = querier.search(movieId);
+        MovieDbDetails details = querier.lookup(movieId);
 
         return details;
     }

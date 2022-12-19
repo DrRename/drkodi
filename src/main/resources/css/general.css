@@ -42,6 +42,10 @@
     src: url('UbuntuMono-Bold.ttf');
 }
 
+@font-face {
+    src: url('Ubuntu-Light.ttf');
+}
+
 
 
 /*.kodi-tree-cell:warning {*/
@@ -74,10 +78,15 @@
     -fx-border-color: gray;
 }
 
-.kodi-movie-name {
+.kodi-movie-title {
     -fx-font-size: 24px;
     -fx-font-weight: 900;
-    -fx-underline: true;
+    -fx-underline: false;
+}
+
+.kodi-movie-original-title {
+    -fx-font-size: 18px;
+    -fx-font-family: 'Ubuntu Light';
 }
 
 .kodi-movie-year {
@@ -144,6 +153,24 @@
 
 .search-result-box.corner {
     -fx-background-insets: 0;
+}
+
+.progress-bar {
+    -fx-accent: rgba(0, 138, 230, 0.85);
+}
+
+.progress-bar .bar {
+    -fx-padding: 1px;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.progress-bar > .track {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-text-box-border: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-color: rgba(255, 255, 255, 0.1);
 }
 
 

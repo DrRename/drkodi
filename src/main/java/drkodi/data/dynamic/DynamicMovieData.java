@@ -54,6 +54,7 @@ public class DynamicMovieData extends StaticMovieData {
     private void registerDefaultListeners() {
         registerRenamingPathListeners();
         registerMovieTitleListeners();
+        registerMovieOriginalTitleListeners();
         registerMovieYearListeners();
         registerMovieTitleFromFolderListeners();
         registerMovieYearFromFolderListeners();
@@ -73,6 +74,10 @@ public class DynamicMovieData extends StaticMovieData {
 
     private void registerMovieTitleListeners() {
         movieTitleProperty().addListener(this::movieTitleListener);
+    }
+
+    private void registerMovieOriginalTitleListeners() {
+        movieTitleProperty().addListener(this::movieOriginalTitleListener);
     }
 
     private void registerMovieYearListeners() {
@@ -120,23 +125,33 @@ public class DynamicMovieData extends StaticMovieData {
                 SearchResult searchResult = getSearchResultDtoMapper().map(searchResultDto, imageData, image);
                 getSearchResults().add(searchResult);
 
-//                if (StringUtils.isNotBlank(searchResultDto.getOriginalTitle()) && !searchResultDto.getOriginalTitle().equalsIgnoreCase(searchResult.getTitle())) {
-//                    SearchResult originalTitleCopy = getSearchResultDtoMapper().map(searchResultDto, imageData, image);
-//                    originalTitleCopy.setTitle(searchResultDto.getOriginalTitle());
-//                    getSearchResults().add(originalTitleCopy);
-//                }
-
                 if (translationDto != null) {
-                    searchResult = new SearchResult(searchResult);
-                    if(StringUtils.isNotBlank(searchResultDto.getOriginalTitle()))
-                        searchResult.setTitle(searchResultDto.getOriginalTitle());
-                    if(StringUtils.isNotBlank(translationDto.getData().getTitle()))
-                        searchResult.setTitle(translationDto.getData().getTitle());
-                    if(StringUtils.isNotBlank(translationDto.getData().getOverview()))
-                    searchResult.setPlot(translationDto.getData().getOverview());
-                    if(StringUtils.isNotBlank(translationDto.getData().getTagline()))
-                        searchResult.setTagline(translationDto.getData().getTagline());
-                    getSearchResults().add(searchResult);
+                    SearchResult searchResultTranslated = new SearchResult(searchResult);
+
+                    if(StringUtils.isNotBlank(translationDto.getData().getTitle())) {
+                        searchResultTranslated.setTitle(translationDto.getData().getTitle());
+                    }
+//                    if(StringUtils.isNotBlank(translationDto.getData().getTitle())) {
+//                        searchResult.setTitle(translationDto.getData().getTitle());
+//                    }
+                    if(StringUtils.isNotBlank(translationDto.getData().getOverview())) {
+                        searchResultTranslated.setPlot(translationDto.getData().getOverview());
+                    }
+                    if(StringUtils.isNotBlank(translationDto.getData().getTagline())) {
+                        searchResultTranslated.setTagline(translationDto.getData().getTagline());
+                    }
+
+                    if(searchResult.getOriginalLanguage() != null && (searchResult.getOriginalLanguage().equalsIgnoreCase(translationDto.getIso639()) || searchResult.getOriginalLanguage().equalsIgnoreCase(translationDto.getIso639()))){
+                        // switch title and original title
+                        searchResultTranslated.setTitle(searchResult.getOriginalTitle());
+//                        searchResultTranslated.setOriginalTitle(searchResult.getTitle());
+                    }
+
+                    getSearchResults().add(searchResultTranslated);
+//                    SearchResult searchInvertedTitles = new SearchResult(searchResult);
+//                    searchInvertedTitles.setTitle(searchResult.getOriginalTitle());
+//                    searchInvertedTitles.setOriginalTitle(searchResult.getTitle());
+//                    getSearchResults().add(searchInvertedTitles);
                 }
             }
         } else {
@@ -148,7 +163,12 @@ public class DynamicMovieData extends StaticMovieData {
 
     private void movieTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
         log.debug("Movie title has changed from {} to {}", oldValue, newValue);
-        updateTitleWarnings();
+        updateTitleWarnings(newValue);
+    }
+
+    private void movieOriginalTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
+        updateOriginalTitleWarnings(newValue);
     }
 
     private void movieYearListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
@@ -167,8 +187,12 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void movieTitleFromNfoListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if(writingToNfo){
+            log.debug("Skipping movie title from NFO");
+            return;
+        }
         log.debug("Movie title from NFO has changed from {} to {}", oldValue, newValue);
-        if (newValue != null) {
+        if (StringUtils.isNotBlank(newValue)) {
             // NFO name has priority, set it in any case
             setMovieTitle(newValue);
         }
@@ -193,6 +217,10 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void movieYearFromNfoListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+        if(writingToNfo){
+            log.debug("Skipping movie year from NFO");
+            return;
+        }
         log.debug("Movie year from NFO has changed from {} to {}", oldValue, newValue);
         if (newValue != null) {
             // NFO year has priority, set it in any case
@@ -215,10 +243,15 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void nfoDataListener(ObservableValue<? extends QualifiedNfoData> observable, QualifiedNfoData oldValue, QualifiedNfoData newValue){
+        if(newValue == null){
+            log.debug("New NFO data null");
+            return;
+        }
         if (writingToNfo) {
             log.debug("Writing data, will not load data from NFO");
             return;
         }
+        // TODO: use mapper
         log.debug("Setting NFO data to {}", newValue);
         setMovieTitleFromNfo(NfoUtil.getMovieTitle(newValue.getElement()));
         setMovieYearFromNfo(NfoUtil.getMovieYear(newValue.getElement()));
@@ -228,6 +261,7 @@ public class DynamicMovieData extends StaticMovieData {
         Path path = NfoUtil.getImagePath(getRenamingPath().getOldPath(), newValue.getElement());
         setImagePath(QualifiedPath.from(path));
         setMovieDbId(NfoUtil.getId2(newValue.getElement()));
+        setMovieOriginalTitle(NfoUtil.getMovieOriginalTitle(newValue.getElement()));
     }
 
 

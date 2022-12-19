@@ -31,7 +31,7 @@ public class MovieTitleLabel extends Label {
         // bind
         textProperty().bind(element.movieTitleProperty());
         // set style
-        getStyleClass().add("kodi-movie-name");
+        getStyleClass().add("kodi-movie-title");
         setWrapText(true);
     }
 }

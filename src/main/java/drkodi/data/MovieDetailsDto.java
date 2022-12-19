@@ -18,7 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi;
+package drkodi.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

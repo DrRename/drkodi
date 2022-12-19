@@ -21,7 +21,7 @@
 package drkodi.ui.control;
 
 import drkodi.MovieDbGenre;
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -58,6 +58,9 @@ public class GenresBox extends FlowPane {
     }
 
     private void setContent(Movie genres) {
+        if(genres.getGenres() == null){
+            return;
+        }
         getChildren().clear();
         for(MovieDbGenre genre : genres.getGenres()){
             getChildren().add(buildGenreNode(genre));
@@ -81,6 +84,7 @@ public class GenresBox extends FlowPane {
         Button button = new Button("Add");
         button.setOnAction(event -> {
            genres.getGenres().add(new MovieDbGenre(null, input.getText()));
+           genres.writeNfoDataAndImage();
         });
         result.getChildren().add(input);
         result.getChildren().add(button);

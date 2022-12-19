@@ -20,8 +20,9 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.Movie;
+import drkodi.data.dynamic.Movie;
 import drkodi.util.DrRenameUtil;
+import javafx.geometry.Insets;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.FlowPane;
 import org.apache.commons.lang3.SystemUtils;
@@ -41,12 +42,14 @@ public class KodiOpenAndSaveButtonsBox extends FlowPane {
         });
         button.getStyleClass().add("kodi-link");
         getChildren().add(button);
-         button = new Hyperlink("Save to NFO");
-        button.setOnAction(event -> {
-            item.writeNfoDataAndImage();
-        });
-        button.getStyleClass().add("kodi-link");
-        getChildren().add(button);
+//         button = new Hyperlink("Save to NFO");
+//        button.setOnAction(event -> {
+//            item.writeNfoDataAndImage();
+//        });
+//        button.getStyleClass().add("kodi-link");
+//        getChildren().add(button);
+
+        setPadding(new Insets(12,0,0,0));
 
     }
 }
