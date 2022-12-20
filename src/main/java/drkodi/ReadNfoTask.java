@@ -29,7 +29,7 @@ import java.nio.file.Path;
 
 @Slf4j
 @RequiredArgsConstructor
-public class LoadNfoTask2 extends Task<NfoRoot> {
+public class ReadNfoTask extends Task<NfoRoot> {
 
     private final static NfoFileParser parser = new NfoFileParser();
 
@@ -40,5 +40,12 @@ public class LoadNfoTask2 extends Task<NfoRoot> {
         log.debug("Parsing NFO data from {}", nfoPath);
         var data = parser.parse(nfoPath);
         return data;
+    }
+
+    @Override
+    public String toString() {
+        return "ReadNfoTask{" +
+                "nfoPath=" + nfoPath +
+                '}';
     }
 }

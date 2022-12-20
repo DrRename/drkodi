@@ -70,6 +70,7 @@ public class WarningsBox extends VBox {
                 case EMTPY_FOLDER ->
                         getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("No media found", appConfig), appConfig));
                 case SUBDIRS ->  getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("Subdirectory found", appConfig), appConfig));
+                case NFO_NOT_READABLE -> getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("NFO file not readable", appConfig), appConfig));
             }
         }
 

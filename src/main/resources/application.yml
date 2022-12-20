@@ -56,6 +56,7 @@ app:
           - ","
           - "'"
           - ":"
+          - "-"
         replace-with-space:
           - "."
           - "_"
