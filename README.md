@@ -14,6 +14,10 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Latest Release](https://img.shields.io/github/release/drkodi/drkodi.svg)](https://github.com/drrename/drkodi/releases/latest)
 
+[![Dr.Kodi Demo](https://youtu.be/rpxz8hLCNUo/hqdefault.jpg)](https://youtu.be/rpxz8hLCNUo)
+
+
+
 ## Minimalistic Media Library Tool
 
 Dr.Kodi helps you to inspect and partly correct a [Kodi](https://kodi.tv/) media library.
