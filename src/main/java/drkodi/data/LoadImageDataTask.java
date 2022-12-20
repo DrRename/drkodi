@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
 @Slf4j
@@ -39,6 +40,11 @@ public class LoadImageDataTask extends Task<byte[]> {
             throw new IllegalArgumentException(imagePath + " is a directory");
         }
         log.debug("Loading image data from image path: {}", imagePath);
-        return Files.readAllBytes(imagePath);
+        try {
+            return Files.readAllBytes(imagePath);
+        }catch(NoSuchFileException e){
+            log.warn("Image not found: {}", e.toString());
+            return null;
+        }
     }
 }

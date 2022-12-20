@@ -106,7 +106,7 @@ public class Movie extends DynamicMovieData {
         initImageDataListener();
         initIdListener();
         // find and load NFO path
-        executeNfoLoadTask();
+        executeReadNfoTask();
         triggerWebSearch();
         // trigger checks
         triggerEmptyFolderCheck();
@@ -256,10 +256,10 @@ public class Movie extends DynamicMovieData {
     }
 
     private void taskFailed(WorkerStateEvent event) {
-        log.error("Task failed: ", event.getSource().getException());
+        log.error("Task {} failed: ", event.getSource(), event.getSource().getException());
     }
 
-    void executeNfoLoadTask() {
+    void executeReadNfoTask() {
         Path path = getRenamingPath().getOldPath();
         var task = new LoadNfoPathTask(path);
         task.setOnSucceeded(event -> setNfoPath(QualifiedPath.from((Path) event.getSource().getValue())));
@@ -268,9 +268,10 @@ public class Movie extends DynamicMovieData {
 
 
     void loadNfoData(Path path) {
-        var task = new LoadNfoTask2(path);
+        var task = new ReadNfoTask(path);
         task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoRoot) event.getSource().getValue())));
-        executeTask(task);
+        task.setOnFailed(event ->  getWarnings().add(new KodiWarning(KodiWarning.Type.NFO_NOT_READABLE)));
+        executeTask2(task);
     }
 
     void loadImageData(Path imagePath) {
@@ -307,9 +308,13 @@ public class Movie extends DynamicMovieData {
 
 
     protected void executeTask(Task<?> task) {
+        task.setOnFailed(this::taskFailed);
+        executeTask2(task);
+    }
+
+    protected void executeTask2(Task<?> task) {
         log.debug("Adding task {} to queue", task);
         runningTasks.add(task);
-        task.setOnFailed(this::taskFailed);
         task.stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED || newState == Worker.State.FAILED || newState == Worker.State.CANCELLED) {
                 log.debug("Removing task {} from queue", task);
@@ -317,7 +322,6 @@ public class Movie extends DynamicMovieData {
             }
         });
 
-        log.debug("Binding running property to task {}", task);
         if (executor == null) {
             log.debug("No executor set, executing on current thread");
             task.run();

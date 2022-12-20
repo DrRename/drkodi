@@ -179,7 +179,7 @@ public class StaticMovieData {
         // next, create new warnings if necessary
         String normalizedTitle = getFolderNameCompareNormalizer().normalize(newValue);
         String normalizedOriginalTitle = getFolderNameCompareNormalizer().normalize(getMovieOriginalTitle());
-        check(normalizedTitle, normalizedOriginalTitle);
+        check(newValue, normalizedTitle, getMovieOriginalTitle(), normalizedOriginalTitle);
     }
 
     protected void updateOriginalTitleWarnings(String newValue) {
@@ -189,22 +189,22 @@ public class StaticMovieData {
         // next, create new warnings if necessary
         String normalizedTitle = getFolderNameCompareNormalizer().normalize(getMovieTitle());
         String normalizedOriginalTitle = getFolderNameCompareNormalizer().normalize(newValue);
-        check(normalizedTitle, normalizedOriginalTitle);
+        check(getMovieTitle(), normalizedTitle, newValue, normalizedOriginalTitle);
     }
 
-    private void check(String normalizedTitle, String normalizedOriginalTitle) {
+    private void check(String title, String normalizedTitle, String originalTitle, String normalizedOriginalTitle) {
         String folderName = getMovieTitleFromFolder();
         // TODO: make case sensitive equals configurable
-        if (folderName.equalsIgnoreCase(normalizedOriginalTitle) || folderName.equalsIgnoreCase(normalizedTitle)) {
-            if(folderName.equalsIgnoreCase(normalizedTitle)){
+        if (folderName.equalsIgnoreCase(title)
+                || folderName.equalsIgnoreCase(normalizedTitle)
+                || folderName.equalsIgnoreCase(originalTitle)
+                || folderName.equalsIgnoreCase(normalizedOriginalTitle)) {
                 // ok
                 return;
-            }
-            log.debug("Original title mismatch, folder: {}, title: {}", folderName, normalizedOriginalTitle);
-            getWarnings().add(new KodiWarning(KodiWarning.Type.TITLE_MISMATCH));
-        } else {
-            int wait = 0;
         }
+
+        log.debug("Title mismatch, folder: {}, title: {}, original title {}", folderName, normalizedTitle, normalizedOriginalTitle);
+        getWarnings().add(new KodiWarning(KodiWarning.Type.TITLE_MISMATCH));
     }
 
     private boolean movieTitleMismatch(String folderName, String normalizedTitle) {

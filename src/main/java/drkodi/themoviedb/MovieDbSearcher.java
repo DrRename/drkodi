@@ -138,7 +138,7 @@ public class MovieDbSearcher {
                     log.warn("Translations body is null");
                 }
             } catch (Exception e) {
-                log.error("Failed to query for translations", e);
+                log.error("Failed to query for translations: ", e);
             }
         }
 
