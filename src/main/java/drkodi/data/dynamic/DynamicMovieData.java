@@ -77,7 +77,7 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void registerMovieOriginalTitleListeners() {
-        movieTitleProperty().addListener(this::movieOriginalTitleListener);
+        movieOriginalTitleProperty().addListener(this::movieOriginalTitleListener);
     }
 
     private void registerMovieYearListeners() {

@@ -25,7 +25,7 @@ import lombok.Getter;
 public record KodiWarning(drkodi.data.KodiWarning.Type type) {
 
     public enum Type {
-        TITLE_MISMATCH("Title mismatch"), YEAR_MISMATCH("Year mismatch"), EMTPY_FOLDER("Empty folder"), SUBDIRS("Subdirectories present");
+        TITLE_MISMATCH("Title mismatch"), YEAR_MISMATCH("Year mismatch"), EMTPY_FOLDER("Empty folder"), SUBDIRS("Subdirectories present"), NFO_NOT_READABLE("NFO not readable");
         private final String message;
 
         Type(String message) {
