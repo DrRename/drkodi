@@ -17,17 +17,27 @@
 ## Minimalistic Media Library Tool
 
 Dr.Kodi helps you to inspect and partly correct a [Kodi](https://kodi.tv/) media library.
+
 Kodi media player expects the library set up to be as follows (taken from [Kodi Wiki](https://kodi.wiki/view/Naming_video_files/Movies)):
 
-> Each movie is saved in its own folder within the Source.
+> + Each movie is saved in its own folder within the Source.
 All files and folders should be simply named with the name of the movie and the year in brackets. The name should match the name shown at the scraper site.
-> Each movie file is placed into its own folder which is then added to your Source.
+> + Each movie file is placed into its own folder which is then added to your Source.
 > + Placing movies in their own folder allows saving of local artwork and NFO files alongside the movie file.
-> + You have the choice of using the Short or Long name format for the artwork. See: Local Artwork
 > + Using this method will provide the safest and most accurate scrape of your media collection.
 > + Most library related add-ons will only work correctly with this method.
-> + Some skins use modified file naming to display additional Media Flags. These apply to the filename, not the folder name.
 
-Dr.Kodi helps you to quickly detect and correct issues with the media library layout. For this, it perform the following checks:
+Since Dr.Kodi does look up all information by itself or reads it from an existing NFO file, folder naming can be less strict. Dr.Kodi will warn you if the folder name does not match the [normalized](link to string normalizatino) movie title or the [normalized](link to string normalizatino) movie original title.
 
-1. Look up the movie name (i.e., the *folder* name) on [theMovieDB](https://www.themoviedb.org/). If no movie matching the exact folder name could be found on theMovieDB, suggestions are available, those are offered as a quick fix. Localized titles are suggested depending on your [locale setting](link to locale).
+The workflow is as follows:
+
+### Workflow
+
+Initially, Dr.Kodi iterates over all subdirectories of a given path. Every directory found is considered to be a movie. Next, for each movie, the following steps/ checks are performed:
+
+1. Look for an NFO file. If found, update the view using the data found in the NFO file.
+2. If no NFO file is found, the [normalized](link to string normalizatino) folder name is used to query [theMovieDB](https://www.themoviedb.org/). Found results are displayed and the user might choose any of those suggestions to take over the according information. Localized titles are suggested depending on your [locale setting](link to locale).
+
+### Installation and running
+
+For now, Dr.Kodi does not bundle a JRE (see https://github.com/DrRename/drkodi/issues/8). To run Dr.Kodi, make sure you have Java 17 or later installed.
