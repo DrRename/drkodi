@@ -16,6 +16,9 @@
 
 [![Dr.Kodi Demo](https://youtu.be/rpxz8hLCNUo/hqdefault.jpg)](https://youtu.be/rpxz8hLCNUo)
 
+[![Dr.Kodi Demo](https://img.youtube.com/vi/rpxz8hLCNUo/maxresdefault.jpg)](https://youtu.be/rpxz8hLCNUo)
+
+
 
 
 ## Minimalistic Media Library Tool
