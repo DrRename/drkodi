@@ -133,11 +133,11 @@
             <id>jitpack</id>
             <url>https://jitpack.io</url>
         </repository>
-            <repository>
-                <id>github</id>
-                <name>GitHub Packages</name>
-                <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
-            </repository>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
