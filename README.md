@@ -14,9 +14,8 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Latest Release](https://img.shields.io/github/release/drkodi/drkodi.svg)](https://github.com/drrename/drkodi/releases/latest)
 
-[![Dr.Kodi Demo](https://img.youtube.com/vi/rpxz8hLCNUo/maxresdefault.jpg)](https://youtu.be/rpxz8hLCNUo)
 
-<video src="https://youtu.be/rpxz8hLCNUo" </video>
+https://user-images.githubusercontent.com/13817521/208780222-6a594fc5-b926-4bfd-b967-cefcdcc84de7.mov
 
 
 ## Minimalistic Media Library Tool
