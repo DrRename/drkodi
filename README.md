@@ -15,7 +15,7 @@
 [![Latest Release](https://img.shields.io/github/release/drkodi/drkodi.svg)](https://github.com/drrename/drkodi/releases/latest)
 
 
-https://user-images.githubusercontent.com/13817521/208780869-8fe9d872-2d57-4f53-8866-de50a8c3413e.mov
+https://user-images.githubusercontent.com/13817521/208781173-32ac91be-6296-4ffa-b010-be3477d02868.mov
 
 
 ## Minimalistic Media Library Tool
