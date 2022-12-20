@@ -18,7 +18,7 @@
 
 [![Dr.Kodi Demo](https://img.youtube.com/vi/rpxz8hLCNUo/maxresdefault.jpg)](https://youtu.be/rpxz8hLCNUo)
 
-
+<video src='media/drkodi-demo.mov' width=180/>
 
 
 ## Minimalistic Media Library Tool
