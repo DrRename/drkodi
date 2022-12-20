@@ -5,9 +5,10 @@ spring:
 logging:
   level:
     root: info
-    drkodi:
-#      normalization: debug
-      themoviedb: debug
+    drkodi: info
+#    drkodi.normalization: debug
+#    drkodi.themoviedb: debug
+#    drkodi.data.dynamic: debug
     com:
       ulisesbocchio: warn
   pattern:
