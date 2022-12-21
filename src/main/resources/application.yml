@@ -60,6 +60,7 @@ app:
           - "x264"
           - "imperium"
           - "german"
+          - "fun"
         replace-with-space:
       compare:
         delete:
@@ -84,6 +85,7 @@ app:
           - "x264"
           - "imperium"
           - "german"
+          - "fun"
         replace-with-space:
           - "."
           - "_"
