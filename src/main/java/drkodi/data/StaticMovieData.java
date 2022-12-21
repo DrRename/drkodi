@@ -167,7 +167,7 @@ public class StaticMovieData {
             setNfoPath(QualifiedPath.from(path));
 
         } else {
-            log.debug("NFO path invalid, will not update");
+            log.debug("NFO path invalid, will not update ({})", getNfoPath());
         }
 
     }

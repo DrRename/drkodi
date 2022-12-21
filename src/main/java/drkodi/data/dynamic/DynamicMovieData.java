@@ -167,13 +167,13 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void movieOriginalTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
-        updateOriginalTitleWarnings(newValue);
+//        log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
+//        updateOriginalTitleWarnings(newValue);
     }
 
     private void movieYearListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-        log.debug("Movie year has changed from {} to {}", oldValue, newValue);
-        updateYearWarnings();
+//        log.debug("Movie year has changed from {} to {}", oldValue, newValue);
+//        updateYearWarnings();
     }
 
     private void movieTitleFromFolderListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {

@@ -34,7 +34,7 @@ public abstract class ProtoTypeNormalizer {
 
         }
         result = result.replaceAll("\\d{2,}", "");
-        result = result.replaceAll("\\s{2,}", "");
+        result = result.replaceAll("\\s{2,}", " ");
         return result;
     }
 
