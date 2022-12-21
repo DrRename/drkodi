@@ -78,7 +78,7 @@ public class Movie extends DynamicMovieData {
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
         this.running = new SimpleBooleanProperty();
-        this.runningTasks = FXCollections.observableArrayList();
+        this.runningTasks = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
         init();
     }
 
@@ -270,7 +270,11 @@ public class Movie extends DynamicMovieData {
     void loadNfoData(Path path) {
         var task = new ReadNfoTask(path);
         task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoRoot) event.getSource().getValue())));
-        task.setOnFailed(event ->  getWarnings().add(new KodiWarning(KodiWarning.Type.NFO_NOT_READABLE)));
+        task.setOnFailed(event -> {
+            setNfoData(QualifiedNfoData.from(null));
+            getWarnings().add(new KodiWarning(KodiWarning.Type.NFO_NOT_READABLE));
+//            triggerWebSearch();
+        });
         executeTask2(task);
     }
 
