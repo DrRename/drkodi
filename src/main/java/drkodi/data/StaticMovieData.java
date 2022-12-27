@@ -180,7 +180,7 @@ public class StaticMovieData {
         // next, create new warnings if necessary
         String normalizedTitle = getFolderNameCompareNormalizer().normalize(newValue);
         String normalizedOriginalTitle = getFolderNameCompareNormalizer().normalize(getMovieOriginalTitle());
-        check(newValue, normalizedTitle, getMovieOriginalTitle(), normalizedOriginalTitle);
+        checkFolderName(newValue, normalizedTitle, getMovieOriginalTitle(), normalizedOriginalTitle);
     }
 
     protected void updateOriginalTitleWarnings(String newValue) {
@@ -190,18 +190,18 @@ public class StaticMovieData {
         // next, create new warnings if necessary
         String normalizedTitle = getFolderNameCompareNormalizer().normalize(getMovieTitle());
         String normalizedOriginalTitle = getFolderNameCompareNormalizer().normalize(newValue);
-        check(getMovieTitle(), normalizedTitle, newValue, normalizedOriginalTitle);
+        checkFolderName(getMovieTitle(), normalizedTitle, newValue, normalizedOriginalTitle);
     }
 
-    private void check(String title, String normalizedTitle, String originalTitle, String normalizedOriginalTitle) {
+    private void checkFolderName(String title, String normalizedTitle, String originalTitle, String normalizedOriginalTitle) {
         String folderName = getMovieTitleFromFolder();
         // TODO: make case sensitive equals configurable
         if (folderName.equalsIgnoreCase(title)
                 || folderName.equalsIgnoreCase(normalizedTitle)
                 || folderName.equalsIgnoreCase(originalTitle)
                 || folderName.equalsIgnoreCase(normalizedOriginalTitle)) {
-                // ok
-                return;
+            // ok
+            return;
         }
 
         log.debug("Title mismatch, folder: {}, title: {}, original title {}", folderName, normalizedTitle, normalizedOriginalTitle);
@@ -217,9 +217,9 @@ public class StaticMovieData {
         // filter out year warnings
         getWarnings().removeIf(w -> KodiWarning.Type.YEAR_MISMATCH.equals(w.type()));
         // next, create new warnings if necessary
-        Integer folderValue = getMovieYearFromFolder();
-        Integer currentValue = getMovieYear();
-        if (folderValue != null && currentValue != null && !folderValue.equals(currentValue)) {
+        Integer yearFromFolder = getMovieYearFromFolder();
+        Integer movieYear = getMovieYear();
+        if (yearFromFolder != null && movieYear != null && !yearFromFolder.equals(movieYear)) {
             getWarnings().add(new KodiWarning(KodiWarning.Type.YEAR_MISMATCH));
         }
     }
@@ -258,8 +258,6 @@ public class StaticMovieData {
         getNfoData().getElement().getMovie().setTagline(getTagline());
         getNfoData().getElement().setUrl(getUrl());
         getNfoData().getElement().getMovie().getArt().setPoster(getImagePath().getElement().getFileName().toString());
-
-        this.writingToNfo = false;
     }
 
     private String getUrl() {
@@ -282,7 +280,7 @@ public class StaticMovieData {
 //        getNfoData().getMovie().getArt().setPoster(getImagePath().getFileName().toString());
     }
 
-    private void setDefaultNfoPath() {
+    protected void setDefaultNfoPath() {
         Path defaultPath = KodiUtil.getDefaultNfoPath(this);
         log.debug("Setting default NFO path ({})", defaultPath);
         setNfoPath(QualifiedPath.from(defaultPath));

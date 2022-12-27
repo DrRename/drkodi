@@ -115,10 +115,6 @@ public class Movie extends DynamicMovieData {
 
     // Register Listeners //
 
-    private void initNfoPathListener() {
-        nfoPathProperty().addListener(this::nfoPathListener);
-    }
-
     private void initWebSearchListener() {
         // nfo data loaded, so movie title might have changed. run a search
         nfoDataProperty().addListener(this::webSearchListener);
@@ -151,12 +147,7 @@ public class Movie extends DynamicMovieData {
         imagePathProperty().addListener(this::imagePathListener);
     }
 
-    private void nfoPathListener(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
-
-        if (writingToNfo) {
-            log.debug("Writing data, will not load NFO data");
-            return;
-        }
+    protected void nfoPathListener(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
 
         if (Qualified.isOk(newValue)) {
             log.debug("Got NFO path: {}", newValue);
@@ -169,11 +160,14 @@ public class Movie extends DynamicMovieData {
         }
     }
 
+    @Override
+    protected void setDefaultNfoPath() {
+        nfoPathProperty().removeListener(this::nfoPathListener);
+        super.setDefaultNfoPath();
+        nfoPathProperty().addListener(this::nfoPathListener);
+    }
+
     private void imagePathListener(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
-        if (writingToNfo) {
-            log.debug("Writing data, will not load image data");
-            return;
-        }
         if (Qualified.isOk(newValue)) {
             log.debug("Got new image path: {}", newValue);
             loadImageData(newValue.getElement());
