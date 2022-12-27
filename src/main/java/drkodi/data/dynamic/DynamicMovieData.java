@@ -54,13 +54,13 @@ public class DynamicMovieData extends StaticMovieData {
     private void registerDefaultListeners() {
         registerRenamingPathListeners();
         registerMovieTitleListeners();
-        registerMovieOriginalTitleListeners();
+        movieOriginalTitleProperty().addListener(this::movieOriginalTitleListener);
         registerMovieYearListeners();
         registerMovieTitleFromFolderListeners();
         registerMovieYearFromFolderListeners();
-        registerFolderNameListener();
-        registerNfoDataListener();
-        registerWebSearchResultsListener();
+        getRenamingPath().fileNameProperty().addListener(this::folderNameListener);
+        nfoDataProperty().addListener(this::nfoDataListener);
+        webSearchResultProperty().addListener(this::webSearchResultListener);
 
     }
 
@@ -74,10 +74,6 @@ public class DynamicMovieData extends StaticMovieData {
 
     private void registerMovieTitleListeners() {
         movieTitleProperty().addListener(this::movieTitleListener);
-    }
-
-    private void registerMovieOriginalTitleListeners() {
-        movieOriginalTitleProperty().addListener(this::movieOriginalTitleListener);
     }
 
     private void registerMovieYearListeners() {
@@ -96,22 +92,6 @@ public class DynamicMovieData extends StaticMovieData {
         movieYearFromFolderProperty().addListener(this::movieYearFromFolderListener);
         movieYearFromNfoProperty().addListener(this::movieYearFromNfoListener);
         movieYearFromWebProperty().addListener(this::movieYearFromWebListener);
-    }
-
-    private void registerFolderNameListener() {
-        // listen for renaming changes
-        getRenamingPath().fileNameProperty().addListener(this::folderNameListener);
-    }
-
-    private void registerNfoDataListener() {
-
-        // NFO data changed, update all properties
-        nfoDataProperty().addListener(this::nfoDataListener);
-    }
-
-    private void registerWebSearchResultsListener() {
-        // Web data changed, update all properties
-        webSearchResultProperty().addListener(this::webSearchResultListener);
     }
 
     private void webSearchResultListener(ObservableValue<? extends WebSearchResults> observable, WebSearchResults oldValue, WebSearchResults newValue) {
@@ -264,5 +244,11 @@ public class DynamicMovieData extends StaticMovieData {
         setMovieOriginalTitle(NfoUtil.getMovieOriginalTitle(newValue.getElement()));
     }
 
+    @Override
+    protected void initEmptyNfoData() {
+        nfoDataProperty().removeListener(this::nfoDataListener);
+        super.initEmptyNfoData();
+        nfoDataProperty().addListener(this::nfoDataListener);
+    }
 
 }
