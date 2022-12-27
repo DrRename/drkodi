@@ -38,7 +38,7 @@ public class KodiMovieInfoBox extends VBox {
 
         this.progressBar = new ProgressBar();
         this.progressBar.setMaxWidth(Double.MAX_VALUE);
-        this.progressBar.setPrefHeight(10);
+//        this.progressBar.setPrefHeight(10);
         this.progressBar.visibleProperty().bind(kodiMovie.runningProperty());
 
         // content
