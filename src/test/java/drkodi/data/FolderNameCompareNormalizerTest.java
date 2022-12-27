@@ -17,7 +17,7 @@ class FolderNameCompareNormalizerTest {
     @BeforeEach
     void setUp() {
         FolderNameCompareNormalizerConfiguration configuration = new FolderNameCompareNormalizerConfiguration();
-        configuration.setDelete(Arrays.asList(",", "'"));
+        configuration.setDelete(Arrays.asList(",", "'", ":"));
         configuration.setReplaceWithSpace(Arrays.asList("."));
         normalizer = new FolderNameCompareNormalizer(configuration);
     }
@@ -27,7 +27,12 @@ class FolderNameCompareNormalizerTest {
     }
 
     @Test
-    void normalize() {
+    void normalize01() {
         assertEquals("Mr Beans Holiday", normalizer.normalize("Mr. Bean's Holiday"));
+    }
+
+    @Test
+    void normalize02() {
+        assertEquals("300 Rise of an Empire", normalizer.normalize("300: Rise of an Empire"));
     }
 }
