@@ -100,9 +100,9 @@ public class Movie extends DynamicMovieData {
         });
 
 
-        initNfoPathListener();
+        nfoPathProperty().addListener(this::nfoPathListener);
         initWebSearchListener();
-        initImagePathListener();
+        imagePathProperty().addListener(this::imagePathListener);
         initImageDataListener();
         initIdListener();
         // find and load NFO path
@@ -411,6 +411,15 @@ public class Movie extends DynamicMovieData {
         );
         executeTask(task);
     }
+
+    @Override
+    protected void setDefaultImagePath() {
+        imagePathProperty().removeListener(this::imagePathListener);
+        super.setDefaultImagePath();
+        imagePathProperty().addListener(this::imagePathListener);
+    }
+
+
 
     // FX Getter / Setter //
 

@@ -112,6 +112,7 @@ public class StaticMovieData {
 
     private final ListProperty<SearchResult> searchResults;
 
+    @Deprecated
     protected boolean writingToNfo = false;
 
     public StaticMovieData(RenamingPath renamingPath, SearchResultDtoMapper searchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameCompareNormalizer folderNameCompareNormalizer) {
@@ -232,7 +233,6 @@ public class StaticMovieData {
 
 
     public void copyToNfo() {
-        this.writingToNfo = true;
         if (!Qualified.isOk(getNfoData())) {
             initEmptyNfoData();
         }
@@ -268,12 +268,10 @@ public class StaticMovieData {
     }
 
     protected void initEmptyNfoData() {
-        writingToNfo = true;
         NfoRoot data = new NfoRoot();
         data.setMovie(new NfoMovie());
         data.getMovie().setArt(new NfoMovie.Art());
         setNfoData(QualifiedNfoData.from(data));
-        writingToNfo = false;
     }
 
     protected void setDefaultImagePath() {

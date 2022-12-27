@@ -251,4 +251,10 @@ public class DynamicMovieData extends StaticMovieData {
         nfoDataProperty().addListener(this::nfoDataListener);
     }
 
+    @Override
+    public void copyToNfo() {
+        nfoDataProperty().removeListener(this::nfoDataListener);
+        super.copyToNfo();
+        nfoDataProperty().addListener(this::nfoDataListener);
+    }
 }
