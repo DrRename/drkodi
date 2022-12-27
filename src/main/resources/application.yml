@@ -61,6 +61,7 @@ app:
           - "imperium"
           - "german"
           - "fun"
+          - ":"
         replace-with-space:
       compare:
         delete:
@@ -86,6 +87,8 @@ app:
           - "imperium"
           - "german"
           - "fun"
+          - ":"
+          - "ENCOUNTERS"
         replace-with-space:
           - "."
           - "_"
