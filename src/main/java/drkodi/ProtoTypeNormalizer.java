@@ -33,7 +33,7 @@ public abstract class ProtoTypeNormalizer {
                     .replaceAll(Matcher.quoteReplacement(""));
 
         }
-        result = result.replaceAll("\\d{2,}", "");
+        result = result.replaceAll("\\d{4,4}", "");
         result = result.replaceAll("\\s{2,}", " ");
         return result;
     }
