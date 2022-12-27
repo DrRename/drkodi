@@ -97,8 +97,6 @@ public class MovieDbSearcher {
     public WebSearchResults search(String searchString, Integer year) throws IOException {
         reset();
 
-        log.debug("Searching {}", searchString);
-
         WebSearchResults result = new WebSearchResults();
 
         var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);
