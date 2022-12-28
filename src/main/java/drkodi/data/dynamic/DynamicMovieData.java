@@ -23,11 +23,12 @@ package drkodi.data.dynamic;
 
 import drkodi.KodiUtil;
 import drkodi.SearchResultDtoMapper;
-import drkodi.data.*;
+import drkodi.data.MovieData;
+import drkodi.data.SearchResult;
+import drkodi.data.SearchResultToMovieMapper;
 import drkodi.data.json.SearchResultDto;
 import drkodi.data.json.TranslationDto;
 import drkodi.data.json.WebSearchResults;
-import drkodi.nfo.NfoUtil;
 import drkodi.normalization.FolderNameWarningNormalizer;
 import drrename.commons.RenamingPath;
 import javafx.beans.value.ObservableValue;
@@ -36,13 +37,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
-import java.util.Optional;
 
 @Slf4j
 public class DynamicMovieData extends MovieData {
 
+    private NfoDataListener nfoDataListener;
+
     public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
         super(renamingPath, mapper, searchResultToMovieMapper, folderNameWarningNormalizer);
+        this.nfoDataListener = new NfoDataListener(this);
         registerDefaultListeners();
         registerListeners();
     }
@@ -59,7 +62,7 @@ public class DynamicMovieData extends MovieData {
         registerMovieTitleFromFolderListeners();
         registerMovieYearFromFolderListeners();
         getRenamingPath().fileNameProperty().addListener(this::folderNameListener);
-        nfoDataProperty().addListener(this::nfoDataListener);
+        nfoDataProperty().addListener(nfoDataListener);
         webSearchResultProperty().addListener(this::webSearchResultListener);
 
     }
@@ -214,35 +217,19 @@ public class DynamicMovieData extends MovieData {
         movieYearFromFolderProperty().set(KodiUtil.getMovieYearFromDirectoryName(newValue));
     }
 
-    private void nfoDataListener(ObservableValue<? extends QualifiedNfoData> observable, QualifiedNfoData oldValue, QualifiedNfoData newValue){
-        if(newValue == null){
-            log.debug("New NFO data null");
-            return;
-        }
-        // TODO: use mapper
-        log.debug("Setting NFO data to {}", newValue);
-        setMovieTitleFromNfo(NfoUtil.getMovieTitle(newValue.getElement()));
-        setMovieYearFromNfo(NfoUtil.getMovieYear(newValue.getElement()));
-        Optional.ofNullable(NfoUtil.getGenres(newValue.getElement())).ifPresent(g -> getGenres().setAll(g));
-        setPlot(NfoUtil.getPlot(newValue.getElement()));
-        setTagline(NfoUtil.getTagline(newValue.getElement()));
-        Path path = NfoUtil.getImagePath(getRenamingPath().getOldPath(), newValue.getElement());
-        setImagePath(QualifiedPath.from(path));
-        setMovieDbId(NfoUtil.getId2(newValue.getElement()));
-        setMovieOriginalTitle(NfoUtil.getMovieOriginalTitle(newValue.getElement()));
-    }
-
     @Override
     protected void initEmptyNfoData() {
-        nfoDataProperty().removeListener(this::nfoDataListener);
+        // we are writing properties to NFO. the nfoDataListener copies NFO data to the properties.
+        nfoDataProperty().removeListener(nfoDataListener);
         super.initEmptyNfoData();
-        nfoDataProperty().addListener(this::nfoDataListener);
+        nfoDataProperty().addListener(nfoDataListener);
     }
 
     @Override
     public void copyToNfo() {
-        nfoDataProperty().removeListener(this::nfoDataListener);
+        // we are writing properties to NFO. the nfoDataListener copies NFO data to the properties.
+        nfoDataProperty().removeListener(nfoDataListener);
         super.copyToNfo();
-        nfoDataProperty().addListener(this::nfoDataListener);
+        nfoDataProperty().addListener(nfoDataListener);
     }
 }
