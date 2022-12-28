@@ -2,7 +2,7 @@ package drkodi;
 
 import drkodi.config.AppConfig;
 import drkodi.data.SearchResultToMovieMapper;
-import drkodi.normalization.FolderNameCompareNormalizer;
+import drkodi.normalization.FolderNameWarningNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
@@ -37,7 +37,7 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
 
     private WarningsConfig warningsConfig;
 
-    private final FolderNameCompareNormalizer folderNameCompareNormalizer;
+    private final FolderNameWarningNormalizer folderNameWarningNormalizer;
 
     private final MovieTitleWriteNormalizer movieTitleWriteNormalizer;
 
@@ -45,14 +45,14 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
 
     private Observable[] extractor;
 
-    public KodiCollectService(AppConfig appConfig, ResourceBundle resourceBundle, Entries directory, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, KodiUiConfig kodiUiConfig, MovieDbSearcher movieDbSearcher, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, MovieTitleSearchNormalizer normalizer) {
+    public KodiCollectService(AppConfig appConfig, ResourceBundle resourceBundle, Entries directory, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, KodiUiConfig kodiUiConfig, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, MovieTitleSearchNormalizer normalizer) {
         super(appConfig, resourceBundle);
         this.directory = directory;
         this.searchResultToMovieMapper = searchResultToMovieMapper;
         this.mapper = mapper;
         this.kodiUiConfig = kodiUiConfig;
         this.movieDbSearcher = movieDbSearcher;
-        this.folderNameCompareNormalizer = folderNameCompareNormalizer;
+        this.folderNameWarningNormalizer = folderNameWarningNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
         this.normalizer = normalizer;
     }
@@ -60,7 +60,7 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
 
     @Override
     protected Task<List<KodiBox>> createTask() {
-        return new KodiToolsCollectTask(getAppConfig(),getResourceBundle(),directory,getExecutor(),warningsConfig, kodiUiConfig, extractor, searchResultToMovieMapper, mapper, movieDbSearcher, folderNameCompareNormalizer, normalizer, movieTitleWriteNormalizer);
+        return new KodiToolsCollectTask(getAppConfig(),getResourceBundle(),directory,getExecutor(),warningsConfig, kodiUiConfig, extractor, searchResultToMovieMapper, mapper, movieDbSearcher, folderNameWarningNormalizer, normalizer, movieTitleWriteNormalizer);
     }
 
 }

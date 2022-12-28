@@ -28,7 +28,7 @@ import drkodi.data.json.SearchResultDto;
 import drkodi.data.json.TranslationDto;
 import drkodi.data.json.WebSearchResults;
 import drkodi.nfo.NfoUtil;
-import drkodi.normalization.FolderNameCompareNormalizer;
+import drkodi.normalization.FolderNameWarningNormalizer;
 import drrename.commons.RenamingPath;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.Image;
@@ -41,8 +41,8 @@ import java.util.Optional;
 @Slf4j
 public class DynamicMovieData extends StaticMovieData {
 
-    public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameCompareNormalizer folderNameCompareNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
-        super(renamingPath, mapper, searchResultToMovieMapper, folderNameCompareNormalizer);
+    public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
+        super(renamingPath, mapper, searchResultToMovieMapper, folderNameWarningNormalizer);
         registerDefaultListeners();
         registerListeners();
     }
@@ -147,13 +147,13 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void movieOriginalTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//        log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
-//        updateOriginalTitleWarnings(newValue);
+        log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
+        updateOriginalTitleWarnings(newValue);
     }
 
     private void movieYearListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-//        log.debug("Movie year has changed from {} to {}", oldValue, newValue);
-//        updateYearWarnings();
+        log.debug("Movie year has changed from {} to {}", oldValue, newValue);
+        updateYearWarnings();
     }
 
     private void movieTitleFromFolderListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -167,10 +167,6 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void movieTitleFromNfoListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        if(writingToNfo){
-            log.debug("Skipping movie title from NFO");
-            return;
-        }
         log.debug("Movie title from NFO has changed from {} to {}", oldValue, newValue);
         if (StringUtils.isNotBlank(newValue)) {
             // NFO name has priority, set it in any case
@@ -197,10 +193,6 @@ public class DynamicMovieData extends StaticMovieData {
     }
 
     private void movieYearFromNfoListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-        if(writingToNfo){
-            log.debug("Skipping movie year from NFO");
-            return;
-        }
         log.debug("Movie year from NFO has changed from {} to {}", oldValue, newValue);
         if (newValue != null) {
             // NFO year has priority, set it in any case
@@ -225,10 +217,6 @@ public class DynamicMovieData extends StaticMovieData {
     private void nfoDataListener(ObservableValue<? extends QualifiedNfoData> observable, QualifiedNfoData oldValue, QualifiedNfoData newValue){
         if(newValue == null){
             log.debug("New NFO data null");
-            return;
-        }
-        if (writingToNfo) {
-            log.debug("Writing data, will not load data from NFO");
             return;
         }
         // TODO: use mapper

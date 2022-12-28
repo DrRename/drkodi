@@ -24,7 +24,7 @@ package drkodi.data.dynamic;
 import drkodi.*;
 import drkodi.data.*;
 import drkodi.data.json.WebSearchResults;
-import drkodi.normalization.FolderNameCompareNormalizer;
+import drkodi.normalization.FolderNameWarningNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.MediaFilesPresentTask;
@@ -71,8 +71,8 @@ public class Movie extends DynamicMovieData {
 
     private ObservableList<Task<?>> runningTasks;
 
-    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
-        super(renamingPath, mapper, folderNameCompareNormalizer, searchResultToMovieMapper);
+    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
+        super(renamingPath, mapper, folderNameWarningNormalizer, searchResultToMovieMapper);
         this.executor = executor;
         this.movieDbSearcher = movieDbSearcher;
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
