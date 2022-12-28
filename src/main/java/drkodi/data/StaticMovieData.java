@@ -23,7 +23,7 @@ package drkodi.data;
 
 import drkodi.*;
 import drkodi.data.json.WebSearchResults;
-import drkodi.normalization.FolderNameCompareNormalizer;
+import drkodi.normalization.FolderNameWarningNormalizer;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -41,7 +41,7 @@ public class StaticMovieData {
 
     private final SearchResultToMovieMapper searchResultToMovieMapper;
 
-    private final FolderNameCompareNormalizer folderNameCompareNormalizer;
+    private final FolderNameWarningNormalizer folderNameWarningNormalizer;
 
     // Underlying path
 
@@ -115,11 +115,11 @@ public class StaticMovieData {
     @Deprecated
     protected boolean writingToNfo = false;
 
-    public StaticMovieData(RenamingPath renamingPath, SearchResultDtoMapper searchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameCompareNormalizer folderNameCompareNormalizer) {
+    public StaticMovieData(RenamingPath renamingPath, SearchResultDtoMapper searchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameWarningNormalizer folderNameWarningNormalizer) {
         this.renamingPath = renamingPath;
         this.searchResultDtoMapper = searchResultDtoMapper;
         this.searchResultToMovieMapper = searchResultToMovieMapper;
-        this.folderNameCompareNormalizer = folderNameCompareNormalizer;
+        this.folderNameWarningNormalizer = folderNameWarningNormalizer;
         this.movieTitleFromFolder = new SimpleStringProperty();
         this.movieTitleFromNfo = new SimpleStringProperty();
         this.nfoPath = new SimpleObjectProperty<>();
@@ -305,7 +305,8 @@ public class StaticMovieData {
                 "renamingPath=" + renamingPath +
                 '}';
     }
-// Getter / Setter //
+
+    // Getter / Setter //
 
     public RenamingPath getRenamingPath() {
         return renamingPath;
@@ -315,8 +316,8 @@ public class StaticMovieData {
         return searchResultDtoMapper;
     }
 
-    public FolderNameCompareNormalizer getFolderNameCompareNormalizer() {
-        return folderNameCompareNormalizer;
+    public FolderNameWarningNormalizer getFolderNameCompareNormalizer() {
+        return folderNameWarningNormalizer;
     }
 
     // FX Getter / Setter //
