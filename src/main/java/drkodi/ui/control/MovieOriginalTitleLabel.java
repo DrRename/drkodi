@@ -20,7 +20,7 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -29,7 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MovieOriginalTitleLabel extends Label {
 
-    public MovieOriginalTitleLabel(StaticMovieData element){
+    public MovieOriginalTitleLabel(MovieData element){
 
         // bind
         textProperty().bind(Bindings.createStringBinding(() ->getString(element.getMovieOriginalTitle()), element.movieOriginalTitleProperty()));

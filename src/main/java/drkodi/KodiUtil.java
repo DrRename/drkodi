@@ -22,7 +22,7 @@ package drkodi;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 
@@ -91,16 +91,16 @@ public class KodiUtil {
         return false;
     }
 
-    public static Path getDefaultNfoPath(StaticMovieData staticMovieData){
-        return getDefaultNfoPath(staticMovieData.getRenamingPath().getOldPath());
+    public static Path getDefaultNfoPath(MovieData movieData){
+        return getDefaultNfoPath(movieData.getRenamingPath().getOldPath());
     }
 
     public static Path getDefaultNfoPath(Path movieDirectory){
         return Paths.get(movieDirectory.toString(), "movie.nfo");
     }
 
-    public static Path getDefaultImagePath(StaticMovieData staticMovieData){
-        return getDefaultImagePath(staticMovieData.getRenamingPath().getOldPath());
+    public static Path getDefaultImagePath(MovieData movieData){
+        return getDefaultImagePath(movieData.getRenamingPath().getOldPath());
     }
 
     public static Path getDefaultImagePath(Path moviePath){

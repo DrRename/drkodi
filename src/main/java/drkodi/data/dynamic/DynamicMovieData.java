@@ -39,7 +39,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 @Slf4j
-public class DynamicMovieData extends StaticMovieData {
+public class DynamicMovieData extends MovieData {
 
     public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
         super(renamingPath, mapper, searchResultToMovieMapper, folderNameWarningNormalizer);

@@ -35,7 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.nio.file.Path;
 
 @Slf4j
-public class StaticMovieData {
+public class MovieData {
 
     private final SearchResultDtoMapper searchResultDtoMapper;
 
@@ -112,7 +112,7 @@ public class StaticMovieData {
 
     private final ListProperty<SearchResult> searchResults;
 
-    public StaticMovieData(RenamingPath renamingPath, SearchResultDtoMapper searchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameWarningNormalizer folderNameWarningNormalizer) {
+    public MovieData(RenamingPath renamingPath, SearchResultDtoMapper searchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameWarningNormalizer folderNameWarningNormalizer) {
         this.renamingPath = renamingPath;
         this.searchResultDtoMapper = searchResultDtoMapper;
         this.searchResultToMovieMapper = searchResultToMovieMapper;

@@ -20,12 +20,12 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import javafx.scene.control.Label;
 
 public class MovieTitleLabel extends Label {
 
-    public MovieTitleLabel(StaticMovieData element){
+    public MovieTitleLabel(MovieData element){
         // initially set
         setText(element.getMovieTitle());
         // bind

@@ -22,7 +22,7 @@ package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
 import drkodi.data.SearchResult;
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import drkodi.ui.UiUtil;
 import drkodi.ui.config.KodiUiConfig;
 import javafx.collections.ListChangeListener;
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SearchResultsBox extends HBox {
 
-    public SearchResultsBox(StaticMovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig){
+    public SearchResultsBox(MovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig){
 
 
 
@@ -66,7 +66,7 @@ public class SearchResultsBox extends HBox {
 
     }
 
-    private void setSearchResults(StaticMovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
+    private void setSearchResults(MovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
         getChildren().clear();
         if(item.getSearchResults() == null){
             return;
