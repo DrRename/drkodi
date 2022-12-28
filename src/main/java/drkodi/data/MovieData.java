@@ -206,7 +206,7 @@ public class MovieData {
 
     }
 
-    public void copyToNfo() {
+    protected void copyToNfo() {
         new ToNfoCopier(this).apply();
     }
 
