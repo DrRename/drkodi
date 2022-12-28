@@ -152,7 +152,6 @@ public class MovieData {
 
     public void applyNewFolderName(String folderName) {
         new FolderNameApplier(this, folderName).apply();
-
     }
 
     protected void updateTitleWarnings(String newValue) {
@@ -177,7 +176,6 @@ public class MovieData {
 
     private void checkFolderName(String title, String normalizedTitle, String originalTitle, String normalizedOriginalTitle) {
         String folderName = getMovieTitleFromFolder();
-        // TODO: make case sensitive equals configurable
         if (folderName.equalsIgnoreCase(title)
                 || folderName.equalsIgnoreCase(normalizedTitle)
                 || folderName.equalsIgnoreCase(originalTitle)
@@ -188,10 +186,6 @@ public class MovieData {
 
         log.debug("Title mismatch, folder: {}, title: {}, original title {}", folderName, normalizedTitle, normalizedOriginalTitle);
         getWarnings().add(new KodiWarning(KodiWarning.Type.TITLE_MISMATCH));
-    }
-
-    private boolean movieTitleMismatch(String folderName, String normalizedTitle) {
-        return !folderName.equalsIgnoreCase(normalizedTitle) && !folderName.equalsIgnoreCase(getMovieTitle());
     }
 
     protected void updateYearWarnings() {
@@ -206,13 +200,11 @@ public class MovieData {
         }
     }
 
-
     public void takeOverSearchResultData(SearchResult searchResult) {
         log.debug("Taking over data for {} from {}", getMovieTitle(), searchResult);
         searchResultToMovieMapper.map(this, searchResult);
 
     }
-
 
     public void copyToNfo() {
         new ToNfoCopier(this).apply();
