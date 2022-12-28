@@ -1,6 +1,6 @@
 package drkodi.data;
 
-import drkodi.normalization.FolderNameCompareNormalizer;
+import drkodi.normalization.FolderNameWarningNormalizer;
 import drkodi.normalization.FolderNameCompareNormalizerConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,16 +10,16 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FolderNameCompareNormalizerTest {
+class FolderNameWarningNormalizerTest {
 
-    private FolderNameCompareNormalizer normalizer;
+    private FolderNameWarningNormalizer normalizer;
 
     @BeforeEach
     void setUp() {
         FolderNameCompareNormalizerConfiguration configuration = new FolderNameCompareNormalizerConfiguration();
         configuration.setDelete(Arrays.asList(",", "'", ":"));
         configuration.setReplaceWithSpace(Arrays.asList("."));
-        normalizer = new FolderNameCompareNormalizer(configuration);
+        normalizer = new FolderNameWarningNormalizer(configuration);
     }
 
     @AfterEach

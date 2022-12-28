@@ -3,7 +3,7 @@ package drkodi;
 import drkodi.config.AppConfig;
 import drkodi.data.dynamic.Movie;
 import drkodi.data.SearchResultToMovieMapper;
-import drkodi.normalization.FolderNameCompareNormalizer;
+import drkodi.normalization.FolderNameWarningNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
@@ -45,9 +45,9 @@ class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
 
     private final MovieTitleWriteNormalizer movieTitleWriteNormalizer;
 
-    private final FolderNameCompareNormalizer folderNameCompareNormalizer;
+    private final FolderNameWarningNormalizer folderNameWarningNormalizer;
 
-    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, Executor executor, WarningsConfig warningsConfig, KodiUiConfig kodiUiConfig, Observable[] extractor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, FolderNameCompareNormalizer folderNameCompareNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
+    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, Executor executor, WarningsConfig warningsConfig, KodiUiConfig kodiUiConfig, Observable[] extractor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
         super(config, resourceBundle);
         this.entries = entries;
         this.executor = executor;
@@ -57,7 +57,7 @@ class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
         this.searchResultToMovieMapper = searchResultToMovieMapper;
         this.mapper = mapper;
         this.movieDbSearcher = movieDbSearcher;
-        this.folderNameCompareNormalizer = folderNameCompareNormalizer;
+        this.folderNameWarningNormalizer = folderNameWarningNormalizer;
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
     }
@@ -104,6 +104,6 @@ class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
      }
 
     private Movie buildDataType(RenamingPath renamingPath) {
-        return new Movie(renamingPath, mapper, executor, movieDbSearcher, folderNameCompareNormalizer, movieTitleSearchNormalizer, searchResultToMovieMapper, movieTitleWriteNormalizer);
+        return new Movie(renamingPath, mapper, executor, movieDbSearcher, folderNameWarningNormalizer, movieTitleSearchNormalizer, searchResultToMovieMapper, movieTitleWriteNormalizer);
     }
 }

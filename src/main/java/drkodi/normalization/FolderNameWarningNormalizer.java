@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class FolderNameCompareNormalizer extends ProtoTypeNormalizer {
+public class FolderNameWarningNormalizer extends ProtoTypeNormalizer {
 
     private final FolderNameCompareNormalizerConfiguration configuration;
 
