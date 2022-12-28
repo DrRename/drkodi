@@ -20,14 +20,14 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import javafx.scene.control.Label;
 
 import static drkodi.ui.KodiUiElementBuilder.buildMovieYearString;
 
 public class MovieYearLabel extends Label {
 
-    public MovieYearLabel(StaticMovieData element){
+    public MovieYearLabel(MovieData element){
         // initially set
         setText(buildMovieYearString(element));
         // bind

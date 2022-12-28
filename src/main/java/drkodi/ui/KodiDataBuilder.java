@@ -38,8 +38,8 @@ public class KodiDataBuilder {
 
     static Executor executor = Executors.newSingleThreadExecutor();
 
-    static StaticMovieData build(String title, Integer year){
-        StaticMovieData result = new Movie(new RenamingPath(Path.of("hans/dampf")), new SearchResultDtoMapperImpl(), executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new MovieTitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), new SearchResultToMovieMapperImpl(new ImageDataMapper()), new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration()));
+    static MovieData build(String title, Integer year){
+        MovieData result = new Movie(new RenamingPath(Path.of("hans/dampf")), new SearchResultDtoMapperImpl(), executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new MovieTitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), new SearchResultToMovieMapperImpl(new ImageDataMapper()), new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration()));
         result.setMovieTitle(title);
         result.setMovieYear(year);
         result.setNfoData(QualifiedNfoData.from(buildNfoData()));

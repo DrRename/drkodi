@@ -21,7 +21,7 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import drkodi.ui.KodiUiElementBuilder;
 import drkodi.ui.UiUtil;
 import javafx.geometry.Pos;
@@ -30,7 +30,7 @@ import javafx.scene.layout.HBox;
 
 public class KodiEmptyFolderWarningBox extends HBox {
 
-    public KodiEmptyFolderWarningBox(StaticMovieData staticMovieData, AppConfig appConfig){
+    public KodiEmptyFolderWarningBox(MovieData movieData, AppConfig appConfig){
 
         Label label1 = new KodiWarningKeyLabel("No media found");
 

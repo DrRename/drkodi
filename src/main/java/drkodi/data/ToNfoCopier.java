@@ -3,14 +3,13 @@ package drkodi.data;
 import drkodi.MovieDbGenre;
 import drkodi.NfoMovie;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
 public class ToNfoCopier {
 
-    private final StaticMovieData movie;
+    private final MovieData movie;
 
     public void apply(){
         if (!Qualified.isOk(movie.getNfoData())) {

@@ -22,7 +22,7 @@ package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
 import drkodi.data.SearchResult;
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import drkodi.ui.KodiUiElementBuilder;
 import drkodi.ui.UiUtil;
 import drkodi.ui.config.KodiUiConfig;
@@ -36,7 +36,7 @@ import javafx.scene.layout.VBox;
 public class SearchResultBox extends VBox {
 
 
-    public SearchResultBox(StaticMovieData kodieMovie, SearchResult searchResult, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
+    public SearchResultBox(MovieData kodieMovie, SearchResult searchResult, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
 
 
 //        setMaxWidth(searchResult.getImage().getWidth());
@@ -78,7 +78,7 @@ public class SearchResultBox extends VBox {
         }
     }
 
-    private void addTakeOverButton(StaticMovieData kodieMovie, AppConfig appConfig, SearchResult searchResult) {
+    private void addTakeOverButton(MovieData kodieMovie, AppConfig appConfig, SearchResult searchResult) {
         Hyperlink button = new Hyperlink("Take over data");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override

@@ -10,7 +10,7 @@ import java.nio.file.Path;
 @Slf4j
 public class FolderNameApplier {
 
-    private final StaticMovieData movie;
+    private final MovieData movie;
 
     private final String folderName;
 

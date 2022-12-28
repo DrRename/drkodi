@@ -9,7 +9,7 @@ public interface SearchResultToMovieMapper {
     @Mapping(target = "movie.movieTitleFromWeb", source = "searchResult.title")
     @Mapping(target = "movie.movieYearFromWeb", source = "searchResult.releaseDate")
     @Mapping(target = "movie.movieOriginalTitle", source = "searchResult.originalTitle")
-    void map(@MappingTarget StaticMovieData movie, SearchResult searchResult);
+    void map(@MappingTarget MovieData movie, SearchResult searchResult);
 
 
 }
