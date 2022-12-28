@@ -21,8 +21,8 @@
 package drkodi.ui;
 
 import drkodi.config.AppConfig;
+import drkodi.data.MovieData;
 import drkodi.data.dynamic.Movie;
-import drkodi.data.StaticMovieData;
 import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.ImageBox;
 import drkodi.ui.control.KodiMovieInfoBox;
@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class KodiUiElementBuilder {
 
-    public static String buildMovieYearString(StaticMovieData item) {
+    public static String buildMovieYearString(MovieData item) {
         return buildMovieYearString(item.getMovieYear());
     }
 
@@ -47,7 +47,7 @@ public class KodiUiElementBuilder {
         return "(" + year + ")";
     }
 
-    public static String buildTitleAndYearString(StaticMovieData item) {
+    public static String buildTitleAndYearString(MovieData item) {
         return buildTitleAndYearString(item.getMovieTitle(), item.getMovieYear());
     }
 

@@ -21,15 +21,14 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import drkodi.ui.UiUtil;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 
 public class MovieTitleAndYearBox extends HBox {
 
-    public MovieTitleAndYearBox(StaticMovieData element, AppConfig appConfig) {
+    public MovieTitleAndYearBox(MovieData element, AppConfig appConfig) {
 
         // content
         getChildren().add(UiUtil.applyDebug(new MovieTitleLabel(element), appConfig));

@@ -21,7 +21,7 @@
 package drkodi.ui;
 
 import drkodi.config.AppConfig;
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.SearchResultsBox;
 import javafx.scene.control.Label;
@@ -29,11 +29,11 @@ import javafx.scene.layout.VBox;
 
 public class SearchResultsAndTitleBox extends VBox {
 
-    public SearchResultsAndTitleBox(StaticMovieData staticMovieData, AppConfig appConfig, KodiUiConfig kodiUiConfig){
+    public SearchResultsAndTitleBox(MovieData movieData, AppConfig appConfig, KodiUiConfig kodiUiConfig){
 
         // content
 
-        var srb = new SearchResultsBox(staticMovieData, appConfig, kodiUiConfig);
+        var srb = new SearchResultsBox(movieData, appConfig, kodiUiConfig);
         getChildren().add(UiUtil.applyDebug(new Label("MovieDB search results"), appConfig));
         getChildren().add(UiUtil.applyDebug(srb, appConfig));
 

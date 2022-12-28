@@ -20,7 +20,7 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.StaticMovieData;
+import drkodi.data.MovieData;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -37,7 +37,7 @@ public class ImageBox extends VBox {
         init(image, imageHeight);
     }
 
-    public ImageBox(StaticMovieData kodieMovie, int imageHeight) {
+    public ImageBox(MovieData kodieMovie, int imageHeight) {
 
         init(kodieMovie.getImage(), imageHeight);
 
@@ -51,7 +51,7 @@ public class ImageBox extends VBox {
         setNewImage(image, imageHeight);
     }
 
-    private void initListener(StaticMovieData kodieMovie, int imageHeight) {
+    private void initListener(MovieData kodieMovie, int imageHeight) {
         // register change listener
         kodieMovie.imageProperty().addListener(new ChangeListener<Image>() {
             @Override
