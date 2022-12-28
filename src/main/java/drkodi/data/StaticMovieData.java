@@ -112,9 +112,6 @@ public class StaticMovieData {
 
     private final ListProperty<SearchResult> searchResults;
 
-    @Deprecated
-    protected boolean writingToNfo = false;
-
     public StaticMovieData(RenamingPath renamingPath, SearchResultDtoMapper searchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameWarningNormalizer folderNameWarningNormalizer) {
         this.renamingPath = renamingPath;
         this.searchResultDtoMapper = searchResultDtoMapper;
@@ -154,22 +151,7 @@ public class StaticMovieData {
     }
 
     public void applyNewFolderName(String folderName) {
-        log.debug("Setting properties from new folder name {}", folderName);
-        setMovieTitleFromFolder(KodiUtil.getMovieNameFromDirectoryName(folderName));
-        setMovieYearFromFolder(KodiUtil.getMovieYearFromDirectoryName(folderName));
-        setMovieTitle(getMovieTitleFromFolder());
-        setMovieYear(getMovieYearFromFolder());
-        updateTitleWarnings(getMovieTitleFromFolder());
-        updateYearWarnings();
-        if (Qualified.isOk(getNfoPath())) {
-            String currentNfoFileName = getNfoPath().getElement().getFileName().toString();
-            Path path = Path.of(getRenamingPath().getOldPath().toString(), currentNfoFileName);
-            log.debug("Updating NFO path to {}", path);
-            setNfoPath(QualifiedPath.from(path));
-
-        } else {
-            log.debug("NFO path invalid, will not update ({})", getNfoPath());
-        }
+        new FolderNameApplier(this, folderName).apply();
 
     }
 
@@ -233,34 +215,10 @@ public class StaticMovieData {
 
 
     public void copyToNfo() {
-        if (!Qualified.isOk(getNfoData())) {
-            initEmptyNfoData();
-        }
-        if (!Qualified.isOk(getImagePath())) {
-            setDefaultImagePath();
-        }
-        if (!Qualified.isOk(getNfoPath())) {
-            setDefaultNfoPath();
-        }
-        if (getNfoData().getElement().getMovie() == null) {
-            getNfoData().getElement().setMovie(new NfoMovie());
-        }
-        if (getNfoData().getElement().getMovie().getArt() == null) {
-            getNfoData().getElement().getMovie().setArt(new NfoMovie.Art());
-        }
-        getNfoData().getElement().getMovie().setUniqueid(new NfoMovie.UniqueId(getMovieDbId(), "tmdb"));
-        getNfoData().getElement().getMovie().setTitle(getMovieTitle());
-        getNfoData().getElement().getMovie().setOriginaltitle(getMovieOriginalTitle());
-        if(getMovieYear() != null)
-            getNfoData().getElement().getMovie().setYear(getMovieYear().toString());
-        getNfoData().getElement().getMovie().setPlot(getPlot());
-        getNfoData().getElement().getMovie().setGenre(getGenres().stream().map(MovieDbGenre::getName).toList());
-        getNfoData().getElement().getMovie().setTagline(getTagline());
-        getNfoData().getElement().setUrl(getUrl());
-        getNfoData().getElement().getMovie().getArt().setPoster(getImagePath().getElement().getFileName().toString());
+        new ToNfoCopier(this).apply();
     }
 
-    private String getUrl() {
+    String getUrl() {
         // for now, URL is always TheMovieDB
         return "https://www.themoviedb.org/movie/" + getMovieDbId();
     }
@@ -274,10 +232,8 @@ public class StaticMovieData {
 
     protected void setDefaultImagePath() {
         Path defaultImagePath = KodiUtil.getDefaultImagePath(this);
-        log.debug("Setting default image path ({})", defaultImagePath);
-        // TODO: set only image path? Update only NFO? Listeners?
+        log.debug("Setting default image path {}", defaultImagePath);
         setImagePath(new QualifiedPath(defaultImagePath, QualifiedPath.Type.OK));
-//        getNfoData().getMovie().getArt().setPoster(getImagePath().getFileName().toString());
     }
 
     protected void setDefaultNfoPath() {
@@ -359,14 +315,17 @@ public class StaticMovieData {
         this.nfoData.set(nfoData);
     }
 
+    @Deprecated
     public WebSearchResults getWebSearchResult() {
         return webSearchResult.get();
     }
 
+    @Deprecated
     public ObjectProperty<WebSearchResults> webSearchResultProperty() {
         return webSearchResult;
     }
 
+    @Deprecated
     public void setWebSearchResult(WebSearchResults webSearchResult) {
         this.webSearchResult.set(webSearchResult);
     }
