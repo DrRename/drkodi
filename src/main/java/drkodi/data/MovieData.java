@@ -210,11 +210,6 @@ public class MovieData {
         new ToNfoCopier(this).apply();
     }
 
-    String getUrl() {
-        // for now, URL is always TheMovieDB
-        return "https://www.themoviedb.org/movie/" + getMovieDbId();
-    }
-
     protected void initEmptyNfoData() {
         NfoRoot data = new NfoRoot();
         data.setMovie(new NfoMovie());

@@ -35,7 +35,12 @@ public class ToNfoCopier {
         movie.getNfoData().getElement().getMovie().setPlot(movie.getPlot());
         movie.getNfoData().getElement().getMovie().setGenre(movie.getGenres().stream().map(MovieDbGenre::getName).toList());
         movie.getNfoData().getElement().getMovie().setTagline(movie.getTagline());
-        movie.getNfoData().getElement().setUrl(movie.getUrl());
+        movie.getNfoData().getElement().setUrl(getUrl(movie));
         movie.getNfoData().getElement().getMovie().getArt().setPoster(movie.getImagePath().getElement().getFileName().toString());
+    }
+
+    String getUrl(MovieData movie) {
+        // for now, URL is always TheMovieDB
+        return "https://www.themoviedb.org/movie/" + movie.getMovieDbId();
     }
 }
