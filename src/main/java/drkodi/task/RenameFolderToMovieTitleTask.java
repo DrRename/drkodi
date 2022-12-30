@@ -1,7 +1,7 @@
 package drkodi.task;
 
 import drkodi.KodiUtil;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.util.DrRenameUtil;
 import javafx.concurrent.Task;

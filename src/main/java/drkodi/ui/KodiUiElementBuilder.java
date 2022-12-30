@@ -21,8 +21,8 @@
 package drkodi.ui;
 
 import drkodi.config.AppConfig;
-import drkodi.data.MovieData;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.MovieData;
+import drkodi.data.movie.Movie;
 import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.ImageBox;
 import drkodi.ui.control.KodiMovieInfoBox;

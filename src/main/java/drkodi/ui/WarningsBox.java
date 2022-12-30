@@ -22,7 +22,7 @@ package drkodi.ui;
 
 import drkodi.config.AppConfig;
 import drkodi.data.KodiWarning;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.ui.control.GenericWarningsBox;
 import drkodi.ui.control.KodiTitleWarningBox;
 import drkodi.ui.control.KodiYearWarningBox;

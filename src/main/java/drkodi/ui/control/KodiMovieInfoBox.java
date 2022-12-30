@@ -21,7 +21,7 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.ui.WarningsBox;
 import drkodi.ui.UiUtil;
 import javafx.geometry.Insets;

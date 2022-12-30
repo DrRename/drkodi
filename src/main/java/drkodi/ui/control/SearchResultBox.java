@@ -22,7 +22,7 @@ package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
 import drkodi.data.SearchResult;
-import drkodi.data.MovieData;
+import drkodi.data.movie.MovieData;
 import drkodi.ui.KodiUiElementBuilder;
 import drkodi.ui.UiUtil;
 import drkodi.ui.config.KodiUiConfig;

@@ -23,7 +23,7 @@ package drkodi.nfo;
 import drkodi.MovieDbGenre;
 import drkodi.NfoMovie;
 import drkodi.NfoRoot;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.data.Qualified;
 import org.apache.commons.lang3.StringUtils;
 

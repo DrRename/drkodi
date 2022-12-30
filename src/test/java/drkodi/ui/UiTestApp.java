@@ -25,7 +25,7 @@ import drkodi.SearchResultDtoMapper;
 import drkodi.SearchResultDtoMapperImpl;
 import drkodi.config.AppConfig;
 import drkodi.data.*;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.normalization.*;
 import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.KodiBox;

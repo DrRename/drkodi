@@ -18,34 +18,32 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.data.dynamic;
+package drkodi.data.movie;
 
 
 import drkodi.KodiUtil;
 import drkodi.SearchResultDtoMapper;
-import drkodi.data.MovieData;
-import drkodi.data.SearchResult;
 import drkodi.data.SearchResultToMovieMapper;
-import drkodi.data.json.SearchResultDto;
-import drkodi.data.json.TranslationDto;
-import drkodi.data.json.WebSearchResults;
 import drkodi.normalization.FolderNameWarningNormalizer;
 import drrename.commons.RenamingPath;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
-import java.nio.file.Path;
 
 @Slf4j
 public class DynamicMovieData extends MovieData {
 
-    private NfoDataListener nfoDataListener;
+    private final NfoDataListener nfoDataListener;
+
+    private final MoviePathChangeListener moviePathChangeListener;
+
+    private final MovieTitleListener movieTitleListener;
 
     public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
         super(renamingPath, mapper, searchResultToMovieMapper, folderNameWarningNormalizer);
         this.nfoDataListener = new NfoDataListener(this);
+        this.moviePathChangeListener = new MoviePathChangeListener(this);
+        this.movieTitleListener = new MovieTitleListener(this);
         registerDefaultListeners();
         registerListeners();
     }
@@ -55,8 +53,8 @@ public class DynamicMovieData extends MovieData {
     }
 
     private void registerDefaultListeners() {
-        registerRenamingPathListeners();
-        registerMovieTitleListeners();
+        getRenamingPath().oldPathProperty().addListener(moviePathChangeListener);
+        movieTitleProperty().addListener(movieTitleListener);
         movieOriginalTitleProperty().addListener(this::movieOriginalTitleListener);
         registerMovieYearListeners();
         registerMovieTitleFromFolderListeners();
@@ -66,17 +64,7 @@ public class DynamicMovieData extends MovieData {
 
     }
 
-    private void registerRenamingPathListeners() {
-        getRenamingPath().oldPathProperty().addListener(this::oldPathListener);
-    }
 
-    private void oldPathListener(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
-        applyNewFolderName(newValue.getFileName().toString());
-    }
-
-    private void registerMovieTitleListeners() {
-        movieTitleProperty().addListener(this::movieTitleListener);
-    }
 
     private void registerMovieYearListeners() {
         movieYearProperty().addListener(this::movieYearListener);
@@ -94,12 +82,6 @@ public class DynamicMovieData extends MovieData {
         movieYearFromFolderProperty().addListener(this::movieYearFromFolderListener);
         movieYearFromNfoProperty().addListener(this::movieYearFromNfoListener);
         movieYearFromWebProperty().addListener(this::movieYearFromWebListener);
-    }
-
-
-    private void movieTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        log.debug("Movie title has changed from {} to {}", oldValue, newValue);
-        updateTitleWarnings(newValue);
     }
 
     private void movieOriginalTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
