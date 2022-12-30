@@ -101,13 +101,6 @@ public class MovieData {
 
     private final ObjectProperty<QualifiedPath> nfoPath;
 
-
-    /**
-     * TODO: Do not store json data here. After receiving it, immediately transform to {@link SearchResult}.
-     */
-    @Deprecated
-    private final ObjectProperty<WebSearchResults> webSearchResult;
-
     private final ListProperty<KodiWarning> warnings;
 
     private final ListProperty<SearchResult> searchResults;
@@ -121,7 +114,6 @@ public class MovieData {
         this.movieTitleFromNfo = new SimpleStringProperty();
         this.nfoPath = new SimpleObjectProperty<>();
         this.nfoData = new SimpleObjectProperty<>();
-        this.webSearchResult = new SimpleObjectProperty<>();
         this.movieYearFromFolder = new SimpleObjectProperty<>();
         this.movieYearFromNfo = new SimpleObjectProperty<>();
         this.movieTitle = new SimpleStringProperty();
@@ -300,21 +292,6 @@ public class MovieData {
 
     public void setNfoData(QualifiedNfoData nfoData) {
         this.nfoData.set(nfoData);
-    }
-
-    @Deprecated
-    public WebSearchResults getWebSearchResult() {
-        return webSearchResult.get();
-    }
-
-    @Deprecated
-    public ObjectProperty<WebSearchResults> webSearchResultProperty() {
-        return webSearchResult;
-    }
-
-    @Deprecated
-    public void setWebSearchResult(WebSearchResults webSearchResult) {
-        this.webSearchResult.set(webSearchResult);
     }
 
     public Integer getMovieYearFromFolder() {
