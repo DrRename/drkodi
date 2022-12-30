@@ -63,7 +63,6 @@ public class DynamicMovieData extends MovieData {
         registerMovieYearFromFolderListeners();
         getRenamingPath().fileNameProperty().addListener(this::folderNameListener);
         nfoDataProperty().addListener(nfoDataListener);
-        webSearchResultProperty().addListener(this::webSearchResultListener);
 
     }
 
@@ -95,52 +94,6 @@ public class DynamicMovieData extends MovieData {
         movieYearFromFolderProperty().addListener(this::movieYearFromFolderListener);
         movieYearFromNfoProperty().addListener(this::movieYearFromNfoListener);
         movieYearFromWebProperty().addListener(this::movieYearFromWebListener);
-    }
-
-    private void webSearchResultListener(ObservableValue<? extends WebSearchResults> observable, WebSearchResults oldValue, WebSearchResults newValue) {
-        if (newValue != null) {
-            for (Number id : newValue.getSearchResults().keySet()) {
-                SearchResultDto searchResultDto = newValue.getSearchResults().get(id);
-                TranslationDto translationDto = newValue.getTranslations().get(id);
-                Image image = newValue.getImages().get(id);
-                byte[] imageData = newValue.getImageData().get(id);
-
-                SearchResult searchResult = getSearchResultDtoMapper().map(searchResultDto, imageData, image);
-                getSearchResults().add(searchResult);
-
-                if (translationDto != null) {
-                    SearchResult searchResultTranslated = new SearchResult(searchResult);
-
-                    if(StringUtils.isNotBlank(translationDto.getData().getTitle())) {
-                        searchResultTranslated.setTitle(translationDto.getData().getTitle());
-                    }
-//                    if(StringUtils.isNotBlank(translationDto.getData().getTitle())) {
-//                        searchResult.setTitle(translationDto.getData().getTitle());
-//                    }
-                    if(StringUtils.isNotBlank(translationDto.getData().getOverview())) {
-                        searchResultTranslated.setPlot(translationDto.getData().getOverview());
-                    }
-                    if(StringUtils.isNotBlank(translationDto.getData().getTagline())) {
-                        searchResultTranslated.setTagline(translationDto.getData().getTagline());
-                    }
-
-                    if(searchResult.getOriginalLanguage() != null && (searchResult.getOriginalLanguage().equalsIgnoreCase(translationDto.getIso639()) || searchResult.getOriginalLanguage().equalsIgnoreCase(translationDto.getIso639()))){
-                        // switch title and original title
-                        searchResultTranslated.setTitle(searchResult.getOriginalTitle());
-//                        searchResultTranslated.setOriginalTitle(searchResult.getTitle());
-                    }
-
-                    getSearchResults().add(searchResultTranslated);
-//                    SearchResult searchInvertedTitles = new SearchResult(searchResult);
-//                    searchInvertedTitles.setTitle(searchResult.getOriginalTitle());
-//                    searchInvertedTitles.setOriginalTitle(searchResult.getTitle());
-//                    getSearchResults().add(searchInvertedTitles);
-                }
-            }
-        } else {
-            getSearchResults().clear();
-        }
-
     }
 
 

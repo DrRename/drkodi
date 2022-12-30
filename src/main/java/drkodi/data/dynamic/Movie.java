@@ -122,6 +122,7 @@ public class Movie extends DynamicMovieData {
         nfoPathProperty().addListener(this::webSearchListener);
     }
 
+    @Deprecated
     private boolean searchingWeb;
 
     private void webSearchListener(ObservableValue<? extends Qualified<?>> observable, Qualified<?> oldValue, Qualified<?> newValue) {
@@ -204,7 +205,7 @@ public class Movie extends DynamicMovieData {
         searchingWeb = true;
         var task = new MovieDbSearchTask(movieDbSearcher, getMovieTitleSearchNormalizer(), this);
         task.setOnSucceeded(event -> {
-            setWebSearchResult((WebSearchResults) event.getSource().getValue());
+            new MovieDbSearchResultProcessor(this, (WebSearchResults) event.getSource().getValue()).process();
             searchingWeb = false;
         });
         executeTask(task);
