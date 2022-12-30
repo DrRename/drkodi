@@ -1,0 +1,41 @@
+name: Build macOS .dmg
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: false
+
+env:
+  JAVA_VERSION: 17
+
+jobs:
+  build:
+    name: Build .app
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+        - os: macos-11
+          architecture: x64
+          output-suffix: x64
+        - os: [self-hosted, macOS, ARM64]
+          architecture: aarch64
+          output-suffix: arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          architecture: ${{ matrix.architecture }}
+          cache: 'maven'
+      - name: Run maven
+        run: mvn -B clean package -Pmac -DskipTests
