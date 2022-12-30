@@ -44,4 +44,27 @@ Initially, Dr.Kodi iterates over all subdirectories of a given path. Every direc
 
 ### Installation and running
 
-For now, Dr.Kodi does not bundle a JRE (see https://github.com/DrRename/drkodi/issues/8). To run Dr.Kodi, make sure you have Java 17 or later installed.
+#### Windows
+
+Download the latest `jar`, i.e., `drkodi-<version>-win.jar`. Run it by double-clicking the `jar` file or executing `java -jar drkodi-<version>-win.jar`.
+
+**Note:** Java 17 or higher needs to be installed. Verify with `java -version`
+
+#### Linux
+
+Download the latest `jar`, i.e., `drkodi-<version>-linux.jar`. Run it by double-clicking the `jar` file or executing `java -jar drkodi-<version>-linux.jar`.
+
+**Note:** Java 17 or higher needs to be installed. Verify with `java -version`
+
+#### Mac
+
+Download the latest DrKodi.app.zip, unpack it and double-click.
+
+**Note:** No Java installation required.
+
+Alternatively, download the latest `jar`, i.e., `drkodi-<version>-mac.jar`. Run it by double-clicking the `jar` file or executing `java -jar drkodi-<version>-mac.jar`.
+
+**Note:** Java 17 or higher needs to be installed. Verify with `java -version`.
+
+
+
