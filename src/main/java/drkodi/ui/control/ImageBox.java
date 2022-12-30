@@ -64,7 +64,6 @@ public class ImageBox extends VBox {
     private void setNewImage(Image newValue, int imageHeight) {
         getChildren().clear();
         if (newValue != null) {
-            log.debug("Setting new image {}", newValue);
             getChildren().add(buildImageView(newValue, imageHeight));
         }
     }
