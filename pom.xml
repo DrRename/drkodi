@@ -361,6 +361,33 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>io.github.fvarrui</groupId>
+                        <artifactId>javapackager</artifactId>
+                        <version>1.7.0-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>${main-class}</mainClass>
+                                    <bundleJre>true</bundleJre>
+                                    <runnableJar>${project.build.directory}/${project.artifactId}-${project.version}-linux.jar</runnableJar>
+                                    <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
+                                    <generateInstaller>false</generateInstaller>
+                                    <administratorRequired>false</administratorRequired>
+                                    <copyDependencies>false</copyDependencies>
+                                    <platform>linux</platform>
+                                    <name>DrKodi</name>
+                                    <assetsDir>assets</assetsDir>
+                                    <version>1.0.0</version>
+
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
