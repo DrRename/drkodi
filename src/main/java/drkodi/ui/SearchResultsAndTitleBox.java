@@ -21,7 +21,7 @@
 package drkodi.ui;
 
 import drkodi.config.AppConfig;
-import drkodi.data.MovieData;
+import drkodi.data.movie.MovieData;
 import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.SearchResultsBox;
 import javafx.scene.control.Label;

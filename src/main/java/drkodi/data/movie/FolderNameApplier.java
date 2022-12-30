@@ -1,6 +1,8 @@
-package drkodi.data;
+package drkodi.data.movie;
 
 import drkodi.KodiUtil;
+import drkodi.data.Qualified;
+import drkodi.data.QualifiedPath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

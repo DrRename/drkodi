@@ -21,7 +21,7 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.ui.UiUtil;
 import drkodi.ui.config.KodiUiConfig;
 import javafx.scene.layout.HBox;

@@ -20,7 +20,7 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.MovieData;
+import drkodi.data.movie.MovieData;
 import javafx.scene.control.Label;
 
 public class MovieTitleLabel extends Label {

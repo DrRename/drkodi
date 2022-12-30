@@ -21,7 +21,7 @@
 package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
-import drkodi.data.MovieData;
+import drkodi.data.movie.MovieData;
 import drkodi.ui.KodiUiElementBuilder;
 import drkodi.ui.UiUtil;
 import javafx.geometry.Pos;

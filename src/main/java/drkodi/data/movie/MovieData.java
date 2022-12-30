@@ -18,11 +18,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.data;
+package drkodi.data.movie;
 
 
 import drkodi.*;
-import drkodi.data.json.WebSearchResults;
+import drkodi.data.*;
 import drkodi.normalization.FolderNameWarningNormalizer;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.*;

@@ -21,7 +21,7 @@
 package drkodi;
 
 import drkodi.config.AppConfig;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 
 import java.util.List;
 import java.util.ResourceBundle;

@@ -1,6 +1,6 @@
-package drkodi.data.dynamic;
+package drkodi.data;
 
-import drkodi.data.SearchResult;
+import drkodi.data.movie.DynamicMovieData;
 import drkodi.data.json.SearchResultDto;
 import drkodi.data.json.TranslationDto;
 import drkodi.data.json.WebSearchResults;

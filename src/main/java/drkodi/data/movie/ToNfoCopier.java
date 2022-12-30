@@ -1,7 +1,8 @@
-package drkodi.data;
+package drkodi.data.movie;
 
 import drkodi.MovieDbGenre;
 import drkodi.NfoMovie;
+import drkodi.data.Qualified;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

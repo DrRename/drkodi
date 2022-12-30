@@ -20,7 +20,7 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.MovieData;
+import drkodi.data.movie.MovieData;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;

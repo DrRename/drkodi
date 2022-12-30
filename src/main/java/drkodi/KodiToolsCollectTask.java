@@ -1,7 +1,7 @@
 package drkodi;
 
 import drkodi.config.AppConfig;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.data.SearchResultToMovieMapper;
 import drkodi.normalization.FolderNameWarningNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
