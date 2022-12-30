@@ -20,7 +20,7 @@
 
 package drkodi.ui.control;
 
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import drkodi.util.DrRenameUtil;
 import javafx.geometry.Insets;
 import javafx.scene.control.Hyperlink;

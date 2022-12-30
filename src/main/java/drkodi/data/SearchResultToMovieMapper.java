@@ -1,5 +1,6 @@
 package drkodi.data;
 
+import drkodi.data.movie.MovieData;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {ImageDataMapper.class}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)

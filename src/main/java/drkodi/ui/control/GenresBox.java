@@ -21,7 +21,7 @@
 package drkodi.ui.control;
 
 import drkodi.MovieDbGenre;
-import drkodi.data.dynamic.Movie;
+import drkodi.data.movie.Movie;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

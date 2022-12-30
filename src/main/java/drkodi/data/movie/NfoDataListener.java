@@ -1,4 +1,4 @@
-package drkodi.data.dynamic;
+package drkodi.data.movie;
 
 import drkodi.data.QualifiedNfoData;
 import drkodi.data.QualifiedPath;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-public class NfoDataListener implements ChangeListener<QualifiedNfoData> {
+class NfoDataListener implements ChangeListener<QualifiedNfoData> {
 
     private final DynamicMovieData movie;
 
