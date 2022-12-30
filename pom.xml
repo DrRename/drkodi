@@ -239,16 +239,16 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
                         <executions>
-                        <execution>
-                            <id>mac</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                            <configuration>
-                                <classifier>mac</classifier>
-                            </configuration>
-                        </execution>
+                            <execution>
+                                <id>mac</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>mac</classifier>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
@@ -268,6 +268,41 @@
                                 <goals>
                                     <goal>build-info</goal>
                                 </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.github.fvarrui</groupId>
+                        <artifactId>javapackager</artifactId>
+                        <version>1.7.0-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>${main-class}</mainClass>
+                                    <bundleJre>true</bundleJre>
+                                    <runnableJar>${project.build.directory}/${project.artifactId}-${project.version}-mac.jar</runnableJar>
+                                    <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
+                                    <generateInstaller>false</generateInstaller>
+                                    <administratorRequired>false</administratorRequired>
+                                    <copyDependencies>false</copyDependencies>
+                                    <platform>mac</platform>
+                                    <name>DrKodi</name>
+                                    <assetsDir>assets</assetsDir>
+                                    <version>1.0.0</version>
+                                    <macConfig>
+                                        <customLauncher>src/main/resources/launcher.sh</customLauncher>
+                                        <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
+                                        <appId>com.drkodi</appId>
+                                        <codesignApp>true</codesignApp>
+                                        <infoPlist>
+                                            <bundlePackageType>APPL</bundlePackageType>
+                                        </infoPlist>
+                                    </macConfig>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
