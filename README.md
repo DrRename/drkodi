@@ -58,7 +58,7 @@ Download the latest `jar`, i.e., `drkodi-<version>-linux.jar`. Run it by double-
 
 #### Mac
 
-Download the latest DrKodi.app.zip, unpack it and double-click.
+Download the latest `DrKodi.app.zip`, unpack it and double-click.
 
 **Note:** No Java installation required.
 
