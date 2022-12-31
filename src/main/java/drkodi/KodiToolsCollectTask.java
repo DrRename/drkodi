@@ -8,22 +8,23 @@ import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
 import drkodi.ui.config.KodiUiConfig;
-import drkodi.ui.control.KodiBox;
+import drkodi.ui.control.KodiMoviePathEntryBox;
 import drrename.commons.RenamingPath;
+import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 
 @Getter
 @Slf4j
-class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
+class KodiToolsCollectTask extends PrototypeTask<Void> {
 
     private final Entries entries;
 
@@ -47,7 +48,9 @@ class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
 
     private final FolderNameWarningNormalizer folderNameWarningNormalizer;
 
-    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, Executor executor, WarningsConfig warningsConfig, KodiUiConfig kodiUiConfig, Observable[] extractor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
+    private final ListView<KodiMoviePathEntryBox> listView;
+
+    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, Executor executor, WarningsConfig warningsConfig, KodiUiConfig kodiUiConfig, Observable[] extractor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, ListView<KodiMoviePathEntryBox> listView) {
         super(config, resourceBundle);
         this.entries = entries;
         this.executor = executor;
@@ -60,13 +63,13 @@ class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
         this.folderNameWarningNormalizer = folderNameWarningNormalizer;
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
+        this.listView = listView;
     }
 
     @Override
-    protected List<KodiBox> call() throws Exception {
+    protected Void call() throws Exception {
         log.debug("Starting");
         updateMessage(String.format(getResourceBundle().getString(KodiCollectService.MESSAGE)));
-        List<KodiBox> result = new ArrayList<>();
 
         int cnt = 0;
         for (RenamingPath renamingPath : entries.getEntriesFiltered()) {
@@ -78,8 +81,11 @@ class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
             if (!Files.isDirectory(renamingPath.getOldPath())) {
                 continue;
             }
-            result.add(buildUiData(buildDataType(renamingPath)));
-            updateProgress(++cnt, result.size());
+            Platform.runLater(() -> {
+                listView.getItems().add(buildUiData(buildData(renamingPath)));
+                listView.getItems().sort(Comparator.comparing(kodiElement -> kodiElement.getMovie().getRenamingPath().getOldPath()));
+            });
+            updateProgress(++cnt, listView.getItems().size());
             if (getAppConfig().isDebug()) {
                 try {
                     Thread.sleep(getAppConfig().getLoopDelayMs());
@@ -92,18 +98,16 @@ class KodiToolsCollectTask extends PrototypeTask<List<KodiBox>> {
                 }
             }
         }
-
-        result.sort(Comparator.comparing(kodiElement -> kodiElement.getMovie().getRenamingPath().getOldPath()));
         log.debug("Finished");
         updateMessage(null);
-        return result;
+        return null;
     }
 
-    private KodiBox buildUiData(Movie data) {
-      return new KodiBox(data, getAppConfig(), kodiUiConfig);
+    private KodiMoviePathEntryBox buildUiData(Movie data) {
+      return new KodiMoviePathEntryBox(data, getAppConfig());
      }
 
-    private Movie buildDataType(RenamingPath renamingPath) {
+    private Movie buildData(RenamingPath renamingPath) {
         return new Movie(renamingPath, mapper, executor, movieDbSearcher, folderNameWarningNormalizer, movieTitleSearchNormalizer, searchResultToMovieMapper, movieTitleWriteNormalizer);
     }
 }

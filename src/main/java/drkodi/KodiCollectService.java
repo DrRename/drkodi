@@ -7,20 +7,20 @@ import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
 import drkodi.ui.config.KodiUiConfig;
-import drkodi.ui.control.KodiBox;
+import drkodi.ui.control.KodiMoviePathEntryBox;
 import javafx.beans.Observable;
 import javafx.concurrent.Task;
+import javafx.scene.control.ListView;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Slf4j
 @Setter
 @Component
-public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
+public class KodiCollectService extends ServicePrototype<Void> {
 
     static final String MESSAGE = "kodi.collect";
 
@@ -45,6 +45,8 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
 
     private Observable[] extractor;
 
+    private ListView<KodiMoviePathEntryBox> listView;
+
     public KodiCollectService(AppConfig appConfig, ResourceBundle resourceBundle, Entries directory, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, KodiUiConfig kodiUiConfig, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, MovieTitleSearchNormalizer normalizer) {
         super(appConfig, resourceBundle);
         this.directory = directory;
@@ -59,8 +61,8 @@ public class KodiCollectService extends ServicePrototype<List<KodiBox>> {
 
 
     @Override
-    protected Task<List<KodiBox>> createTask() {
-        return new KodiToolsCollectTask(getAppConfig(),getResourceBundle(),directory,getExecutor(),warningsConfig, kodiUiConfig, extractor, searchResultToMovieMapper, mapper, movieDbSearcher, folderNameWarningNormalizer, normalizer, movieTitleWriteNormalizer);
+    protected Task<Void> createTask() {
+        return new KodiToolsCollectTask(getAppConfig(),getResourceBundle(),directory,getExecutor(),warningsConfig, kodiUiConfig, extractor, searchResultToMovieMapper, mapper, movieDbSearcher, folderNameWarningNormalizer, normalizer, movieTitleWriteNormalizer, listView);
     }
 
 }
