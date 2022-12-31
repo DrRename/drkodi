@@ -45,7 +45,7 @@ import java.util.ResourceBundle;
 @Component
 @Scope("prototype")
 @FxmlView("/fxml/StartDirectoryComponent.fxml")
-public class StartDirectoryComponentController implements Initializable, ApplicationListener<ApplicationEvent> {
+public class StartDirectoryComponentController implements Initializable {
 
     public TextField textFieldDirectory;
 
@@ -112,10 +112,7 @@ public class StartDirectoryComponentController implements Initializable, Applica
         log.debug("Ready-state now {}", ready.get());
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationEvent event) {
 
-    }
 
     public Path getInputPath() {
         return inputPath.get();

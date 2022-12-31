@@ -22,16 +22,17 @@ package drkodi.ui;
 
 import drkodi.*;
 import drkodi.config.AppConfig;
+import drkodi.data.movie.Movie;
+import drkodi.ui.config.KodiUiConfig;
 import drkodi.ui.control.KodiBox;
+import drkodi.ui.control.KodiMoviePathEntryBox;
 import javafx.application.Platform;
-import javafx.concurrent.WorkerStateEvent;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -47,7 +48,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
@@ -68,6 +68,8 @@ public class MainViewController extends DebuggableController implements DrRename
 
     private final ResourceBundle resourceBundle;
 
+    private final KodiUiConfig kodiUiConfig;
+
     //
 
     // FXML injected //
@@ -76,7 +78,10 @@ public class MainViewController extends DebuggableController implements DrRename
     Pane root;
 
     @FXML
-    ListView<KodiBox> listView;
+    ListView<KodiMoviePathEntryBox> listView;
+
+    @FXML
+    VBox detailsBox;
 
     @FXML
     CheckBox checkBoxHideEmpty;
@@ -108,19 +113,8 @@ public class MainViewController extends DebuggableController implements DrRename
         }
 
         @Override
-        protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-
-            @SuppressWarnings("unchecked")
-            List<KodiBox> result = (List<KodiBox>) workerStateEvent.getSource().getValue();
-            if (result != null) {
-                listView.getItems().setAll(result);
-            } else {
-                log.error("Got no result from {} with state {}", workerStateEvent.getSource(), workerStateEvent.getSource().getState());
-            }
-        }
-
-        @Override
         protected void doInitService(KodiCollectService service) {
+            service.setListView(listView);
             progressAndStatusGridPane.getProgressBar().progressProperty().bind(service.progressProperty());
             progressLabel.textProperty().bind(service.messageProperty());
 
@@ -135,12 +129,13 @@ public class MainViewController extends DebuggableController implements DrRename
 
     //
 
-    public MainViewController(KodiCollectService kodiCollectService, Executor executor, AppConfig appConfig, ResourceBundle resourceBundle) {
+    public MainViewController(KodiCollectService kodiCollectService, Executor executor, AppConfig appConfig, ResourceBundle resourceBundle, KodiUiConfig kodiUiConfig) {
         super(appConfig);
         this.kodiCollectService = kodiCollectService;
         this.executor = executor;
         this.serviceStarter = new KodiCollectServiceStarter(kodiCollectService);
         this.resourceBundle = resourceBundle;
+        this.kodiUiConfig = kodiUiConfig;
         this.progressLabel = new Label();
     }
 
@@ -169,13 +164,13 @@ public class MainViewController extends DebuggableController implements DrRename
 
 
 
-        listView.setCellFactory(new Callback<ListView<KodiBox>, ListCell<KodiBox>>() {
+        listView.setCellFactory(new Callback<ListView<KodiMoviePathEntryBox>, ListCell<KodiMoviePathEntryBox>>() {
             @Override
-            public ListCell<KodiBox> call(ListView<KodiBox> param) {
-                ListCell<KodiBox> lc = new ListCell<>() {
+            public ListCell<KodiMoviePathEntryBox> call(ListView<KodiMoviePathEntryBox> param) {
+                ListCell<KodiMoviePathEntryBox> lc = new ListCell<>() {
 
                     @Override
-                    protected void updateItem(KodiBox item, boolean empty) {
+                    protected void updateItem(KodiMoviePathEntryBox item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setText(null);
@@ -189,6 +184,17 @@ public class MainViewController extends DebuggableController implements DrRename
 //                lc.setMaxHeight(Double.MAX_VALUE);
                 lc.prefWidthProperty().bind(listView.widthProperty().subtract(18));
                 return lc;
+            }
+        });
+
+        listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<KodiMoviePathEntryBox>() {
+
+            @Override
+            public void changed(ObservableValue<? extends KodiMoviePathEntryBox> observable, KodiMoviePathEntryBox oldValue, KodiMoviePathEntryBox newValue) {
+                if(newValue != null) {
+                    Movie selectedMovie = newValue.getMovie();
+                    detailsBox.getChildren().setAll(new KodiBox(selectedMovie, getAppConfig(),kodiUiConfig));
+                }
             }
         });
 
