@@ -24,7 +24,7 @@ public class KodiCollectService extends ServicePrototype<Void> {
 
     static final String MESSAGE = "kodi.collect";
 
-    private final Entries directory;
+    private final RenamingPathEntries directory;
 
     private final SearchResultToMovieMapper searchResultToMovieMapper;
 
@@ -47,7 +47,7 @@ public class KodiCollectService extends ServicePrototype<Void> {
 
     private ListView<KodiMoviePathEntryBox> listView;
 
-    public KodiCollectService(AppConfig appConfig, ResourceBundle resourceBundle, Entries directory, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, KodiUiConfig kodiUiConfig, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, MovieTitleSearchNormalizer normalizer) {
+    public KodiCollectService(AppConfig appConfig, ResourceBundle resourceBundle, RenamingPathEntries directory, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, KodiUiConfig kodiUiConfig, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, MovieTitleSearchNormalizer normalizer) {
         super(appConfig, resourceBundle);
         this.directory = directory;
         this.searchResultToMovieMapper = searchResultToMovieMapper;

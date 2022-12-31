@@ -20,9 +20,9 @@
 
 package drkodi.ui;
 
-import drkodi.Entries;
+import drkodi.RenamingPathEntries;
 import drkodi.config.AppConfig;
-import drkodi.ui.service.LoadPathsServicePrototype;
+import drkodi.ui.service.LoadPathsService;
 import drkodi.util.FXUtil;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -57,11 +57,11 @@ public class TabController extends DebuggableController implements Initializable
 
     private final FxApplicationStyle applicationStyle;
 
-    private final LoadPathsServicePrototype loadPathsService;
+    private final LoadPathsService loadPathsService;
 
     private final Executor executor;
 
-    private final Entries entries;
+    private final RenamingPathEntries renamingPathEntries;
 
     private final ResourceBundle resourceBundle;
 
@@ -108,16 +108,16 @@ public class TabController extends DebuggableController implements Initializable
 
     // Nested classes //
 
-    private class LoadServiceStarter extends ServiceStarter<LoadPathsServicePrototype> {
+    private class LoadServiceStarter extends ServiceStarter<LoadPathsService> {
 
-        public LoadServiceStarter(LoadPathsServicePrototype service) {
+        public LoadServiceStarter(LoadPathsService service) {
             super(service);
         }
 
         @Override
         protected void prepareUi() {
             super.prepareUi();
-            entries.getEntries().clear();
+            renamingPathEntries.getEntries().clear();
             mainViewController.clearView();
 
         }
@@ -129,7 +129,7 @@ public class TabController extends DebuggableController implements Initializable
         }
 
         @Override
-        protected void doInitService(LoadPathsServicePrototype service) {
+        protected void doInitService(LoadPathsService service) {
             progressAndStatusGrid.getProgressBar().progressProperty().bind(service.progressProperty());
             progressLabel.textProperty().bind(loadPathsService.messageProperty());
         }
@@ -137,13 +137,13 @@ public class TabController extends DebuggableController implements Initializable
 
     //
 
-    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, Entries entries, LoadPathsServicePrototype loadPathsService, Executor executor, AppConfig appConfig, ResourceBundle resourceBundle) {
+    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, RenamingPathEntries renamingPathEntries, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig, ResourceBundle resourceBundle) {
         super(appConfig);
         this.fxWeaver = fxWeaver;
         this.applicationStyle = applicationStyle;
         this.loadPathsService = loadPathsService;
         this.executor = executor;
-        this.entries = entries;
+        this.renamingPathEntries = renamingPathEntries;
         this.resourceBundle = resourceBundle;
         this.loadServiceStarter = new LoadServiceStarter(this.loadPathsService);
         this.progressLabel = new Label();
