@@ -39,14 +39,18 @@ public class KodiMovieInfoBox extends VBox {
         this.progressBar = new ProgressBar();
         this.progressBar.setMaxWidth(Double.MAX_VALUE);
 //        this.progressBar.setPrefHeight(10);
-        this.progressBar.visibleProperty().bind(kodiMovie.runningProperty());
+        this.progressBar.managedProperty().bind(kodiMovie.runningProperty());
+
 
         // content
 
         getChildren().add(progressBar);
+
+        getChildren().add(UiUtil.applyDebug(new KodiOpenAndSaveButtonsBox(kodiMovie), appConfig));
+
         getChildren().add(UiUtil.applyDebug(new MovieTitleAndYearBox(kodiMovie, appConfig), appConfig));
         getChildren().add(UiUtil.applyDebug(new MovieOriginalTitleLabel(kodiMovie), appConfig));
-        getChildren().add(UiUtil.applyDebug(new KodiOpenAndSaveButtonsBox(kodiMovie), appConfig));
+
         getChildren().add(UiUtil.applyDebug(new TaglineBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new PlotBox(kodiMovie), appConfig));
         getChildren().add(UiUtil.applyDebug(new GenresBox(kodiMovie), appConfig));

@@ -56,8 +56,8 @@ import java.util.concurrent.Executor;
 
 @Slf4j
 @Component
-@FxmlView("/fxml/TabView.fxml")
-public class TabController extends DebuggableController implements Initializable {
+@FxmlView("/fxml/MainView.fxml")
+public class MainViewController extends DebuggableController implements Initializable {
 
 
     // Spring Injected //
@@ -151,7 +151,7 @@ public class TabController extends DebuggableController implements Initializable
 
     //
 
-    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig, MovieEntries movieEntries, ResourceBundle resourceBundle, KodiUiConfig kodiUiConfig) {
+    public MainViewController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig, MovieEntries movieEntries, ResourceBundle resourceBundle, KodiUiConfig kodiUiConfig) {
         super(appConfig);
         this.fxWeaver = fxWeaver;
         this.applicationStyle = applicationStyle;
