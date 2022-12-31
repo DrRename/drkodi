@@ -13,7 +13,6 @@ import drrename.commons.RenamingPath;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +25,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 class KodiToolsCollectTask extends PrototypeTask<Void> {
 
-    private final Entries entries;
+    private final RenamingPathEntries renamingPathEntries;
 
     private final Executor executor;
 
@@ -50,9 +49,9 @@ class KodiToolsCollectTask extends PrototypeTask<Void> {
 
     private final ListView<KodiMoviePathEntryBox> listView;
 
-    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, Entries entries, Executor executor, WarningsConfig warningsConfig, KodiUiConfig kodiUiConfig, Observable[] extractor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, ListView<KodiMoviePathEntryBox> listView) {
+    public KodiToolsCollectTask(AppConfig config, ResourceBundle resourceBundle, RenamingPathEntries renamingPathEntries, Executor executor, WarningsConfig warningsConfig, KodiUiConfig kodiUiConfig, Observable[] extractor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, ListView<KodiMoviePathEntryBox> listView) {
         super(config, resourceBundle);
-        this.entries = entries;
+        this.renamingPathEntries = renamingPathEntries;
         this.executor = executor;
         this.warningsConfig = warningsConfig;
         this.kodiUiConfig = kodiUiConfig;
@@ -72,7 +71,7 @@ class KodiToolsCollectTask extends PrototypeTask<Void> {
         updateMessage(String.format(getResourceBundle().getString(KodiCollectService.MESSAGE)));
 
         int cnt = 0;
-        for (RenamingPath renamingPath : entries.getEntriesFiltered()) {
+        for (RenamingPath renamingPath : renamingPathEntries.getEntriesFiltered()) {
             if (isCancelled()) {
                 log.debug("Cancelled");
                 updateMessage("Cancelled.");

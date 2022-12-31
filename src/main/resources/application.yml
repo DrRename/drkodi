@@ -29,7 +29,7 @@ app:
     initialWidth: 600
     initialHeight: 600
     imageHeight: 200
-#    override-locale: de
+    override-locale: de
   word-cnt: 3
   loop-delay-ms: 300
   reset-delay-ms: 500
