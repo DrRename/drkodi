@@ -1,8 +1,7 @@
 package drkodi.ui.service;
 
-import drkodi.Entries;
+import drkodi.RenamingPathEntries;
 import drkodi.PrototypeTask;
-import drkodi.RenamingControl;
 import drkodi.Tasks;
 import drkodi.config.AppConfig;
 import drrename.commons.RenamingPath;
@@ -17,7 +16,7 @@ import java.util.ResourceBundle;
 
 /**
  * A {@link Task} that will iterate over all children of given {@link Path} and create a new instance of
- * {@link RenamingControl} from every child. Every {@code RenamingControl} is immediately added to given instance of
+ * {@link RenamingPath} from every child. Every {@code RenamingPath} is immediately added to given instance of
  * {@code Entries}.
  */
 @Slf4j
@@ -25,19 +24,19 @@ public class ListDirectoryTask extends PrototypeTask<Void> {
 
     private final Path dir;
 
-    private final Entries entries;
+    private final RenamingPathEntries renamingPathEntries;
 
-    public ListDirectoryTask(AppConfig config, ResourceBundle resourceBundle, Path dir, Entries entries) {
+    public ListDirectoryTask(AppConfig config, ResourceBundle resourceBundle, Path dir, RenamingPathEntries renamingPathEntries) {
         super(config, resourceBundle);
         this.dir = dir;
-        this.entries = entries;
+        this.renamingPathEntries = renamingPathEntries;
     }
 
     @Override
     protected Void call() throws Exception {
         checkState();
         log.debug("Starting");
-        updateMessage(String.format(getResourceBundle().getString(LoadPathsServicePrototype.LOADING_FILES)));
+        updateMessage(String.format(getResourceBundle().getString(LoadPathsService.LOADING_FILES)));
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
             for (Path path : stream) {
                 if (isCancelled()) {
@@ -67,7 +66,7 @@ public class ListDirectoryTask extends PrototypeTask<Void> {
 
     protected void handleNewEntry(RenamingPath element) {
         Platform.runLater(() -> {
-            entries.getEntries().add(element);
+            renamingPathEntries.getEntries().add(element);
         });
     }
 

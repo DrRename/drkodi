@@ -35,7 +35,7 @@ import java.util.function.Predicate;
 
 @Slf4j
 @Component
-public class Entries {
+public class RenamingPathEntries {
 
     private final ListProperty<RenamingPath> entries;
 
@@ -43,7 +43,7 @@ public class Entries {
 
     private final Predicate<RenamingPath> entriesFilteredDefaultPredicate = e -> true;
 
-    public Entries() {
+    public RenamingPathEntries() {
         entries = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{item.newPathProperty(), item.exceptionProperty(), item.filteredProperty(), item.willChangeProperty()}));
         entriesFiltered = new SimpleListProperty<>(new FilteredList<>(entries, entriesFilteredDefaultPredicate));
     }

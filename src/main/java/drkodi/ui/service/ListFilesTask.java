@@ -1,10 +1,10 @@
 package drkodi.ui.service;
 
-import drkodi.Entries;
+import drkodi.RenamingPathEntries;
 import drkodi.PrototypeTask;
-import drkodi.RenamingControl;
 import drkodi.Tasks;
 import drkodi.config.AppConfig;
+import drrename.commons.RenamingPath;
 import javafx.application.Platform;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,23 +12,27 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
+/**
+ * Iterates over a given collection of {@code Path}, transforms all entries into {@code RenamingPath} and stores them
+ * into given instance of {@code Entries}.
+ */
 @Slf4j
 public class ListFilesTask extends PrototypeTask<Void> {
 
     private final Collection<Path> files;
 
-    private final Entries entries;
+    private final RenamingPathEntries renamingPathEntries;
 
-    public ListFilesTask(AppConfig config, ResourceBundle resourceBundle, Collection<Path> files, Entries entries) {
+    public ListFilesTask(AppConfig config, ResourceBundle resourceBundle, Collection<Path> files, RenamingPathEntries renamingPathEntries) {
         super(config, resourceBundle);
         this.files = files;
-        this.entries = entries;
+        this.renamingPathEntries = renamingPathEntries;
     }
 
     @Override
     protected Void call() throws InterruptedException {
         log.debug("Starting");
-        updateMessage(String.format(getResourceBundle().getString(LoadPathsServicePrototype.LOADING_FILES)));
+        updateMessage(String.format(getResourceBundle().getString(LoadPathsService.LOADING_FILES)));
         int cnt = 0;
         for (final Path f : files) {
             if (isCancelled()) {
@@ -36,7 +40,7 @@ public class ListFilesTask extends PrototypeTask<Void> {
                 updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
                 break;
             }
-            handleNewEntry(++cnt, new RenamingControl(f));
+            handleNewEntry(++cnt, new RenamingPath(f));
             if (getAppConfig().isDebug()) {
                 try {
                     Thread.sleep(getAppConfig().getLoopDelayMs());
@@ -54,8 +58,8 @@ public class ListFilesTask extends PrototypeTask<Void> {
         return null;
     }
 
-    private void handleNewEntry(int progress, RenamingControl renamingControl) {
-        Platform.runLater(() -> entries.getEntries().add(renamingControl));
+    private void handleNewEntry(int progress, RenamingPath renamingControl) {
+        Platform.runLater(() -> renamingPathEntries.getEntries().add(renamingControl));
         updateProgress(progress, files.size());
     }
 }
