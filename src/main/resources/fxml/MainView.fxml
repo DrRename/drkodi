@@ -28,6 +28,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="drkodi.ui.MainViewController" fx:id="root">
@@ -45,7 +46,10 @@
     <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
 
        <SplitPane VBox.vgrow="ALWAYS">
-           <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
+          <VBox>
+              <TextField fx:id="searchField" promptText="%mainview.searchfield.text"/>
+              <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
+          </VBox>
            <VBox fx:id="detailsBox"></VBox>
        </SplitPane>
 
