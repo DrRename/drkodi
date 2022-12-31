@@ -21,17 +21,37 @@
 package drkodi;
 
 import drkodi.config.AppConfig;
+import drkodi.data.SearchResultToMovieMapper;
+import drkodi.normalization.FolderNameWarningNormalizer;
+import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.MovieTitleWriteNormalizer;
+import drkodi.themoviedb.MovieDbSearcher;
 import javafx.concurrent.Service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
 @Getter
-public abstract class ServicePrototype<T> extends Service<T> {
+public abstract class PrototypeService<T> extends Service<T> {
 
-    private final AppConfig appConfig;
+    protected final AppConfig appConfig;
 
-    private final ResourceBundle resourceBundle;
+    protected final ResourceBundle resourceBundle;
+
+    protected final MovieEntries movieEntries;
+
+    protected final SearchResultToMovieMapper searchResultToMovieMapper;
+
+    protected final SearchResultDtoMapper mapper;
+
+    protected final MovieDbSearcher movieDbSearcher;
+
+    protected final MovieTitleSearchNormalizer movieTitleSearchNormalizer;
+
+    protected final MovieTitleWriteNormalizer movieTitleWriteNormalizer;
+
+    protected final FolderNameWarningNormalizer folderNameWarningNormalizer;
 }
