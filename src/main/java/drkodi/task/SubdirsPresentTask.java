@@ -5,6 +5,7 @@ import drkodi.data.movie.Movie;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class SubdirsPresentTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         Path path = movie.getRenamingPath().getOldPath();
-        return !KodiUtil.getSubdirs(path).isEmpty();
+        return Files.isDirectory(movie.getRenamingPath().getOldPath()) && !KodiUtil.getSubdirs(path).isEmpty();
     }
 
 }

@@ -34,15 +34,17 @@ public class NfoFileCollector {
 
     public List<Path> collectNfoFiles(Path directory) throws IOException {
         List<Path> result = new ArrayList<>();
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
-            for (Path child : ds) {
-                String extension = FilenameUtils.getExtension(child.getFileName().toString());
-                if(Files.isHidden(child)){
-                    log.debug("Ignoring hidden NFO file {}", child);
-                    continue;
-                }
-                if (Files.isRegularFile(child) && NfoFiles.DEFAULT_EXTENSION.equalsIgnoreCase(extension)) {
-                    result.add(child);
+        if(Files.isDirectory(directory)) {
+            try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
+                for (Path child : ds) {
+                    String extension = FilenameUtils.getExtension(child.getFileName().toString());
+                    if (Files.isHidden(child)) {
+                        log.debug("Ignoring hidden NFO file {}", child);
+                        continue;
+                    }
+                    if (Files.isRegularFile(child) && NfoFiles.DEFAULT_EXTENSION.equalsIgnoreCase(extension)) {
+                        result.add(child);
+                    }
                 }
             }
         }

@@ -121,17 +121,19 @@ public class KodiUtil {
 
     public static List<Path> findAllVideoFiles(Path directory) throws IOException {
         List<Path> result = new ArrayList<>();
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
-            for (Path child : ds) {
-                if(Files.isRegularFile(child)){
-                    String extension = FilenameUtils.getExtension(child.getFileName().toString());
-                    if("sub".equalsIgnoreCase(extension) || "idx".equalsIgnoreCase(extension)){
+        if (Files.isDirectory(directory)) {
+            try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
+                for (Path child : ds) {
+                    if (Files.isRegularFile(child)) {
+                        String extension = FilenameUtils.getExtension(child.getFileName().toString());
+                        if ("sub".equalsIgnoreCase(extension) || "idx".equalsIgnoreCase(extension)) {
 //                        log.debug("Ignore sub/ idx files for now");
-                        continue;
-                    }
-                    var mediaType = new FileTypeByMimeProvider().getFileType(child);
-                    if(mediaType.startsWith("video")){
-                        result.add(child);
+                            continue;
+                        }
+                        var mediaType = new FileTypeByMimeProvider().getFileType(child);
+                        if (mediaType.startsWith("video")) {
+                            result.add(child);
+                        }
                     }
                 }
             }
