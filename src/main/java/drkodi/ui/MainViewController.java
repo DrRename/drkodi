@@ -36,16 +36,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -86,6 +84,9 @@ public class MainViewController extends DebuggableController implements Initiali
 
     @FXML
     public StartDirectoryComponentController startDirectoryController;
+
+    @FXML
+    public TextField searchField;
 
     @FXML
     ListView<KodiMoviePathEntryBox> listView;
@@ -175,8 +176,9 @@ public class MainViewController extends DebuggableController implements Initiali
         startDirectoryController.inputPathProperty().addListener(this::getNewInputPathChangeListener);
         startDirectoryController.readyProperty().addListener(this::readyChangeListener);
 
-        if (!getAppConfig().isDebug())
+        if (!getAppConfig().isDebug()) {
             progressAndStatusGrid.visibleProperty().bind(loadPathsService.runningProperty());
+        }
 
         loadPathsService.setExecutor(executor);
 
@@ -219,6 +221,18 @@ public class MainViewController extends DebuggableController implements Initiali
         });
 
         listView.setItems(movieEntries.entriesFilteredProperty());
+
+
+        searchField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue != null){
+                    movieEntries.getFilteredList().setPredicate(m -> StringUtils.containsIgnoreCase(m.getMovie().getMovieTitle(), newValue));
+                } else {
+                    movieEntries.getFilteredList().setPredicate( s -> true);
+                }
+            }
+        });
 
     }
 

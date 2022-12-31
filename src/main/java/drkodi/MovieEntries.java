@@ -46,11 +46,12 @@ public class MovieEntries {
 
     private final ListProperty<KodiMoviePathEntryBox> entriesFiltered;
 
-    private final Predicate<KodiMoviePathEntryBox> entriesFilteredDefaultPredicate = e -> true;
+    private final FilteredList<KodiMoviePathEntryBox> filteredList;
 
     public MovieEntries() {
         entries = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{}));
-        entriesFiltered = new SimpleListProperty<>(new FilteredList<>(entries, entriesFilteredDefaultPredicate));
+        filteredList  = new FilteredList<>(entries);
+        entriesFiltered = new SimpleListProperty<>(filteredList);
     }
 
     @PostConstruct
@@ -61,6 +62,12 @@ public class MovieEntries {
     protected void initListeners() {
 
 
+    }
+
+    // Getter / Setter //
+
+    public FilteredList<KodiMoviePathEntryBox> getFilteredList() {
+        return filteredList;
     }
 
 
