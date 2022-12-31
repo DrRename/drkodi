@@ -1,9 +1,14 @@
 package drkodi.ui.service;
 
-import drkodi.RenamingPathEntries;
-import drkodi.PrototypeTask;
-import drkodi.Tasks;
+import drkodi.*;
 import drkodi.config.AppConfig;
+import drkodi.data.SearchResultToMovieMapper;
+import drkodi.data.movie.Movie;
+import drkodi.normalization.FolderNameWarningNormalizer;
+import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.MovieTitleWriteNormalizer;
+import drkodi.themoviedb.MovieDbSearcher;
+import drkodi.ui.control.KodiMoviePathEntryBox;
 import drrename.commons.RenamingPath;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -13,6 +18,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
 
 /**
  * A {@link Task} that will iterate over all children of given {@link Path} and create a new instance of
@@ -24,12 +30,9 @@ public class ListDirectoryTask extends PrototypeTask<Void> {
 
     private final Path dir;
 
-    private final RenamingPathEntries renamingPathEntries;
-
-    public ListDirectoryTask(AppConfig config, ResourceBundle resourceBundle, Path dir, RenamingPathEntries renamingPathEntries) {
-        super(config, resourceBundle);
+    public ListDirectoryTask(AppConfig appConfig, ResourceBundle resourceBundle, MovieEntries movieEntries, Executor executor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, FolderNameWarningNormalizer folderNameWarningNormalizer, Path dir) {
+        super(appConfig, resourceBundle, movieEntries, executor, searchResultToMovieMapper, mapper, movieDbSearcher, movieTitleSearchNormalizer, movieTitleWriteNormalizer, folderNameWarningNormalizer);
         this.dir = dir;
-        this.renamingPathEntries = renamingPathEntries;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class ListDirectoryTask extends PrototypeTask<Void> {
                     updateMessage(String.format(getResourceBundle().getString(Tasks.MESSAGE_CANCELLED)));
                     break;
                 }
-                var entry = new RenamingPath(path);
+                var entry = buildUiData(buildData(new RenamingPath(path)));
                 handleNewEntry(entry);
                 if (getAppConfig().isDebug()) {
                     try {
@@ -64,9 +67,9 @@ public class ListDirectoryTask extends PrototypeTask<Void> {
         return null;
     }
 
-    protected void handleNewEntry(RenamingPath element) {
+    protected void handleNewEntry(KodiMoviePathEntryBox element) {
         Platform.runLater(() -> {
-            renamingPathEntries.getEntries().add(element);
+            movieEntries.getEntries().add(element);
         });
     }
 

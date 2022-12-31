@@ -20,11 +20,16 @@
 
 package drkodi.ui;
 
-import drkodi.RenamingPathEntries;
+import drkodi.MovieEntries;
 import drkodi.config.AppConfig;
+import drkodi.data.movie.Movie;
+import drkodi.ui.config.KodiUiConfig;
+import drkodi.ui.control.KodiBox;
+import drkodi.ui.control.KodiMoviePathEntryBox;
 import drkodi.ui.service.LoadPathsService;
 import drkodi.util.FXUtil;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -32,8 +37,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -61,9 +70,12 @@ public class TabController extends DebuggableController implements Initializable
 
     private final Executor executor;
 
-    private final RenamingPathEntries renamingPathEntries;
+    private final MovieEntries movieEntries;
 
     private final ResourceBundle resourceBundle;
+
+    private final KodiUiConfig kodiUiConfig;
+
 
 
     //
@@ -76,7 +88,10 @@ public class TabController extends DebuggableController implements Initializable
     public StartDirectoryComponentController startDirectoryController;
 
     @FXML
-    public MainViewController mainViewController;
+    ListView<KodiMoviePathEntryBox> listView;
+
+    @FXML
+    VBox detailsBox;
 
 
 
@@ -92,8 +107,7 @@ public class TabController extends DebuggableController implements Initializable
     @FXML
     public Pane startDirectory;
 
-    @FXML
-    public Pane mainView;
+
 
     @FXML
     MenuBar menuBar;
@@ -117,14 +131,14 @@ public class TabController extends DebuggableController implements Initializable
         @Override
         protected void prepareUi() {
             super.prepareUi();
-            renamingPathEntries.getEntries().clear();
-            mainViewController.clearView();
+            movieEntries.getEntries().clear();
+
 
         }
 
         @Override
         protected void onSucceeded(WorkerStateEvent workerStateEvent) {
-            mainViewController.updateInputView();
+
             log.debug("Service {} finished", workerStateEvent.getSource());
         }
 
@@ -137,14 +151,15 @@ public class TabController extends DebuggableController implements Initializable
 
     //
 
-    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, RenamingPathEntries renamingPathEntries, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig, ResourceBundle resourceBundle) {
+    public TabController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig, MovieEntries movieEntries, ResourceBundle resourceBundle, KodiUiConfig kodiUiConfig) {
         super(appConfig);
         this.fxWeaver = fxWeaver;
         this.applicationStyle = applicationStyle;
         this.loadPathsService = loadPathsService;
         this.executor = executor;
-        this.renamingPathEntries = renamingPathEntries;
+        this.movieEntries = movieEntries;
         this.resourceBundle = resourceBundle;
+        this.kodiUiConfig = kodiUiConfig;
         this.loadServiceStarter = new LoadServiceStarter(this.loadPathsService);
         this.progressLabel = new Label();
 
@@ -161,7 +176,7 @@ public class TabController extends DebuggableController implements Initializable
         startDirectoryController.readyProperty().addListener(this::readyChangeListener);
 
         if (!getAppConfig().isDebug())
-        progressAndStatusGrid.visibleProperty().bind(loadPathsService.runningProperty());
+            progressAndStatusGrid.visibleProperty().bind(loadPathsService.runningProperty());
 
         loadPathsService.setExecutor(executor);
 
@@ -169,6 +184,41 @@ public class TabController extends DebuggableController implements Initializable
 
         applicationStyle.currentStyleSheetProperty().addListener(this::themeChanged);
         Platform.runLater(() -> applyTheme(null, applicationStyle.getCurrentStyleSheet()));
+
+
+        listView.setCellFactory(new Callback<ListView<KodiMoviePathEntryBox>, ListCell<KodiMoviePathEntryBox>>() {
+            @Override
+            public ListCell<KodiMoviePathEntryBox> call(ListView<KodiMoviePathEntryBox> param) {
+                ListCell<KodiMoviePathEntryBox> lc = new ListCell<>() {
+
+                    @Override
+                    protected void updateItem(KodiMoviePathEntryBox item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            setGraphic(item);
+                        }
+                    }
+                };
+                lc.prefWidthProperty().bind(listView.widthProperty().subtract(18));
+                return lc;
+            }
+        });
+
+        listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<KodiMoviePathEntryBox>() {
+
+            @Override
+            public void changed(ObservableValue<? extends KodiMoviePathEntryBox> observable, KodiMoviePathEntryBox oldValue, KodiMoviePathEntryBox newValue) {
+                if(newValue != null) {
+                    Movie selectedMovie = newValue.getMovie();
+                    detailsBox.getChildren().setAll(new KodiBox(selectedMovie, getAppConfig(),kodiUiConfig));
+                }
+            }
+        });
+
+        listView.setItems(movieEntries.entriesFilteredProperty());
 
     }
 
@@ -181,7 +231,7 @@ public class TabController extends DebuggableController implements Initializable
         if (newValue != null && newValue) {
             // we are ready. Starting is triggered by input change listener
         } else {
-            mainViewController.cancelCurrentOperationAndClearView();
+
         }
     }
 

@@ -20,6 +20,7 @@
 
 package drkodi;
 
+import drkodi.ui.control.KodiMoviePathEntryBox;
 import drrename.commons.RenamingPath;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
@@ -35,20 +36,20 @@ import javax.annotation.PostConstruct;
 import java.util.function.Predicate;
 
 /**
- * {@link Component} that holds loaded instances of {@link RenamingPath}.
+ * {@link Component} that holds loaded instances of {@link KodiMoviePathEntryBox}.
  */
 @Slf4j
 @Component
-public class RenamingPathEntries {
+public class MovieEntries {
 
-    private final ListProperty<RenamingPath> entries;
+    private final ListProperty<KodiMoviePathEntryBox> entries;
 
-    private final ListProperty<RenamingPath> entriesFiltered;
+    private final ListProperty<KodiMoviePathEntryBox> entriesFiltered;
 
-    private final Predicate<RenamingPath> entriesFilteredDefaultPredicate = e -> true;
+    private final Predicate<KodiMoviePathEntryBox> entriesFilteredDefaultPredicate = e -> true;
 
-    public RenamingPathEntries() {
-        entries = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{item.newPathProperty(), item.exceptionProperty(), item.filteredProperty(), item.willChangeProperty()}));
+    public MovieEntries() {
+        entries = new SimpleListProperty<>(FXCollections.observableArrayList(item -> new Observable[]{}));
         entriesFiltered = new SimpleListProperty<>(new FilteredList<>(entries, entriesFilteredDefaultPredicate));
     }
 
@@ -66,23 +67,23 @@ public class RenamingPathEntries {
     // FX Getter / Setter //
 
 
-    public ObservableList<RenamingPath> getEntries() {
+    public ObservableList<KodiMoviePathEntryBox> getEntries() {
         return entries.get();
     }
 
-    public ListProperty<RenamingPath> entriesProperty() {
+    public ListProperty<KodiMoviePathEntryBox> entriesProperty() {
         return entries;
     }
 
-    public void setEntries(ObservableList<RenamingPath> entries) {
+    public void setEntries(ObservableList<KodiMoviePathEntryBox> entries) {
         this.entries.set(entries);
     }
 
-    public ObservableList<RenamingPath> getEntriesFiltered() {
+    public ObservableList<KodiMoviePathEntryBox> getEntriesFiltered() {
         return entriesFiltered.get();
     }
 
-    public ReadOnlyListProperty<RenamingPath> entriesFilteredProperty() {
+    public ReadOnlyListProperty<KodiMoviePathEntryBox> entriesFilteredProperty() {
         return entriesFiltered;
     }
 
