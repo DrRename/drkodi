@@ -73,9 +73,9 @@
 /*}*/
 
 .kodi-box {
-    -fx-border-style: solid hidden hidden hidden;
-    -fx-border-width: 2;
-    -fx-border-color: gray;
+    /*-fx-border-style: solid hidden hidden hidden;*/
+    /*-fx-border-width: 2;*/
+    /*-fx-border-color: gray;*/
 }
 
 .kodi-movie-title {

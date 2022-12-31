@@ -23,6 +23,7 @@ package drkodi.ui.control;
 import drkodi.data.movie.Movie;
 import drkodi.util.DrRenameUtil;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.FlowPane;
 import org.apache.commons.lang3.SystemUtils;
@@ -31,12 +32,12 @@ public class KodiOpenAndSaveButtonsBox extends FlowPane {
 
     public KodiOpenAndSaveButtonsBox(Movie item){
         if (SystemUtils.IS_OS_MAC) {
-            Hyperlink button = new Hyperlink("Open in finder");
+            Button button = new Button("Open in finder");
             button.setOnAction(event -> DrRenameUtil.runOpenFolderCommandMacOs(item.getRenamingPath().getOldPath()));
             button.getStyleClass().add("kodi-link");
             getChildren().add(button);
         }
-        Hyperlink button = new Hyperlink("Clear Data");
+        Button button = new Button("Clear Data");
         button.setOnAction(event -> {
             item.clearData();
         });
@@ -49,7 +50,7 @@ public class KodiOpenAndSaveButtonsBox extends FlowPane {
 //        button.getStyleClass().add("kodi-link");
 //        getChildren().add(button);
 
-        setPadding(new Insets(12,0,0,0));
+        setPadding(new Insets(0,0,12,0));
 
     }
 }

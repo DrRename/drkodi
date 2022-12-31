@@ -30,7 +30,7 @@
 <?import javafx.scene.control.ListView?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="drkodi.ui.TabController" fx:id="root">
+      fx:controller="drkodi.ui.MainViewController" fx:id="root">
 
     <padding>
         <Insets top="4" right="4" bottom="4" left="4"/>
