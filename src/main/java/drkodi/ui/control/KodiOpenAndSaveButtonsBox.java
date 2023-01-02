@@ -24,31 +24,38 @@ import drkodi.data.movie.Movie;
 import drkodi.util.DrRenameUtil;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.FlowPane;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SystemUtils;
 
+@Slf4j
 public class KodiOpenAndSaveButtonsBox extends FlowPane {
 
-    public KodiOpenAndSaveButtonsBox(Movie item){
+    public KodiOpenAndSaveButtonsBox(Movie item) {
+
+        Button button = new Button("Open in System browser");
+
         if (SystemUtils.IS_OS_MAC) {
-            Button button = new Button("Open in finder");
-            button.setOnAction(event -> DrRenameUtil.runOpenFolderCommandMacOs(item.getRenamingPath().getOldPath()));
-            button.getStyleClass().add("kodi-link");
-            getChildren().add(button);
+            button.setOnAction(event -> {
+                DrRenameUtil.runOpenFolderCommandMacOs(item.getRenamingPath().getOldPath());
+            });
+        } else if (SystemUtils.IS_OS_LINUX) {
+            button.setOnAction(event -> {
+                DrRenameUtil.runOpenFolderCommandLinux(item.getRenamingPath().getOldPath());
+            });
+        } else {
+            log.warn("Unknown OS {}", SystemUtils.OS_NAME);
         }
-        Button button = new Button("Clear Data");
+
+        button.getStyleClass().add("kodi-link");
+        getChildren().add(button);
+
+        button = new Button("Clear Data");
         button.setOnAction(event -> {
             item.clearData();
         });
         button.getStyleClass().add("kodi-link");
         getChildren().add(button);
-//         button = new Hyperlink("Save to NFO");
-//        button.setOnAction(event -> {
-//            item.writeNfoDataAndImage();
-//        });
-//        button.getStyleClass().add("kodi-link");
-//        getChildren().add(button);
 
         setPadding(new Insets(0,0,12,0));
 
