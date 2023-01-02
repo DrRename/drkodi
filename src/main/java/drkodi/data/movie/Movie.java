@@ -141,9 +141,17 @@ public class Movie extends DynamicMovieData {
         initImageDataListener();
         initIdListener();
         // find and load NFO path
+
+
+
+    }
+
+    public void loadExternalData(){
         executeReadNfoTask();
         triggerWebSearch();
-        // trigger checks
+    }
+
+    public void triggerChecks(){
         triggerEmptyFolderCheck();
         new SubdirsCheckTaskExecutor(this, executor, runningTasks).execute();
     }
