@@ -19,4 +19,4 @@
 #
 
 cd "$(dirname "$0")" || exit
-../Plugins/jre/Contents/Home/bin/java -jar "../Resources/Java/drkodi-0.1.1-SNAPSHOT-mac.jar"
+../Plugins/jre/Contents/Home/bin/java -jar "../Resources/Java/drkodi-0.1.3-mac.jar"

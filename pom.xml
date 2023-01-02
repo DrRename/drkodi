@@ -382,7 +382,7 @@
                                     <platform>linux</platform>
                                     <name>DrKodi</name>
                                     <assetsDir>assets</assetsDir>
-                                    <version>1.0.0</version>
+                                    <version>0.1.3</version>
 
                                 </configuration>
                             </execution>
