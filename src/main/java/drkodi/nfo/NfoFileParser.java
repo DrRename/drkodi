@@ -82,7 +82,7 @@ public class NfoFileParser {
             root.setUrl(Files.readString(filePath));
             return root;
         }
-        String content = "<NfoRoot>" + String.join("", Files.readAllLines(filePath)) + "</NfoRoot>";
+        String content = "<NfoRoot>" + String.join("", Files.readAllLines(filePath)).trim() + "</NfoRoot>";
 
         try {
             return xmlMapper.readValue(content, NfoRoot.class);
