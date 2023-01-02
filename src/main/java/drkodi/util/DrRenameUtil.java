@@ -21,11 +21,6 @@
 package drkodi.util;
 
 import drkodi.ui.CommandRunner;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,20 +108,11 @@ public class DrRenameUtil {
         return true;
     }
 
-    public static Parent getOpenInFinderButton(Path path) {
-        HBox box = new HBox(2);
-        Button button = new Button("Open in finder");
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                runOpenFolderCommandMacOs(path);
-            }
-        });
-        box.getChildren().add(button);
-        return box;
-    }
-
     public static void runOpenFolderCommandMacOs(Path path) {
         new CommandRunner().runCommand(new String[]{"open", "-R", path + File.separator});
+    }
+
+    public static void runOpenFolderCommandLinux(Path path) {
+        new CommandRunner().runCommand(new String[]{"xdg-open", path + File.separator});
     }
 }
