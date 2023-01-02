@@ -123,26 +123,20 @@ public class Movie extends DynamicMovieData {
 
     private void init() {
 
-        runningTasks.addListener(new ListChangeListener<Task<?>>() {
-            @Override
-            public void onChanged(Change<? extends Task<?>> c) {
-                while(c.next()){
+        runningTasks.addListener((ListChangeListener<Task<?>>) c -> {
+            while(c.next()){
 
-                }
-                log.debug("Running tasks now {}", c.getList().size());
-                running.set(!c.getList().isEmpty());
             }
+            log.debug("Running tasks now {}", c.getList().size());
+            running.set(!c.getList().isEmpty());
         });
 
 
         nfoPathProperty().addListener(nfoPathListener);
-        initWebSearchListener();
         imagePathProperty().addListener(imagePathListener);
+        initWebSearchListener();
         initImageDataListener();
         initIdListener();
-        // find and load NFO path
-
-
 
     }
 
