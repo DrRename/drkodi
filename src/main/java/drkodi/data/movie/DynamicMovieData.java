@@ -43,18 +43,110 @@ public class DynamicMovieData extends MovieData {
     // Inner classes //
 
     class MovieTitleListener implements ChangeListener<String> {
-
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
             log.debug("Movie title has changed from {} to {}", oldValue, newValue);
             updateTitleWarnings(newValue);
         }
     }
-
     private final MovieTitleListener movieTitleListener;
 
-    class NfoDataListener implements ChangeListener<QualifiedNfoData> {
+    class MovieTitleFromFolderListener implements ChangeListener<String> {
 
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            log.debug("Movie title from folder has changed from {} to {}", oldValue, newValue);
+            if (newValue != null) {
+                if (getMovieTitle() == null || getMovieTitle() != null && getMovieTitle().equals(oldValue)) {
+                    // no generic movie name set, set it || old value was from folder name, update to new value
+                    setMovieTitle(newValue);
+                }
+            }
+        }
+    }
+    private final MovieTitleFromFolderListener movieTitleFromFolderListener;
+
+    class MovieTitleFromNfoListener implements ChangeListener<String> {
+
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            // NFO name has priority, set it in any case
+            setMovieTitle(newValue);
+        }
+    }
+    private final MovieTitleFromNfoListener movieTitleFromNfoListener;
+
+    class MovieOriginalTitleListener implements ChangeListener<String> {
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
+            updateOriginalTitleWarnings(newValue);
+        }
+    }
+    private final MovieOriginalTitleListener movieOriginalTitleListener;
+
+    class MovieTitleFromWebListener implements ChangeListener<String> {
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            log.debug("Movie title from web has changed from {} to {}", oldValue, newValue);
+            if (StringUtils.isNotBlank(newValue)) {
+                // NFO name has priority, set it in any case
+                setMovieTitle(newValue);
+            }
+        }
+    }
+    private final MovieTitleFromWebListener movieTitleFromWebListener;
+
+    class MovieYearListener implements ChangeListener<Integer> {
+        @Override
+        public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+            log.debug("Movie year has changed from {} to {}", oldValue, newValue);
+            updateYearWarnings();
+        }
+    }
+    private final MovieYearListener movieYearListener;
+
+    class MovieYearFromFolderListener implements ChangeListener<Integer> {
+        @Override
+        public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+            log.debug("Movie year from Folder has changed from {} to {}", oldValue, newValue);
+            // NFO year has priority, set it in any case
+            setMovieYear(newValue);
+        }
+    }
+    private final MovieYearFromFolderListener movieYearFromFolderListener;
+
+    class MovieYearFromNfoListener implements ChangeListener<Integer> {
+        @Override
+        public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+            log.debug("Movie year from NFO has changed from {} to {}", oldValue, newValue);
+            // NFO year has priority, set it in any case
+            setMovieYear(newValue);
+        }
+    }
+    private final MovieYearFromNfoListener movieYearFromNfoListener;
+
+    class MovieYearFromWebListener implements ChangeListener<Integer> {
+        @Override
+        public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+            log.debug("Movie year from web has changed from {} to {}", oldValue, newValue);
+            setMovieYear(newValue);
+        }
+    }
+    private final MovieYearFromWebListener movieYearFromWebListener;
+
+    class FolderNameListener implements ChangeListener<String> {
+
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            // update name and year, they are both coming from the folder name
+            movieTitleFromFolderProperty().set(KodiUtil.getMovieNameFromDirectoryName(newValue));
+            movieYearFromFolderProperty().set(KodiUtil.getMovieYearFromDirectoryName(newValue));
+        }
+    }
+    private final FolderNameListener folderNameListener;
+
+    class NfoDataListener implements ChangeListener<QualifiedNfoData> {
         @Override
         public void changed(ObservableValue<? extends QualifiedNfoData> observable, QualifiedNfoData oldValue, QualifiedNfoData newValue) {
             if(newValue == null){
@@ -72,17 +164,14 @@ public class DynamicMovieData extends MovieData {
             setMovieOriginalTitle(NfoUtil.getMovieOriginalTitle(newValue.getElement()));
         }
     }
-
     private final NfoDataListener nfoDataListener;
 
     class MoviePathChangeListener implements ChangeListener<Path> {
-
         @Override
         public void changed(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
             applyNewFolderName(newValue.getFileName().toString());
         }
     }
-
     private final MoviePathChangeListener moviePathChangeListener;
 
     //
@@ -90,9 +179,18 @@ public class DynamicMovieData extends MovieData {
 
     public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
         super(renamingPath, mapper, searchResultToMovieMapper, folderNameWarningNormalizer);
+        this.folderNameListener = new FolderNameListener();
         this.nfoDataListener = new NfoDataListener();
         this.moviePathChangeListener = new MoviePathChangeListener();
         this.movieTitleListener = new MovieTitleListener();
+        this.movieTitleFromFolderListener = new MovieTitleFromFolderListener();
+        this.movieTitleFromNfoListener = new MovieTitleFromNfoListener();
+        this.movieTitleFromWebListener = new MovieTitleFromWebListener();
+        this.movieOriginalTitleListener = new MovieOriginalTitleListener();
+        this.movieYearListener = new MovieYearListener();
+        this.movieYearFromNfoListener = new MovieYearFromNfoListener();
+        this.movieYearFromFolderListener = new MovieYearFromFolderListener();
+        this.movieYearFromWebListener = new MovieYearFromWebListener();
         registerDefaultListeners();
         registerListeners();
     }
@@ -102,103 +200,18 @@ public class DynamicMovieData extends MovieData {
     }
 
     private void registerDefaultListeners() {
+        getRenamingPath().fileNameProperty().addListener(folderNameListener);
+        nfoDataProperty().addListener(nfoDataListener);
         getRenamingPath().oldPathProperty().addListener(moviePathChangeListener);
         movieTitleProperty().addListener(movieTitleListener);
-        movieOriginalTitleProperty().addListener(this::movieOriginalTitleListener);
-        registerMovieYearListeners();
-        registerMovieTitleFromFolderListeners();
-        registerMovieYearFromFolderListeners();
-        getRenamingPath().fileNameProperty().addListener(this::folderNameListener);
-        nfoDataProperty().addListener(nfoDataListener);
-
-    }
-
-
-
-    private void registerMovieYearListeners() {
-        movieYearProperty().addListener(this::movieYearListener);
-    }
-
-    private void registerMovieTitleFromFolderListeners() {
-        // listen for changes from folder, nfo, web
-        movieTitleFromFolderProperty().addListener(this::movieTitleFromFolderListener);
-        movieTitleFromNfoProperty().addListener(this::movieTitleFromNfoListener);
-        movieTitleFromWebProperty().addListener(this::movieTitleFromWebListener);
-    }
-
-    private void registerMovieYearFromFolderListeners() {
-        // listen for changes from folder, nfo, web
-        movieYearFromFolderProperty().addListener(this::movieYearFromFolderListener);
-        movieYearFromNfoProperty().addListener(this::movieYearFromNfoListener);
-        movieYearFromWebProperty().addListener(this::movieYearFromWebListener);
-    }
-
-    private void movieOriginalTitleListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
-        updateOriginalTitleWarnings(newValue);
-    }
-
-    private void movieYearListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-        log.debug("Movie year has changed from {} to {}", oldValue, newValue);
-        updateYearWarnings();
-    }
-
-    private void movieTitleFromFolderListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        log.debug("Movie title from folder has changed from {} to {}", oldValue, newValue);
-        if (newValue != null) {
-            if (getMovieTitle() == null || getMovieTitle() != null && getMovieTitle().equals(oldValue)) {
-                // no generic movie name set, set it || old value was from folder name, update to new value
-                setMovieTitle(newValue);
-            }
-        }
-    }
-
-    private void movieTitleFromNfoListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        log.debug("Movie title from NFO has changed from {} to {}", oldValue, newValue);
-        if (StringUtils.isNotBlank(newValue)) {
-            // NFO name has priority, set it in any case
-            setMovieTitle(newValue);
-        }
-    }
-
-    private void movieTitleFromWebListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        log.debug("Movie name from Web has changed from {} to {}", oldValue, newValue);
-        if (newValue != null) {
-            // This is set manually
-            setMovieTitle(newValue);
-        }
-    }
-
-    private void movieYearFromFolderListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-        log.debug("Movie year from Web has changed from {} to {}", oldValue, newValue);
-        if (newValue != null) {
-            if (getMovieYear() == null || getMovieYear() != null && getMovieYear().equals(oldValue)) {
-                // no generic movie name set, set it || old value was from folder name, update to new value
-                setMovieYear(newValue);
-            }
-        }
-    }
-
-    private void movieYearFromNfoListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-        log.debug("Movie year from NFO has changed from {} to {}", oldValue, newValue);
-        if (newValue != null) {
-            // NFO year has priority, set it in any case
-            setMovieYear(newValue);
-        }
-    }
-
-    private void movieYearFromWebListener(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
-        log.debug("Movie year from Web has changed from {} to {}", oldValue, newValue);
-        if (newValue != null) {
-            // this is set manually
-            setMovieYear(newValue);
-        }
-    }
-
-    private void folderNameListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        // update name and year, they are both coming from the folder name
-        movieTitleFromFolderProperty().set(KodiUtil.getMovieNameFromDirectoryName(newValue));
-        movieYearFromFolderProperty().set(KodiUtil.getMovieYearFromDirectoryName(newValue));
+        movieTitleFromFolderProperty().addListener(movieTitleFromFolderListener);
+        movieTitleFromNfoProperty().addListener(movieTitleFromNfoListener);
+        movieTitleFromWebProperty().addListener(movieTitleFromWebListener);
+        movieOriginalTitleProperty().addListener(movieOriginalTitleListener);
+        movieYearProperty().addListener(movieYearListener);
+        movieYearFromNfoProperty().addListener(movieYearFromNfoListener);
+        movieYearFromFolderProperty().addListener(movieYearFromFolderListener);
+        movieYearFromWebProperty().addListener(movieYearFromWebListener);
     }
 
     @Override
