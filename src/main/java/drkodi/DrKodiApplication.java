@@ -15,7 +15,7 @@ public class DrKodiApplication extends Application {
     public void init() {
         this.applicationContext = new SpringApplicationBuilder()
                 .sources(Launcher.class)
-//                .headless(false)
+                .headless(false)
                 .run(getParameters().getRaw().toArray(new String[0]));
     }
 
