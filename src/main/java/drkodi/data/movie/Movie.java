@@ -29,13 +29,13 @@ import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.MediaFilesPresentTask;
 import drkodi.task.RenameFolderToMovieTitleTask;
-import drkodi.task.SubdirsPresentTask;
 import drkodi.themoviedb.MovieDbDetails;
 import drkodi.themoviedb.MovieDbSearchTask;
 import drkodi.themoviedb.MovieDbSearcher;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -59,17 +59,54 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class Movie extends DynamicMovieData {
 
+    // Inner classes //
+
+    class NfoPathListener implements ChangeListener<QualifiedPath> {
+
+        @Override
+        public void changed(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
+            if (Qualified.isOk(newValue)) {
+                log.debug("Got NFO path: {}", newValue);
+                loadNfoData(newValue.getElement());
+            } else {
+                log.debug("Got invalid NFO path: {}", newValue);
+                // we are not loading NFO data since path is invalid.
+                // To signal data loading is complete, we need to set NFO data to INVALID here.
+                setNfoData(new QualifiedNfoData(null, Qualified.Type.INVALID));
+            }
+        }
+    }
+
+    private final NfoPathListener nfoPathListener;
+
+    class ImagePathListener implements ChangeListener<QualifiedPath> {
+
+        @Override
+        public void changed(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
+            if (Qualified.isOk(newValue)) {
+                log.debug("Got new image path: {}", newValue);
+                loadImageData(newValue.getElement());
+            } else {
+                log.debug("Invalid image path: {}", newValue);
+            }
+        }
+    }
+
+    private final ImagePathListener imagePathListener;
+
+    //
+
     private final MovieDbSearcher movieDbSearcher;
 
     private final MovieTitleSearchNormalizer movieTitleSearchNormalizer;
 
     private final MovieTitleWriteNormalizer movieTitleWriteNormalizer;
 
-    private Executor executor;
+    private final Executor executor;
 
     private final BooleanProperty running;
 
-    private ObservableList<Task<?>> runningTasks;
+    private final ObservableList<Task<?>> runningTasks;
 
     public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
         super(renamingPath, mapper, folderNameWarningNormalizer, searchResultToMovieMapper);
@@ -77,6 +114,8 @@ public class Movie extends DynamicMovieData {
         this.movieDbSearcher = movieDbSearcher;
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
+        this.nfoPathListener = new NfoPathListener();
+        this.imagePathListener = new ImagePathListener();
         this.running = new SimpleBooleanProperty();
         this.runningTasks = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
         init();
@@ -91,18 +130,14 @@ public class Movie extends DynamicMovieData {
 
                 }
                 log.debug("Running tasks now {}", c.getList().size());
-                if(c.getList().isEmpty()){
-                    running.set(false);
-                } else {
-                    running.set(true);
-                }
+                running.set(!c.getList().isEmpty());
             }
         });
 
 
-        nfoPathProperty().addListener(this::nfoPathListener);
+        nfoPathProperty().addListener(nfoPathListener);
         initWebSearchListener();
-        imagePathProperty().addListener(this::imagePathListener);
+        imagePathProperty().addListener(imagePathListener);
         initImageDataListener();
         initIdListener();
         // find and load NFO path
@@ -110,7 +145,7 @@ public class Movie extends DynamicMovieData {
         triggerWebSearch();
         // trigger checks
         triggerEmptyFolderCheck();
-        triggerSubdirsCheck();
+        new SubdirsCheckTaskExecutor(this, executor, runningTasks).execute();
     }
 
     // Register Listeners //
@@ -144,38 +179,12 @@ public class Movie extends DynamicMovieData {
         imageDataProperty().addListener(this::imageDataListener);
     }
 
-    private void initImagePathListener() {
-        imagePathProperty().addListener(this::imagePathListener);
-    }
-
-    protected void nfoPathListener(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
-
-        if (Qualified.isOk(newValue)) {
-            log.debug("Got NFO path: {}", newValue);
-            loadNfoData(newValue.getElement());
-        } else {
-            log.debug("Got invalid NFO path: {}", newValue);
-            // we are not loading NFO data since path is invalid.
-            // To signal data loading is complete, we need to set NFO data to INVALID here.
-            setNfoData(new QualifiedNfoData(null, Qualified.Type.INVALID));
-        }
-    }
 
     @Override
     protected void setDefaultNfoPath() {
-        nfoPathProperty().removeListener(this::nfoPathListener);
+        nfoPathProperty().removeListener(nfoPathListener);
         super.setDefaultNfoPath();
-        nfoPathProperty().addListener(this::nfoPathListener);
-    }
-
-    private void imagePathListener(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
-        if (Qualified.isOk(newValue)) {
-            log.debug("Got new image path: {}", newValue);
-            loadImageData(newValue.getElement());
-        } else {
-            log.debug("Invalid image path: {}", newValue);
-        }
-
+        nfoPathProperty().addListener(nfoPathListener);
     }
 
     private void imageDataListener(ObservableValue<? extends ImageData> observable, ImageData oldValue, ImageData newValue) {
@@ -266,6 +275,7 @@ public class Movie extends DynamicMovieData {
         var task = new ReadNfoTask(path);
         task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoRoot) event.getSource().getValue())));
         task.setOnFailed(event -> {
+            log.warn("Task failed", task.getException());
             setNfoData(QualifiedNfoData.from(null));
             getWarnings().add(new KodiWarning(KodiWarning.Type.NFO_NOT_READABLE));
 //            triggerWebSearch();
@@ -305,12 +315,13 @@ public class Movie extends DynamicMovieData {
     }
 
 
-
+    @Deprecated
     protected void executeTask(Task<?> task) {
         task.setOnFailed(this::taskFailed);
         executeTask2(task);
     }
 
+    @Deprecated
     protected void executeTask2(Task<?> task) {
         log.debug("Adding task {} to queue", task);
         runningTasks.add(task);
@@ -395,23 +406,14 @@ public class Movie extends DynamicMovieData {
     }
 
     private void triggerSubdirsCheck() {
-        log.debug("Trigger subdirs check");
-        var task = new SubdirsPresentTask(this);
-        task.setOnSucceeded(event -> {
-                    if (task.getValue()) {
-                        log.debug("Subdirectories found in {}", getRenamingPath().getOldPath());
-                        getWarnings().add(new KodiWarning(KodiWarning.Type.SUBDIRS));
-                    }
-                }
-        );
-        executeTask(task);
+        new SubdirsCheckTaskExecutor(this, executor, runningTasks).execute();
     }
 
     @Override
     protected void setDefaultImagePath() {
-        imagePathProperty().removeListener(this::imagePathListener);
+        imagePathProperty().removeListener(imagePathListener);
         super.setDefaultImagePath();
-        imagePathProperty().addListener(this::imagePathListener);
+        imagePathProperty().addListener(imagePathListener);
     }
 
 
