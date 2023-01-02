@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @RequiredArgsConstructor
-public class SubdirsPresentTask extends Task<Boolean> {
+public class SubdirsCheckTask extends Task<Boolean> {
 
     private final Movie movie;
 

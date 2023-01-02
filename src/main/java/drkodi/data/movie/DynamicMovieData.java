@@ -23,27 +23,76 @@ package drkodi.data.movie;
 
 import drkodi.KodiUtil;
 import drkodi.SearchResultDtoMapper;
+import drkodi.data.QualifiedNfoData;
+import drkodi.data.QualifiedPath;
 import drkodi.data.SearchResultToMovieMapper;
+import drkodi.nfo.NfoUtil;
 import drkodi.normalization.FolderNameWarningNormalizer;
 import drrename.commons.RenamingPath;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.nio.file.Path;
+import java.util.Optional;
+
 @Slf4j
 public class DynamicMovieData extends MovieData {
 
-    private final NfoDataListener nfoDataListener;
+    // Inner classes //
 
-    private final MoviePathChangeListener moviePathChangeListener;
+    class MovieTitleListener implements ChangeListener<String> {
+
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            log.debug("Movie title has changed from {} to {}", oldValue, newValue);
+            updateTitleWarnings(newValue);
+        }
+    }
 
     private final MovieTitleListener movieTitleListener;
 
+    class NfoDataListener implements ChangeListener<QualifiedNfoData> {
+
+        @Override
+        public void changed(ObservableValue<? extends QualifiedNfoData> observable, QualifiedNfoData oldValue, QualifiedNfoData newValue) {
+            if(newValue == null){
+                log.debug("New NFO data null");
+                return;
+            }
+            log.debug("Setting NFO data to {}", newValue);
+            setMovieTitleFromNfo(NfoUtil.getMovieTitle(newValue.getElement()));
+            setMovieYearFromNfo(NfoUtil.getMovieYear(newValue.getElement()));
+            Optional.ofNullable(NfoUtil.getGenres(newValue.getElement())).ifPresent(g -> getGenres().setAll(g));
+            setPlot(NfoUtil.getPlot(newValue.getElement()));
+            setTagline(NfoUtil.getTagline(newValue.getElement()));
+            setImagePath(QualifiedPath.from(NfoUtil.getImagePath(getRenamingPath().getOldPath(), newValue.getElement())));
+            setMovieDbId(NfoUtil.getId2(newValue.getElement()));
+            setMovieOriginalTitle(NfoUtil.getMovieOriginalTitle(newValue.getElement()));
+        }
+    }
+
+    private final NfoDataListener nfoDataListener;
+
+    class MoviePathChangeListener implements ChangeListener<Path> {
+
+        @Override
+        public void changed(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
+            applyNewFolderName(newValue.getFileName().toString());
+        }
+    }
+
+    private final MoviePathChangeListener moviePathChangeListener;
+
+    //
+
+
     public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
         super(renamingPath, mapper, searchResultToMovieMapper, folderNameWarningNormalizer);
-        this.nfoDataListener = new NfoDataListener(this);
-        this.moviePathChangeListener = new MoviePathChangeListener(this);
-        this.movieTitleListener = new MovieTitleListener(this);
+        this.nfoDataListener = new NfoDataListener();
+        this.moviePathChangeListener = new MoviePathChangeListener();
+        this.movieTitleListener = new MovieTitleListener();
         registerDefaultListeners();
         registerListeners();
     }

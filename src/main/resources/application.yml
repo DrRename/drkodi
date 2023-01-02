@@ -5,7 +5,7 @@ spring:
 logging:
   level:
     root: info
-    drkodi: info
+#    drkodi: debug
 #    drkodi.normalization: debug
 #    drkodi.themoviedb: debug
 #    drkodi.data.dynamic: debug
