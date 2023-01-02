@@ -89,6 +89,12 @@ public class MainViewController extends DebuggableController implements Initiali
     public TextField searchField;
 
     @FXML
+    public SplitPane splitPane;
+
+    @FXML
+    public VBox leftSplitContent;
+
+    @FXML
     ListView<KodiMoviePathEntryBox> listView;
 
     @FXML
@@ -235,6 +241,8 @@ public class MainViewController extends DebuggableController implements Initiali
                 }
             }
         });
+
+        SplitPane.setResizableWithParent(leftSplitContent, Boolean.FALSE);
 
     }
 

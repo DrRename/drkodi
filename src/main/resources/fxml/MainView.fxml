@@ -45,12 +45,12 @@
 
     <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
 
-       <SplitPane VBox.vgrow="ALWAYS">
-          <VBox>
+       <SplitPane fx:id="splitPane" VBox.vgrow="ALWAYS">
+          <VBox fx:id="leftSplitContent">
               <TextField fx:id="searchField" promptText="%mainview.searchfield.text"/>
               <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
           </VBox>
-           <VBox fx:id="detailsBox"></VBox>
+           <VBox fx:id="detailsBox"/>
        </SplitPane>
 
     <ProgressAndStatusGridPane fx:id="progressAndStatusGrid"/>
