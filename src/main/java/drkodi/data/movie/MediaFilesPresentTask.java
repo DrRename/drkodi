@@ -1,7 +1,6 @@
-package drkodi.task;
+package drkodi.data.movie;
 
 import drkodi.KodiUtil;
-import drkodi.data.movie.Movie;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 
