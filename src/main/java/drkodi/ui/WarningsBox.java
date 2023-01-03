@@ -26,6 +26,7 @@ import drkodi.data.movie.Movie;
 import drkodi.ui.control.GenericWarningsBox;
 import drkodi.ui.control.KodiTitleWarningBox;
 import drkodi.ui.control.KodiYearWarningBox;
+import drkodi.ui.control.NotADirectoryWarningsBox;
 import javafx.collections.ListChangeListener;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +72,7 @@ public class WarningsBox extends VBox {
                         getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("No media found", appConfig), appConfig));
                 case SUBDIRS ->  getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("Subdirectory found", appConfig), appConfig));
                 case NFO_NOT_READABLE -> getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("NFO file not readable", appConfig), appConfig));
+                case NOT_A_DIRECTORY -> getChildren().add(UiUtil.applyDebug(new NotADirectoryWarningsBox(element, appConfig), appConfig));
             }
         }
 

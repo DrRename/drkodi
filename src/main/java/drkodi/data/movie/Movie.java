@@ -27,7 +27,6 @@ import drkodi.data.json.WebSearchResults;
 import drkodi.normalization.FolderNameWarningNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
-import drkodi.task.MediaFilesPresentTask;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drkodi.themoviedb.MovieDbDetails;
 import drkodi.themoviedb.MovieDbSearchTask;
@@ -106,7 +105,7 @@ public class Movie extends DynamicMovieData {
 
     private final BooleanProperty running;
 
-    private final ObservableList<Task<?>> runningTasks;
+    private final ObservableList<Task<?>> runningTasksList;
 
     public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
         super(renamingPath, mapper, folderNameWarningNormalizer, searchResultToMovieMapper);
@@ -117,13 +116,13 @@ public class Movie extends DynamicMovieData {
         this.nfoPathListener = new NfoPathListener();
         this.imagePathListener = new ImagePathListener();
         this.running = new SimpleBooleanProperty();
-        this.runningTasks = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
+        this.runningTasksList = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
         init();
     }
 
     private void init() {
 
-        runningTasks.addListener((ListChangeListener<Task<?>>) c -> {
+        runningTasksList.addListener((ListChangeListener<Task<?>>) c -> {
             while(c.next()){
 
             }
@@ -146,8 +145,9 @@ public class Movie extends DynamicMovieData {
     }
 
     public void triggerChecks(){
-        triggerEmptyFolderCheck();
-        new SubdirsCheckTaskExecutor(this, executor, runningTasks).execute();
+        new MediaFilesPresentTaskExecutor(this, executor, runningTasksList).execute();
+        new SubdirsCheckTaskExecutor(this, executor, runningTasksList).execute();
+        new IsDirectoryTaskExecutor(this, executor, runningTasksList).execute();
     }
 
     // Register Listeners //
@@ -326,11 +326,11 @@ public class Movie extends DynamicMovieData {
     @Deprecated
     protected void executeTask2(Task<?> task) {
         log.debug("Adding task {} to queue", task);
-        runningTasks.add(task);
+        runningTasksList.add(task);
         task.stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED || newState == Worker.State.FAILED || newState == Worker.State.CANCELLED) {
                 log.debug("Removing task {} from queue", task);
-                runningTasks.remove(task);
+                runningTasksList.remove(task);
             }
         });
 
@@ -405,10 +405,6 @@ public class Movie extends DynamicMovieData {
                 }
         );
         executeTask(task);
-    }
-
-    private void triggerSubdirsCheck() {
-        new SubdirsCheckTaskExecutor(this, executor, runningTasks).execute();
     }
 
     @Override
