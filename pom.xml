@@ -353,6 +353,8 @@
                                 <configuration>
                                     <mainClass>${main-class}</mainClass>
                                     <bundleJre>true</bundleJre>
+                                    <generateInstaller>true</generateInstaller>
+                                    <createTarball>true</createTarball>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
