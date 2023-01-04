@@ -1,13 +1,8 @@
-name: Build macOS .dmg
+name: Build Mac dmg
 
 on:
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version'
-        required: false
 
 env:
   JAVA_VERSION: 17
