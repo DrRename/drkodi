@@ -273,7 +273,7 @@
                                     <assetsDir>assets</assetsDir>
                                     <version>1.0.0</version>
                                     <macConfig>
-                                        <customLauncher>src/main/resources/launcher-macosx-aarch64.sh</customLauncher>
+<!--                                        <customLauncher>src/main/resources/launcher-macosx-aarch64.sh</customLauncher>-->
                                         <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
                                         <appId>com.drkodi</appId>
                                         <codesignApp>true</codesignApp>
