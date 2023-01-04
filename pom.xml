@@ -254,7 +254,7 @@
                     <plugin>
                         <groupId>io.github.fvarrui</groupId>
                         <artifactId>javapackager</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.7.0-SNAPSHOT</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -264,6 +264,10 @@
                                 <configuration>
                                     <mainClass>${main-class}</mainClass>
                                     <bundleJre>true</bundleJre>
+                                    <generateInstaller>true</generateInstaller>
+                                    <createTarball>true</createTarball>
+                                    <jdkPath>jdk/mac/aarch64/jdk-17.0.5+8/Contents/Home</jdkPath>
+                                    <packagingJdk>jdk/mac/aarch64/jdk-17.0.5+8/Contents/Home</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
@@ -271,9 +275,9 @@
                                     <copyDependencies>false</copyDependencies>
                                     <name>DrKodi</name>
                                     <assetsDir>assets</assetsDir>
-                                    <version>1.0.0</version>
+                                    <version>${project.version}</version>
                                     <macConfig>
-<!--                                        <customLauncher>src/main/resources/launcher-macosx-aarch64.sh</customLauncher>-->
+                                        <customLauncher>src/main/resources/launcher-macosx-aarch64.sh</customLauncher>
                                         <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
                                         <appId>com.drkodi</appId>
                                         <codesignApp>true</codesignApp>
@@ -299,7 +303,7 @@
                     <plugin>
                         <groupId>io.github.fvarrui</groupId>
                         <artifactId>javapackager</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.7.0-SNAPSHOT</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -309,6 +313,10 @@
                                 <configuration>
                                     <mainClass>${main-class}</mainClass>
                                     <bundleJre>true</bundleJre>
+                                    <generateInstaller>true</generateInstaller>
+                                    <createTarball>true</createTarball>
+                                    <jdkPath>jdk/mac/x86_64/jdk-17.0.5+8/Contents/Home</jdkPath>
+                                    <packagingJdk>jdk/mac/x86_64/jdk-17.0.5+8/Contents/Home</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
@@ -316,7 +324,7 @@
                                     <copyDependencies>false</copyDependencies>
                                     <name>DrKodi</name>
                                     <assetsDir>assets</assetsDir>
-                                    <version>1.0.0</version>
+                                    <version>${project.version}</version>
                                     <macConfig>
                                         <customLauncher>src/main/resources/launcher-macosx-x86_64.sh</customLauncher>
                                         <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
@@ -339,11 +347,12 @@
                 <javafx.platform>linux</javafx.platform>
             </properties>
             <build>
+                <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
                         <groupId>io.github.fvarrui</groupId>
                         <artifactId>javapackager</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.7.0-SNAPSHOT</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -355,6 +364,8 @@
                                     <bundleJre>true</bundleJre>
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
+                                    <jdkPath>jdk/linux/x86_64/jdk-17.0.5+8</jdkPath>
+                                    <packagingJdk>jdk/linux/x86_64/jdk-17.0.5+8</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
@@ -363,7 +374,12 @@
                                     <platform>linux</platform>
                                     <name>DrKodi</name>
                                     <assetsDir>assets</assetsDir>
-                                    <version>0.1.3</version>
+                                    <version>${project.version}</version>
+                                    <linuxConfig>
+                                        <generateDeb>true</generateDeb>
+                                        <generateRpm>true</generateRpm>
+                                        <wrapJar>true</wrapJar>
+                                    </linuxConfig>
                                 </configuration>
                             </execution>
                         </executions>
