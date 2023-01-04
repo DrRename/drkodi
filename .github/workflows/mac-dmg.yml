@@ -35,3 +35,9 @@ jobs:
           cache: 'maven'
       - name: Run maven
         run: mvn -B clean package -Pmac -DskipTests
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: target/DrKodi/DrKodi.app
+          path: DrKodi.app
+          if-no-files-found: error

@@ -16,13 +16,17 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
-          cache: 'maven'
-
+          cache: 'maven
       - name: Run maven
         run: mvn -B clean package -Plinux-x86_64 -DskipTests
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: target/DrKodi/DrKodi.dmg
+          path: DrKodi.dmg
+          if-no-files-found: error
