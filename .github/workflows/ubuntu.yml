@@ -25,4 +25,4 @@ jobs:
           cache: 'maven'
 
       - name: Run maven
-        run: mvn -B clean package -Plinux -DskipTests
+        run: mvn -B clean package -Plinux-x86_64 -DskipTests
