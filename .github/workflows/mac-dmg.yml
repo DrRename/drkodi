@@ -24,6 +24,8 @@ jobs:
           cache: 'maven'
       - name: Run maven
         run: mvn -B clean package -Pmacosx-x86_64 -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
