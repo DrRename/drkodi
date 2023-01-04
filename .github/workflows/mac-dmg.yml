@@ -24,7 +24,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: 'maven
       - name: Run maven
-        run: mvn -B clean package -Pmac -DskipTests
+        run: mvn -B clean package -Pmacosx-x86_64 -DskipTests
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
