@@ -3,6 +3,7 @@ name: Build Mac dmg
 on:
   release:
     types: [published]
+  workflow_dispatch: {}
 
 env:
   JAVA_VERSION: 17
