@@ -3,6 +3,7 @@ name: Build Ubuntu
 on:
   release:
     types: [published]
+  workflow_dispatch: {}
 
 env:
   JAVA_VERSION: 17
