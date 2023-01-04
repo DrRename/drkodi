@@ -42,8 +42,7 @@ public class KodiMovieInfoBox extends VBox {
         this.progressBar = new ProgressBar();
         this.progressBar.setMaxWidth(Double.MAX_VALUE);
         progressBox.managedProperty().bind(kodiMovie.runningProperty());
-        progressBox.visibleProperty().bind(progressBar.managedProperty());
-
+        progressBox.visibleProperty().bind(progressBox.managedProperty());
         progressBox.getChildren().add(progressBar);
 
 
