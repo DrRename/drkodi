@@ -29,6 +29,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: target/DrKodi/DrKodi.dmg
-          path: DrKodi.dmg
+          name: target/DrKodi/DrKodi.deb
+          path: DrKodi.deb
           if-no-files-found: error
