@@ -21,3 +21,5 @@ secret.properties
 
 ## More
 .DS_Store
+
+jdk/
