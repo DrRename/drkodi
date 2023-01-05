@@ -30,7 +30,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: 'maven'
       - name: Build and Test
-        run: mvn -B verify jacoco:report coveralls:report
+        run: mvn -B verify sonar:sonar -Pcoverage
           jacoco:report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
