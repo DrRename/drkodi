@@ -402,6 +402,7 @@
                 <javafx.platform>win</javafx.platform>
             </properties>
             <build>
+                <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                 </plugins>
             </build>
