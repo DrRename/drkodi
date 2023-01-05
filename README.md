@@ -1,18 +1,12 @@
 # Dr.Kodi
 
 [![Build](https://github.com/drrename/drkodi/actions/workflows/build.yml/badge.svg)](https://github.com/drrename/drkodi/actions/workflows/build.yml)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=bugs)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=alert_status)](https://sonarcloud.io/dashboard?id=DrRename_drkodi)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
-[![Latest Release](https://img.shields.io/github/release/drkodi/drkodi.svg)](https://github.com/drrename/drkodi/releases/latest)
 
 
 https://user-images.githubusercontent.com/13817521/208781276-60301994-3e0d-4172-9ca8-1def39b4f29b.mov
