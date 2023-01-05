@@ -241,6 +241,12 @@
             <artifactId>drrename-commons</artifactId>
             <version>0.0.1</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.github.fvarrui</groupId>-->
+<!--            <artifactId>javapackager</artifactId>-->
+<!--            <version>1.7.0-SNAPSHOT</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
     <profiles>
         <profile>
@@ -266,6 +272,7 @@
                                     <bundleJre>true</bundleJre>
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
+                                    <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
                                     <jdkPath>jdk/mac/aarch64/jdk-17.0.5+8/Contents/Home</jdkPath>
                                     <packagingJdk>jdk/mac/aarch64/jdk-17.0.5+8/Contents/Home</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
@@ -315,6 +322,7 @@
                                     <bundleJre>true</bundleJre>
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
+                                    <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
                                     <jdkPath>jdk/mac/x86_64/jdk-17.0.5+8/Contents/Home</jdkPath>
                                     <packagingJdk>jdk/mac/x86_64/jdk-17.0.5+8/Contents/Home</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
@@ -364,6 +372,7 @@
                                     <bundleJre>true</bundleJre>
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
+                                    <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
                                     <jdkPath>jdk/linux/x86_64/jdk-17.0.5+8</jdkPath>
                                     <packagingJdk>jdk/linux/x86_64/jdk-17.0.5+8</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
