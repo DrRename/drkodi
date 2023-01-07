@@ -70,8 +70,9 @@ public class DynamicMovieData extends MovieData {
 
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-            // NFO name has priority, set it in any case
-            setMovieTitle(newValue);
+            if (StringUtils.isNotBlank(newValue))
+                // NFO name has priority, set it in any case
+                setMovieTitle(newValue);
         }
     }
     private final MovieTitleFromNfoListener movieTitleFromNfoListener;
@@ -120,8 +121,9 @@ public class DynamicMovieData extends MovieData {
         @Override
         public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
             log.debug("Movie year from NFO has changed from {} to {}", oldValue, newValue);
-            // NFO year has priority, set it in any case
-            setMovieYear(newValue);
+            if (newValue != null)
+                // NFO year has priority, set it in any case
+                setMovieYear(newValue);
         }
     }
     private final MovieYearFromNfoListener movieYearFromNfoListener;

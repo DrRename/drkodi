@@ -36,17 +36,7 @@ public class PlotBox extends VBox {
         Label label = new Label();
         label.setWrapText(true);
         label.setText(item.getPlot());
-
-
-        // register listener
-
-        item.plotProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                log.debug("Plot changed, updating content");
-                label.setText(newValue);
-            }
-        });
+        label.textProperty().bind(item.plotProperty());
 
         getChildren().add(label);
 

@@ -20,8 +20,9 @@
 
 package drkodi.themoviedb;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import drkodi.*;
+import drkodi.MovieDbClient;
+import drkodi.MovieDbGenre;
+import drkodi.MovieDbImagesClient;
 import drkodi.config.TheMovieDbConfig;
 import drkodi.data.MovieDetailsDto;
 import drkodi.data.json.SearchResultDto;
@@ -31,6 +32,7 @@ import drkodi.util.DrRenameUtil;
 import javafx.scene.image.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -99,48 +101,51 @@ public class MovieDbSearcher {
 
         WebSearchResults result = new WebSearchResults();
 
-        var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);
+        if (!StringUtils.isBlank(searchString)) {
+            var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);
 
-        if (searchResult.getBody() == null || searchResult.getBody().getResults().isEmpty()) return result;
+            if (searchResult.getBody() == null || searchResult.getBody().getResults().isEmpty()) return result;
 
-        List<SearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
+            List<SearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
 
-        subList.forEach(dto -> result.getSearchResults().put(dto.getId(), dto));
+            subList.forEach(dto -> result.getSearchResults().put(dto.getId(), dto));
 
-        for (SearchResultDto searchResultDto : subList) {
+            for (SearchResultDto searchResultDto : subList) {
 
-            if(searchResultDto.getPosterPath() != null) {
-                var imageData = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchResultDto.getPosterPath());
-                if (imageData.getBody() != null) {
-                    Image image = new Image(new ByteArrayInputStream(imageData.getBody()));
-                    image.exceptionProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue != null)
-                            log.error(newValue.getLocalizedMessage(), newValue);
-                    });
-                    result.getImageData().put(searchResultDto.getId(), imageData.getBody());
-                    result.getImages().put(searchResultDto.getId(), image);
-                }
-            }
-
-            try {
-                ResponseEntity<TranslationsDto> translations = client.getTranslations("ca540140c89af81851d4026286942896", searchResultDto.getId());
-                if (translations.getBody() != null) {
-                    for (TranslationDto translationDto : translations.getBody().getTranslations()) {
-                        String iso1 = translationDto.getIso3166();
-                        String iso2 = translationDto.getIso639();
-                        if (resourceBundle.getLocale().getLanguage().equals(iso1) || resourceBundle.getLocale().getLanguage().equals(iso2)) {
-                            result.getTranslations().put(searchResultDto.getId(), translationDto);
-                        }
+                if (searchResultDto.getPosterPath() != null) {
+                    var imageData = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchResultDto.getPosterPath());
+                    if (imageData.getBody() != null) {
+                        Image image = new Image(new ByteArrayInputStream(imageData.getBody()));
+                        image.exceptionProperty().addListener((observable, oldValue, newValue) -> {
+                            if (newValue != null)
+                                log.error(newValue.getLocalizedMessage(), newValue);
+                        });
+                        result.getImageData().put(searchResultDto.getId(), imageData.getBody());
+                        result.getImages().put(searchResultDto.getId(), image);
                     }
-                } else {
-                    log.warn("Translations body is null");
                 }
-            } catch (Exception e) {
-                log.error("Failed to query for translations: ", e);
+
+                try {
+                    ResponseEntity<TranslationsDto> translations = client.getTranslations("ca540140c89af81851d4026286942896", searchResultDto.getId());
+                    if (translations.getBody() != null) {
+                        for (TranslationDto translationDto : translations.getBody().getTranslations()) {
+                            String iso1 = translationDto.getIso3166();
+                            String iso2 = translationDto.getIso639();
+                            if (resourceBundle.getLocale().getLanguage().equals(iso1) || resourceBundle.getLocale().getLanguage().equals(iso2)) {
+                                result.getTranslations().put(searchResultDto.getId(), translationDto);
+                            }
+                        }
+                    } else {
+                        log.warn("Translations body is null");
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to query for translations: ", e);
+                }
             }
-        }
 
 //        ResponseEntity<byte[]> hans = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), "");
+
+        }
 
         return result;
     }
