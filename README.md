@@ -34,6 +34,9 @@ The following checks are performed. For most, an automatic fix is offered.
     
     Dr.Kodi offers a quick fix to wrap the media file into a directory of the same name.
     <img width="797" alt="Screenshot 2023-01-07 at 22 20 44" src="https://user-images.githubusercontent.com/13817521/211170783-79d6b5f2-7592-48cd-8bfa-2ce0621227dd.png">
+    
+    After applying the fix, the movie title is used to query [themoviedb](#themoviedb-lookup). Movie data can be taken over from any of the matches.
+    **Note:** If Dr.Kodi detects a non-default locale, every search result is presented in the default locale (en) and in the differing locale as well (therefore always two search results per movie).
 
 2. The directory should not be empty and should contain at least one media file.
 3. The media file (or multiple files, see _Split Video Files_ (https://kodi.wiki/view/Naming_video_files/Movies)) need to have the same name as the folder.
