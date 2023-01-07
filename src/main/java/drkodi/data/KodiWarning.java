@@ -20,17 +20,13 @@
 
 package drkodi.data;
 
-import lombok.Getter;
-
 public record KodiWarning(drkodi.data.KodiWarning.Type type) {
 
     public enum Type {
-        TITLE_MISMATCH("Title mismatch"), YEAR_MISMATCH("Year mismatch"), EMTPY_FOLDER("Empty folder"), SUBDIRS("Subdirectories present"), NFO_NOT_READABLE("NFO not readable"), NOT_A_DIRECTORY("Not a directory");
-        private final String message;
+        TITLE_MISMATCH, YEAR_MISMATCH, EMPTY_FOLDER, SUBDIRS, NFO_NOT_READABLE, NOT_A_DIRECTORY;
 
-        Type(String message) {
-            this.message = message;
-        }
+
+
     }
 
 

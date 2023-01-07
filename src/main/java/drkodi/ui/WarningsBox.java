@@ -68,7 +68,7 @@ public class WarningsBox extends VBox {
                         getChildren().add(UiUtil.applyDebug(new KodiTitleWarningBox(element, appConfig), appConfig));
                 case YEAR_MISMATCH ->
                         getChildren().add(UiUtil.applyDebug(new KodiYearWarningBox(element, appConfig), appConfig));
-                case EMTPY_FOLDER ->
+                case EMPTY_FOLDER ->
                         getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("No media found", appConfig), appConfig));
                 case SUBDIRS ->  getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("Subdirectory found", appConfig), appConfig));
                 case NFO_NOT_READABLE -> getChildren().add(UiUtil.applyDebug(new GenericWarningsBox("NFO file not readable", appConfig), appConfig));

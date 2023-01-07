@@ -19,7 +19,7 @@ public class MediaFilesPresentTaskExecutor extends TaskExecutor<Boolean> {
         task.setOnSucceeded(event -> {
                     if (task.getValue()) {
                         log.debug("No media files found: {}", movie.getRenamingPath().getOldPath());
-                        movie.getWarnings().add(new KodiWarning(KodiWarning.Type.EMTPY_FOLDER));
+                        movie.getWarnings().add(new KodiWarning(KodiWarning.Type.EMPTY_FOLDER));
                     }
                 }
         );

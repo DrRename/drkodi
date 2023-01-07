@@ -421,7 +421,7 @@ public class Movie extends DynamicMovieData {
         task.setOnSucceeded(event -> {
                     if (task.getValue()) {
                         log.debug("No media files found: {}", getRenamingPath().getOldPath());
-                        getWarnings().add(new KodiWarning(KodiWarning.Type.EMTPY_FOLDER));
+                        getWarnings().add(new KodiWarning(KodiWarning.Type.EMPTY_FOLDER));
                     }
                 }
         );
