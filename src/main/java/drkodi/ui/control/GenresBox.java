@@ -27,14 +27,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GenresBox extends FlowPane {
+
     public GenresBox(Movie kodiMovie) {
 
         setContent(kodiMovie);
@@ -53,41 +56,32 @@ public class GenresBox extends FlowPane {
         setHgap(4);
         setPadding(new Insets(4, 4, 4, 4));
 
-//        visibleProperty().bind(kodiMovie.genresProperty().isNotNull().and(kodiMovie.genresProperty().emptyProperty().not()));
-//        managedProperty().bind(visibleProperty());
     }
 
-    private void setContent(Movie genres) {
+    public void setContent(Movie genres) {
         if(genres.getGenres() == null){
             return;
         }
         getChildren().clear();
         for(MovieDbGenre genre : genres.getGenres()){
-            getChildren().add(buildGenreNode(genre));
+            getChildren().add(buildWrapper(genre));
         }
-        getChildren().add(buildAddGenreButton(genres));
     }
 
-    private Label buildGenreNode(MovieDbGenre genre) {
+    private Node buildWrapper(MovieDbGenre genre) {
+        HBox result = new HBox();
+        var label = buildGenreNode(genre);
+        result.getChildren().add(label);
+        result.getStyleClass().add("kodi-genre");
+        result.setAlignment(Pos.CENTER);
+        result.setSpacing(2);
+        return result;
+    }
+
+    protected Control buildGenreNode(MovieDbGenre genre) {
         Label label = new Label(genre.getName());
-        label.getStyleClass().add("kodi-genre");
         return label;
     }
 
-    private Node buildAddGenreButton(Movie genres) {
-        HBox result = new HBox();
-        result.setAlignment(Pos.CENTER);
-        TextField input = new TextField();
-        input.getStyleClass().add("kodi-genre");
-        input.setPrefWidth(100);
 
-        Button button = new Button("Add");
-        button.setOnAction(event -> {
-           genres.getGenres().add(new MovieDbGenre(null, input.getText()));
-           genres.writeNfoDataAndImage();
-        });
-        result.getChildren().add(input);
-        result.getChildren().add(button);
-        return result;
-    }
 }

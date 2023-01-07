@@ -50,7 +50,7 @@
               <TextField fx:id="searchField" promptText="%mainview.searchfield.text"/>
               <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
           </VBox>
-           <VBox fx:id="detailsBox"/>
+           <VBox fx:id="detailsBox" VBox.vgrow="ALWAYS"/>
        </SplitPane>
 
     <ProgressAndStatusGridPane fx:id="progressAndStatusGrid"/>

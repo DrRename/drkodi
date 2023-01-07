@@ -26,26 +26,24 @@ import drkodi.ui.SearchResultsAndTitleBox;
 import drkodi.ui.UiUtil;
 import drkodi.ui.config.KodiUiConfig;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
-import lombok.Getter;
+import javafx.scene.layout.*;
 
-@Getter
+
 public class KodiBox extends VBox {
 
     private final Movie movie;
 
-    public KodiBox(Movie kodiMovie, AppConfig appConfig, KodiUiConfig kodiUiConfig){
+    private final Pane detailsView;
+
+    public KodiBox(Movie kodiMovie, AppConfig appConfig, KodiUiConfig kodiUiConfig, Pane detailsView){
 
         this.movie = kodiMovie;
+        this.detailsView = detailsView;
 
-        // content
         getChildren().add(UiUtil.applyDebug(new KodiMovieAndImageBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
 
-
-        var john = new SearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig);
-
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(UiUtil.applyDebug(john, appConfig));
+        scrollPane.setContent(UiUtil.applyDebug(new SearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
         scrollPane.setFitToHeight(true);
 //        scrollPane.setFitToWidth(true);
 
@@ -54,21 +52,40 @@ public class KodiBox extends VBox {
 
         scrollPane.getStyleClass().add("search-result-box");
 
-        scrollPane.minHeightProperty().bind(john.prefHeightProperty());
+//        scrollPane.minHeightProperty().bind(john.prefHeightProperty());
+
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
         getChildren().add(UiUtil.applyDebug(scrollPane, appConfig));
 //        VBox.setVgrow(scrollPane, Priority.ALWAYS);
 //        VBox.setVgrow(john, Priority.ALWAYS);
 
+        Pane spacer = new Pane();
+//        spacer.setMinHeight(50);
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+
+
+        getChildren().add(UiUtil.applyDebug(spacer, appConfig));
+
+        getChildren().add(UiUtil.applyDebug(detailsView, appConfig));
+
         // layout
         getStyleClass().add("kodi-box");
 
 
+//        setMaxHeight(Double.MAX_VALUE);
 
-//        setVgrow(scrollPane, Priority.ALWAYS);
+        setVgrow(this, Priority.ALWAYS);
+
+
 
 
     }
 
+    // Getter / Setter //
 
+    public Movie getMovie() {
+        return movie;
+    }
 }

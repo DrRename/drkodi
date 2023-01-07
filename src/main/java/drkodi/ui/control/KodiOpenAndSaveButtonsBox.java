@@ -57,7 +57,13 @@ public class KodiOpenAndSaveButtonsBox extends FlowPane {
         button.getStyleClass().add("kodi-link");
         getChildren().add(button);
 
-        setPadding(new Insets(0,0,12,0));
+//        button = new Button("Edit");
+//        button.setOnAction(this.editButtonAction);
+//        button.getStyleClass().add("kodi-link");
+//        getChildren().add(button);
+
+        setHgap(4);
+        setPadding(new Insets(4,4,4,4));
 
     }
 }

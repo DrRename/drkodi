@@ -16,6 +16,7 @@ public class MovieDbSearchResultProcessor {
     private final WebSearchResults webSearchResults;
 
     public void process() {
+        movie.getSearchResults().clear();
         if (webSearchResults != null) {
             for (Number id : webSearchResults.getSearchResults().keySet()) {
                 SearchResultDto searchResultDto = webSearchResults.getSearchResults().get(id);

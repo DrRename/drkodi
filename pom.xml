@@ -391,6 +391,40 @@
             <build>
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
+                    <plugin>
+                        <groupId>io.github.fvarrui</groupId>
+                        <artifactId>javapackager</artifactId>
+                        <version>1.7.0-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>package</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>${main-class}</mainClass>
+                                    <bundleJre>true</bundleJre>
+                                    <generateInstaller>true</generateInstaller>
+                                    <createTarball>true</createTarball>
+                                    <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
+                                    <jdkPath>jdk/linux/x86_64/jdk-17.0.5+8</jdkPath>
+                                    <packagingJdk>jdk/linux/x86_64/jdk-17.0.5+8</packagingJdk>
+                                    <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
+                                    <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
+                                    <generateInstaller>false</generateInstaller>
+                                    <administratorRequired>false</administratorRequired>
+                                    <copyDependencies>false</copyDependencies>
+                                    <platform>windows</platform>
+                                    <name>DrKodi</name>
+                                    <assetsDir>assets</assetsDir>
+                                    <version>${project.version}</version>
+                                    <winConfig>
+                                        <wrapJar>true</wrapJar>
+                                    </winConfig>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>

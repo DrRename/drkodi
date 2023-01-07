@@ -32,6 +32,8 @@ import drkodi.ui.control.KodiBox;
 import drrename.commons.RenamingPath;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -97,7 +99,7 @@ public class UiTestApp extends Application {
     private void fillUi() throws Exception {
         for(Movie element : data){
             element.getSearchResults().addAll(buildSearchResults());
-            Platform.runLater(() -> listView.getItems().add(new KodiBox(element, new AppConfig(), new KodiUiConfig())));
+            Platform.runLater(() -> listView.getItems().add(new KodiBox(element, new AppConfig(), new KodiUiConfig(), null)));
         }
     }
 

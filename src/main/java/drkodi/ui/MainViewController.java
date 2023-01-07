@@ -21,6 +21,7 @@
 package drkodi.ui;
 
 import drkodi.MovieEntries;
+import drkodi.SelectedData;
 import drkodi.config.AppConfig;
 import drkodi.data.movie.Movie;
 import drkodi.ui.config.KodiUiConfig;
@@ -74,6 +75,7 @@ public class MainViewController extends DebuggableController implements Initiali
 
     private final KodiUiConfig kodiUiConfig;
 
+    private final SelectedData selectedData;
 
 
     //
@@ -127,6 +129,9 @@ public class MainViewController extends DebuggableController implements Initiali
 
     private final Label progressLabel;
 
+
+    private EditViewController editViewController;
+
     // Nested classes //
 
     private class LoadServiceStarter extends ServiceStarter<LoadPathsService> {
@@ -158,7 +163,7 @@ public class MainViewController extends DebuggableController implements Initiali
 
     //
 
-    public MainViewController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig, MovieEntries movieEntries, ResourceBundle resourceBundle, KodiUiConfig kodiUiConfig) {
+    public MainViewController(FxWeaver fxWeaver, FxApplicationStyle applicationStyle, LoadPathsService loadPathsService, Executor executor, AppConfig appConfig, MovieEntries movieEntries, ResourceBundle resourceBundle, KodiUiConfig kodiUiConfig, SelectedData selectedData) {
         super(appConfig);
         this.fxWeaver = fxWeaver;
         this.applicationStyle = applicationStyle;
@@ -167,6 +172,7 @@ public class MainViewController extends DebuggableController implements Initiali
         this.movieEntries = movieEntries;
         this.resourceBundle = resourceBundle;
         this.kodiUiConfig = kodiUiConfig;
+        this.selectedData = selectedData;
         this.loadServiceStarter = new LoadServiceStarter(this.loadPathsService);
         this.progressLabel = new Label();
 
@@ -223,7 +229,8 @@ public class MainViewController extends DebuggableController implements Initiali
                     Movie selectedMovie = newValue.getMovie();
                     selectedMovie.loadExternalData();
                     selectedMovie.triggerChecks();
-                    detailsBox.getChildren().setAll(new KodiBox(selectedMovie, getAppConfig(),kodiUiConfig));
+                    selectedData.setSelectedMovie(selectedMovie);
+                    detailsBox.getChildren().setAll(new KodiBox(selectedMovie, getAppConfig(),kodiUiConfig, editViewController.detailsTableRoot));
                 }
             }
         });
@@ -243,6 +250,9 @@ public class MainViewController extends DebuggableController implements Initiali
         });
 
         SplitPane.setResizableWithParent(leftSplitContent, Boolean.FALSE);
+
+
+            editViewController = fxWeaver.loadController(EditViewController.class, resourceBundle);
 
     }
 

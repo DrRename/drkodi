@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<VBox fx:controller="drkodi.ui.EditViewController" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:id="detailsTableRoot" >
+
+    <HBox fx:id="buttonsBox" />
+
+    <GridPane fx:id="detailsTable" hgap="4">
+
+        <padding>
+            <Insets top="8" right="8" bottom="8" left="8"/>
+        </padding>
+
+        <Label text="Title" minWidth="60" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="movieTitleTextField" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+
+        <Label text="Original Title" minWidth="80" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="movieOriginalTitleTextField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+
+        <Label text="Year" minWidth="60" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="movieYearTextField" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+
+        <Label text="Genres" minWidth="60" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <HBox fx:id="genresBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    </GridPane>
+
+
+</VBox>

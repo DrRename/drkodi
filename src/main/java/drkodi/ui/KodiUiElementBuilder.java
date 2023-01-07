@@ -64,21 +64,4 @@ public class KodiUiElementBuilder {
     }
 
 
-    Node buildKodiElementNode(Movie item, int imageHeight) {
-        HBox imageAndElementNode = new HBox(4);
-
-        VBox result = new VBox();
-        result.setFillWidth(true);
-        result.getStyleClass().add("kodi-box");
-        result.getChildren().addAll(applyDebug(new KodiMovieInfoBox(item, appConfig)), applyDebug(new WarningsBox(item, appConfig)), applyDebug(new SearchResultsAndTitleBox(item, appConfig, kodiUiConfig)));
-
-        var imageBox = new ImageBox(item, imageHeight);
-        imageBox.getStyleClass().add("kodi-image-large");
-
-        imageAndElementNode.getChildren().add(applyDebug(imageBox));
-        imageAndElementNode.getChildren().add(result);
-
-        return applyDebug(imageAndElementNode);
-    }
-
 }

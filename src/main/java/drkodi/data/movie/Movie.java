@@ -51,6 +51,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executor;
 
 @Setter
@@ -59,6 +61,25 @@ import java.util.concurrent.Executor;
 public class Movie extends DynamicMovieData {
 
     // Inner classes //
+
+    class MovieTitleListener implements ChangeListener<String> {
+
+        Timer timer = new Timer();
+
+        @Override
+        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            log.debug("Movie title has changed from {} to {}", oldValue, newValue);
+            timer.cancel();
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    triggerWebSearch();
+                }
+            }, 1000);
+        }
+    }
+    private final MovieTitleListener movieTitleListener;
 
     class NfoPathListener implements ChangeListener<QualifiedPath> {
 
@@ -75,7 +96,6 @@ public class Movie extends DynamicMovieData {
             }
         }
     }
-
     private final NfoPathListener nfoPathListener;
 
     class ImagePathListener implements ChangeListener<QualifiedPath> {
@@ -90,7 +110,6 @@ public class Movie extends DynamicMovieData {
             }
         }
     }
-
     private final ImagePathListener imagePathListener;
 
     //
@@ -113,6 +132,7 @@ public class Movie extends DynamicMovieData {
         this.movieDbSearcher = movieDbSearcher;
         this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
+        this.movieTitleListener = new MovieTitleListener();
         this.nfoPathListener = new NfoPathListener();
         this.imagePathListener = new ImagePathListener();
         this.running = new SimpleBooleanProperty();
@@ -130,7 +150,7 @@ public class Movie extends DynamicMovieData {
             running.set(!c.getList().isEmpty());
         });
 
-
+        movieTitleProperty().addListener(movieTitleListener);
         nfoPathProperty().addListener(nfoPathListener);
         imagePathProperty().addListener(imagePathListener);
         initWebSearchListener();
@@ -145,6 +165,7 @@ public class Movie extends DynamicMovieData {
     }
 
     public void triggerChecks(){
+        getWarnings().clear();
         new MediaFilesPresentTaskExecutor(this, executor, runningTasksList).execute();
         new SubdirsCheckTaskExecutor(this, executor, runningTasksList).execute();
         new IsDirectoryTaskExecutor(this, executor, runningTasksList).execute();

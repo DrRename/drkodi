@@ -50,7 +50,7 @@ public class KodiMovieInfoBox extends VBox {
 
         getChildren().add(UiUtil.applyDebug(progressBox, appConfig));
 
-        getChildren().add(UiUtil.applyDebug(new KodiOpenAndSaveButtonsBox(kodiMovie), appConfig));
+//        getChildren().add(UiUtil.applyDebug(new KodiOpenAndSaveButtonsBox(kodiMovie), appConfig));
 
         getChildren().add(UiUtil.applyDebug(new MovieTitleAndYearBox(kodiMovie, appConfig), appConfig));
         getChildren().add(UiUtil.applyDebug(new MovieOriginalTitleLabel(kodiMovie), appConfig));
