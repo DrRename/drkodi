@@ -9,7 +9,7 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 
 
-https://user-images.githubusercontent.com/13817521/208781276-60301994-3e0d-4172-9ca8-1def39b4f29b.mov
+[//]: # (https://user-images.githubusercontent.com/13817521/208781276-60301994-3e0d-4172-9ca8-1def39b4f29b.mov)
 
 
 ## Minimalistic Media Library Tool
