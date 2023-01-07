@@ -25,16 +25,25 @@ All files and folders should be simply named with the name of the movie and the 
 > + Using this method will provide the safest and most accurate scrape of your media collection.
 > + Most library related add-ons will only work correctly with this method.
 
-Since Dr.Kodi does look up all information by itself or reads it from an existing NFO file, folder naming can be less strict. Dr.Kodi will warn you if the folder name does not match the [normalized](link to string normalizatino) movie title or the [normalized](link to string normalizatino) movie original title.
+Since Dr.Kodi does look up all information by itself or reads it from an existing NFO file, folder naming can be less strict.
 
-The workflow is as follows:
+The following checks are performed. For most, an automatic fix is offered.
 
-### Workflow
+1. The path should be a directory and not a file (see _Flat Folder_ (https://kodi.wiki/view/Naming_video_files/Movies).
+2. The directory should not be empty and should contain at least one media file.
+3. The media file (or multiple files, see _Split Video Files_ (https://kodi.wiki/view/Naming_video_files/Movies)) need to have the same name as the folder.
+4. The directory should not have subdirectories (a _Subs_ folder containing subtitles is not supported, e.g.).
 
-Initially, Dr.Kodi iterates over all subdirectories of a given path. Every directory found is considered to be a movie. Next, for each movie, the following steps/ checks are performed:
+Those basic checks can be performed offline and without the presence of an NFO file (see https://kodi.wiki/view/NFO_files). For the following checks, information from an NFO file is considered as well.
 
-1. Look for an NFO file. If found, update the view using the data found in the NFO file.
-2. If no NFO file is found, the [normalized](link to string normalizatino) folder name is used to query [theMovieDB](https://www.themoviedb.org/). Found results are displayed and the user might choose any of those suggestions to take over the according information. Localized titles are suggested depending on your [locale setting](link to locale).
+1. The folder name should match the [normalized](#title-normalization) NFO's movie title.
+2. The NFO's movie year (release year) should match the folder's movie year (folder naming pattern: _The Matrix (1998)_) 
+
+### Title Normalization
+
+### themoviedb Lookup
+
+If data is incomplete, the [normalized](#title-normalization) movie title is used to query [theMovieDB](https://www.themoviedb.org/). Found results are displayed and the user might choose any of those suggestions to take over the according information. Localized titles are suggested depending on your [locale setting](link to locale).
 
 ### Installation and running
 

@@ -23,8 +23,36 @@ package drkodi.data;
 public record KodiWarning(drkodi.data.KodiWarning.Type type) {
 
     public enum Type {
-        TITLE_MISMATCH, YEAR_MISMATCH, EMPTY_FOLDER, SUBDIRS, NFO_NOT_READABLE, NOT_A_DIRECTORY;
 
+        /**
+         * Folder name does not match normalized movie title and does not match normalized original movie title.
+         */
+        TITLE_MISMATCH,
+
+        /**
+         * Year from folder does not match movie release year.
+         */
+        YEAR_MISMATCH,
+
+        /**
+         * Folder is empty and does not contain any media file.
+         */
+        EMPTY_FOLDER,
+
+        /**
+         * Folder has one or more subdirectories.
+         */
+        SUBDIRS,
+
+        /**
+         *
+         */
+        NFO_NOT_READABLE,
+
+        /**
+         * Path is not a directory.
+         */
+        NOT_A_DIRECTORY;
 
 
     }

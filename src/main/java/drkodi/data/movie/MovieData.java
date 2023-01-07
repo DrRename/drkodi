@@ -59,6 +59,9 @@ public class MovieData {
 
     // Properties from web //
 
+    /**
+     * @deprecated not needed. Info can be stored to {@link #movieTitleFromNfo} as well.
+     */
     private final StringProperty movieTitleFromWeb;
 
     private final StringProperty movieOriginalTitle;
