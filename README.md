@@ -30,6 +30,7 @@ Since Dr.Kodi does look up all information by itself or reads it from an existin
 The following checks are performed. For most, an automatic fix is offered.
 
 1. The path should be a directory and not a file (see _Flat Folder_ (https://kodi.wiki/view/Naming_video_files/Movies).
+    <img width="712" alt="Screenshot 2023-01-07 at 22 13 19" src="https://user-images.githubusercontent.com/13817521/211170531-c84aae64-1e8e-40fe-89b0-6716e59413ee.png">
 2. The directory should not be empty and should contain at least one media file.
 3. The media file (or multiple files, see _Split Video Files_ (https://kodi.wiki/view/Naming_video_files/Movies)) need to have the same name as the folder.
 4. The directory should not have subdirectories (a _Subs_ folder containing subtitles is not supported, e.g.).
