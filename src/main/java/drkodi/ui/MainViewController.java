@@ -265,7 +265,7 @@ public class MainViewController extends DebuggableController implements Initiali
         if (newValue != null && newValue) {
             // we are ready. Starting is triggered by input change listener
         } else {
-
+            movieEntries.getEntries().clear();
         }
     }
 
