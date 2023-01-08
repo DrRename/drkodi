@@ -190,7 +190,7 @@ public class MovieData {
         // next, create new warnings if necessary
         Integer yearFromFolder = getMovieYearFromFolder();
         Integer movieYear = getMovieYear();
-        if (yearFromFolder != null && movieYear != null && !yearFromFolder.equals(movieYear)) {
+        if (yearFromFolder == null || !yearFromFolder.equals(movieYear)) {
             getWarnings().add(new KodiWarning(KodiWarning.Type.YEAR_MISMATCH));
         }
     }
@@ -198,7 +198,6 @@ public class MovieData {
     public void takeOverSearchResultData(SearchResult searchResult) {
         log.debug("Taking over data for {} from {}", getMovieTitle(), searchResult);
         searchResultToMovieMapper.map(this, searchResult);
-
     }
 
     protected void copyToNfo() {
