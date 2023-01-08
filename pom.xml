@@ -21,6 +21,7 @@
         <javafx.version>19</javafx.version>
         <spring-boot.version>2.7.4</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
+        <MAC_DEVELOPER_ID>override this</MAC_DEVELOPER_ID>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/${github-user}/${github-repo}.git</connection>
@@ -272,7 +273,7 @@
                                     <version>${project.version}</version>
                                     <macConfig>
                                         <customLauncher>src/main/resources/launcher-macosx-aarch64.sh</customLauncher>
-                                        <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
+                                        <developerId>${MAC_DEVELOPER_ID}</developerId>
                                         <appId>com.drkodi</appId>
                                         <codesignApp>true</codesignApp>
                                         <infoPlist>
@@ -322,7 +323,7 @@
                                     <version>${project.version}</version>
                                     <macConfig>
                                         <customLauncher>src/main/resources/launcher-macosx-x86_64.sh</customLauncher>
-                                        <developerId>3rd Party Mac Developer Application: Alexander Kerner (5W26Y2F3CM)</developerId>
+                                        <developerId>${MAC_DEVELOPER_ID}</developerId>
                                         <appId>com.drkodi</appId>
                                         <codesignApp>true</codesignApp>
                                         <infoPlist>
