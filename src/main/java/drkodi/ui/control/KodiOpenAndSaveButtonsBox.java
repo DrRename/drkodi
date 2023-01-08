@@ -43,6 +43,10 @@ public class KodiOpenAndSaveButtonsBox extends FlowPane {
             button.setOnAction(event -> {
                 DrRenameUtil.runOpenFolderCommandLinux(item.getRenamingPath().getOldPath());
             });
+        } else if(SystemUtils.IS_OS_WINDOWS) {
+            button.setOnAction(event -> {
+                DrRenameUtil.runOpenFolderCommandWindows(item.getRenamingPath().getOldPath());
+            });
         } else {
             log.warn("Unknown OS {}", SystemUtils.OS_NAME);
         }
