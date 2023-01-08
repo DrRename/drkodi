@@ -29,23 +29,22 @@ Since Dr.Kodi does look up all information by itself or reads it from an existin
 
 The following checks are performed. For most, an automatic fix is offered.
 
-1. The path should be a directory and not a file (see _Flat Folder_ (https://kodi.wiki/view/Naming_video_files/Movies).
-    <img width="712" alt="Screenshot 2023-01-07 at 22 13 19" src="https://user-images.githubusercontent.com/13817521/211170531-c84aae64-1e8e-40fe-89b0-6716e59413ee.png">
-    
-    Dr.Kodi offers a quick fix to wrap the media file into a directory of the same name.
-    <img width="797" alt="Screenshot 2023-01-07 at 22 20 44" src="https://user-images.githubusercontent.com/13817521/211170783-79d6b5f2-7592-48cd-8bfa-2ce0621227dd.png">
-    
-    After applying the fix, the movie title is used to query [themoviedb](#themoviedb-lookup). Movie data can be taken over from any of the matches.
-    **Note:** If Dr.Kodi detects a non-default locale, every search result is presented in the default locale (en) and in the differing locale as well (therefore always two search results per movie).
-
+1. The path should be a directory and not a file (see _Flat Folder_ (https://kodi.wiki/view/Naming_video_files/Movies). Dr.Kodi offers a quick fix to wrap the media file into a directory of the same name.
 2. The directory should not be empty and should contain at least one media file.
-3. The media file (or multiple files, see _Split Video Files_ (https://kodi.wiki/view/Naming_video_files/Movies)) need to have the same name as the folder.
-4. The directory should not have subdirectories (a _Subs_ folder containing subtitles is not supported, e.g.).
+3. The media file (or multiple files, see _Split Video Files_ (https://kodi.wiki/view/Naming_video_files/Movies)) needs to have the same name as the folder.
+4. The directory should not have subdirectories (e.g., a _Subs_ folder containing subtitles is not supported).
 
 Those basic checks can be performed offline and without the presence of an NFO file (see https://kodi.wiki/view/NFO_files). For the following checks, information from an NFO file is considered as well.
 
 1. The folder name should match the [normalized](#title-normalization) NFO's movie title.
-2. The NFO's movie year (release year) should match the folder's movie year (folder naming pattern: _The Matrix (1998)_) 
+2. The NFO's movie year (release year) should match the folder's movie year (folder naming pattern: _The Matrix (1998)_, see _Naming_ (https://kodi.wiki/view/Naming_video_files/Movies)) 
+
+### Example Walk-through
+
+
+
+After applying the fix, and if movie meta-data is incomplete because there is no NFO file or NFO data is incomplete, the [normalized](#title-normalization) movie title is used to query [themoviedb](#themoviedb-lookup). Movie data can be taken over from any of the matches.
+**Note:** If Dr.Kodi detects a non-default locale, every search result is presented in the default locale (en) and in the differing locale as well (therefore always two search results per movie).
 
 ### Title Normalization
 
