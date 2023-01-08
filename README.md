@@ -68,6 +68,13 @@ After taking over a search result, the movie meta data is stored as an NFO file 
 
 ### Title Normalization
 
+#### Normalization Examples
+
+<img width="957" alt="Screenshot 2023-01-08 at 13 11 34" src="https://user-images.githubusercontent.com/13817521/211195353-0a87f5a7-61a7-4086-be9f-d2072803e087.png">
+
+<img width="1138" alt="Screenshot 2023-01-08 at 13 14 18" src="https://user-images.githubusercontent.com/13817521/211195454-c5e8a55c-3ecf-4763-bdad-a489f22f3cd2.png">
+
+
 ### themoviedb Lookup
 
 If data is incomplete, the [normalized](#title-normalization) movie title is used to query [theMovieDB](https://www.themoviedb.org/). Found results are displayed and the user might choose any of those suggestions to take over the according information. Localized titles are suggested depending on your [locale setting](link to locale).
