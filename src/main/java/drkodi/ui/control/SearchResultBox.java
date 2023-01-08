@@ -80,6 +80,8 @@ public class SearchResultBox extends VBox {
 
     private void addTakeOverButton(MovieData kodieMovie, AppConfig appConfig, SearchResult searchResult) {
         Hyperlink button = new Hyperlink("Take over data");
+        button.setWrapText(true);
+        button.setMinWidth(60);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
