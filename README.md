@@ -65,6 +65,14 @@ After taking over a search result, the movie meta data is stored as an NFO file 
 
 <img width="666" alt="Screenshot 2023-01-08 at 11 26 18" src="https://user-images.githubusercontent.com/13817521/211191099-3276a9f6-8171-4895-beb9-2ac22e098e42.png">
 
+_Folder year does not match_ warning is shown and a quick-fix is offered. Applying the fix will rename the directory after the movie title plus year (folder naming pattern: _Die Hard (1988)_, see _Naming_ (https://kodi.wiki/view/Naming_video_files/Movies)). 
+
+<img width="943" alt="Screenshot 2023-01-08 at 13 20 08" src="https://user-images.githubusercontent.com/13817521/211195708-79761187-7fc6-4e47-924e-ad2e63013236.png">
+
+<img width="943" alt="Screenshot 2023-01-08 at 13 20 53" src="https://user-images.githubusercontent.com/13817521/211195721-d3345861-3def-478b-b980-2a3380521dbd.png">
+
+<img width="666" alt="Screenshot 2023-01-08 at 13 23 58" src="https://user-images.githubusercontent.com/13817521/211195869-04ddd423-05ba-4aee-84c3-d430eafd0b03.png">
+
 
 ### Title Normalization
 
