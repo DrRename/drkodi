@@ -190,7 +190,7 @@ public class MovieData {
         // next, create new warnings if necessary
         Integer yearFromFolder = getMovieYearFromFolder();
         Integer movieYear = getMovieYear();
-        if (yearFromFolder == null || !yearFromFolder.equals(movieYear)) {
+        if ((yearFromFolder == null && movieYear != null) || (yearFromFolder != null && movieYear == null) || (yearFromFolder != null && movieYear != null && !yearFromFolder.equals(movieYear))) {
             getWarnings().add(new KodiWarning(KodiWarning.Type.YEAR_MISMATCH));
         }
     }
