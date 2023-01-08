@@ -29,15 +29,15 @@ Since Dr.Kodi does look up all information by itself or reads it from an existin
 
 The following checks are performed. For most, an automatic fix is offered.
 
-1. The path should be a directory and not a file (see _Flat Folder_ (https://kodi.wiki/view/Naming_video_files/Movies). Dr.Kodi offers a quick fix to wrap the media file into a directory of the same name.
-2. The directory should not be empty and should contain at least one media file.
-3. The media file (or multiple files, see _Split Video Files_ (https://kodi.wiki/view/Naming_video_files/Movies)) needs to have the same name as the folder.
-4. The directory should not have subdirectories (e.g., a _Subs_ folder containing subtitles is not supported).
+1. **The path should be a directory and not a file** (see _Flat Folder_ (https://kodi.wiki/view/Naming_video_files/Movies). Dr.Kodi offers a quick fix to wrap the media file into a directory of the same name.
+2. **The directory should not be empty and should contain at least one media file**.
+3. **The media file** (or multiple files, see _Split Video Files_ (https://kodi.wiki/view/Naming_video_files/Movies)) **needs to have the same name as the folder**.
+4. **The directory should not have subdirectories** (e.g., a _Subs_ folder containing subtitles is not supported).
 
 Those basic checks can be performed offline and without the presence of an NFO file (see https://kodi.wiki/view/NFO_files). For the following checks, information from an NFO file is considered as well.
 
-1. The folder name should match the [normalized](#title-normalization) NFO's movie title.
-2. The NFO's movie year (release year) should match the folder's movie year (folder naming pattern: _The Matrix (1998)_, see _Naming_ (https://kodi.wiki/view/Naming_video_files/Movies)) 
+1. **The folder name should match the** [normalized](#title-normalization) **NFO's movie title**.
+2. **The NFO's movie year** (release year) **should match the folder's movie year** (folder naming pattern: _The Matrix (1998)_, see _Naming_ (https://kodi.wiki/view/Naming_video_files/Movies)) 
 
 ### Example Walk-through
 
