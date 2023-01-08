@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.file.Files;
 import java.util.concurrent.Executor;
 
 @Slf4j
@@ -23,5 +24,15 @@ public class MediaFilesPresentTaskExecutor extends TaskExecutor<Boolean> {
                     }
                 }
         );
+    }
+
+    @Override
+    public void execute() {
+
+        if(Files.isDirectory(movie.getRenamingPath().getOldPath())) {
+            super.execute();
+        } else {
+            // ignore file
+        }
     }
 }
