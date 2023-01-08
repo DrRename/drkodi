@@ -115,4 +115,8 @@ public class DrRenameUtil {
     public static void runOpenFolderCommandLinux(Path path) {
         new CommandRunner().runCommand(new String[]{"xdg-open", path + File.separator});
     }
+
+    public static void runOpenFolderCommandWindows(Path path) {
+        new CommandRunner().runCommand(new String[]{"explorer.exe", "/select", path + File.separator});
+    }
 }
