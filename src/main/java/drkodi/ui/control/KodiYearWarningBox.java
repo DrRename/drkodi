@@ -37,8 +37,10 @@ public class KodiYearWarningBox extends HBox {
 
         Label label1 = new KodiWarningKeyLabel("Folder year does not match:");
 
+        String yearString = staticMovieData.getMovieYearFromFolder() == null ? null : staticMovieData.getMovieYearFromFolder().toString();
+
         // NFO value is displayed, and we have a mismatch, so display folder name
-        Label label2 = new KodiWarningValueLabel(staticMovieData.getMovieYearFromFolder().toString());
+        Label label2 = new KodiWarningValueLabel(yearString);
 
         getChildren().add(UiUtil.applyDebug(label1, appConfig));
         getChildren().add(UiUtil.applyDebug(label2, appConfig));
