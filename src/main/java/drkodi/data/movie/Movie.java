@@ -166,6 +166,8 @@ public class Movie extends DynamicMovieData {
 
     public void triggerChecks(){
         getWarnings().clear();
+        updateTitleWarnings(getMovieTitle());
+        updateYearWarnings();
         new MediaFilesPresentTaskExecutor(this, executor, runningTasksList).execute();
         new SubdirsCheckTaskExecutor(this, executor, runningTasksList).execute();
         new IsDirectoryTaskExecutor(this, executor, runningTasksList).execute();
