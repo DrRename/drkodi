@@ -41,10 +41,28 @@ Those basic checks can be performed offline and without the presence of an NFO f
 
 ### Example Walk-through
 
+We start with a very small library that contains one movie. The 'library' is just the parent folder, in this case _Movies_.
 
+<img width="666" alt="Screenshot 2023-01-08 at 10 03 26" src="https://user-images.githubusercontent.com/13817521/211188313-3593698a-7e77-45d5-854b-64c68653aa1e.png">
 
-After applying the fix, and if movie meta-data is incomplete because there is no NFO file or NFO data is incomplete, the [normalized](#title-normalization) movie title is used to query [themoviedb](#themoviedb-lookup). Movie data can be taken over from any of the matches.
-**Note:** If Dr.Kodi detects a non-default locale, every search result is presented in the default locale (en) and in the differing locale as well (therefore always two search results per movie).
+We Drag & Drop it into the Main View. After selecting 'die hard.mkv', details are shown on the right.
+
+<img width="729" alt="Screenshot 2023-01-08 at 10 07 51" src="https://user-images.githubusercontent.com/13817521/211188423-757be751-6ca6-4595-b7ae-00bf74e1b2c2.png">
+
+_Not a directory_ warning is shown and a quick-fix is offered. Applying the fix will wrap the media file in a directory of the same name.
+
+<img width="807" alt="Screenshot 2023-01-08 at 11 01 26" src="https://user-images.githubusercontent.com/13817521/211190123-6f341061-044f-44a6-b075-077d358e7806.png">
+
+After applying the fix the [normalized](#title-normalization) movie title is used to query [themoviedb](#themoviedb-lookup) to complete movie meta data. Search results are shown below the information that is already present. If Dr.Kodi detects a non-default locale, every search result is presented in the default locale (en) and as well in the current locale. In this case, an additional, localized search result is presented.
+
+en locale | de locale
+--------- | ---------
+<img width="1025" alt="Screenshot 2023-01-08 at 11 25 07" src="https://user-images.githubusercontent.com/13817521/211191042-29f515e7-409f-4ef2-b8c6-90e22f9c8149.png"> | <img width="1025" alt="Screenshot 2023-01-08 at 11 24 39" src="https://user-images.githubusercontent.com/13817521/211191026-6c6f2337-c9bd-47c9-9115-f7578a6251b4.png">
+ 
+After taking over a search result, the movie meta data is stored as an NFO file inside the directory.
+
+<img width="666" alt="Screenshot 2023-01-08 at 11 26 18" src="https://user-images.githubusercontent.com/13817521/211191099-3276a9f6-8171-4895-beb9-2ac22e098e42.png">
+
 
 ### Title Normalization
 
