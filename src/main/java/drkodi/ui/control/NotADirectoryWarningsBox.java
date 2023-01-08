@@ -21,7 +21,12 @@ import java.nio.file.Paths;
 
 @Slf4j
 public class NotADirectoryWarningsBox extends HBox {
+
+    private final Movie movie;
+
     public NotADirectoryWarningsBox(Movie element, AppConfig appConfig) {
+
+        this.movie = element;
 
         Label label1 = new KodiWarningKeyLabel("Not a directory");
 
@@ -52,6 +57,8 @@ public class NotADirectoryWarningsBox extends HBox {
             } catch (IOException e) {
                 log.error("Failed to fix: ", e);
             }
+            // re-check after fixing the issue
+            movie.triggerChecks();
         });
         button.setMinWidth(40);
         button.setAlignment(Pos.CENTER_RIGHT);
