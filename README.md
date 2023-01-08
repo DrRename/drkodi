@@ -27,6 +27,8 @@ All files and folders should be simply named with the name of the movie and the 
 
 Since Dr.Kodi does look up all information by itself or reads it from an existing NFO file, folder naming can be less strict.
 
+## Checks
+
 The following checks are performed. For most, an automatic fix is offered.
 
 1. **The path should be a directory and not a file** (see _Flat Folder_ (https://kodi.wiki/view/Naming_video_files/Movies). Dr.Kodi offers a quick fix to wrap the media file into a directory of the same name.
