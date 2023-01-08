@@ -282,6 +282,7 @@ public class Movie extends DynamicMovieData {
             setTagline(movieDbDetails.getTaline());
 
         writeNfoDataAndImage();
+        triggerChecks();
     }
 
     private void taskFailed(WorkerStateEvent event) {
@@ -414,7 +415,6 @@ public class Movie extends DynamicMovieData {
     public void takeOverSearchResultData(SearchResult searchResult) {
         super.takeOverSearchResultData(searchResult);
         createAndRunMovieDbDetailsTask(getMovieDbId());
-//        writeNfoDataAndImage();
     }
 
     private void triggerEmptyFolderCheck() {
