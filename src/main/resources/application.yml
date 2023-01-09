@@ -62,6 +62,8 @@ app:
           - "german"
           - "fun"
           - ":"
+          - "/"
+          - "\\"
         replace-with-space:
       compare:
         delete:
@@ -69,6 +71,8 @@ app:
           - "'"
           - ":"
           - "-"
+          - "/"
+          - "\\"
         replace-with-space:
           - "."
           - "_"
@@ -89,6 +93,15 @@ app:
           - "fun"
           - ":"
           - "ENCOUNTERS"
+          - "CDD"
+          - "DVDRiP"
+          - "SAViOUR"
+          - "UNiVERSUM"
+          - "/"
+          - "\\"
+          - "OYHD"
+          - "and"
+          - "und"
         replace-with-space:
           - "."
           - "_"
