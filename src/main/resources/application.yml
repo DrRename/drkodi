@@ -26,7 +26,7 @@ app:
   debug: false
   ui:
     appTitle: "Dr.Kodi"
-    initialWidth: 600
+    initialWidth: 800
     initialHeight: 600
     imageHeight: 200
     override-locale: de
