@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 public class DrRenameUtil {
 
-    public static <T> T[] concatenate(T[] a, T[] b) {
+    public static <T> T[] concatenateArray(T[] a, T[] b) {
         if (a == null) {
             return b;
         }
