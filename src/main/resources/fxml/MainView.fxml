@@ -45,7 +45,7 @@
 
     <fx:include fx:id="startDirectory" source="StartDirectoryComponent.fxml"/>
 
-       <SplitPane fx:id="splitPane" VBox.vgrow="ALWAYS">
+       <SplitPane fx:id="splitPane" VBox.vgrow="ALWAYS" dividerPositions="0.33">
           <VBox fx:id="leftSplitContent">
               <TextField fx:id="searchField" promptText="%mainview.searchfield.text"/>
               <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
