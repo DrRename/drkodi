@@ -32,4 +32,4 @@ jobs:
       - name: Exec Maven
         run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pwindows-x86_64 -Djavafx.platform=win
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
