@@ -1,10 +1,7 @@
 package drkodi.data.movie;
 
-import drkodi.KodiUtil;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
-
-import java.nio.file.Path;
 
 @RequiredArgsConstructor
 public class MediaFilesPresentTask extends Task<Boolean> {
@@ -13,8 +10,7 @@ public class MediaFilesPresentTask extends Task<Boolean> {
 
     @Override
     protected Boolean call() throws Exception {
-        Path path = movie.getRenamingPath().getOldPath();
-        return KodiUtil.findAllVideoFiles(path).isEmpty();
+        return new MediaFilesCollectTask(movie).call().isEmpty();
 
     }
 
