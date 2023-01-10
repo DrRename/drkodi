@@ -82,7 +82,11 @@ _Folder year does not match_ warning is shown and a quick-fix is offered. Applyi
 
 <img width="957" alt="Screenshot 2023-01-08 at 13 11 34" src="https://user-images.githubusercontent.com/13817521/211195353-0a87f5a7-61a7-4086-be9f-d2072803e087.png">
 
+'Input' string, i.e., the 'unnormalized' query string is `Der.Schatzplanet.2002.German.DL.1080p.BluRay.x264-ENCOUNTERS`. The normalized string, that is used to query themoviedb is `Der Schatzplanet`.
+
 <img width="1138" alt="Screenshot 2023-01-08 at 13 14 18" src="https://user-images.githubusercontent.com/13817521/211195454-c5e8a55c-3ecf-4763-bdad-a489f22f3cd2.png">
+
+'Input' string, i.e., the 'unnormalized' query string is `Coming.Home.for.Christmas.Eine.Familie.zur.Bescherung.German.2013.AC3.DVDRiP.x264-SAViOUR`. The normalized string, that is used to query themoviedb is `Coming Home for Christmas Eine Familie zur Bescherung`.
 
 
 ### themoviedb Lookup
