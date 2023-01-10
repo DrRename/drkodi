@@ -1,6 +1,6 @@
 # Dr.Kodi
 
-[![Build](https://github.com/drrename/drkodi/actions/workflows/build.yml/badge.svg)](https://github.com/drrename/drkodi/actions/workflows/build.yml) [![Latest Release](https://img.shields.io/github/release/drkodi/portfolio.svg)](https://github.com/DrRename/drkodi/releases/latest) [![Release Date](https://img.shields.io/github/release-date/drkodi/portfolio?color=blue)](https://github.com/drkodi/portfolio/releases/latest)
+[![Build](https://github.com/drrename/drkodi/actions/workflows/build.yml/badge.svg)](https://github.com/drrename/drkodi/actions/workflows/build.yml) [![Latest Release](https://img.shields.io/github/release/drrename/drkodi.svg)](https://github.com/DrRename/drkodi/releases/latest) [![Release Date](https://img.shields.io/github/release-date/drrename/drkodi?color=blue)](https://github.com/DrRename/drkodi/releases/latest)
 
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=DrRename_drkodi&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=DrRename_drkodi)
