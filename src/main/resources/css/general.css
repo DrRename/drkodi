@@ -123,10 +123,20 @@
 
 .kodi-genre {
     -fx-font-family: 'Ubuntu Mono Regular';
-    -fx-border-radius: 4;
+    -fx-border-radius: 5;
     -fx-border-width:1;
     -fx-border-color: white;
     -fx-padding: 2px;
+}
+
+.file-size-box {
+    -fx-font-family: 'Ubuntu Mono Regular';
+    -fx-font-size: 11px;
+    -fx-border-radius: 3;
+    -fx-border-width:1;
+    -fx-border-color: white;
+    -fx-padding: 2px;
+    /*-fx-underline: true;*/
 }
 
 .kodi-image-large {
@@ -154,6 +164,8 @@
 .search-result-box.corner {
     -fx-background-insets: 0;
 }
+
+
 
 .progress-bar {
     -fx-accent: rgba(0, 138, 230, 0.85);

@@ -9,7 +9,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <VBox fx:controller="drkodi.ui.EditViewController" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:id="detailsTableRoot" >
+      xmlns:fx="http://javafx.com/fxml" fx:id="detailsTableRoot" stylesheets="@/css/general.css" >
+
+
 
     <HBox fx:id="buttonsBox" />
 
@@ -30,6 +32,11 @@
 
         <Label text="Genres" minWidth="60" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
         <HBox fx:id="genresBox" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="File size" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <HBox fx:id="fileSizeBox" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <padding> <Insets top="4" right="4" bottom="4" left="4" /></padding>
+        </HBox>
 
     </GridPane>
 

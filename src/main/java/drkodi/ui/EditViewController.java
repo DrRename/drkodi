@@ -22,16 +22,20 @@ package drkodi.ui;
 
 import drkodi.SelectedData;
 import drkodi.config.AppConfig;
+import drkodi.data.movie.MediaFilesSizeTask;
 import drkodi.data.movie.Movie;
 import drkodi.ui.control.GenresBox2;
 import drkodi.ui.control.KodiOpenAndSaveButtonsBox;
+import drkodi.util.DrRenameUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -43,11 +47,14 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
 
 @Slf4j
 @Component
 @FxmlView("/fxml/EditView.fxml")
 public class EditViewController extends DebuggableController implements Initializable {
+
+    private final Executor executor;
 
     private final SelectedData selectedData;
 
@@ -74,12 +81,16 @@ public class EditViewController extends DebuggableController implements Initiali
     @FXML
     public HBox buttonsBox;
 
+    @FXML
+    public HBox fileSizeBox;
+
     private Stage stage;
 
 
 
-    public EditViewController(AppConfig appConfig, SelectedData selectedData, AppConfig appConfig1) {
+    public EditViewController(AppConfig appConfig, Executor executor, SelectedData selectedData, AppConfig appConfig1) {
         super(appConfig);
+        this.executor = executor;
         this.selectedData = selectedData;
         this.appConfig = appConfig1;
         log.debug("New {} controller created", this);
@@ -91,6 +102,13 @@ public class EditViewController extends DebuggableController implements Initiali
         this.stage = new Stage();
         this.stage.setTitle("Edit Details");
         this.stage.setScene(new Scene(detailsTableRoot));
+        FlowPane fileSizePane = new FlowPane();
+        fileSizePane.setHgap(4);
+        fileSizePane.setVgap(4);
+        Label fileSizeLabel = new Label();
+        fileSizeLabel.getStyleClass().add("file-size-box");
+        fileSizePane.getChildren().add(UiUtil.applyDebug(fileSizeLabel, appConfig));
+        this.fileSizeBox.getChildren().add(UiUtil.applyDebug(fileSizePane, appConfig));
 
         if(selectedData.getSelectedMovie() != null) {
 
@@ -100,6 +118,17 @@ public class EditViewController extends DebuggableController implements Initiali
             movieOriginalTitleTextField.setText(selectedData.getSelectedMovie().getMovieOriginalTitle());
             movieYearTextField.setText(selectedData.getSelectedMovie() != null ? selectedData.getSelectedMovie().getMovieYear().toString() : null);
             genresBox.getChildren().setAll(new GenresBox2(selectedData.getSelectedMovie()));
+
+
+            fileSizeLabel.setText(DrRenameUtil.formatSize(0));
+            var task = new MediaFilesSizeTask(selectedData.getSelectedMovie());
+            task.setOnSucceeded(event -> {
+                fileSizeLabel.setText(DrRenameUtil.formatSize(task.getValue().stream().mapToLong(e -> e).sum()));
+            });
+            task.setOnFailed(event -> log.error("Failed to get file size ", task.getException()));
+            executor.execute(task);
+
+
         }
         selectedData.selectedMovieProperty().addListener(new ChangeListener<Movie>() {
             @Override
@@ -118,6 +147,14 @@ public class EditViewController extends DebuggableController implements Initiali
                     movieOriginalTitleTextField.textProperty().bindBidirectional(newValue.movieOriginalTitleProperty());
                     movieYearTextField.textProperty().bindBidirectional(newValue.movieYearProperty(), new IntegerStringConverter());
                     genresBox.getChildren().setAll(new GenresBox2(selectedData.getSelectedMovie()));
+
+                    fileSizeLabel.setText(DrRenameUtil.formatSize(0));
+                    var task = new MediaFilesSizeTask(newValue);
+                    task.setOnSucceeded(event -> {
+                            fileSizeLabel.setText(DrRenameUtil.formatSize(task.getValue().stream().mapToLong(e -> e).sum()));
+                    });
+                    task.setOnFailed(event -> log.error("Failed to get file size ", task.getException()));
+                    executor.execute(task);
                 }
 
             }
@@ -134,7 +171,7 @@ public class EditViewController extends DebuggableController implements Initiali
 
     @Override
     protected Parent[] getUiElementsForRandomColor() {
-        return new Parent[]{detailsTable};
+        return new Parent[]{detailsTable, fileSizeBox};
     }
 
 
