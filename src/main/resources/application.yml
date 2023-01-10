@@ -35,7 +35,7 @@ app:
   reset-delay-ms: 500
   kodi:
     ui:
-      imageHeight: 265
+      imageHeight: 300
       searchImageHeight: 100
     themoviedb:
       base-url: https://api.themoviedb.org/3
