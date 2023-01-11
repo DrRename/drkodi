@@ -32,6 +32,12 @@ jobs:
       - name: Build
         run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pwindows-x86_64 -Djavafx.platform=win
       - name: Publish Package
-        run: mvn --batch-mode deploy
+        run: mvn -B deploy
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Archives
+          path: |
+            drkodi-*-windows.tar.gz
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

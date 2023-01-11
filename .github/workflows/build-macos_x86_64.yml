@@ -32,6 +32,12 @@ jobs:
       - name: Build
         run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
       - name: Publish Package
-        run: mvn --batch-mode deploy
+        run: mvn -B deploy
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Archives
+          path: |
+            drkodi-*-macos.tar.gz
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
