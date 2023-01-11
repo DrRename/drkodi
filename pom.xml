@@ -21,7 +21,6 @@
         <javafx.version>19</javafx.version>
         <spring-boot.version>2.7.4</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
-        <MAC_DEVELOPER_ID>override this</MAC_DEVELOPER_ID>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/${github-user}/${github-repo}.git</connection>
