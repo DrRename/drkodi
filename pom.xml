@@ -36,6 +36,22 @@
             <url>file://${user.home}/local-maven-repository</url>
         </repository>
     </distributionManagement>
+    <repositories>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>github-drrename-commons</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/kerner1000/javapackager</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -128,17 +144,6 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>jitpack</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
