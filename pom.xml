@@ -45,13 +45,21 @@
             <id>github-drrename-commons</id>
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
-        </repository>
-        <repository>
-            <id>github-kerner1000-javapackager</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/kerner1000/javapackager</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+                <id>github-kerner1000-javapackager</id>
+                <name>GitHub Packages</name>
+                <url>https://maven.pkg.github.com/kerner1000/JavaPackager</url>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <plugins>
             <plugin>
