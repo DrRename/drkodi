@@ -35,7 +35,7 @@
 
         <Label text="File size" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
         <HBox fx:id="fileSizeBox" GridPane.rowIndex="4" GridPane.columnIndex="1">
-            <padding> <Insets top="4" right="4" bottom="4" left="4" /></padding>
+            <padding> <Insets top="4" right="4" bottom="4" left="0" /></padding>
         </HBox>
 
     </GridPane>

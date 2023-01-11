@@ -40,6 +40,14 @@
     -fx-text-fill: #e3a359;
 }
 
+.kodi-genre {
+    -fx-border-color: white;
+}
+
+.file-size-box {
+    -fx-border-color: white;
+}
+
 .progress-bar {
     -fx-accent: rgb(255, 255, 255);
 }
