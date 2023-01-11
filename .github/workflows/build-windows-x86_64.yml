@@ -38,6 +38,6 @@ jobs:
         with:
           name: Archives
           path: |
-            drkodi-*-windows.tar.gz
+            target/drkodi-*-windows.tar.gz
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
