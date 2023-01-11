@@ -274,8 +274,6 @@
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
                                     <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
-                                    <jdkPath>jdk/mac/aarch64/jdk-17.0.5+8/Contents/Home</jdkPath>
-                                    <packagingJdk>jdk/mac/aarch64/jdk-17.0.5+8/Contents/Home</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
@@ -324,8 +322,6 @@
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
                                     <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
-                                    <jdkPath>jdk/mac/x86_64/jdk-17.0.5+8/Contents/Home</jdkPath>
-                                    <packagingJdk>jdk/mac/x86_64/jdk-17.0.5+8/Contents/Home</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
@@ -374,8 +370,6 @@
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
                                     <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
-                                    <jdkPath>jdk/linux/x86_64/jdk-17.0.5+8</jdkPath>
-                                    <packagingJdk>jdk/linux/x86_64/jdk-17.0.5+8</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
@@ -421,8 +415,6 @@
                                     <generateInstaller>true</generateInstaller>
                                     <createTarball>true</createTarball>
                                     <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
-                                    <jdkPath>jdk/windows/x86_64/jdk-17.0.5+8</jdkPath>
-                                    <packagingJdk>jdk/windows/x86_64/jdk-17.0.5+8</packagingJdk>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
