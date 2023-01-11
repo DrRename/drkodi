@@ -64,6 +64,6 @@ jobs:
         with:
           name: Archives
           path: |
-            drkodi-*-macos.tar.gz
+            target/drkodi-*-macos.tar.gz
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
