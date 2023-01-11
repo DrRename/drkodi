@@ -100,8 +100,7 @@ app:
           - "/"
           - "\\"
           - "OYHD"
-          - "and"
-          - "und"
+          - "BDRip"
         replace-with-space:
           - "."
           - "_"

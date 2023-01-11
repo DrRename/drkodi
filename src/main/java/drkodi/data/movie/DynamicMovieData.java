@@ -81,7 +81,8 @@ public class DynamicMovieData extends MovieData {
         @Override
         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
             log.debug("Movie original title has changed from {} to {}", oldValue, newValue);
-            updateOriginalTitleWarnings(newValue);
+            if(StringUtils.isNotBlank(newValue))
+                updateOriginalTitleWarnings(newValue);
         }
     }
     private final MovieOriginalTitleListener movieOriginalTitleListener;
