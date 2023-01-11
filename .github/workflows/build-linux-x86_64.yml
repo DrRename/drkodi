@@ -39,5 +39,9 @@ jobs:
           name: Archives
           path: |
             drkodi-*-linux.tar.gz
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: drkodi-*-linux.tar.gz
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
