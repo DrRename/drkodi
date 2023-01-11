@@ -47,7 +47,7 @@
             <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
         </repository>
         <repository>
-            <id>github</id>
+            <id>github-kerner1000-javapackager</id>
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/kerner1000/javapackager</url>
         </repository>
