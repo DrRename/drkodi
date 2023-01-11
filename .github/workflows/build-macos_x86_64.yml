@@ -40,4 +40,5 @@ jobs:
           path: |
             drkodi-*-macos.tar.gz
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MAC_DEVELOPER_ID: ${{ MAC_DEVELOPER_ID }}
