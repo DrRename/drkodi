@@ -62,7 +62,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Archives
+          if-no-files-found: error
           path: |
             target/drkodi-*-macos.tar.gz
     env:
