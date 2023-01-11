@@ -33,9 +33,11 @@ public abstract class ProtoTypeNormalizer {
                     .replaceAll(Matcher.quoteReplacement(""));
 
         }
+        // remove 'years', like '1998'
         result = result.replaceAll("\\d{4,4}", "");
+        // remove multi whitespaces
         result = result.replaceAll("\\s{2,}", " ");
-        return result;
+        return result.trim();
     }
 
 

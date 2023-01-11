@@ -62,7 +62,7 @@ public abstract class ServiceStarter<S extends Service<?>> {
     }
 
     private void handleFailed(WorkerStateEvent e) {
-        log.error("{} failed with reason {}", e.getSource(), e.getSource().getException());
+        log.error("{} failed with reason ", e.getSource(), e.getSource().getException());
     }
 
     protected abstract void doInitService(S service);
