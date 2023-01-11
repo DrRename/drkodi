@@ -107,9 +107,9 @@
 
 .kodi-warning-box-element {
     -fx-padding: 4px;
-    -fx-border-style: solid hidden hidden hidden;
-    -fx-border-width: 1;
-    -fx-border-color: gray;
+    /*-fx-border-style: solid hidden hidden hidden;*/
+    /*-fx-border-width: 1;*/
+    /*-fx-border-color: gray;*/
 
 }
 
@@ -125,7 +125,7 @@
     -fx-font-family: 'Ubuntu Mono Regular';
     -fx-border-radius: 5;
     -fx-border-width:1;
-    -fx-border-color: white;
+    -fx-border-color: #e3a359;
     -fx-padding: 2px;
 }
 
@@ -134,7 +134,7 @@
     -fx-font-size: 11px;
     -fx-border-radius: 3;
     -fx-border-width:1;
-    -fx-border-color: white;
+    -fx-border-color: #e3a359;
     -fx-padding: 2px;
     /*-fx-underline: true;*/
 }

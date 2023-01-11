@@ -54,7 +54,7 @@ public class GenresBox extends FlowPane {
 
         setVgap(4);
         setHgap(4);
-        setPadding(new Insets(4, 4, 4, 4));
+        setPadding(new Insets(4, 4, 4, 0));
 
     }
 
