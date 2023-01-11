@@ -42,7 +42,7 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>github-drrename-commons</id>
+            <id>github</id>
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
             <snapshots>
@@ -52,7 +52,7 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-                <id>github-kerner1000-javapackager</id>
+                <id>github</id>
                 <name>GitHub Packages</name>
                 <url>https://maven.pkg.github.com/kerner1000/JavaPackager</url>
                 <snapshots>
