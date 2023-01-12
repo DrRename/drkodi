@@ -188,7 +188,7 @@ jobs:
         with:
           draft: true
           files: |
-            target/drkodi-*-linux.tar.gz
-            target/drkodi-*-win.zip
-            target/drkodi-*-mac.tar.gz
+            /home/runner/work/drkodi/drkodi/drkodi-*-linux.tar.gz
+            /home/runner/work/drkodi/drkodi/drkodi-*-win.zip
+            /home/runner/work/drkodi/drkodi/drkodi-*-mac.tar.gz
           fail_on_unmatched_files: true
