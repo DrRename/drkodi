@@ -5,7 +5,7 @@ name: CI
 env:
   JAVA_VERSION: 17
 defaults:
-  run:
+run:
     shell: bash
 jobs:
   compile_and_test:
@@ -185,8 +185,7 @@ jobs:
           - "drkodi-*.*.*"
     steps:
       - name: Download artifacts
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: artifact
       - name: Draft Release
