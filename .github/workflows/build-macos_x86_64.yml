@@ -65,6 +65,6 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/drkodi-*-macos.tar.gz
+            target/drkodi-*-mac.tar.gz
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
