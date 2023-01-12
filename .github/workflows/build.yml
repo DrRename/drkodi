@@ -14,7 +14,6 @@ env:
 defaults:
   run:
     shell: bash
-
 jobs:
   compile_and_test:
     name: Compile and Test
@@ -46,12 +45,12 @@ jobs:
       - name: Maven Build, Test
         run: mvn -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=drrename -Dsonar.projectKey=DrRename_drkodi -B verify jacoco:report sonar:sonar
   build_linux_x86_64:
+    name: Build Linux x86_64
+    runs-on: ubuntu-latest
     on:
       push:
         tags:
           - "drkodi-*.*.*"
-    name: Build Linux x86_64
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -76,12 +75,12 @@ jobs:
           path: |
             target/drkodi-*-linux.tar.gz
   build_macos_x86_64:
+    name: Build MacOS x86_64
+    runs-on: macos-latest
     on:
       push:
         tags:
           - "drkodi-*.*.*"
-    name: Build MacOS x86_64
-    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -130,12 +129,12 @@ jobs:
           path: |
             target/drkodi-*-mac.tar.gz
   build_windows_x86_64:
+    name: Build Windows
+    runs-on: windows-latest
     on:
       push:
         tags:
           - "drkodi-*.*.*"
-    name: Build Windows
-    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
