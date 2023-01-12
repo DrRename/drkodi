@@ -78,6 +78,7 @@ jobs:
           if-no-files-found: error
           path: |
             target/drkodi-*-linux.tar.gz
+            target/drkodi-linux.jar
   build_macos_x86_64:
     name: Build MacOS x86_64
     env:
@@ -137,6 +138,7 @@ jobs:
           if-no-files-found: error
           path: |
             target/drkodi-*-mac.tar.gz
+            target/drkodi-mac.jar
   build_windows_x86_64:
     name: Build Windows x86_64
     env:
@@ -172,6 +174,7 @@ jobs:
           if-no-files-found: error
           path: |
             target/drkodi-*-win.zip
+            target/drkodi-win.jar
   draft_release:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -189,6 +192,9 @@ jobs:
           draft: true
           files: |
             /home/runner/work/drkodi/drkodi/drkodi-*-linux.tar.gz
+            /home/runner/work/drkodi/drkodi/drkodi-linux.jar
             /home/runner/work/drkodi/drkodi/drkodi-*-win.zip
+            /home/runner/work/drkodi/drkodi/drkodi-win.jar
             /home/runner/work/drkodi/drkodi/drkodi-*-mac.tar.gz
+            /home/runner/work/drkodi/drkodi/drkodi-mac.jar
           fail_on_unmatched_files: true
