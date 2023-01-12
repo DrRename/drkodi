@@ -4,7 +4,7 @@ uses: softprops/action-gh-release@v1
 with:
   draft: true
   files: |
-    target/drkodi-*-linux.tar.gz
-    target/drkodi-*-win.zip
-    target/drkodi-*-mac.tar.gz
+    drkodi-*-linux.tar.gz
+    drkodi-*-win.zip
+    drkodi-*-mac.tar.gz
   fail_on_unmatched_files: true
