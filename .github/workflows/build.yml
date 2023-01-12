@@ -7,11 +7,11 @@ env:
 defaults:
 run:
     shell: bash
+on: push
 jobs:
   compile_and_test:
     name: Compile and Test
     runs-on: ubuntu-latest
-    on: push
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Check out
@@ -43,10 +43,7 @@ jobs:
   build_linux_x86_64:
     name: Build Linux x86_64
     runs-on: ubuntu-latest
-    on:
-      push:
-        tags:
-          - "drkodi-*.*.*"
+    if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -79,10 +76,7 @@ jobs:
   build_macos_x86_64:
     name: Build MacOS x86_64
     runs-on: macos-latest
-    on:
-      push:
-        tags:
-          - "drkodi-*.*.*"
+    if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -139,10 +133,7 @@ jobs:
   build_windows_x86_64:
     name: Build Windows
     runs-on: windows-latest
-    on:
-      push:
-        tags:
-          - "drkodi-*.*.*"
+    if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -174,10 +165,7 @@ jobs:
             target/drkodi-*-win.zip
   draft_release:
     name: Draft a Release
-    on:
-      push:
-        tags:
-          - "drkodi-*.*.*"
+    if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
