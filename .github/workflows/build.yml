@@ -5,7 +5,7 @@ name: CI
 env:
   JAVA_VERSION: 17
 defaults:
-run:
+  run:
     shell: bash
 on: push
 jobs:
