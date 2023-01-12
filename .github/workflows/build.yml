@@ -10,6 +10,9 @@ run:
 on: push
 jobs:
   compile_and_test:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     name: Compile and Test
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
@@ -41,6 +44,8 @@ jobs:
       - name: Maven Build, Test
         run: mvn -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=drrename -Dsonar.projectKey=DrRename_drkodi -B verify jacoco:report sonar:sonar
   build_linux_x86_64:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Build Linux x86_64
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
@@ -74,6 +79,8 @@ jobs:
           path: |
             target/drkodi-*-linux.tar.gz
   build_macos_x86_64:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Build MacOS x86_64
     runs-on: macos-latest
     if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
@@ -131,6 +138,8 @@ jobs:
           path: |
             target/drkodi-*-mac.tar.gz
   build_windows_x86_64:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Build Windows
     runs-on: windows-latest
     if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
@@ -164,6 +173,8 @@ jobs:
           path: |
             target/drkodi-*-win.zip
   draft_release:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Draft a Release
     if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
     steps:
@@ -180,6 +191,3 @@ jobs:
             target/drkodi-*-win.zip
             target/drkodi-*-mac.tar.gz
           fail_on_unmatched_files: true
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
