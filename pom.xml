@@ -412,8 +412,8 @@
                                     <mainClass>${main-class}</mainClass>
                                     <bundleJre>true</bundleJre>
                                     <generateInstaller>true</generateInstaller>
-                                    <createTarball>true</createTarball>
-                                    <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
+                                    <createZipball>true</createZipball>
+                                    <zipballName>${project.artifactId}-${project.version}-${javafx.platform}</zipballName>
                                     <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
                                     <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
                                     <generateInstaller>false</generateInstaller>
