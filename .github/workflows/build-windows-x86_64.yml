@@ -3,7 +3,7 @@ name: Build Windows x86_64
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "drkodi-*.*.*"
   workflow_dispatch: {}
 
 env:
