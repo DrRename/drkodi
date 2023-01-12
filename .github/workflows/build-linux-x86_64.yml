@@ -3,7 +3,7 @@ name: Build Linux x86_64
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "drkodi-*.*.*"
   workflow_dispatch: {}
 
 env:
