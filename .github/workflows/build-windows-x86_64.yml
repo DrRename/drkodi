@@ -1,8 +1,9 @@
 name: Build Windows x86_64
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*.*.*"
   workflow_dispatch: {}
 
 env:

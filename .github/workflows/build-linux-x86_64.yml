@@ -1,8 +1,9 @@
 name: Build Linux x86_64
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*.*.*"
   workflow_dispatch: {}
 
 env:
