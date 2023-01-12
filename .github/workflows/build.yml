@@ -83,6 +83,10 @@ jobs:
     name: Build MacOS x86_64  App
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MAC_DEVELOPER_ID: ${{ secrets.MAC_DEVELOPER_ID }}
+      MAC_DEVELOPER_CERTIFICATE: ${{ secrets.MAC_DEVELOPER_CERTIFICATE }}
+      MAC_DEVELOPER_CERTIFICATE_PASSWORD: ${{ secrets.MAC_DEVELOPER_CERTIFICATE_PASSWORD }}
+      KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
     runs-on: macos-latest
     if: startsWith(github.event.ref, 'refs/tags/drkodi-version-')
     steps:
