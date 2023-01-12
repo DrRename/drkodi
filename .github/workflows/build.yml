@@ -176,6 +176,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     name: Draft a Release
+    runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/drkodi-*.*.*')
     steps:
       - name: Download artifacts
