@@ -44,7 +44,7 @@ jobs:
       - name: Maven Build, Test
         run: mvn -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=drrename -Dsonar.projectKey=DrRename_drkodi -B verify jacoco:report sonar:sonar
   build_linux_x86_64:
-    name: Build Linux x86_64
+    name: Build Linux x86_64 App
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
@@ -80,7 +80,7 @@ jobs:
             target/drkodi-*-linux.tar.gz
             target/drkodi-linux.jar
   build_macos_x86_64:
-    name: Build MacOS x86_64
+    name: Build MacOS x86_64  App
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: macos-latest
@@ -140,7 +140,7 @@ jobs:
             target/drkodi-*-mac.tar.gz
             target/drkodi-mac.jar
   build_windows_x86_64:
-    name: Build Windows x86_64
+    name: Build Windows x86_64 App
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: windows-latest
