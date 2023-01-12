@@ -39,6 +39,6 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/drkodi-*-win.tar.gz
+            target/drkodi-*-win.zip
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
