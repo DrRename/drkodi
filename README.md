@@ -40,7 +40,7 @@ Those basic checks can be performed offline and without the presence of an NFO f
 1. **The folder name should match the** [normalized](#title-normalization) **NFO's movie title**.
 2. **The NFO's movie year** (release year) **should match the folder's movie year** (folder naming pattern: _The Matrix (1998)_, see _Naming_ (https://kodi.wiki/view/Naming_video_files/Movies)) 
 
-### Example Walk-through
+### Example Walk-through for a Movies Library
 
 We start with a very small library that contains one movie. The 'library' is just the parent folder, in this case _Movies_.
 
@@ -77,11 +77,11 @@ _Folder year does not match_ warning is shown and a quick-fix is offered. Applyi
 
 #### Normalization Examples
 
-<img width="957" alt="Screenshot 2023-01-08 at 13 11 34" src="https://user-images.githubusercontent.com/13817521/211195353-0a87f5a7-61a7-4086-be9f-d2072803e087.png">
++ <img width="957" alt="Screenshot 2023-01-08 at 13 11 34" src="https://user-images.githubusercontent.com/13817521/211195353-0a87f5a7-61a7-4086-be9f-d2072803e087.png">
 
 'Input' string, i.e., the 'unnormalized' query string is `Der.Schatzplanet.2002.German.DL.1080p.BluRay.x264-ENCOUNTERS`. The normalized string, that is used to query themoviedb is `Der Schatzplanet`.
 
-<img width="1138" alt="Screenshot 2023-01-08 at 13 14 18" src="https://user-images.githubusercontent.com/13817521/211195454-c5e8a55c-3ecf-4763-bdad-a489f22f3cd2.png">
++ <img width="1138" alt="Screenshot 2023-01-08 at 13 14 18" src="https://user-images.githubusercontent.com/13817521/211195454-c5e8a55c-3ecf-4763-bdad-a489f22f3cd2.png">
 
 'Input' string, i.e., the 'unnormalized' query string is `Coming.Home.for.Christmas.Eine.Familie.zur.Bescherung.German.2013.AC3.DVDRiP.x264-SAViOUR`. The normalized string, that is used to query themoviedb is `Coming Home for Christmas Eine Familie zur Bescherung`.
 
