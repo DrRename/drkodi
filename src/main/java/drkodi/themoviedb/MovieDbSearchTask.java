@@ -41,7 +41,7 @@ public class MovieDbSearchTask extends Task<WebSearchResults> {
     protected WebSearchResults call() throws Exception {
         var searchString = normalizer.normalize(movie.getMovieTitle());
         log.debug("Starting query for {}", searchString);
-        WebSearchResults movieDbMovieSearchResult = movieDbSearcher.search(searchString, null);
+        WebSearchResults movieDbMovieSearchResult = movieDbSearcher.searchMovie(searchString, null);
         log.debug("Found {} matches for '{}'", movieDbMovieSearchResult.getSearchResults().keySet().size(), searchString);
         return movieDbMovieSearchResult;
     }

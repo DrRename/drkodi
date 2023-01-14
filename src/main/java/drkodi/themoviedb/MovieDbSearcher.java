@@ -56,7 +56,6 @@ public class MovieDbSearcher {
     private final ResourceBundle resourceBundle;
 
 
-
     protected void reset() {
 
     }
@@ -95,7 +94,7 @@ public class MovieDbSearcher {
         return result;
     }
 
-    public WebSearchResults search(String searchString, Integer year) throws IOException {
+    public WebSearchResults searchMovie(String searchString, Integer year) throws IOException {
         reset();
 
         WebSearchResults result = new WebSearchResults();
