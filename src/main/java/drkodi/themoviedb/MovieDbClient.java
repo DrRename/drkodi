@@ -1,9 +1,9 @@
 /*
- *     Dr.Rename - A Minimalistic Batch Renamer
+ *     Dr.Kodi - A Minimalistic Batch Renamer
  *
- *     Copyright (C) 2022
+ *     Copyright (C) 2023
  *
- *     This file is part of Dr.Rename.
+ *     This file is part of Dr.Kodi.
  *
  *     You can redistribute it and/or modify it under the terms of the GNU Affero
  *     General Public License as published by the Free Software Foundation, either
@@ -18,8 +18,9 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi;
+package drkodi.themoviedb;
 
+import drkodi.MovieDbClientConfig;
 import drkodi.data.MovieDetailsDto;
 import drkodi.data.SearchResultsDto;
 import drkodi.themoviedb.TranslationsDto;
