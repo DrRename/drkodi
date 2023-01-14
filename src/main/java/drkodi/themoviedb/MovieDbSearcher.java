@@ -20,7 +20,6 @@
 
 package drkodi.themoviedb;
 
-import drkodi.MovieDbClient;
 import drkodi.MovieDbGenre;
 import drkodi.MovieDbImagesClient;
 import drkodi.config.TheMovieDbConfig;
