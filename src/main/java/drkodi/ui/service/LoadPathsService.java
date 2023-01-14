@@ -6,12 +6,10 @@ import drkodi.SearchResultDtoMapper;
 import drkodi.PrototypeService;
 import drkodi.config.AppConfig;
 import drkodi.data.SearchResultToMovieMapper;
-import drkodi.data.movie.Movie;
 import drkodi.normalization.FolderNameWarningNormalizer;
-import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
-import drrename.commons.RenamingPath;
 import javafx.concurrent.Task;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -34,8 +32,8 @@ public class LoadPathsService extends PrototypeService<Void> {
 
     private Collection<Path> files;
 
-    public LoadPathsService(AppConfig appConfig, ResourceBundle resourceBundle, MovieEntries movieEntries, Executor executor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, FolderNameWarningNormalizer folderNameWarningNormalizer, Collection<Path> files) {
-        super(appConfig, resourceBundle, movieEntries, searchResultToMovieMapper, mapper, movieDbSearcher, movieTitleSearchNormalizer, movieTitleWriteNormalizer, folderNameWarningNormalizer);
+    public LoadPathsService(AppConfig appConfig, ResourceBundle resourceBundle, MovieEntries movieEntries, Executor executor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, TitleSearchNormalizer titleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, FolderNameWarningNormalizer folderNameWarningNormalizer, Collection<Path> files) {
+        super(appConfig, resourceBundle, movieEntries, searchResultToMovieMapper, mapper, movieDbSearcher, titleSearchNormalizer, movieTitleWriteNormalizer, folderNameWarningNormalizer);
         this.files = files;
     }
 
@@ -43,9 +41,9 @@ public class LoadPathsService extends PrototypeService<Void> {
     protected Task<Void> createTask() {
         // If 'files' is one entry only, and it's a directory, use ListDirectoryTask, otherwise use ListFilesTask.
         if (files != null && files.size() == 1 && Files.isDirectory(files.iterator().next())) {
-            return new ListDirectoryTask(getAppConfig(), getResourceBundle(),movieEntries,getExecutor(), searchResultToMovieMapper,mapper,movieDbSearcher,movieTitleSearchNormalizer,movieTitleWriteNormalizer,folderNameWarningNormalizer, files.iterator().next());
+            return new ListDirectoryTask(getAppConfig(), getResourceBundle(),movieEntries,getExecutor(), searchResultToMovieMapper,mapper,movieDbSearcher, titleSearchNormalizer,movieTitleWriteNormalizer,folderNameWarningNormalizer, files.iterator().next());
         }
-        return new ListFilesTask(getAppConfig(), getResourceBundle(),movieEntries,getExecutor(), searchResultToMovieMapper,mapper,movieDbSearcher,movieTitleSearchNormalizer,movieTitleWriteNormalizer,folderNameWarningNormalizer, files);
+        return new ListFilesTask(getAppConfig(), getResourceBundle(),movieEntries,getExecutor(), searchResultToMovieMapper,mapper,movieDbSearcher, titleSearchNormalizer,movieTitleWriteNormalizer,folderNameWarningNormalizer, files);
     }
 
 

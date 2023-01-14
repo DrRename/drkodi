@@ -24,12 +24,11 @@ import drkodi.config.AppConfig;
 import drkodi.data.SearchResultToMovieMapper;
 import drkodi.data.movie.Movie;
 import drkodi.normalization.FolderNameWarningNormalizer;
-import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
 import drkodi.ui.control.KodiMoviePathEntryBox;
 import drrename.commons.RenamingPath;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -55,14 +54,14 @@ public abstract class PrototypeTask<T> extends Task<T> {
 
     protected final MovieDbSearcher movieDbSearcher;
 
-    protected final MovieTitleSearchNormalizer movieTitleSearchNormalizer;
+    protected final TitleSearchNormalizer titleSearchNormalizer;
 
     protected final MovieTitleWriteNormalizer movieTitleWriteNormalizer;
 
     protected final FolderNameWarningNormalizer folderNameWarningNormalizer;
 
     protected Movie buildData(RenamingPath renamingPath) {
-        return new Movie(renamingPath, mapper, executor, movieDbSearcher, folderNameWarningNormalizer, movieTitleSearchNormalizer, searchResultToMovieMapper, movieTitleWriteNormalizer);
+        return new Movie(renamingPath, mapper, executor, movieDbSearcher, folderNameWarningNormalizer, titleSearchNormalizer, searchResultToMovieMapper, movieTitleWriteNormalizer);
     }
 
     protected KodiMoviePathEntryBox buildUiData(Movie data) {

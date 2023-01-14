@@ -9,15 +9,15 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class MovieTitleSearchNormalizerTest {
+class TitleSearchNormalizerTest {
 
-    private MovieTitleSearchNormalizer normalizer;
+    private TitleSearchNormalizer normalizer;
 
     @BeforeEach
     void setUp() {
         MovieTitleSearchNormalizerConfiguration config = new MovieTitleSearchNormalizerConfiguration();
         config.setDelete(Arrays.asList("and"));
-        normalizer = new MovieTitleSearchNormalizer(config);
+        normalizer = new TitleSearchNormalizer(config);
     }
 
     @AfterEach

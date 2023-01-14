@@ -23,7 +23,7 @@ package drkodi;
 import drkodi.config.AppConfig;
 import drkodi.data.SearchResultToMovieMapper;
 import drkodi.normalization.FolderNameWarningNormalizer;
-import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
 import javafx.concurrent.Service;
@@ -31,7 +31,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor
 @Getter
@@ -49,7 +48,7 @@ public abstract class PrototypeService<T> extends Service<T> {
 
     protected final MovieDbSearcher movieDbSearcher;
 
-    protected final MovieTitleSearchNormalizer movieTitleSearchNormalizer;
+    protected final TitleSearchNormalizer titleSearchNormalizer;
 
     protected final MovieTitleWriteNormalizer movieTitleWriteNormalizer;
 

@@ -3,9 +3,8 @@ package drkodi.ui.service;
 import drkodi.*;
 import drkodi.config.AppConfig;
 import drkodi.data.SearchResultToMovieMapper;
-import drkodi.data.movie.Movie;
 import drkodi.normalization.FolderNameWarningNormalizer;
-import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.themoviedb.MovieDbSearcher;
 import drkodi.ui.control.KodiMoviePathEntryBox;
@@ -30,8 +29,8 @@ public class ListDirectoryTask extends PrototypeTask<Void> {
 
     private final Path dir;
 
-    public ListDirectoryTask(AppConfig appConfig, ResourceBundle resourceBundle, MovieEntries movieEntries, Executor executor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, MovieTitleSearchNormalizer movieTitleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, FolderNameWarningNormalizer folderNameWarningNormalizer, Path dir) {
-        super(appConfig, resourceBundle, movieEntries, executor, searchResultToMovieMapper, mapper, movieDbSearcher, movieTitleSearchNormalizer, movieTitleWriteNormalizer, folderNameWarningNormalizer);
+    public ListDirectoryTask(AppConfig appConfig, ResourceBundle resourceBundle, MovieEntries movieEntries, Executor executor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, TitleSearchNormalizer titleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, FolderNameWarningNormalizer folderNameWarningNormalizer, Path dir) {
+        super(appConfig, resourceBundle, movieEntries, executor, searchResultToMovieMapper, mapper, movieDbSearcher, titleSearchNormalizer, movieTitleWriteNormalizer, folderNameWarningNormalizer);
         this.dir = dir;
     }
 

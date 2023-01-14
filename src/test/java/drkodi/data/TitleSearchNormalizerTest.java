@@ -1,6 +1,6 @@
 package drkodi.data;
 
-import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleSearchNormalizerConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,15 +10,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class MovieTitleSearchNormalizerTest {
+class TitleSearchNormalizerTest {
 
-    private MovieTitleSearchNormalizer normalizer;
+    private TitleSearchNormalizer normalizer;
 
     @BeforeEach
     void setUp() {
         MovieTitleSearchNormalizerConfiguration config = new MovieTitleSearchNormalizerConfiguration();
         config.setReplaceWithSpace(List.of("."));
-        normalizer = new MovieTitleSearchNormalizer(config);
+        normalizer = new TitleSearchNormalizer(config);
     }
 
     @AfterEach
