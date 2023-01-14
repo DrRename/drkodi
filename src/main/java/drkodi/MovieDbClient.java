@@ -34,7 +34,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MovieDbClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search/movie", produces = "application/json")
-    ResponseEntity<SearchResultsDto> searchMovie(@RequestParam(name = "api_key") String apiKey, @RequestParam(name = "langauge", required = false) String language, @RequestParam(name = "include_adult", required = false) Boolean includeAdult, @RequestParam(name = "query") String query, @RequestParam(name = "year") Number year);
+    ResponseEntity<SearchResultsDto> searchMovie(@RequestParam(name = "api_key") String apiKey, @RequestParam(name = "langauge", required = false) String language, @RequestParam(name = "include_adult", required = false) Boolean includeAdult, @RequestParam(name = "query") String query, @RequestParam(name = "year", required = false) Number year);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/search/tv", produces = "application/json")
+    ResponseEntity<SearchResultsDto> searchTv(@RequestParam(name = "api_key") String apiKey, @RequestParam(name = "langauge", required = false) String language, @RequestParam(name = "query") String query, @RequestParam(name = "year", required = false) Number year);
 
     @RequestMapping(method = RequestMethod.GET, value = "/movie/{id}/translations", produces = "application/json")
     ResponseEntity<TranslationsDto> getTranslations(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id);
