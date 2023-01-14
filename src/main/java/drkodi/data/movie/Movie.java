@@ -30,6 +30,7 @@ import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drkodi.themoviedb.MovieDbDetails;
 import drkodi.themoviedb.MovieDbSearchMoviesTask;
+import drkodi.themoviedb.MovieDbSearchTvTask;
 import drkodi.themoviedb.MovieDbSearcher;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.BooleanProperty;
@@ -182,14 +183,9 @@ public class Movie extends DynamicMovieData {
         nfoPathProperty().addListener(this::webSearchListener);
     }
 
-    @Deprecated
-    private boolean searchingWeb;
+
 
     private void webSearchListener(ObservableValue<? extends Qualified<?>> observable, Qualified<?> oldValue, Qualified<?> newValue) {
-        if (searchingWeb) {
-            log.debug("Already searching, skipping change event");
-            return;
-        }
         if (newValue != null) {
             log.debug("Data OK, triggering web search");
             triggerWebSearch();
@@ -236,13 +232,16 @@ public class Movie extends DynamicMovieData {
             log.debug("Data complete, will not query TheMovieDb");
             return;
         }
-        searchingWeb = true;
-        var task = new MovieDbSearchMoviesTask(movieDbSearcher, getTitleSearchNormalizer(), this);
-        task.setOnSucceeded(event -> {
+        var moviesTask = new MovieDbSearchMoviesTask(movieDbSearcher, getTitleSearchNormalizer(), this);
+        moviesTask.setOnSucceeded(event -> {
             new MovieDbSearchResultProcessor(this, (WebSearchResults) event.getSource().getValue()).process();
-            searchingWeb = false;
         });
-        executeTask(task);
+        executeTask(moviesTask);
+        var tvTask = new MovieDbSearchTvTask(movieDbSearcher, getTitleSearchNormalizer(), this);
+        tvTask.setOnSucceeded(event -> {
+           int wait = 0;
+        });
+        executeTask(tvTask);
     }
 
     private void initIdListener() {
