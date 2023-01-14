@@ -23,7 +23,6 @@ package drkodi.themoviedb;
 import drkodi.MovieDbClientConfig;
 import drkodi.data.MovieDetailsDto;
 import drkodi.data.SearchResultsDto;
-import drkodi.themoviedb.TranslationsDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(value = "moviedb", url = "${app.kodi.themoviedb.baseurl}", configuration = MovieDbClientConfig.class)
-public interface MovieDbClient {
+public interface TheMovieDbClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search/movie", produces = "application/json")
     ResponseEntity<SearchResultsDto> searchMovie(@RequestParam(name = "api_key") String apiKey, @RequestParam(name = "langauge", required = false) String language, @RequestParam(name = "include_adult", required = false) Boolean includeAdult, @RequestParam(name = "query") String query, @RequestParam(name = "year", required = false) Number year);

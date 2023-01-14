@@ -47,7 +47,7 @@ import java.util.ResourceBundle;
 @Scope("prototype")
 public class MovieDbSearcher {
 
-    private final MovieDbClient client;
+    private final TheMovieDbClient client;
 
     private final MovieDbImagesClient imagesClient;
 
