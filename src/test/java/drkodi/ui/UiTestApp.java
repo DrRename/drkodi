@@ -32,8 +32,6 @@ import drkodi.ui.control.KodiBox;
 import drrename.commons.RenamingPath;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -53,7 +51,7 @@ public class UiTestApp extends Application {
     SearchResultDtoMapper mapper = new SearchResultDtoMapperImpl();
 
     private SearchResultToMovieMapper searchResultToMovieMapper = new SearchResultToMovieMapperImpl(new ImageDataMapper());
-    List<Movie> data = List.of(new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper,executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new MovieTitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())),new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper, executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new MovieTitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())));
+    List<Movie> data = List.of(new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper,executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new TitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())),new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper, executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new TitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())));
 
     ListView<KodiBox> listView;
 

@@ -25,11 +25,11 @@ import drkodi.*;
 import drkodi.data.*;
 import drkodi.data.json.WebSearchResults;
 import drkodi.normalization.FolderNameWarningNormalizer;
-import drkodi.normalization.MovieTitleSearchNormalizer;
+import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drkodi.themoviedb.MovieDbDetails;
-import drkodi.themoviedb.MovieDbSearchTask;
+import drkodi.themoviedb.MovieDbSearchMoviesTask;
 import drkodi.themoviedb.MovieDbSearcher;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.BooleanProperty;
@@ -116,7 +116,7 @@ public class Movie extends DynamicMovieData {
 
     private final MovieDbSearcher movieDbSearcher;
 
-    private final MovieTitleSearchNormalizer movieTitleSearchNormalizer;
+    private final TitleSearchNormalizer titleSearchNormalizer;
 
     private final MovieTitleWriteNormalizer movieTitleWriteNormalizer;
 
@@ -126,11 +126,11 @@ public class Movie extends DynamicMovieData {
 
     private final ObservableList<Task<?>> runningTasksList;
 
-    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, MovieTitleSearchNormalizer movieTitleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
+    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, TitleSearchNormalizer titleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
         super(renamingPath, mapper, folderNameWarningNormalizer, searchResultToMovieMapper);
         this.executor = executor;
         this.movieDbSearcher = movieDbSearcher;
-        this.movieTitleSearchNormalizer = movieTitleSearchNormalizer;
+        this.titleSearchNormalizer = titleSearchNormalizer;
         this.movieTitleWriteNormalizer = movieTitleWriteNormalizer;
         this.movieTitleListener = new MovieTitleListener();
         this.nfoPathListener = new NfoPathListener();
@@ -237,7 +237,7 @@ public class Movie extends DynamicMovieData {
             return;
         }
         searchingWeb = true;
-        var task = new MovieDbSearchTask(movieDbSearcher, getMovieTitleSearchNormalizer(), this);
+        var task = new MovieDbSearchMoviesTask(movieDbSearcher, getTitleSearchNormalizer(), this);
         task.setOnSucceeded(event -> {
             new MovieDbSearchResultProcessor(this, (WebSearchResults) event.getSource().getValue()).process();
             searchingWeb = false;

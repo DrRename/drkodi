@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class MovieTitleSearchNormalizer extends ProtoTypeNormalizer {
+public class TitleSearchNormalizer extends ProtoTypeNormalizer {
 
     private final MovieTitleSearchNormalizerConfiguration configuration;
 
