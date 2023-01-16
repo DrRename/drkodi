@@ -18,13 +18,12 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.themoviedb;
+package drkodi.data;
 
-import drkodi.MovieDbGenre;
-import javafx.scene.image.Image;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -32,7 +31,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class MovieDbTvDetails extends MovieDbDetails {
+public class TvDetailsDto extends DetailsDto {
 
 
 }

@@ -1,9 +1,9 @@
 /*
- *     Dr.Rename - A Minimalistic Batch Renamer
+ *     Dr.Kodi - A Minimalistic Batch Renamer
  *
- *     Copyright (C) 2022
+ *     Copyright (C) 2023
  *
- *     This file is part of Dr.Rename.
+ *     This file is part of Dr.Kodi.
  *
  *     You can redistribute it and/or modify it under the terms of the GNU Affero
  *     General Public License as published by the Free Software Foundation, either
@@ -20,19 +20,10 @@
 
 package drkodi.themoviedb;
 
-import drkodi.MovieDbGenre;
-import javafx.scene.image.Image;
-import lombok.*;
+import org.mapstruct.Mapper;
 
-import java.util.ArrayList;
-import java.util.List;
+@Mapper(componentModel = "spring")
+public interface MovieDetailsMapper {
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
-@ToString
-public class MovieDbTvDetails extends MovieDbDetails {
-
-
+    MovieDbMovieDetails map();
 }

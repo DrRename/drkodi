@@ -1,9 +1,9 @@
 /*
- *     Dr.Rename - A Minimalistic Batch Renamer
+ *     Dr.Kodi - A Minimalistic Batch Renamer
  *
- *     Copyright (C) 2022
+ *     Copyright (C) 2023
  *
- *     This file is part of Dr.Rename.
+ *     This file is part of Dr.Kodi.
  *
  *     You can redistribute it and/or modify it under the terms of the GNU Affero
  *     General Public License as published by the Free Software Foundation, either
@@ -31,7 +31,42 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class MovieDetailsDto extends DetailsDto {
+public class DetailsDto {
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Genres {
 
+        @JsonProperty("id")
+        Number id;
+
+        @JsonProperty("name")
+        String name;
+    }
+
+    @JsonProperty("genres")
+    List<Genres> genres;
+
+    @JsonProperty("tagline")
+    String taline;
+
+    @JsonProperty("overview")
+    String overview;
+
+    @JsonProperty("original_title")
+    String originalTitle;
+
+    @JsonProperty("title")
+    String title;
+
+    @JsonProperty("plot")
+    String plot;
+
+    @JsonProperty("release_date")
+    LocalDate releaseDate;
+
+    @JsonProperty("poster_path")
+    String posterPath;
 }
