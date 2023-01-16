@@ -22,8 +22,8 @@ public class ToNfoCopier {
         if (!Qualified.isOk(movie.getNfoPath())) {
             movie.setDefaultNfoPath();
         }
-        if (movie.getNfoData().getElement().getMovie() == null) {
-            movie.getNfoData().getElement().setMovie(new NfoMovie());
+        if (movie.getNfoData().getElement().getElement() == null) {
+//            movie.getNfoData().getElement().setElement(new NfoMovie());
         }
         if (movie.getNfoData().getElement().getElement().getArt() == null) {
             movie.getNfoData().getElement().getElement().setArt(new NfoMovie.Art());

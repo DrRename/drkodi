@@ -34,10 +34,22 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
 
+
+/**
+ * TODO: Rename to something more generic, needs to fit TV Series as well.
+ */
 @Slf4j
 public class MovieData {
 
-    private final SearchResultDtoMapper searchResultDtoMapper;
+    public enum Type {
+        MOVIE, TV_SERIES
+    }
+
+    private final ObjectProperty<Type> type;
+
+    private final MovieSearchResultDtoMapper movieSearchResultDtoMapper;
+
+    private final TvSearchResultDtoMapper tvSearchResultDtoMapper;
 
     private final SearchResultToMovieMapper searchResultToMovieMapper;
 
@@ -106,13 +118,17 @@ public class MovieData {
 
     private final ListProperty<KodiWarning> warnings;
 
-    private final ListProperty<SearchResult> searchResults;
+    private final ListProperty<SearchResult> movieSearchResults;
 
-    public MovieData(RenamingPath renamingPath, SearchResultDtoMapper searchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameWarningNormalizer folderNameWarningNormalizer) {
+    private final ListProperty<SearchResult> tvSearchResults;
+
+    public MovieData(RenamingPath renamingPath, MovieSearchResultDtoMapper movieSearchResultDtoMapper, TvSearchResultDtoMapper tvSearchResultDtoMapper, SearchResultToMovieMapper searchResultToMovieMapper, FolderNameWarningNormalizer folderNameWarningNormalizer) {
         this.renamingPath = renamingPath;
-        this.searchResultDtoMapper = searchResultDtoMapper;
+        this.movieSearchResultDtoMapper = movieSearchResultDtoMapper;
+        this.tvSearchResultDtoMapper = tvSearchResultDtoMapper;
         this.searchResultToMovieMapper = searchResultToMovieMapper;
         this.folderNameWarningNormalizer = folderNameWarningNormalizer;
+        this.type = new SimpleObjectProperty<>();
         this.movieTitleFromFolder = new SimpleStringProperty();
         this.movieTitleFromNfo = new SimpleStringProperty();
         this.nfoPath = new SimpleObjectProperty<>();
@@ -132,7 +148,8 @@ public class MovieData {
         this.tagline = new SimpleStringProperty();
         this.genres = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.warnings = new SimpleListProperty<>(FXCollections.observableArrayList());
-        this.searchResults = new SimpleListProperty<>(FXCollections.observableArrayList());
+        this.movieSearchResults = new SimpleListProperty<>(FXCollections.observableArrayList());
+        this.tvSearchResults = new SimpleListProperty<>(FXCollections.observableArrayList());
         init();
     }
 
@@ -205,7 +222,7 @@ public class MovieData {
     }
 
     protected void initEmptyNfoData() {
-        NfoRoot data = new NfoRoot();
+        NfoMovieRoot data = new NfoMovieRoot();
         data.setMovie(new NfoMovie());
         data.getMovie().setArt(new NfoMovie.Art());
         setNfoData(QualifiedNfoData.from(data));
@@ -249,8 +266,12 @@ public class MovieData {
         return renamingPath;
     }
 
-    public SearchResultDtoMapper getSearchResultDtoMapper() {
-        return searchResultDtoMapper;
+    public MovieSearchResultDtoMapper getMovieSearchResultDtoMapper() {
+        return movieSearchResultDtoMapper;
+    }
+
+    public TvSearchResultDtoMapper getTvSearchResultDtoMapper() {
+        return tvSearchResultDtoMapper;
     }
 
     public FolderNameWarningNormalizer getFolderNameCompareNormalizer() {
@@ -259,6 +280,18 @@ public class MovieData {
 
     // FX Getter / Setter //
 
+
+    public Type getType() {
+        return type.get();
+    }
+
+    public ObjectProperty<Type> typeProperty() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type.set(type);
+    }
 
     public String getMovieTitleFromFolder() {
         return movieTitleFromFolder.get();
@@ -392,16 +425,28 @@ public class MovieData {
         this.movieYearFromWeb.set(movieYearFromWeb);
     }
 
-    public ObservableList<SearchResult> getSearchResults() {
-        return searchResults.get();
+    public ObservableList<SearchResult> getMovieSearchResults() {
+        return movieSearchResults.get();
     }
 
-    public ListProperty<SearchResult> searchResultsProperty() {
-        return searchResults;
+    public ListProperty<SearchResult> movieSearchResultsProperty() {
+        return movieSearchResults;
     }
 
-    public void setSearchResults(ObservableList<SearchResult> searchResults) {
-        this.searchResults.set(searchResults);
+    public void setMovieSearchResults(ObservableList<SearchResult> movieSearchResults) {
+        this.movieSearchResults.set(movieSearchResults);
+    }
+
+    public ObservableList<SearchResult> getTvSearchResults() {
+        return tvSearchResults.get();
+    }
+
+    public ListProperty<SearchResult> tvSearchResultsProperty() {
+        return tvSearchResults;
+    }
+
+    public void setTvSearchResults(ObservableList<SearchResult> tvSearchResults) {
+        this.tvSearchResults.set(tvSearchResults);
     }
 
     public Image getImage() {

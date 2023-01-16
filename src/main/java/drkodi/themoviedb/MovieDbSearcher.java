@@ -24,9 +24,7 @@ import drkodi.MovieDbGenre;
 import drkodi.MovieDbImagesClient;
 import drkodi.config.TheMovieDbConfig;
 import drkodi.data.MovieDetailsDto;
-import drkodi.data.json.SearchResultDto;
-import drkodi.data.json.TranslationDto;
-import drkodi.data.json.WebSearchResults;
+import drkodi.data.json.*;
 import drkodi.util.DrRenameUtil;
 import javafx.scene.image.Image;
 import lombok.RequiredArgsConstructor;
@@ -94,25 +92,28 @@ public class MovieDbSearcher {
         return result;
     }
 
-    public WebSearchResults searchTv(String searchString, Integer year) throws IOException {
+    public MovieDbTvDetails lookupTvDetails(Number movieDbId){
+        MovieDbTvDetails result = new MovieDbTvDetails();
+        return result;
+    }
+
+    public TvWebSearchResults searchTv(String searchString, Integer year) throws IOException {
         reset();
 
-        WebSearchResults result = new WebSearchResults();
+        TvWebSearchResults result = new TvWebSearchResults();
 
         if (StringUtils.isNotBlank(searchString)) {
             var searchResult = client.searchTv("ca540140c89af81851d4026286942896", null, searchString, null);
 
             if (searchResult.getBody() == null || searchResult.getBody().getResults().isEmpty()) return result;
 
-            List<SearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
+            List<TvSearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
 
             subList.forEach(dto -> result.getSearchResults().put(dto.getId(), dto));
 
-            for (SearchResultDto searchResultDto : subList) {
+            for (TvSearchResultDto searchResultDto : subList) {
 
                 addImageAndImageData(result, searchResultDto);
-
-                addTranslations(result, searchResultDto);
             }
         }
 
@@ -122,7 +123,7 @@ public class MovieDbSearcher {
     public MovieWebSearchResults searchMovie(String searchString, Integer year) throws IOException {
         reset();
 
-        WebSearchResults result = new WebSearchResults();
+        MovieWebSearchResults result = new MovieWebSearchResults();
 
         if (StringUtils.isNotBlank(searchString)) {
             var searchResult = client.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchString, null);

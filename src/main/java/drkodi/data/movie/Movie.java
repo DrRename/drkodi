@@ -23,15 +23,13 @@ package drkodi.data.movie;
 
 import drkodi.*;
 import drkodi.data.*;
-import drkodi.data.json.WebSearchResults;
+import drkodi.data.json.MovieWebSearchResults;
+import drkodi.data.json.TvWebSearchResults;
 import drkodi.normalization.FolderNameWarningNormalizer;
 import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.RenameFolderToMovieTitleTask;
-import drkodi.themoviedb.MovieDbDetails;
-import drkodi.themoviedb.MovieDbSearchMoviesTask;
-import drkodi.themoviedb.MovieDbSearchTvTask;
-import drkodi.themoviedb.MovieDbSearcher;
+import drkodi.themoviedb.*;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -127,8 +125,8 @@ public class Movie extends DynamicMovieData {
 
     private final ObservableList<Task<?>> runningTasksList;
 
-    public Movie(RenamingPath renamingPath, SearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, TitleSearchNormalizer titleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer) {
-        super(renamingPath, mapper, folderNameWarningNormalizer, searchResultToMovieMapper);
+    public Movie(RenamingPath renamingPath, MovieSearchResultDtoMapper mapper, Executor executor, MovieDbSearcher movieDbSearcher, FolderNameWarningNormalizer folderNameWarningNormalizer, TitleSearchNormalizer titleSearchNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, MovieTitleWriteNormalizer movieTitleWriteNormalizer, TvSearchResultDtoMapper tvSearchResultDtoMapper) {
+        super(renamingPath, mapper, folderNameWarningNormalizer, searchResultToMovieMapper, tvSearchResultDtoMapper);
         this.executor = executor;
         this.movieDbSearcher = movieDbSearcher;
         this.titleSearchNormalizer = titleSearchNormalizer;
@@ -234,12 +232,12 @@ public class Movie extends DynamicMovieData {
         }
         var moviesTask = new MovieDbSearchMoviesTask(movieDbSearcher, getTitleSearchNormalizer(), this);
         moviesTask.setOnSucceeded(event -> {
-            new MovieDbSearchResultProcessor(this, (WebSearchResults) event.getSource().getValue()).process();
+            new MovieSearchResultProcessor(this, (MovieWebSearchResults) event.getSource().getValue()).process();
         });
         executeTask(moviesTask);
         var tvTask = new MovieDbSearchTvTask(movieDbSearcher, getTitleSearchNormalizer(), this);
         tvTask.setOnSucceeded(event -> {
-           int wait = 0;
+            new TvSearchResultProcessor(this, (TvWebSearchResults) event.getSource().getValue()).process();
         });
         executeTask(tvTask);
     }
@@ -259,26 +257,55 @@ public class Movie extends DynamicMovieData {
 //        }
     }
 
-    private void createAndRunMovieDbDetailsTask(Number newValue) {
-        var task = new MovieDbDetailsTask(newValue, movieDbSearcher);
+    private void createAndRunMovieDbMovieDetailsTask(Number newValue) {
+        var task = new MovieDbMovieDetailsTask(newValue, movieDbSearcher);
         task.setOnSucceeded(event -> {
             takeOverMovieDetails(task.getValue());
         });
         executeTask(task);
     }
 
+    private void createAndRunMovieDbTvDetailsTask(Number newValue) {
+        var task = new MovieDbTvDetailsTask(newValue, movieDbSearcher);
+        task.setOnSucceeded(event -> {
+            takeOverTvDetails(task.getValue());
+        });
+        executeTask(task);
+    }
+
     //
 
-    public void takeOverMovieDetails(MovieDbDetails movieDbDetails) {
+    public void takeOverMovieDetails(MovieDbMovieDetails movieDbMovieDetails) {
+
+        setType(Type.MOVIE);
+
         // Only genres are updated here.
         // The rest is already updated from the search result.
 
         Set<MovieDbGenre> genreSet = new LinkedHashSet<>(getGenres());
-        genreSet.addAll(movieDbDetails.getGenres());
+        genreSet.addAll(movieDbMovieDetails.getGenres());
         getGenres().setAll(genreSet);
 
         if (StringUtils.isBlank(getTagline()))
-            setTagline(movieDbDetails.getTaline());
+            setTagline(movieDbMovieDetails.getTaline());
+
+        writeNfoDataAndImage();
+        triggerChecks();
+    }
+
+    public void takeOverTvDetails(MovieDbTvDetails movieDbMovieDetails) {
+
+        setType(Type.TV_SERIES);
+
+        // Only genres are updated here.
+        // The rest is already updated from the search result.
+
+        Set<MovieDbGenre> genreSet = new LinkedHashSet<>(getGenres());
+        genreSet.addAll(movieDbMovieDetails.getGenres());
+        getGenres().setAll(genreSet);
+
+        if (StringUtils.isBlank(getTagline()))
+            setTagline(movieDbMovieDetails.getTaline());
 
         writeNfoDataAndImage();
         triggerChecks();
@@ -298,7 +325,7 @@ public class Movie extends DynamicMovieData {
 
     void loadNfoData(Path path) {
         var task = new ReadNfoTask(path);
-        task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoRoot) event.getSource().getValue())));
+        task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoMovieRoot) event.getSource().getValue())));
         task.setOnFailed(event -> {
             log.warn("Task failed", task.getException());
             setNfoData(QualifiedNfoData.from(null));
@@ -404,7 +431,7 @@ public class Movie extends DynamicMovieData {
         setMovieTitleFromWeb(null);
         setMovieYearFromWeb(null);
         setPlot(null);
-        getSearchResults().clear();
+        getMovieSearchResults().clear();
         setTagline(null);
         getWarnings().clear();
         initMovieTitleAndMovieYear();
@@ -413,7 +440,12 @@ public class Movie extends DynamicMovieData {
     @Override
     public void takeOverSearchResultData(SearchResult searchResult) {
         super.takeOverSearchResultData(searchResult);
-        createAndRunMovieDbDetailsTask(getMovieDbId());
+        if(searchResult instanceof MovieSearchResult) {
+            createAndRunMovieDbMovieDetailsTask(getMovieDbId());
+        }
+        else if(searchResult instanceof TvSearchResult) {
+            createAndRunMovieDbTvDetailsTask(getMovieDbId());
+        }
     }
 
     private void triggerEmptyFolderCheck() {
