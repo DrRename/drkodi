@@ -22,6 +22,7 @@ package drkodi.ui.control;
 
 import drkodi.MovieDbGenre;
 import drkodi.data.movie.Movie;
+import drkodi.data.movie.MovieData;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
