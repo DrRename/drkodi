@@ -32,21 +32,7 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class MovieDbMovieDetails {
+public class MovieDbMovieDetails extends MovieDbDetails {
 
-    List<MovieDbGenre> genres = new ArrayList<>();
 
-    String taline;
-
-    String overview;
-
-    String title;
-
-    String plot;
-
-    Integer releaseDate;
-
-    Image image;
-
-    byte[] imageData;
 }

@@ -22,6 +22,7 @@ package drkodi.themoviedb;
 
 import drkodi.MovieDbClientConfig;
 import drkodi.data.MovieDetailsDto;
+import drkodi.data.TvDetailsDto;
 import drkodi.data.json.MovieSearchResultsDto;
 import drkodi.data.json.TvSearchResultsDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -44,5 +45,8 @@ public interface TheMovieDbClient {
     ResponseEntity<TranslationsDto> getTranslations(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id);
 
     @RequestMapping(method = RequestMethod.GET, value = "/movie/{id}", produces = "application/json")
-    ResponseEntity<MovieDetailsDto> getDetails(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id, @RequestParam(name = "langauge", required = false) String language);
+    ResponseEntity<MovieDetailsDto> getMovieDetails(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id, @RequestParam(name = "langauge", required = false) String language);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/tv/{id}", produces = "application/json")
+    ResponseEntity<TvDetailsDto> getTvDetails(@RequestParam(name = "api_key") String apiKey, @PathVariable(name = "id") Number id, @RequestParam(name = "langauge", required = false) String language);
 }

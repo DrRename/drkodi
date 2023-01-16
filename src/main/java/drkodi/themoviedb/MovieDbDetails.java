@@ -1,9 +1,9 @@
 /*
- *     Dr.Rename - A Minimalistic Batch Renamer
+ *     Dr.Kodi - A Minimalistic Batch Renamer
  *
- *     Copyright (C) 2022
+ *     Copyright (C) 2023
  *
- *     This file is part of Dr.Rename.
+ *     This file is part of Dr.Kodi.
  *
  *     You can redistribute it and/or modify it under the terms of the GNU Affero
  *     General Public License as published by the Free Software Foundation, either
@@ -27,12 +27,24 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
 @ToString
-public class MovieDbTvDetails extends MovieDbDetails {
+public class MovieDbDetails {
 
+    List<MovieDbGenre> genres = new ArrayList<>();
 
+    String taline;
+
+    String overview;
+
+    String title;
+
+    String plot;
+
+    Integer releaseDate;
+
+    Image image;
+
+    byte[] imageData;
 }

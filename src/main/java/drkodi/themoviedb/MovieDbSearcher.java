@@ -24,6 +24,7 @@ import drkodi.MovieDbGenre;
 import drkodi.MovieDbImagesClient;
 import drkodi.config.TheMovieDbConfig;
 import drkodi.data.MovieDetailsDto;
+import drkodi.data.TvDetailsDto;
 import drkodi.data.json.*;
 import drkodi.util.DrRenameUtil;
 import javafx.scene.image.Image;
@@ -53,6 +54,9 @@ public class MovieDbSearcher {
 
     private final ResourceBundle resourceBundle;
 
+    private final MovieDetailsMapper movieDetailsMapper;
+
+    private final TvDetailsMapper tvDetailsMapper;
 
     protected void reset() {
 
@@ -61,7 +65,7 @@ public class MovieDbSearcher {
     public MovieDbMovieDetails lookupMovieDetails(Number movieDbId){
         MovieDbMovieDetails result = new MovieDbMovieDetails();
         try {
-            ResponseEntity<MovieDetailsDto> details = client.getDetails("ca540140c89af81851d4026286942896", movieDbId, null);
+            ResponseEntity<MovieDetailsDto> details = client.getMovieDetails("ca540140c89af81851d4026286942896", movieDbId, null);
             if(details.getBody() != null) {
                 result.genres = details.getBody().getGenres().stream().map(e -> new MovieDbGenre(e.getId(), e.getName())).toList();
                 result.taline = details.getBody().getTaline();
@@ -94,6 +98,12 @@ public class MovieDbSearcher {
 
     public MovieDbTvDetails lookupTvDetails(Number movieDbId){
         MovieDbTvDetails result = new MovieDbTvDetails();
+        ResponseEntity<TvDetailsDto> details = client.getTvDetails("ca540140c89af81851d4026286942896", movieDbId, null);
+        if(details.getBody() != null) {
+
+
+
+        }
         return result;
     }
 
