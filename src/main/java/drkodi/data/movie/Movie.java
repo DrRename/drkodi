@@ -287,7 +287,7 @@ public class Movie extends DynamicMovieData {
         getGenres().setAll(genreSet);
 
         if (StringUtils.isBlank(getTagline()))
-            setTagline(movieDbMovieDetails.getTaline());
+            setTagline(movieDbMovieDetails.getTagline());
 
         writeNfoDataAndImage();
         triggerChecks();
@@ -305,7 +305,7 @@ public class Movie extends DynamicMovieData {
         getGenres().setAll(genreSet);
 
         if (StringUtils.isBlank(getTagline()))
-            setTagline(movieDbMovieDetails.getTaline());
+            setTagline(movieDbMovieDetails.getTagline());
 
         writeNfoDataAndImage();
         triggerChecks();
