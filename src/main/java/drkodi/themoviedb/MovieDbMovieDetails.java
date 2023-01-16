@@ -18,25 +18,35 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi;
+package drkodi.themoviedb;
 
-
-import drkodi.data.SearchResult;
-import drkodi.data.json.SearchResultDto;
+import drkodi.MovieDbGenre;
 import javafx.scene.image.Image;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-@Mapper(componentModel = "spring")
-public interface SearchResultDtoMapper {
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+public class MovieDbMovieDetails {
 
-    @Mapping(target = "plot", source="searchResultDto.overview")
-    SearchResult map(SearchResultDto searchResultDto, byte[] imageData, Image image);
+    List<MovieDbGenre> genres = new ArrayList<>();
 
-    default Integer mapReleaseDateToYear(LocalDate localDate){
-        return localDate == null ? null : localDate.getYear();
-    }
+    String taline;
 
+    String overview;
+
+    String title;
+
+    String plot;
+
+    Integer releaseDate;
+
+    Image image;
+
+    byte[] imageData;
 }

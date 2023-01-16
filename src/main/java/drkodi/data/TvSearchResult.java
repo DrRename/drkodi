@@ -1,9 +1,9 @@
 /*
- *     Dr.Rename - A Minimalistic Batch Renamer
+ *     Dr.Kodi - A Minimalistic Batch Renamer
  *
- *     Copyright (C) 2022
+ *     Copyright (C) 2023
  *
- *     This file is part of Dr.Rename.
+ *     This file is part of Dr.Kodi.
  *
  *     You can redistribute it and/or modify it under the terms of the GNU Affero
  *     General Public License as published by the Free Software Foundation, either
@@ -18,20 +18,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.nfo;
+package drkodi.data;
 
-import drkodi.NfoMovieRoot;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-public class NfoFileYearExtractor extends AbstractNfoFileExtractor {
-
-    public NfoFileYearExtractor(NfoFileParser nfoFileParser) {
-        super(nfoFileParser);
-    }
-
-    @Override
-    protected String parseNfoModel(NfoMovieRoot xmlModel) {
-        return xmlModel.getMovie().getYear();
-    }
+public class TvSearchResult extends SearchResult {
 }

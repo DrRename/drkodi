@@ -20,7 +20,7 @@
 
 package drkodi.nfo;
 
-import drkodi.NfoRoot;
+import drkodi.NfoMovieRoot;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,5 +47,5 @@ public abstract class AbstractNfoFileExtractor {
         return null;
     }
 
-    protected abstract String parseNfoModel(NfoRoot xmlModel);
+    protected abstract String parseNfoModel(NfoMovieRoot xmlModel);
 }

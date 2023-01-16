@@ -1,9 +1,9 @@
 package drkodi.data;
 
 import drkodi.data.movie.DynamicMovieData;
-import drkodi.data.json.SearchResultDto;
+import drkodi.data.json.MovieSearchResultDto;
 import drkodi.data.json.TranslationDto;
-import drkodi.data.json.WebSearchResults;
+import drkodi.data.json.MovieWebSearchResults;
 import javafx.scene.image.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,21 +11,21 @@ import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 @RequiredArgsConstructor
-public class MovieDbSearchResultProcessor {
+public class MovieSearchResultProcessor {
     private final DynamicMovieData movie;
-    private final WebSearchResults webSearchResults;
+    private final MovieWebSearchResults movieWebSearchResults;
 
     public void process() {
-        movie.getSearchResults().clear();
-        if (webSearchResults != null) {
-            for (Number id : webSearchResults.getSearchResults().keySet()) {
-                SearchResultDto searchResultDto = webSearchResults.getSearchResults().get(id);
-                TranslationDto translationDto = webSearchResults.getTranslations().get(id);
-                Image image = webSearchResults.getImages().get(id);
-                byte[] imageData = webSearchResults.getImageData().get(id);
+        movie.getMovieSearchResults().clear();
+        if (movieWebSearchResults != null) {
+            for (Number id : movieWebSearchResults.getSearchResults().keySet()) {
+                MovieSearchResultDto movieSearchResultDto = movieWebSearchResults.getSearchResults().get(id);
+                TranslationDto translationDto = movieWebSearchResults.getTranslations().get(id);
+                Image image = movieWebSearchResults.getImages().get(id);
+                byte[] imageData = movieWebSearchResults.getImageData().get(id);
 
-                SearchResult searchResult = movie.getSearchResultDtoMapper().map(searchResultDto, imageData, image);
-               movie.getSearchResults().add(searchResult);
+                SearchResult searchResult = movie.getMovieSearchResultDtoMapper().map(movieSearchResultDto, imageData, image);
+               movie.getMovieSearchResults().add(searchResult);
 
                 if (translationDto != null) {
                     SearchResult searchResultTranslated = new SearchResult(searchResult);
@@ -49,15 +49,13 @@ public class MovieDbSearchResultProcessor {
 //                        searchResultTranslated.setOriginalTitle(searchResult.getTitle());
                     }
 
-                    movie.getSearchResults().add(searchResultTranslated);
+                    movie.getMovieSearchResults().add(searchResultTranslated);
 //                    SearchResult searchInvertedTitles = new SearchResult(searchResult);
 //                    searchInvertedTitles.setTitle(searchResult.getOriginalTitle());
 //                    searchInvertedTitles.setOriginalTitle(searchResult.getTitle());
 //                    getSearchResults().add(searchInvertedTitles);
                 }
             }
-        } else {
-            movie.getSearchResults().clear();
         }
     }
 }

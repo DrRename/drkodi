@@ -18,20 +18,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.nfo;
+package drkodi.data.json;
 
-import drkodi.NfoMovieRoot;
-import lombok.extern.slf4j.Slf4j;
+import javafx.scene.image.Image;
+import lombok.Getter;
 
-@Slf4j
-public class NfoFileYearExtractor extends AbstractNfoFileExtractor {
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    public NfoFileYearExtractor(NfoFileParser nfoFileParser) {
-        super(nfoFileParser);
-    }
+@Getter
+public class MovieWebSearchResults extends SearchResults {
 
-    @Override
-    protected String parseNfoModel(NfoMovieRoot xmlModel) {
-        return xmlModel.getMovie().getYear();
-    }
+    private final Map<Number, MovieSearchResultDto> searchResults = new LinkedHashMap<>();
+
+    private final Map<Number, TranslationDto> translations = new LinkedHashMap<>();
+
+
 }

@@ -28,10 +28,11 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @Setter
-@JacksonXmlRootElement(localName = "movie")
-public class NfoMovie extends NfoElement {
+@JacksonXmlRootElement(localName = "tvshow")
+public class NfoTvShow extends NfoElement {
 
 
 }

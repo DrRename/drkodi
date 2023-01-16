@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import drkodi.NfoRoot;
+import drkodi.NfoMovieRoot;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -49,12 +49,12 @@ public class NfoFileParser {
         xmlMapper.addHandler(new DeserializationProblemHandler() {
             @Override
             public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
-                if (beanOrClass instanceof NfoRoot nfoRoot) {
+                if (beanOrClass instanceof NfoMovieRoot nfoMovieRoot) {
                     String valueAsString = p.readValueAs(String.class);
                     try {
                         URL url = new URL(valueAsString);
                         url.toURI();
-                        nfoRoot.setUrl(valueAsString);
+                        nfoMovieRoot.setUrl(valueAsString);
                         return true;
                     } catch (Exception e) {
                         return false;
@@ -65,7 +65,7 @@ public class NfoFileParser {
         });
     }
 
-    public NfoRoot parse(Path filePath) throws IOException {
+    public NfoMovieRoot parse(Path filePath) throws IOException {
         long lineCount;
         try (Stream<String> stream = Files.lines(filePath, StandardCharsets.UTF_8)) {
             lineCount = stream.filter(s -> !s.isBlank()).count();
@@ -78,14 +78,14 @@ public class NfoFileParser {
             throw new IOException(e);
         }
         if(lineCount == 1){
-            NfoRoot root = new NfoRoot();
+            NfoMovieRoot root = new NfoMovieRoot();
             root.setUrl(Files.readString(filePath));
             return root;
         }
         String content = "<NfoRoot>" + String.join("", Files.readAllLines(filePath)).trim() + "</NfoRoot>";
 
         try {
-            return xmlMapper.readValue(content, NfoRoot.class);
+            return xmlMapper.readValue(content, NfoMovieRoot.class);
         } catch (MismatchedInputException e) {
             log.debug(e.getLocalizedMessage());
             return null;

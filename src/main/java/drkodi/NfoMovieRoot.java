@@ -19,19 +19,20 @@
 
 package drkodi;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@ToString
 @Getter
 @Setter
-@JacksonXmlRootElement(localName = "movie")
-public class NfoMovie extends NfoElement {
+public class NfoMovieRoot extends NfoRoot {
+
+    NfoMovie movie;
 
 
+    @Override
+    public NfoElement getElement() {
+        return movie;
+    }
 }

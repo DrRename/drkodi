@@ -23,23 +23,25 @@ package drkodi.ui;
 import drkodi.config.AppConfig;
 import drkodi.data.movie.MovieData;
 import drkodi.ui.config.KodiUiConfig;
-import drkodi.ui.control.SearchResultsBox;
+import drkodi.ui.control.MovieSearchResultsBox;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class SearchResultsAndTitleBox extends VBox {
+public class MovieSearchResultsAndTitleBox extends VBox {
 
-    public SearchResultsAndTitleBox(MovieData movieData, AppConfig appConfig, KodiUiConfig kodiUiConfig){
+    public MovieSearchResultsAndTitleBox(MovieData movieData, AppConfig appConfig, KodiUiConfig kodiUiConfig){
 
         // content
 
-        var srb = new SearchResultsBox(movieData, appConfig, kodiUiConfig);
-        getChildren().add(UiUtil.applyDebug(new Label("MovieDB search results"), appConfig));
+        var label = new Label("Matching Movies");
+        var srb = new MovieSearchResultsBox(movieData, appConfig, kodiUiConfig);
+        getChildren().add(UiUtil.applyDebug(label, appConfig));
         getChildren().add(UiUtil.applyDebug(srb, appConfig));
 
        // formatting
 
-//        setPadding(new Insets(4,4,4,4));
+        setPadding(new Insets(4,4,4,4));
 
 
 

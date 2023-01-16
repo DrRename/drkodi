@@ -20,13 +20,23 @@
 
 package drkodi.data;
 
-import drkodi.data.json.SearchResultDto;
-import lombok.Data;
+import drkodi.themoviedb.MovieDbMovieDetails;
+import drkodi.themoviedb.MovieDbSearcher;
+import javafx.concurrent.Task;
+import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+@RequiredArgsConstructor
+public class MovieDbMovieDetailsTask extends Task<MovieDbMovieDetails> {
 
-@Data
-public class SearchResultsDto {
+    private final Number movieId;
 
-   List<SearchResultDto> results;
+    private final MovieDbSearcher querier;
+
+    @Override
+    protected MovieDbMovieDetails call() throws Exception {
+
+        MovieDbMovieDetails details = querier.lookupMovieDetails(movieId);
+
+        return details;
+    }
 }

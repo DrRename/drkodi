@@ -18,35 +18,27 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.themoviedb;
+package drkodi.data.json;
 
-import drkodi.MovieDbGenre;
-import javafx.scene.image.Image;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
-@ToString
-public class MovieDbDetails {
+@Data
+public class TvSearchResultDto extends SearchResultDto {
 
-    List<MovieDbGenre> genres = new ArrayList<>();
+    @JsonProperty("first_air_date")
+    LocalDate firstAirDate;
 
-    String taline;
+    @JsonProperty("name")
+    String name;
 
+    @JsonProperty("original_name")
+    String originalName;
+
+    @JsonProperty("overview")
     String overview;
 
-    String title;
 
-    String plot;
-
-    Integer releaseDate;
-
-    Image image;
-
-    byte[] imageData;
 }

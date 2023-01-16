@@ -18,20 +18,35 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.nfo;
+package drkodi.themoviedb;
 
-import drkodi.NfoMovieRoot;
-import lombok.extern.slf4j.Slf4j;
+import drkodi.MovieDbGenre;
+import javafx.scene.image.Image;
+import lombok.*;
 
-@Slf4j
-public class NfoFileYearExtractor extends AbstractNfoFileExtractor {
+import java.util.ArrayList;
+import java.util.List;
 
-    public NfoFileYearExtractor(NfoFileParser nfoFileParser) {
-        super(nfoFileParser);
-    }
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+public class MovieDbTvDetails {
 
-    @Override
-    protected String parseNfoModel(NfoMovieRoot xmlModel) {
-        return xmlModel.getMovie().getYear();
-    }
+    List<MovieDbGenre> genres = new ArrayList<>();
+
+    String taline;
+
+    String overview;
+
+    String title;
+
+    String plot;
+
+    Integer releaseDate;
+
+    Image image;
+
+    byte[] imageData;
 }

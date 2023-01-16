@@ -20,7 +20,7 @@
 
 package drkodi.nfo;
 
-import drkodi.NfoRoot;
+import drkodi.NfoMovieRoot;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class NfoFileParserTest {
 
     @Test
     void parse01() throws IOException {
-        NfoRoot result = new NfoFileParser().parse(Paths.get("src/test/resources/kodi/nfo/complete.nfo"));
+        NfoMovieRoot result = new NfoFileParser().parse(Paths.get("src/test/resources/kodi/nfo/complete.nfo"));
         System.out.println(result);
     }
 }

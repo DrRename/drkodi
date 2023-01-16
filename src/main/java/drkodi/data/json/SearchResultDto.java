@@ -1,9 +1,9 @@
 /*
- *     Dr.Rename - A Minimalistic Batch Renamer
+ *     Dr.Kodi - A Minimalistic Batch Renamer
  *
- *     Copyright (C) 2022
+ *     Copyright (C) 2023
  *
- *     This file is part of Dr.Rename.
+ *     This file is part of Dr.Kodi.
  *
  *     You can redistribute it and/or modify it under the terms of the GNU Affero
  *     General Public License as published by the Free Software Foundation, either
@@ -23,28 +23,11 @@ package drkodi.data.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
 public class SearchResultDto {
 
-    @JsonProperty("original_title")
-    String originalTitle;
-
-    @JsonProperty("original_language")
-    String originalLanguage;
-
-    @JsonProperty("title")
-    String title;
-
-    @JsonProperty("overview")
-    String overview;
-
     @JsonProperty("id")
     Number id;
-
-    @JsonProperty("release_date")
-    LocalDate releaseDate;
 
     @JsonProperty("poster_path")
     String posterPath;
