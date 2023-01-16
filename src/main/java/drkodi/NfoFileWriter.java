@@ -38,12 +38,12 @@ public class NfoFileWriter {
         if(outFile == null){
             throw new NullPointerException("Path is null");
         }
-        log.debug("Writing NFO data to {}", outFile);
+        log.debug("Writing NFO data ({}) to {}", data.getClass().getSimpleName(), outFile);
         XmlMapper xmlMapper = getXmlMapper();
 
         Path tmpPath = outFile.resolveSibling(outFile.getFileName().toString() + ".tmp");
         log.debug("Writing to tmp path {} ", tmpPath);
-        xmlMapper.writeValue(tmpPath.toFile(), data.movie);
+        xmlMapper.writeValue(tmpPath.toFile(), data.getElement());
         // append URL line
         if (data.url != null)
             Files.writeString(tmpPath,data.url,APPEND);
