@@ -34,7 +34,7 @@ public class MovieDbDetails {
 
     List<MovieDbGenre> genres = new ArrayList<>();
 
-    String taline;
+    String tagline;
 
     String overview;
 

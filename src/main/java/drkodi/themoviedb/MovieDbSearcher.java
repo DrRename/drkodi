@@ -68,7 +68,7 @@ public class MovieDbSearcher {
             ResponseEntity<MovieDetailsDto> details = client.getMovieDetails("ca540140c89af81851d4026286942896", movieDbId, null);
             if(details.getBody() != null) {
                 result.genres = details.getBody().getGenres().stream().map(e -> new MovieDbGenre(e.getId(), e.getName())).toList();
-                result.taline = details.getBody().getTaline();
+                result.tagline = details.getBody().getTaline();
                 result.overview = details.getBody().getOverview();
                 result.title = details.getBody().getTitle();
                 result.overview = details.getBody().getOverview();
