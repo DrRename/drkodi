@@ -22,7 +22,8 @@ package drkodi.ui.control;
 
 import drkodi.config.AppConfig;
 import drkodi.data.movie.Movie;
-import drkodi.ui.SearchResultsAndTitleBox;
+import drkodi.ui.MovieSearchResultsAndTitleBox;
+import drkodi.ui.TvSearchResultsAndTitleBox;
 import drkodi.ui.UiUtil;
 import drkodi.ui.config.KodiUiConfig;
 import javafx.scene.control.ScrollPane;
@@ -42,28 +43,12 @@ public class KodiBox extends VBox {
 
         getChildren().add(UiUtil.applyDebug(new KodiMovieAndImageBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(UiUtil.applyDebug(new SearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
-        scrollPane.setFitToHeight(true);
-//        scrollPane.setFitToWidth(true);
+        addMovieSearchResultScrollPane(kodiMovie, appConfig, kodiUiConfig);
 
-        scrollPane.visibleProperty().bind(kodiMovie.searchResultsProperty().emptyProperty().not());
-        scrollPane.managedProperty().bind(scrollPane.visibleProperty());
-
-        scrollPane.getStyleClass().add("search-result-box");
-
-//        scrollPane.minHeightProperty().bind(john.prefHeightProperty());
-
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-
-        getChildren().add(UiUtil.applyDebug(scrollPane, appConfig));
-//        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-//        VBox.setVgrow(john, Priority.ALWAYS);
+        addTvSearchResultScrollPane(kodiMovie, appConfig, kodiUiConfig);
 
         Pane spacer = new Pane();
-//        spacer.setMinHeight(50);
         VBox.setVgrow(spacer, Priority.ALWAYS);
-
 
 
         getChildren().add(UiUtil.applyDebug(spacer, appConfig));
@@ -81,6 +66,37 @@ public class KodiBox extends VBox {
 
 
 
+    }
+
+
+    private void addMovieSearchResultScrollPane(Movie kodiMovie, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(UiUtil.applyDebug(new MovieSearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
+        scrollPane.setFitToHeight(true);
+
+        scrollPane.visibleProperty().bind(kodiMovie.movieSearchResultsProperty().emptyProperty().not());
+        scrollPane.managedProperty().bind(scrollPane.visibleProperty());
+
+//        scrollPane.getStyleClass().add("search-result-box");
+
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+        getChildren().add(UiUtil.applyDebug(scrollPane, appConfig));
+    }
+
+    private void addTvSearchResultScrollPane(Movie kodiMovie, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(UiUtil.applyDebug(new TvSearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
+        scrollPane.setFitToHeight(true);
+
+        scrollPane.visibleProperty().bind(kodiMovie.movieSearchResultsProperty().emptyProperty().not());
+        scrollPane.managedProperty().bind(scrollPane.visibleProperty());
+
+//        scrollPane.getStyleClass().add("search-result-box");
+
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+        getChildren().add(UiUtil.applyDebug(scrollPane, appConfig));
     }
 
     // Getter / Setter //
