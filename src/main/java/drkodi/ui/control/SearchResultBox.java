@@ -50,6 +50,8 @@ public class SearchResultBox extends VBox {
 //        visibleProperty().bind(kodieMovie.searchResultsProperty().emptyProperty().not());
 //        managedProperty().bind(visibleProperty());
 
+        setPrefWidth(120);
+
 
     }
 
@@ -57,7 +59,7 @@ public class SearchResultBox extends VBox {
         if (searchResult.getImage() != null) {
             var imageBox = new ImageBox(searchResult.getImage(), kodiUiConfig.getSearchImageHeight());
             getChildren().add(UiUtil.applyDebug(imageBox, appConfig));
-            maxWidthProperty().bind(imageBox.widthProperty());
+//            maxWidthProperty().bind(imageBox.widthProperty());
 
         }
     }
@@ -80,8 +82,8 @@ public class SearchResultBox extends VBox {
 
     private void addTakeOverButton(MovieData kodieMovie, AppConfig appConfig, SearchResult searchResult) {
         Hyperlink button = new Hyperlink("Take over data");
-        button.setWrapText(true);
-        button.setMinWidth(60);
+        button.setWrapText(false);
+        button.setMinWidth(80);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
