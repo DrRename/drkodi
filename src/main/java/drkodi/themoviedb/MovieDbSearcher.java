@@ -60,8 +60,8 @@ public class MovieDbSearcher {
 
     }
 
-    public MovieDbDetails lookup(Number movieDbId){
-        MovieDbDetails result = new MovieDbDetails();
+    public MovieDbMovieDetails lookupMovieDetails(Number movieDbId){
+        MovieDbMovieDetails result = new MovieDbMovieDetails();
         try {
             ResponseEntity<MovieDetailsDto> details = client.getDetails("ca540140c89af81851d4026286942896", movieDbId, null);
             if(details.getBody() != null) {
@@ -119,7 +119,7 @@ public class MovieDbSearcher {
         return result;
     }
 
-    public WebSearchResults searchMovie(String searchString, Integer year) throws IOException {
+    public MovieWebSearchResults searchMovie(String searchString, Integer year) throws IOException {
         reset();
 
         WebSearchResults result = new WebSearchResults();
@@ -129,45 +129,45 @@ public class MovieDbSearcher {
 
             if (searchResult.getBody() == null || searchResult.getBody().getResults().isEmpty()) return result;
 
-            List<SearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
+            List<MovieSearchResultDto> subList = DrRenameUtil.getSubList(searchResult.getBody().getResults(), config.getNumberOfMaxSuggestions());
 
             subList.forEach(dto -> result.getSearchResults().put(dto.getId(), dto));
 
-            for (SearchResultDto searchResultDto : subList) {
+            for (MovieSearchResultDto movieSearchResultDto : subList) {
 
-                addImageAndImageData(result, searchResultDto);
+                addImageAndImageData(result, movieSearchResultDto);
 
-                addTranslations(result, searchResultDto);
+                addTranslations(result, movieSearchResultDto);
             }
         }
 
         return result;
     }
 
-    private void addImageAndImageData(WebSearchResults result, SearchResultDto searchResultDto) {
-        if (searchResultDto.getPosterPath() != null) {
-            var imageData = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), searchResultDto.getPosterPath());
+    private void addImageAndImageData(SearchResults result, SearchResultDto movieSearchResultDto) {
+        if (movieSearchResultDto.getPosterPath() != null) {
+            var imageData = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), movieSearchResultDto.getPosterPath());
             if (imageData.getBody() != null) {
                 Image image = new Image(new ByteArrayInputStream(imageData.getBody()));
                 image.exceptionProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue != null)
                         log.error(newValue.getLocalizedMessage(), newValue);
                 });
-                result.getImageData().put(searchResultDto.getId(), imageData.getBody());
-                result.getImages().put(searchResultDto.getId(), image);
+                result.getImageData().put(movieSearchResultDto.getId(), imageData.getBody());
+                result.getImages().put(movieSearchResultDto.getId(), image);
             }
         }
     }
 
-    private void addTranslations(WebSearchResults result, SearchResultDto searchResultDto) {
+    private void addTranslations(MovieWebSearchResults result, MovieSearchResultDto movieSearchResultDto) {
         try {
-            ResponseEntity<TranslationsDto> translations = client.getTranslations("ca540140c89af81851d4026286942896", searchResultDto.getId());
+            ResponseEntity<TranslationsDto> translations = client.getTranslations("ca540140c89af81851d4026286942896", movieSearchResultDto.getId());
             if (translations.getBody() != null) {
                 for (TranslationDto translationDto : translations.getBody().getTranslations()) {
                     String iso1 = translationDto.getIso3166();
                     String iso2 = translationDto.getIso639();
                     if (resourceBundle.getLocale().getLanguage().equals(iso1) || resourceBundle.getLocale().getLanguage().equals(iso2)) {
-                        result.getTranslations().put(searchResultDto.getId(), translationDto);
+                        result.getTranslations().put(movieSearchResultDto.getId(), translationDto);
                     }
                 }
             } else {

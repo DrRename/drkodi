@@ -22,7 +22,8 @@ package drkodi.data.movie;
 
 
 import drkodi.KodiUtil;
-import drkodi.SearchResultDtoMapper;
+import drkodi.MovieSearchResultDtoMapper;
+import drkodi.TvSearchResultDtoMapper;
 import drkodi.data.QualifiedNfoData;
 import drkodi.data.QualifiedPath;
 import drkodi.data.SearchResultToMovieMapper;
@@ -180,8 +181,8 @@ public class DynamicMovieData extends MovieData {
     //
 
 
-    public DynamicMovieData(RenamingPath renamingPath, SearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper) {
-        super(renamingPath, mapper, searchResultToMovieMapper, folderNameWarningNormalizer);
+    public DynamicMovieData(RenamingPath renamingPath, MovieSearchResultDtoMapper mapper, FolderNameWarningNormalizer folderNameWarningNormalizer, SearchResultToMovieMapper searchResultToMovieMapper, TvSearchResultDtoMapper tvSearchResultDtoMapper) {
+        super(renamingPath, mapper, tvSearchResultDtoMapper, searchResultToMovieMapper, folderNameWarningNormalizer);
         this.folderNameListener = new FolderNameListener();
         this.nfoDataListener = new NfoDataListener();
         this.moviePathChangeListener = new MoviePathChangeListener();

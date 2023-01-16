@@ -20,22 +20,23 @@
 
 package drkodi.data;
 
+import drkodi.NfoMovieRoot;
 import drkodi.NfoRoot;
 
 public class QualifiedNfoData extends Qualified<NfoRoot> {
 
-    public static QualifiedNfoData from(NfoRoot nfoRoot) {
+    public static QualifiedNfoData from(NfoMovieRoot nfoMovieRoot) {
         Qualified.Type type;
-        if(nfoRoot == null){
+        if(nfoMovieRoot == null){
             type = Type.INVALID;
         }
         else  {
             type = Qualified.Type.OK;
         }
-        return new QualifiedNfoData(nfoRoot, type);
+        return new QualifiedNfoData(nfoMovieRoot, type);
     }
 
-    public QualifiedNfoData(NfoRoot element, Type type) {
+    public QualifiedNfoData(NfoMovieRoot element, Type type) {
         super(element, type);
     }
 

@@ -25,19 +25,19 @@ public class ToNfoCopier {
         if (movie.getNfoData().getElement().getMovie() == null) {
             movie.getNfoData().getElement().setMovie(new NfoMovie());
         }
-        if (movie.getNfoData().getElement().getMovie().getArt() == null) {
-            movie.getNfoData().getElement().getMovie().setArt(new NfoMovie.Art());
+        if (movie.getNfoData().getElement().getElement().getArt() == null) {
+            movie.getNfoData().getElement().getElement().setArt(new NfoMovie.Art());
         }
-        movie.getNfoData().getElement().getMovie().setUniqueid(new NfoMovie.UniqueId(movie.getMovieDbId(), "tmdb"));
-        movie.getNfoData().getElement().getMovie().setTitle(movie.getMovieTitle());
-        movie.getNfoData().getElement().getMovie().setOriginaltitle(movie.getMovieOriginalTitle());
+        movie.getNfoData().getElement().getElement().setUniqueid(new NfoMovie.UniqueId(movie.getMovieDbId(), "tmdb"));
+        movie.getNfoData().getElement().getElement().setTitle(movie.getMovieTitle());
+        movie.getNfoData().getElement().getElement().setOriginaltitle(movie.getMovieOriginalTitle());
         if(movie.getMovieYear() != null)
-            movie.getNfoData().getElement().getMovie().setYear(movie.getMovieYear().toString());
-        movie.getNfoData().getElement().getMovie().setPlot(movie.getPlot());
-        movie.getNfoData().getElement().getMovie().setGenre(movie.getGenres().stream().map(MovieDbGenre::getName).toList());
-        movie.getNfoData().getElement().getMovie().setTagline(movie.getTagline());
+            movie.getNfoData().getElement().getElement().setYear(movie.getMovieYear().toString());
+        movie.getNfoData().getElement().getElement().setPlot(movie.getPlot());
+        movie.getNfoData().getElement().getElement().setGenre(movie.getGenres().stream().map(MovieDbGenre::getName).toList());
+        movie.getNfoData().getElement().getElement().setTagline(movie.getTagline());
         movie.getNfoData().getElement().setUrl(getUrl(movie));
-        movie.getNfoData().getElement().getMovie().getArt().setPoster(movie.getImagePath().getElement().getFileName().toString());
+        movie.getNfoData().getElement().getElement().getArt().setPoster(movie.getImagePath().getElement().getFileName().toString());
     }
 
     String getUrl(MovieData movie) {

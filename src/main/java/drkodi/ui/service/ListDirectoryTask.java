@@ -29,8 +29,8 @@ public class ListDirectoryTask extends PrototypeTask<Void> {
 
     private final Path dir;
 
-    public ListDirectoryTask(AppConfig appConfig, ResourceBundle resourceBundle, MovieEntries movieEntries, Executor executor, SearchResultToMovieMapper searchResultToMovieMapper, SearchResultDtoMapper mapper, MovieDbSearcher movieDbSearcher, TitleSearchNormalizer titleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, FolderNameWarningNormalizer folderNameWarningNormalizer, Path dir) {
-        super(appConfig, resourceBundle, movieEntries, executor, searchResultToMovieMapper, mapper, movieDbSearcher, titleSearchNormalizer, movieTitleWriteNormalizer, folderNameWarningNormalizer);
+    public ListDirectoryTask(AppConfig appConfig, ResourceBundle resourceBundle, MovieEntries movieEntries, Executor executor, SearchResultToMovieMapper searchResultToMovieMapper, MovieSearchResultDtoMapper mapper, TvSearchResultDtoMapper tvSearchResultDtoMapper, MovieDbSearcher movieDbSearcher, TitleSearchNormalizer titleSearchNormalizer, MovieTitleWriteNormalizer movieTitleWriteNormalizer, FolderNameWarningNormalizer folderNameWarningNormalizer, Path dir) {
+        super(appConfig, resourceBundle, movieEntries, executor, searchResultToMovieMapper, mapper, tvSearchResultDtoMapper, movieDbSearcher, titleSearchNormalizer, movieTitleWriteNormalizer, folderNameWarningNormalizer);
         this.dir = dir;
     }
 

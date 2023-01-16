@@ -44,7 +44,9 @@ public abstract class PrototypeService<T> extends Service<T> {
 
     protected final SearchResultToMovieMapper searchResultToMovieMapper;
 
-    protected final SearchResultDtoMapper mapper;
+    protected final MovieSearchResultDtoMapper movieSearchResultDtoMapper;
+
+    protected final TvSearchResultDtoMapper tvSearchResultDtoMapper;
 
     protected final MovieDbSearcher movieDbSearcher;
 

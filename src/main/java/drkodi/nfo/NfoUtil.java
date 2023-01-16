@@ -20,9 +20,7 @@
 
 package drkodi.nfo;
 
-import drkodi.MovieDbGenre;
-import drkodi.NfoMovie;
-import drkodi.NfoRoot;
+import drkodi.*;
 import drkodi.data.movie.Movie;
 import drkodi.data.Qualified;
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +36,8 @@ public class NfoUtil {
         return nfoMovie == null ? null : nfoMovie.getPlot();
     }
 
-    public static NfoMovie getNfoMovie(NfoRoot nfoRoot) {
-        return nfoRoot == null ? null : nfoRoot.getMovie();
+    public static NfoElement getNfoMovie(NfoRoot nfoMovieRoot) {
+        return nfoMovieRoot == null ? null : nfoMovieRoot.getElement();
     }
 
     public static NfoRoot getNfoRoot(Movie item) {
@@ -92,7 +90,7 @@ public class NfoUtil {
         return result;
     }
 
-    private static String getNfoArtPoster(NfoMovie item) {
+    private static String getNfoArtPoster(NfoElement item) {
         var art = item.getArt();
         return art == null ? null : art.getPoster();
     }

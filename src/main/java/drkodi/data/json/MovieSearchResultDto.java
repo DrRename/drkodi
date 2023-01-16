@@ -18,31 +18,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.nfo;
+package drkodi.data.json;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.time.LocalDate;
 
-class NfoContentTitleCheckerTest {
+@Data
+public class MovieSearchResultDto extends SearchResultDto {
 
-    @BeforeEach
-    void setUp() {
-    }
+    @JsonProperty("original_title")
+    String originalTitle;
 
-    @AfterEach
-    void tearDown() {
-    }
+    @JsonProperty("original_language")
+    String originalLanguage;
 
-    @Test
-    void verifyTitle(){
-        assertTrue(NfoContentTitleChecker.verifyTitle("Test (2999)", "Test"));
-    }
+    @JsonProperty("title")
+    String title;
 
-    @Test
-    void verifyTitleMissingYear(){
-        assertTrue(NfoContentTitleChecker.verifyTitle("Test", "Test"));
-    }
+    @JsonProperty("overview")
+    String overview;
+
+    @JsonProperty("release_date")
+    LocalDate releaseDate;
 }

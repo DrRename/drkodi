@@ -29,14 +29,14 @@ import java.nio.file.Path;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ReadNfoTask extends Task<NfoRoot> {
+public class ReadNfoTask extends Task<NfoMovieRoot> {
 
     private final static NfoFileParser parser = new NfoFileParser();
 
     private final Path nfoPath;
 
     @Override
-    protected NfoRoot call() throws Exception {
+    protected NfoMovieRoot call() throws Exception {
         log.debug("Parsing NFO data from {}", nfoPath);
         var data = parser.parse(nfoPath);
         return data;

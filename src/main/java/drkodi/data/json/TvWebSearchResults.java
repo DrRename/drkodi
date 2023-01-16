@@ -18,25 +18,17 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.data;
+package drkodi.data.json;
 
-import drkodi.themoviedb.MovieDbDetails;
-import drkodi.themoviedb.MovieDbSearcher;
-import javafx.concurrent.Task;
-import lombok.RequiredArgsConstructor;
+import javafx.scene.image.Image;
+import lombok.Getter;
 
-@RequiredArgsConstructor
-public class MovieDbDetailsTask extends Task<MovieDbDetails> {
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    private final Number movieId;
+@Getter
+public class TvWebSearchResults extends SearchResults {
 
-    private final MovieDbSearcher querier;
+    private final Map<Number, TvSearchResultDto> searchResults = new LinkedHashMap<>();
 
-    @Override
-    protected MovieDbDetails call() throws Exception {
-
-        MovieDbDetails details = querier.lookup(movieId);
-
-        return details;
-    }
 }

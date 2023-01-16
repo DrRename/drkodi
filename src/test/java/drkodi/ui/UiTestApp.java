@@ -20,9 +20,7 @@
 
 package drkodi.ui;
 
-import drkodi.LoadImageTask;
-import drkodi.SearchResultDtoMapper;
-import drkodi.SearchResultDtoMapperImpl;
+import drkodi.*;
 import drkodi.config.AppConfig;
 import drkodi.data.*;
 import drkodi.data.movie.Movie;
@@ -48,10 +46,12 @@ public class UiTestApp extends Application {
 
     static Executor executor = Executors.newSingleThreadExecutor();
 
-    SearchResultDtoMapper mapper = new SearchResultDtoMapperImpl();
+    MovieSearchResultDtoMapper movieSearchResultDtoMapper = new MovieSearchResultDtoMapperImpl();
+
+    TvSearchResultDtoMapper tvSearchResultDtoMapper = new TvSearchResultDtoMapperImpl();
 
     private SearchResultToMovieMapper searchResultToMovieMapper = new SearchResultToMovieMapperImpl(new ImageDataMapper());
-    List<Movie> data = List.of(new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper,executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new TitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())),new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")),mapper, executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new TitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration())));
+    List<Movie> data = List.of(new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")), movieSearchResultDtoMapper,executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new TitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration()), tvSearchResultDtoMapper),new Movie(new RenamingPath(Paths.get("src/test/resources/kodi/Reference Movie (2000)")), movieSearchResultDtoMapper, executor, null, new FolderNameWarningNormalizer(new FolderNameCompareNormalizerConfiguration()), new TitleSearchNormalizer(new MovieTitleSearchNormalizerConfiguration()), searchResultToMovieMapper, new MovieTitleWriteNormalizer(new MovieTitleWriteNormalizerConfiguration()), tvSearchResultDtoMapper));
 
     ListView<KodiBox> listView;
 
@@ -96,7 +96,7 @@ public class UiTestApp extends Application {
 
     private void fillUi() throws Exception {
         for(Movie element : data){
-            element.getSearchResults().addAll(buildSearchResults());
+            element.getMovieSearchResults().addAll(buildSearchResults());
             Platform.runLater(() -> listView.getItems().add(new KodiBox(element, new AppConfig(), new KodiUiConfig(), null)));
         }
     }

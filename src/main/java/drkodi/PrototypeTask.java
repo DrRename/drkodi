@@ -50,7 +50,9 @@ public abstract class PrototypeTask<T> extends Task<T> {
 
     protected final SearchResultToMovieMapper searchResultToMovieMapper;
 
-    protected final SearchResultDtoMapper mapper;
+    protected final MovieSearchResultDtoMapper movieSearchResultDtoMapper;
+
+    protected final TvSearchResultDtoMapper tvSearchResultDtoMapper;
 
     protected final MovieDbSearcher movieDbSearcher;
 
@@ -61,7 +63,7 @@ public abstract class PrototypeTask<T> extends Task<T> {
     protected final FolderNameWarningNormalizer folderNameWarningNormalizer;
 
     protected Movie buildData(RenamingPath renamingPath) {
-        return new Movie(renamingPath, mapper, executor, movieDbSearcher, folderNameWarningNormalizer, titleSearchNormalizer, searchResultToMovieMapper, movieTitleWriteNormalizer);
+        return new Movie(renamingPath, movieSearchResultDtoMapper, executor, movieDbSearcher, folderNameWarningNormalizer, titleSearchNormalizer, searchResultToMovieMapper, movieTitleWriteNormalizer, tvSearchResultDtoMapper);
     }
 
     protected KodiMoviePathEntryBox buildUiData(Movie data) {

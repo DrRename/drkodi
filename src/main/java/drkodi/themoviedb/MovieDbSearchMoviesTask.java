@@ -21,7 +21,7 @@
 package drkodi.themoviedb;
 
 import drkodi.data.movie.Movie;
-import drkodi.data.json.WebSearchResults;
+import drkodi.data.json.MovieWebSearchResults;
 import drkodi.normalization.TitleSearchNormalizer;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class MovieDbSearchMoviesTask extends Task<WebSearchResults> {
+public class MovieDbSearchMoviesTask extends Task<MovieWebSearchResults> {
 
     private final MovieDbSearcher movieDbSearcher;
 
@@ -38,10 +38,10 @@ public class MovieDbSearchMoviesTask extends Task<WebSearchResults> {
     private final Movie movie;
 
     @Override
-    protected WebSearchResults call() throws Exception {
+    protected MovieWebSearchResults call() throws Exception {
         var searchString = normalizer.normalize(movie.getMovieTitle());
         log.debug("Starting query for {}", searchString);
-        WebSearchResults movieDbMovieSearchResult = movieDbSearcher.searchMovie(searchString, null);
+        MovieWebSearchResults movieDbMovieSearchResult = movieDbSearcher.searchMovie(searchString, null);
         log.debug("Found {} movie matches for '{}'", movieDbMovieSearchResult.getSearchResults().keySet().size(), searchString);
         return movieDbMovieSearchResult;
     }

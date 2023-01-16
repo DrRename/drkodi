@@ -30,9 +30,9 @@ import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SearchResultsBox extends HBox {
+public class MovieSearchResultsBox extends HBox {
 
-    public SearchResultsBox(MovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig){
+    public MovieSearchResultsBox(MovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig){
 
 
 
@@ -40,7 +40,7 @@ public class SearchResultsBox extends HBox {
         // Set initial value
         setSearchResults(item, appConfig, kodiUiConfig);
         // Add listener
-        item.searchResultsProperty().addListener(new ListChangeListener<SearchResult>() {
+        item.movieSearchResultsProperty().addListener(new ListChangeListener<SearchResult>() {
             @Override
             public void onChanged(Change<? extends SearchResult> c) {
                 while (c.next()){
@@ -50,28 +50,14 @@ public class SearchResultsBox extends HBox {
             }
         });
 
-
-
-
-
-
-//       setStyle("-fx-background-color: #da1919;");
-
-
-
-        // behaviour
-//        visibleProperty().bind(item.searchResultsProperty().emptyProperty().not());
-//        managedProperty().bind(visibleProperty());
-
-
     }
 
     private void setSearchResults(MovieData item, AppConfig appConfig, KodiUiConfig kodiUiConfig) {
         getChildren().clear();
-        if(item.getSearchResults() == null){
+        if(item.getMovieSearchResults() == null){
             return;
         }
-        for(SearchResult searchResult : item.getSearchResults()){
+        for(SearchResult searchResult : item.getMovieSearchResults()){
             if(searchResult.getImage() != null) {
                 var sr = new SearchResultBox(item, searchResult, appConfig, kodiUiConfig);
                 getChildren().add(UiUtil.applyDebug(sr, appConfig));

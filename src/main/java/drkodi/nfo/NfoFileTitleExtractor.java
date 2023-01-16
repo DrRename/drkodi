@@ -20,7 +20,7 @@
 
 package drkodi.nfo;
 
-import drkodi.NfoRoot;
+import drkodi.NfoMovieRoot;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,7 +31,7 @@ public class NfoFileTitleExtractor extends AbstractNfoFileExtractor {
     }
 
     @Override
-    protected String parseNfoModel(NfoRoot xmlModel) {
+    protected String parseNfoModel(NfoMovieRoot xmlModel) {
         return xmlModel.getMovie().getTitle();
     }
 }

@@ -18,20 +18,26 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.nfo;
+package drkodi;
 
-import drkodi.NfoMovieRoot;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-public class NfoFileYearExtractor extends AbstractNfoFileExtractor {
+import drkodi.data.MovieSearchResult;
+import drkodi.data.SearchResult;
+import drkodi.data.json.MovieSearchResultDto;
+import javafx.scene.image.Image;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-    public NfoFileYearExtractor(NfoFileParser nfoFileParser) {
-        super(nfoFileParser);
+import java.time.LocalDate;
+
+@Mapper(componentModel = "spring")
+public interface MovieSearchResultDtoMapper {
+
+    @Mapping(target = "plot", source="movieSearchResultDto.overview")
+    MovieSearchResult map(MovieSearchResultDto movieSearchResultDto, byte[] imageData, Image image);
+
+    default Integer mapReleaseDateToYear(LocalDate localDate){
+        return localDate == null ? null : localDate.getYear();
     }
 
-    @Override
-    protected String parseNfoModel(NfoMovieRoot xmlModel) {
-        return xmlModel.getMovie().getYear();
-    }
 }
