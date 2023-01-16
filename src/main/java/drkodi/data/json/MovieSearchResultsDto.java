@@ -21,11 +21,15 @@
 package drkodi.data.json;
 
 import drkodi.data.json.MovieSearchResultDto;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 public class MovieSearchResultsDto {
 
    List<MovieSearchResultDto> results;

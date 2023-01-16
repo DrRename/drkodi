@@ -19,11 +19,15 @@
 
 package drkodi.config;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 @Configuration
 @ConfigurationProperties(prefix = "app")
 public class AppConfig {

@@ -21,11 +21,15 @@
 package drkodi.themoviedb;
 
 import drkodi.data.json.TranslationDto;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 public class TranslationsDto {
 
     List<TranslationDto> translations;

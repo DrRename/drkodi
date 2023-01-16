@@ -21,11 +21,15 @@
 package drkodi.data.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 public class MovieSearchResultDto extends SearchResultDto {
 
     @JsonProperty("original_title")
