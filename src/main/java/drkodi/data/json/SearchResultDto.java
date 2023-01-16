@@ -21,9 +21,13 @@
 package drkodi.data.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 public class SearchResultDto {
 
     @JsonProperty("id")

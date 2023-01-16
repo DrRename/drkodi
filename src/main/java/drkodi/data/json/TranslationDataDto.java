@@ -20,9 +20,13 @@
 
 package drkodi.data.json;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
 public class TranslationDataDto {
 
     String title;
