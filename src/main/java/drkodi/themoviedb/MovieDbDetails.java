@@ -20,6 +20,7 @@
 
 package drkodi.themoviedb;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import drkodi.MovieDbGenre;
 import javafx.scene.image.Image;
 import lombok.*;
@@ -39,6 +40,9 @@ public class MovieDbDetails {
     String overview;
 
     String title;
+
+    @JsonProperty("original_title")
+    String originalTitle;
 
     String plot;
 
