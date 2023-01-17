@@ -23,14 +23,21 @@ package drkodi.ui.control;
 import drkodi.data.movie.MovieData;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ImageBox extends VBox {
+public class ImageBox extends StackPane {
 
     public ImageBox(Image image, int imageHeight) {
 
@@ -40,10 +47,22 @@ public class ImageBox extends VBox {
     public ImageBox(MovieData kodieMovie, int imageHeight) {
 
         init(kodieMovie.getImage(), imageHeight);
-
         initListener(kodieMovie, imageHeight);
 
-//        visibleProperty().bind(kodieMovie.imageProperty().isNotNull());
+        setTypeLabel(kodieMovie);
+
+        setPadding(new Insets(4,4,4,4));
+    }
+
+    private void setTypeLabel(MovieData kodieMovie) {
+        HBox box = new HBox();
+        box.setPadding(new Insets(8,8,8,8));
+        Label label = new Label();
+        label.getStyleClass().add("type-label");
+        label.textProperty().bind(kodieMovie.typeProperty().asString());
+        box.getChildren().add(label);
+        StackPane.setAlignment(box, Pos.TOP_LEFT);
+        getChildren().add(box);
     }
 
     private void init(Image image, int imageHeight) {
@@ -56,13 +75,14 @@ public class ImageBox extends VBox {
         kodieMovie.imageProperty().addListener(new ChangeListener<Image>() {
             @Override
             public void changed(ObservableValue<? extends Image> observable, Image oldValue, Image newValue) {
+                getChildren().clear();
                 setNewImage(newValue, imageHeight);
+                setTypeLabel(kodieMovie);
             }
         });
     }
 
     private void setNewImage(Image newValue, int imageHeight) {
-        getChildren().clear();
         if (newValue != null) {
             getChildren().add(buildImageView(newValue, imageHeight));
         }
