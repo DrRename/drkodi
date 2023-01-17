@@ -86,6 +86,7 @@ public class Movie extends DynamicMovieData {
         public void changed(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
             if (Qualified.isOk(newValue)) {
                 log.debug("Got NFO path: {}", newValue);
+                setTypeFromPath(newValue);
                 loadNfoData(newValue.getElement());
             } else {
                 log.debug("Got invalid NFO path: {}", newValue);
@@ -95,6 +96,20 @@ public class Movie extends DynamicMovieData {
             }
         }
     }
+
+    private void setTypeFromPath(QualifiedPath newValue) {
+        String fileName = newValue.getElement().getFileName().toString().toLowerCase();
+        if(fileName.equals("tvshow.nfo")){
+            setType(Type.TV_SERIES);
+        }
+        else if(fileName.equals("movie.nfo") || fileName.equals(getRenamingPath().getFileName().toLowerCase())){
+            setType(Type.MOVIE);
+        }
+        else {
+            throw new RuntimeException("Cannot parse type from " + newValue);
+        }
+    }
+
     private final NfoPathListener nfoPathListener;
 
     class ImagePathListener implements ChangeListener<QualifiedPath> {
