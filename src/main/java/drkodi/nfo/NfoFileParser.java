@@ -21,12 +21,14 @@ package drkodi.nfo;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import drkodi.NfoMovieRoot;
+import drkodi.NfoRoot;
+import drkodi.NfoTvShowRoot;
+import drkodi.data.movie.MovieData;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -43,20 +45,32 @@ public class NfoFileParser {
 
     private final XmlMapper xmlMapper;
 
-    public NfoFileParser() {
+    private final Class<? extends NfoRoot> clazz;
+
+    public NfoFileParser(MovieData.Type type) {
+        if(MovieData.Type.MOVIE.equals(type)){
+            this.clazz = NfoMovieRoot.class;
+        }
+        else if(MovieData.Type.TV_SERIES.equals(type)){
+            this.clazz = NfoTvShowRoot.class;
+        }
+        else {
+            throw new RuntimeException("Unknown type");
+        }
         xmlMapper = new XmlMapper();
-        xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+//        xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         xmlMapper.addHandler(new DeserializationProblemHandler() {
             @Override
             public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
-                if (beanOrClass instanceof NfoMovieRoot nfoMovieRoot) {
+                if (clazz.isAssignableFrom(beanOrClass.getClass())) {
                     String valueAsString = p.readValueAs(String.class);
                     try {
                         URL url = new URL(valueAsString);
                         url.toURI();
-                        nfoMovieRoot.setUrl(valueAsString);
+                        clazz.cast(beanOrClass).setUrl(valueAsString);
                         return true;
                     } catch (Exception e) {
+                        log.debug(e.getLocalizedMessage(), e);
                         return false;
                     }
                 }
@@ -65,7 +79,7 @@ public class NfoFileParser {
         });
     }
 
-    public NfoMovieRoot parse(Path filePath) throws IOException {
+    public NfoRoot parse(Path filePath) throws Exception {
         long lineCount;
         try (Stream<String> stream = Files.lines(filePath, StandardCharsets.UTF_8)) {
             lineCount = stream.filter(s -> !s.isBlank()).count();
@@ -78,14 +92,15 @@ public class NfoFileParser {
             throw new IOException(e);
         }
         if(lineCount == 1){
-            NfoMovieRoot root = new NfoMovieRoot();
+            NfoRoot root = clazz.getConstructor().newInstance();
             root.setUrl(Files.readString(filePath));
             return root;
         }
-        String content = "<NfoRoot>" + String.join("", Files.readAllLines(filePath)).trim() + "</NfoRoot>";
+        String content = "<Test>" + String.join("", Files.readAllLines(filePath)).trim() + "</Test>";
 
         try {
-            return xmlMapper.readValue(content, NfoMovieRoot.class);
+            var result = xmlMapper.readValue(content, clazz);
+            return result;
         } catch (MismatchedInputException e) {
             log.debug(e.getLocalizedMessage());
             return null;

@@ -21,6 +21,7 @@
 package drkodi.nfo;
 
 import drkodi.NfoMovieRoot;
+import drkodi.data.movie.MovieData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,15 +42,15 @@ class NfoFileParserTest {
     }
 
     @Test
-    void checkInValidFile() throws IOException {
-        var result = new NfoFileParser().parse(Paths.get("src/test/resources/kodi/Some Movie (2000)/wrong-format.nfo"));
+    void checkInValidFile() throws Exception {
+        var result = new NfoFileParser(MovieData.Type.MOVIE).parse(Paths.get("src/test/resources/kodi/Some Movie (2000)/wrong-format.nfo"));
         assertNull(result.getUrl());
-        assertNull(result.getMovie());
+        assertNull(result.getElement());
     }
 
     @Test
-    void parse01() throws IOException {
-        NfoMovieRoot result = new NfoFileParser().parse(Paths.get("src/test/resources/kodi/nfo/complete.nfo"));
+    void parse01() throws Exception {
+        NfoMovieRoot result = (NfoMovieRoot) new NfoFileParser(MovieData.Type.MOVIE).parse(Paths.get("src/test/resources/kodi/nfo/complete.nfo"));
         System.out.println(result);
     }
 }

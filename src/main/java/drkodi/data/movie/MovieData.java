@@ -222,10 +222,20 @@ public class MovieData {
     }
 
     protected void initEmptyNfoData() {
-        NfoMovieRoot data = new NfoMovieRoot();
-        data.setMovie(new NfoMovie());
-        data.getMovie().setArt(new NfoMovie.Art());
-        setNfoData(QualifiedNfoData.from(data));
+        if(Type.MOVIE.equals(getType())) {
+            NfoMovieRoot data = new NfoMovieRoot();
+            data.setMovie(new NfoMovie());
+            data.getMovie().setArt(new NfoElement.Art());
+            setNfoData(QualifiedNfoData.from(data));
+        }
+        else if(Type.TV_SERIES.equals(getType())){
+            NfoTvShowRoot data = new NfoTvShowRoot();
+            data.setTvShow(new NfoTvShow());
+            data.getTvShow().setArt(new NfoElement.Art());
+            setNfoData(QualifiedNfoData.from(data));
+        } else {
+            throw new RuntimeException("Type not set");
+        }
     }
 
     protected void setDefaultImagePath() {
