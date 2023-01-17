@@ -66,6 +66,9 @@ app:
           - "/"
           - "\\"
           - "&"
+          - "Dubbed"
+          - "Web"
+          - "Qh264GDR"
         replace-with-space:
       compare:
         delete:
@@ -76,6 +79,9 @@ app:
           - "/"
           - "\\"
           - "&"
+          - "Dubbed"
+          - "Web"
+          - "h264GDR"
         replace-with-space:
           - "."
           - "_"
@@ -104,6 +110,9 @@ app:
           - "\\"
           - "OYHD"
           - "BDRip"
+          - "Dubbed"
+          - "Web"
+          - "h264GDR"
         replace-with-space:
           - "."
           - "_"
