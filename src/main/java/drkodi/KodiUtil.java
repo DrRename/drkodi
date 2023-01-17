@@ -92,11 +92,18 @@ public class KodiUtil {
     }
 
     public static Path getDefaultNfoPath(MovieData movieData){
-        return getDefaultNfoPath(movieData.getRenamingPath().getOldPath());
+        return getDefaultNfoPath(movieData.getType(), movieData.getRenamingPath().getOldPath());
     }
 
-    public static Path getDefaultNfoPath(Path movieDirectory){
-        return Paths.get(movieDirectory.toString(), "movie.nfo");
+    public static Path getDefaultNfoPath(MovieData.Type type, Path movieDirectory){
+        if(MovieData.Type.MOVIE.equals(type)) {
+            return Paths.get(movieDirectory.toString(), "movie.nfo");
+        }
+        else if(MovieData.Type.TV_SERIES.equals(type)){
+            return Paths.get(movieDirectory.toString(), "tvshow.nfo");
+        } else
+            throw new RuntimeException("Type not set");
+
     }
 
     public static Path getDefaultImagePath(MovieData movieData){

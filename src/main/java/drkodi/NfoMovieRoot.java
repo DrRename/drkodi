@@ -19,20 +19,21 @@
 
 package drkodi;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
 @Getter
 @Setter
+@ToString
 public class NfoMovieRoot extends NfoRoot {
 
+    @JacksonXmlProperty(localName = "movie")
     NfoMovie movie;
 
-
     @Override
-    public NfoElement getElement() {
+    public NfoMovie getElement() {
         return movie;
     }
 }

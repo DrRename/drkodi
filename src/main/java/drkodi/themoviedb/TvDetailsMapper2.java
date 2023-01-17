@@ -1,9 +1,9 @@
 /*
- *     Dr.Rename - A Minimalistic Batch Renamer
+ *     Dr.Kodi - A Minimalistic Batch Renamer
  *
- *     Copyright (C) 2022
+ *     Copyright (C) 2023
  *
- *     This file is part of Dr.Rename.
+ *     This file is part of Dr.Kodi.
  *
  *     You can redistribute it and/or modify it under the terms of the GNU Affero
  *     General Public License as published by the Free Software Foundation, either
@@ -18,20 +18,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package drkodi.nfo;
+package drkodi.themoviedb;
 
-import drkodi.NfoMovieRoot;
+import drkodi.data.MovieDetailsDto;
+import drkodi.data.TvDetailsDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-public class NfoFileYearExtractor extends AbstractNfoFileExtractor {
+@RequiredArgsConstructor
+@Component
+public class TvDetailsMapper2 {
 
-    public NfoFileYearExtractor(NfoFileParser nfoFileParser) {
-        super(nfoFileParser);
-    }
+    private final TvDetailsMapper tvDetailsMapper;
 
-    @Override
-    protected String parseNfoModel(NfoMovieRoot xmlModel) {
-        return xmlModel.getMovie().getYear();
+    private final ImageMapper imageMapper;
+
+    public MovieDbTvDetails map(TvDetailsDto dto) {
+        var result = tvDetailsMapper.map(dto);
+        var result2 = imageMapper.map(dto.getPosterPath());
+        result.setImage(result2.image);
+        result.setImageData(result2.imageData);
+        return result;
     }
 }

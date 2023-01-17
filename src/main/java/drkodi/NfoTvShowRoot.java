@@ -19,15 +19,17 @@
 
 package drkodi;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
 @Getter
 @Setter
-public class NfoTvSeriesRoot extends NfoRoot {
+@ToString
+public class NfoTvShowRoot extends NfoRoot {
 
+    @JacksonXmlProperty(localName = "tvshow")
     NfoTvShow tvShow;
 
     @Override

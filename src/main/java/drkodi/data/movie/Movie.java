@@ -339,8 +339,8 @@ public class Movie extends DynamicMovieData {
 
 
     void loadNfoData(Path path) {
-        var task = new ReadNfoTask(path);
-        task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoMovieRoot) event.getSource().getValue())));
+        var task = new ReadNfoTask(getType(), path);
+        task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoRoot) event.getSource().getValue())));
         task.setOnFailed(event -> {
             log.warn("Task failed", task.getException());
             setNfoData(QualifiedNfoData.from(null));

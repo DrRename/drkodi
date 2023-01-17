@@ -27,8 +27,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Setter
 @Getter
 @ToString

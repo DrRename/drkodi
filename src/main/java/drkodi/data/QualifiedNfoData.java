@@ -25,7 +25,7 @@ import drkodi.NfoRoot;
 
 public class QualifiedNfoData extends Qualified<NfoRoot> {
 
-    public static QualifiedNfoData from(NfoMovieRoot nfoMovieRoot) {
+    public static QualifiedNfoData from(NfoRoot nfoMovieRoot) {
         Qualified.Type type;
         if(nfoMovieRoot == null){
             type = Type.INVALID;
@@ -36,7 +36,7 @@ public class QualifiedNfoData extends Qualified<NfoRoot> {
         return new QualifiedNfoData(nfoMovieRoot, type);
     }
 
-    public QualifiedNfoData(NfoMovieRoot element, Type type) {
+    public QualifiedNfoData(NfoRoot element, Type type) {
         super(element, type);
     }
 
