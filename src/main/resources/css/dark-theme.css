@@ -48,6 +48,10 @@
     -fx-border-color: white;
 }
 
+.type-label {
+    -fx-background-color: rgba(0, 0, 0, 0.75); -fx-background-radius: 10;
+}
+
 .progress-bar {
     -fx-accent: rgb(255, 255, 255);
 }

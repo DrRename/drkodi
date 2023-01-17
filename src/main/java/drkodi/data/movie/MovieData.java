@@ -42,7 +42,18 @@ import java.nio.file.Path;
 public class MovieData {
 
     public enum Type {
-        MOVIE, TV_SERIES
+        MOVIE("Movie"), TV_SERIES("TV Series");
+
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     private final ObjectProperty<Type> type;

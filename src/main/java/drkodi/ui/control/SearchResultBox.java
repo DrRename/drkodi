@@ -50,7 +50,7 @@ public class SearchResultBox extends VBox {
 //        visibleProperty().bind(kodieMovie.searchResultsProperty().emptyProperty().not());
 //        managedProperty().bind(visibleProperty());
 
-        setPrefWidth(120);
+
 
 
     }
@@ -59,7 +59,7 @@ public class SearchResultBox extends VBox {
         if (searchResult.getImage() != null) {
             var imageBox = new ImageBox(searchResult.getImage(), kodiUiConfig.getSearchImageHeight());
             getChildren().add(UiUtil.applyDebug(imageBox, appConfig));
-//            maxWidthProperty().bind(imageBox.widthProperty());
+            prefWidthProperty().bind(imageBox.widthProperty());
 
         }
     }

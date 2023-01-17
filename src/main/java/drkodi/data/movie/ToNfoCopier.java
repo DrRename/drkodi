@@ -13,7 +13,7 @@ public class ToNfoCopier {
     private final MovieData movie;
 
     public void apply(){
-        if (!Qualified.isOk(movie.getNfoData())) {
+        if (!Qualified.isOk(movie.getNfoData()) || movie.getNfoData().getElement().getElement() == null) {
             movie.initEmptyNfoData();
         }
         if (!Qualified.isOk(movie.getImagePath())) {
@@ -23,7 +23,7 @@ public class ToNfoCopier {
             movie.setDefaultNfoPath();
         }
         if (movie.getNfoData().getElement().getElement() == null) {
-//            movie.getNfoData().getElement().setElement(new NfoMovie());
+            log.error("NFO element is null, initialization incorrect");
         }
         if (movie.getNfoData().getElement().getElement().getArt() == null) {
             movie.getNfoData().getElement().getElement().setArt(new NfoMovie.Art());

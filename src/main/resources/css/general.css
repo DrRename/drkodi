@@ -125,7 +125,7 @@
     -fx-font-family: 'Ubuntu Mono Regular';
     -fx-border-radius: 5;
     -fx-border-width:1;
-    -fx-border-color: #e3a359;
+    /*-fx-border-color: #e3a359;*/
     -fx-padding: 2px;
 }
 
@@ -134,7 +134,7 @@
     -fx-font-size: 11px;
     -fx-border-radius: 3;
     -fx-border-width:1;
-    -fx-border-color: #e3a359;
+    /*-fx-border-color: #e3a359;*/
     -fx-padding: 2px;
     /*-fx-underline: true;*/
 }
@@ -165,7 +165,16 @@
     -fx-background-insets: 0;
 }
 
-
+.type-label {
+    -fx-font-family: 'Ubuntu Bold Italic';
+    -fx-font-size: 16px;
+    /*-fx-background-color: white;*/
+    -fx-background-color: rgba(255, 255, 255, 0.75); -fx-background-radius: 10;
+    -fx-padding: 5;
+    -fx-border-radius: 10;
+    -fx-border-width:1;
+    /*-fx-border-color: #e3a359;*/
+}
 
 .progress-bar {
     -fx-accent: rgba(0, 138, 230, 0.85);
