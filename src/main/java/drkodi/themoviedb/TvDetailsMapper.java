@@ -20,10 +20,20 @@
 
 package drkodi.themoviedb;
 
+import drkodi.data.TvDetailsDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.time.LocalDate;
 
 @Mapper(componentModel = "spring")
 public interface TvDetailsMapper {
 
-    MovieDbTvDetails map();
+    @Mapping(target = "title", source = "name")
+    @Mapping(target = "originalTitle", source = "originalName")
+    MovieDbTvDetails map(TvDetailsDto dto);
+
+    default Integer mapReleaseDateToYear(LocalDate localDate){
+        return localDate == null ? null : localDate.getYear();
+    }
 }

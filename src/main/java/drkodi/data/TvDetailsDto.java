@@ -26,12 +26,14 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
 @ToString
 public class TvDetailsDto extends DetailsDto {
 
+    String name;
+
+    @JsonProperty("original_name")
+    String originalName;
 
 }

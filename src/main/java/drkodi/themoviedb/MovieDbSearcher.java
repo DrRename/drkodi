@@ -54,57 +54,42 @@ public class MovieDbSearcher {
 
     private final ResourceBundle resourceBundle;
 
-    private final MovieDetailsMapper movieDetailsMapper;
+    private final MovieDetailsMapper2 movieDetailsMapper;
 
-    private final TvDetailsMapper tvDetailsMapper;
+    private final TvDetailsMapper2 tvDetailsMapper;
 
     protected void reset() {
 
     }
 
     public MovieDbMovieDetails lookupMovieDetails(Number movieDbId){
-        MovieDbMovieDetails result = new MovieDbMovieDetails();
+
         try {
             ResponseEntity<MovieDetailsDto> details = client.getMovieDetails("ca540140c89af81851d4026286942896", movieDbId, null);
             if(details.getBody() != null) {
-                result.genres = details.getBody().getGenres().stream().map(e -> new MovieDbGenre(e.getId(), e.getName())).toList();
-                result.tagline = details.getBody().getTaline();
-                result.overview = details.getBody().getOverview();
-                result.title = details.getBody().getTitle();
-                result.overview = details.getBody().getOverview();
-                result.plot = details.getBody().getPlot();
-                if(details.getBody().getReleaseDate() != null) {
-                    result.releaseDate = details.getBody().getReleaseDate().getYear();
-                }
-                if(details.getBody().getPosterPath() != null) {
-                    var imageData = imagesClient.searchMovie("ca540140c89af81851d4026286942896", null, config.isIncludeAdult(), details.getBody().getPosterPath());
-                    if (imageData.getBody() != null) {
-                        Image image = new Image(new ByteArrayInputStream(imageData.getBody()));
-                        image.exceptionProperty().addListener((observable, oldValue, newValue) -> {
-                            if (newValue != null)
-                                log.error(newValue.getLocalizedMessage(), newValue);
-                        });
-                        result.image = image;
-                        result.imageData = imageData.getBody();
-                    }
-                }
+                MovieDbMovieDetails result = movieDetailsMapper.map(details.getBody());
+                return result;
 
             }
         }catch (Exception e){
             log.error("Failed to get details for ID", e);
         }
-        return result;
+        return new MovieDbMovieDetails();
     }
 
     public MovieDbTvDetails lookupTvDetails(Number movieDbId){
-        MovieDbTvDetails result = new MovieDbTvDetails();
-        ResponseEntity<TvDetailsDto> details = client.getTvDetails("ca540140c89af81851d4026286942896", movieDbId, null);
-        if(details.getBody() != null) {
 
+        try {
+            ResponseEntity<TvDetailsDto> details = client.getTvDetails("ca540140c89af81851d4026286942896", movieDbId, null);
+            if(details.getBody() != null) {
+                MovieDbTvDetails result = tvDetailsMapper.map(details.getBody());
+                return result;
 
-
+            }
+        }catch (Exception e){
+            log.error("Failed to get details for ID", e);
         }
-        return result;
+        return new MovieDbTvDetails();
     }
 
     public TvWebSearchResults searchTv(String searchString, Integer year) throws IOException {
