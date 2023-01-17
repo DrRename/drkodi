@@ -65,6 +65,7 @@ app:
           - ":"
           - "/"
           - "\\"
+          - "&"
         replace-with-space:
       compare:
         delete:
@@ -74,6 +75,7 @@ app:
           - "-"
           - "/"
           - "\\"
+          - "&"
         replace-with-space:
           - "."
           - "_"
