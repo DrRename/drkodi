@@ -30,6 +30,7 @@ import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drkodi.themoviedb.*;
+import drkodi.util.DrRenameUtil;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -86,7 +87,6 @@ public class Movie extends DynamicMovieData {
         public void changed(ObservableValue<? extends QualifiedPath> observable, QualifiedPath oldValue, QualifiedPath newValue) {
             if (Qualified.isOk(newValue)) {
                 log.debug("Got NFO path: {}", newValue);
-                setTypeFromPath(newValue);
                 loadNfoData(newValue.getElement());
             } else {
                 log.debug("Got invalid NFO path: {}", newValue);
@@ -94,19 +94,6 @@ public class Movie extends DynamicMovieData {
                 // To signal data loading is complete, we need to set NFO data to INVALID here.
                 setNfoData(new QualifiedNfoData(null, Qualified.Type.INVALID));
             }
-        }
-    }
-
-    private void setTypeFromPath(QualifiedPath newValue) {
-        String fileName = newValue.getElement().getFileName().toString().toLowerCase();
-        if(fileName.equals("tvshow.nfo")){
-            setType(Type.TV_SERIES);
-        }
-        else if(fileName.equals("movie.nfo") || fileName.equals(getRenamingPath().getFileName().toLowerCase())){
-            setType(Type.MOVIE);
-        }
-        else {
-            throw new RuntimeException("Cannot parse type from " + newValue);
         }
     }
 
@@ -125,6 +112,17 @@ public class Movie extends DynamicMovieData {
         }
     }
     private final ImagePathListener imagePathListener;
+
+    class TypeListener implements ChangeListener<Type> {
+
+        @Override
+        public void changed(ObservableValue<? extends Type> observable, Type oldValue, Type newValue) {
+            if(newValue != null) {
+                new CollectMediaFilesTaskExecutor(Movie.this, executor, runningTasksList, Type.TV_SERIES.equals(newValue) ? 2 : 0).execute();
+            }
+        }
+    }
+    private final TypeListener typeListener;
 
     //
 
@@ -149,6 +147,7 @@ public class Movie extends DynamicMovieData {
         this.movieTitleListener = new MovieTitleListener();
         this.nfoPathListener = new NfoPathListener();
         this.imagePathListener = new ImagePathListener();
+        this.typeListener = new TypeListener();
         this.running = new SimpleBooleanProperty();
         this.runningTasksList = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
         init();
@@ -164,9 +163,12 @@ public class Movie extends DynamicMovieData {
             running.set(!c.getList().isEmpty());
         });
 
+        typeProperty().addListener(typeListener);
         movieTitleProperty().addListener(movieTitleListener);
         nfoPathProperty().addListener(nfoPathListener);
         imagePathProperty().addListener(imagePathListener);
+
+
         initWebSearchListener();
         initImageDataListener();
         initIdListener();
@@ -182,8 +184,8 @@ public class Movie extends DynamicMovieData {
         getWarnings().clear();
         updateTitleWarnings(getMovieTitle());
         updateYearWarnings();
-        new MediaFilesPresentTaskExecutor(this, executor, runningTasksList).execute();
-        new SubdirsCheckTaskExecutor(this, executor, runningTasksList).execute();
+//        new MediaFilesPresentTaskExecutor(this, executor, runningTasksList).execute();
+//        new SubdirsCheckTaskExecutor(this, executor, runningTasksList).execute();
         new IsDirectoryTaskExecutor(this, executor, runningTasksList).execute();
     }
 
@@ -339,13 +341,15 @@ public class Movie extends DynamicMovieData {
 
 
     void loadNfoData(Path path) {
-        var task = new ReadNfoTask(getType(), path);
-        task.setOnSucceeded(event -> setNfoData(QualifiedNfoData.from((NfoRoot) event.getSource().getValue())));
+        var task = new ReadNfoTask(path);
+        task.setOnSucceeded(event -> {
+            setNfoData(QualifiedNfoData.from((NfoRoot) task.getValue().nfoRoot()));
+            setType(task.getValue().type());
+        });
         task.setOnFailed(event -> {
             log.warn("Task failed", task.getException());
             setNfoData(QualifiedNfoData.from(null));
             getWarnings().add(new KodiWarning(KodiWarning.Type.NFO_NOT_READABLE));
-//            triggerWebSearch();
         });
         executeTask2(task);
     }
@@ -461,19 +465,6 @@ public class Movie extends DynamicMovieData {
         else if(searchResult instanceof TvSearchResult) {
             createAndRunMovieDbTvDetailsTask(getMovieDbId());
         }
-    }
-
-    private void triggerEmptyFolderCheck() {
-        log.debug("Trigger media files check");
-        var task = new MediaFilesPresentTask(this);
-        task.setOnSucceeded(event -> {
-                    if (task.getValue()) {
-                        log.debug("No media files found: {}", getRenamingPath().getOldPath());
-                        getWarnings().add(new KodiWarning(KodiWarning.Type.EMPTY_FOLDER));
-                    }
-                }
-        );
-        executeTask(task);
     }
 
     @Override

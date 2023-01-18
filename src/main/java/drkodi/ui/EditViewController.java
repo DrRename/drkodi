@@ -22,13 +22,18 @@ package drkodi.ui;
 
 import drkodi.SelectedData;
 import drkodi.config.AppConfig;
+import drkodi.data.movie.MediaFilesFileSizeTaskExecutor;
 import drkodi.data.movie.MediaFilesSizeTask;
 import drkodi.data.movie.Movie;
 import drkodi.ui.control.GenresBox2;
 import drkodi.ui.control.KodiOpenAndSaveButtonsBox;
 import drkodi.util.DrRenameUtil;
+import drrename.commons.RenamingPath;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -86,13 +91,35 @@ public class EditViewController extends DebuggableController implements Initiali
 
     private Stage stage;
 
+    //
 
+    private final Label fileSizeLabel;
+
+
+    class MediaFilesListener implements ListChangeListener<RenamingPath> {
+
+
+
+
+
+            @Override
+            public void onChanged(Change<? extends RenamingPath> c) {
+                while(c.next()){
+
+                }
+                new MediaFilesFileSizeTaskExecutor(selectedData.getSelectedMovie(), c.getList().stream().map(RenamingPath::getOldPath).toList(), executor, selectedData.getSelectedMovie().getRunningTasksList(), fileSizeLabel).execute();
+            }
+
+    }
+    private final MediaFilesListener mediaFilesListener;
 
     public EditViewController(AppConfig appConfig, Executor executor, SelectedData selectedData, AppConfig appConfig1) {
         super(appConfig);
         this.executor = executor;
         this.selectedData = selectedData;
         this.appConfig = appConfig1;
+        this.mediaFilesListener = new MediaFilesListener();
+        fileSizeLabel = new Label();
         log.debug("New {} controller created", this);
     }
 
@@ -105,7 +132,6 @@ public class EditViewController extends DebuggableController implements Initiali
         FlowPane fileSizePane = new FlowPane();
         fileSizePane.setHgap(4);
         fileSizePane.setVgap(4);
-        Label fileSizeLabel = new Label();
         fileSizeLabel.getStyleClass().add("file-size-box");
         fileSizePane.getChildren().add(UiUtil.applyDebug(fileSizeLabel, appConfig));
         this.fileSizeBox.getChildren().add(UiUtil.applyDebug(fileSizePane, appConfig));
@@ -120,13 +146,7 @@ public class EditViewController extends DebuggableController implements Initiali
             genresBox.getChildren().setAll(new GenresBox2(selectedData.getSelectedMovie()));
 
 
-            fileSizeLabel.setText(DrRenameUtil.formatSize(0));
-            var task = new MediaFilesSizeTask(selectedData.getSelectedMovie());
-            task.setOnSucceeded(event -> {
-                fileSizeLabel.setText(DrRenameUtil.formatSize(task.getValue().stream().mapToLong(e -> e).sum()));
-            });
-            task.setOnFailed(event -> log.error("Failed to get file size ", task.getException()));
-            executor.execute(task);
+
 
 
         }
@@ -138,6 +158,9 @@ public class EditViewController extends DebuggableController implements Initiali
                     movieTitleTextField.textProperty().unbindBidirectional(oldValue.movieTitleProperty());
                     movieOriginalTitleTextField.textProperty().unbindBidirectional(oldValue.movieOriginalTitleProperty());
                     movieYearTextField.textProperty().unbindBidirectional(oldValue.movieYearProperty());
+
+                    oldValue.getMediaFiles().removeListener(mediaFilesListener);
+                    fileSizeLabel.setText(DrRenameUtil.formatSize(0));
                 }
                 if(newValue != null){
 
@@ -148,13 +171,14 @@ public class EditViewController extends DebuggableController implements Initiali
                     movieYearTextField.textProperty().bindBidirectional(newValue.movieYearProperty(), new IntegerStringConverter());
                     genresBox.getChildren().setAll(new GenresBox2(selectedData.getSelectedMovie()));
 
-                    fileSizeLabel.setText(DrRenameUtil.formatSize(0));
-                    var task = new MediaFilesSizeTask(newValue);
-                    task.setOnSucceeded(event -> {
-                            fileSizeLabel.setText(DrRenameUtil.formatSize(task.getValue().stream().mapToLong(e -> e).sum()));
-                    });
-                    task.setOnFailed(event -> log.error("Failed to get file size ", task.getException()));
-                    executor.execute(task);
+
+                    // Initially load file size if media files have been collected already
+                    new MediaFilesFileSizeTaskExecutor(newValue, newValue.getMediaFiles().stream().map(RenamingPath::getOldPath).toList(), executor, newValue.getRunningTasksList(), fileSizeLabel).execute();
+
+                    // Wait for media files to be available and update file size label
+                    newValue.getMediaFiles().addListener(mediaFilesListener);
+
+
                 }
 
             }

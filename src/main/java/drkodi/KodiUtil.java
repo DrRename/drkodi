@@ -126,22 +126,33 @@ public class KodiUtil {
         return subdirs;
     }
 
-    public static List<Path> findAllVideoFiles(Path directory) throws IOException {
+    public static List<Path> findAllVideoFiles(Path directory, int maxDepth) throws IOException {
         List<Path> result = new ArrayList<>();
         if (Files.isDirectory(directory)) {
             try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
-                for (Path child : ds) {
-                    if (Files.isRegularFile(child)) {
-                        String extension = FilenameUtils.getExtension(child.getFileName().toString());
-                        if ("sub".equalsIgnoreCase(extension) || "idx".equalsIgnoreCase(extension)) {
+                int depth = 0;
+                result.addAll(descend(ds,  ++depth, maxDepth));
+            }
+        }
+        return result;
+    }
+
+    static List<Path> descend(DirectoryStream<Path> directory, int currentDepth, int maxDepth) throws IOException {
+        List<Path> result = new ArrayList<>();
+        for (Path child : directory) {
+            if (Files.isRegularFile(child)) {
+                String extension = FilenameUtils.getExtension(child.getFileName().toString());
+                if ("sub".equalsIgnoreCase(extension) || "idx".equalsIgnoreCase(extension)) {
 //                        log.debug("Ignore sub/ idx files for now");
-                            continue;
-                        }
-                        var mediaType = new FileTypeByMimeProvider().getFileType(child);
-                        if (mediaType.startsWith("video")) {
-                            result.add(child);
-                        }
-                    }
+                    continue;
+                }
+                var mediaType = new FileTypeByMimeProvider().getFileType(child);
+                if (mediaType.startsWith("video")) {
+                    result.add(child);
+                }
+            } else if(Files.isDirectory(child) && ++currentDepth <= maxDepth){
+                try (DirectoryStream<Path> ds = Files.newDirectoryStream(child)) {
+                    result.addAll(descend(ds,  currentDepth, maxDepth));
                 }
             }
         }

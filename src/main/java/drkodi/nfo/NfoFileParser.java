@@ -41,13 +41,13 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 @Slf4j
-public class NfoFileParser {
+class NfoFileParser {
 
     private final XmlMapper xmlMapper;
 
     private final Class<? extends NfoRoot> clazz;
 
-    public NfoFileParser(MovieData.Type type) {
+    NfoFileParser(MovieData.Type type) {
         if(MovieData.Type.MOVIE.equals(type)){
             this.clazz = NfoMovieRoot.class;
         }

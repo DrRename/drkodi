@@ -66,6 +66,8 @@ public class MovieData {
 
     private final FolderNameWarningNormalizer folderNameWarningNormalizer;
 
+    private final ListProperty<RenamingPath> mediaFiles;
+
     // Underlying path
 
     private final RenamingPath renamingPath;
@@ -161,6 +163,7 @@ public class MovieData {
         this.warnings = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.movieSearchResults = new SimpleListProperty<>(FXCollections.observableArrayList());
         this.tvSearchResults = new SimpleListProperty<>(FXCollections.observableArrayList());
+        this.mediaFiles = new SimpleListProperty<>(FXCollections.observableArrayList());
         init();
     }
 
@@ -279,6 +282,14 @@ public class MovieData {
         return "StaticMovieData{" +
                 "renamingPath=" + renamingPath +
                 '}';
+    }
+
+    public boolean isMovieType(){
+        return Type.MOVIE.equals(getType());
+    }
+
+    public boolean isTvShowType(){
+        return Type.TV_SERIES.equals(getType());
     }
 
     // Getter / Setter //
@@ -564,5 +575,17 @@ public class MovieData {
 
     public void setMovieOriginalTitle(String movieOriginalTitle) {
         this.movieOriginalTitle.set(movieOriginalTitle);
+    }
+
+    public ObservableList<RenamingPath> getMediaFiles() {
+        return mediaFiles.get();
+    }
+
+    public ListProperty<RenamingPath> mediaFilesProperty() {
+        return mediaFiles;
+    }
+
+    public void setMediaFiles(ObservableList<RenamingPath> mediaFiles) {
+        this.mediaFiles.set(mediaFiles);
     }
 }
