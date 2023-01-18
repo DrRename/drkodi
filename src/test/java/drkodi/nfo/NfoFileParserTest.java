@@ -44,8 +44,7 @@ class NfoFileParserTest {
     @Test
     void checkInValidFile() throws Exception {
         var result = new NfoFileParser(MovieData.Type.MOVIE).parse(Paths.get("src/test/resources/kodi/Some Movie (2000)/wrong-format.nfo"));
-        assertNull(result.getUrl());
-        assertNull(result.getElement());
+        assertNull(result);
     }
 
     @Test
