@@ -227,9 +227,9 @@ public class MainViewController extends DebuggableController implements Initiali
             public void changed(ObservableValue<? extends KodiMoviePathEntryBox> observable, KodiMoviePathEntryBox oldValue, KodiMoviePathEntryBox newValue) {
                 if(newValue != null) {
                     Movie selectedMovie = newValue.getMovie();
+                    selectedData.setSelectedMovie(selectedMovie);
                     selectedMovie.loadExternalData();
                     selectedMovie.triggerChecks();
-                    selectedData.setSelectedMovie(selectedMovie);
                     detailsBox.getChildren().setAll(new KodiBox(selectedMovie, getAppConfig(),kodiUiConfig, editViewController.detailsTableRoot));
                 }
             }

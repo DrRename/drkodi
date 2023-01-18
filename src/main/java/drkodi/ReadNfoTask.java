@@ -20,27 +20,26 @@
 
 package drkodi;
 
-import drkodi.data.movie.MovieData;
-import drkodi.nfo.NfoFileParser;
+import drkodi.nfo.NfoFileParser2;
 import javafx.concurrent.Task;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Path;
 
 @Slf4j
-public class ReadNfoTask extends Task<NfoRoot> {
+public class ReadNfoTask extends Task<NfoFileParser2.ParseResult> {
 
-    private final NfoFileParser parser;
+    private final NfoFileParser2 parser;
 
     private final Path nfoPath;
 
-    public ReadNfoTask(MovieData.Type type, Path nfoPath) {
+    public ReadNfoTask(Path nfoPath) {
         this.nfoPath = nfoPath;
-        this.parser = new NfoFileParser(type);
+        this.parser = new NfoFileParser2();
     }
 
     @Override
-    protected NfoRoot call() throws Exception {
+    protected NfoFileParser2.ParseResult call() throws Exception {
         log.debug("Parsing NFO data from {}", nfoPath);
         var data = parser.parse(nfoPath);
         return data;

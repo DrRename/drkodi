@@ -20,23 +20,28 @@
 
 package drkodi.data.movie;
 
+import drrename.commons.RenamingPath;
 import javafx.concurrent.Task;
-import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
+
 public class MediaFilesSizeTask extends Task<List<Long>> {
 
-    private final Movie movie;
+    private final Collection<Path> mediaFiles;
+
+    public MediaFilesSizeTask(Collection<Path> mediaFiles) {
+        this.mediaFiles = mediaFiles;
+    }
 
     @Override
     protected List<Long> call() throws Exception {
         List<Long> result = new ArrayList<>();
-        for(Path path : new MediaFilesCollectTask(movie).call()){
+        for(Path path : mediaFiles){
             result.add(Files.size(path));
         }
         return result;

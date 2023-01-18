@@ -21,6 +21,7 @@
 package drkodi.data.movie;
 
 import drkodi.KodiUtil;
+import drrename.commons.RenamingPath;
 import javafx.concurrent.Task;
 import lombok.RequiredArgsConstructor;
 
@@ -28,13 +29,15 @@ import java.nio.file.Path;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class MediaFilesCollectTask extends Task<List<Path>> {
+public class RecursiveMediaFilesCollectTask extends Task<List<RenamingPath>> {
 
     private final Movie movie;
 
+    private final int maxDepth;
+
     @Override
-    protected List<Path> call() throws Exception {
+    protected List<RenamingPath> call() throws Exception {
         Path path = movie.getRenamingPath().getOldPath();
-        return KodiUtil.findAllVideoFiles(path);
+        return KodiUtil.findAllVideoFiles(path, maxDepth).stream().map(RenamingPath::new).toList();
     }
 }
