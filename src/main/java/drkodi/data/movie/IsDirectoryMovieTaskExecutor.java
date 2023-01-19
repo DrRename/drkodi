@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class IsDirectoryTaskExecutor extends TaskExecutor<Boolean> {
-    public IsDirectoryTaskExecutor(Movie movie, Executor executor, ObservableList<Task<?>> runningTasksList) {
+public class IsDirectoryMovieTaskExecutor extends MovieTaskExecutor<Boolean> {
+    public IsDirectoryMovieTaskExecutor(Movie movie, Executor executor, ObservableList<Task<?>> runningTasksList) {
         super(movie, new IsDirectoryTask(movie), executor, runningTasksList);
     }
 

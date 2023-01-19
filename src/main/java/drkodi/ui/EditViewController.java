@@ -22,15 +22,12 @@ package drkodi.ui;
 
 import drkodi.SelectedData;
 import drkodi.config.AppConfig;
-import drkodi.data.movie.MediaFilesFileSizeTaskExecutor;
-import drkodi.data.movie.MediaFilesSizeTask;
+import drkodi.data.movie.MediaFilesFileSizeMovieTaskExecutor;
 import drkodi.data.movie.Movie;
 import drkodi.ui.control.GenresBox2;
 import drkodi.ui.control.KodiOpenAndSaveButtonsBox;
 import drkodi.util.DrRenameUtil;
 import drrename.commons.RenamingPath;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -107,7 +104,7 @@ public class EditViewController extends DebuggableController implements Initiali
                 while(c.next()){
 
                 }
-                new MediaFilesFileSizeTaskExecutor(selectedData.getSelectedMovie(), c.getList().stream().map(RenamingPath::getOldPath).toList(), executor, selectedData.getSelectedMovie().getRunningTasksList(), fileSizeLabel).execute();
+                new MediaFilesFileSizeMovieTaskExecutor(selectedData.getSelectedMovie(), c.getList().stream().map(RenamingPath::getOldPath).toList(), executor, selectedData.getSelectedMovie().getRunningTasksList(), fileSizeLabel).execute();
             }
 
     }
@@ -173,7 +170,7 @@ public class EditViewController extends DebuggableController implements Initiali
 
 
                     // Initially load file size if media files have been collected already
-                    new MediaFilesFileSizeTaskExecutor(newValue, newValue.getMediaFiles().stream().map(RenamingPath::getOldPath).toList(), executor, newValue.getRunningTasksList(), fileSizeLabel).execute();
+                    new MediaFilesFileSizeMovieTaskExecutor(newValue, newValue.getMediaFiles().stream().map(RenamingPath::getOldPath).toList(), executor, newValue.getRunningTasksList(), fileSizeLabel).execute();
 
                     // Wait for media files to be available and update file size label
                     newValue.getMediaFiles().addListener(mediaFilesListener);

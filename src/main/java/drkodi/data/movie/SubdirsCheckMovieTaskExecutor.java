@@ -9,9 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Executor;
 
 @Slf4j
-public class SubdirsCheckTaskExecutor extends TaskExecutor<Boolean> {
+public class SubdirsCheckMovieTaskExecutor extends MovieTaskExecutor<Boolean> {
 
-    public SubdirsCheckTaskExecutor(Movie movie, Executor executor, ObservableList<Task<?>> runningTasksList) {
+    public SubdirsCheckMovieTaskExecutor(Movie movie, Executor executor, ObservableList<Task<?>> runningTasksList) {
         super(movie, new SubdirsCheckTask(movie), executor, runningTasksList);
     }
 

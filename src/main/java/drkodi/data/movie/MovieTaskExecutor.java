@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
 
 @Slf4j
 @RequiredArgsConstructor
-public class TaskExecutor<T> {
+class MovieTaskExecutor<T> {
 
     protected final Movie movie;
 
@@ -39,11 +39,12 @@ public class TaskExecutor<T> {
     }
 
     public void execute() {
-
         initTaskCounter();
-
         initTask();
+        doExecute();
+    }
 
+    private void doExecute() {
         if (executor == null) {
             log.debug("No executor set, executing on current thread");
             task.run();

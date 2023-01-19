@@ -30,7 +30,6 @@ import drkodi.normalization.TitleSearchNormalizer;
 import drkodi.normalization.MovieTitleWriteNormalizer;
 import drkodi.task.RenameFolderToMovieTitleTask;
 import drkodi.themoviedb.*;
-import drkodi.util.DrRenameUtil;
 import drrename.commons.RenamingPath;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -118,7 +117,7 @@ public class Movie extends DynamicMovieData {
         @Override
         public void changed(ObservableValue<? extends Type> observable, Type oldValue, Type newValue) {
             if(newValue != null) {
-                new CollectMediaFilesTaskExecutor(Movie.this, executor, runningTasksList, Type.TV_SERIES.equals(newValue) ? 2 : 0).execute();
+                new CollectMediaFilesMovieTaskExecutor(Movie.this, executor, runningTasksList, Type.TV_SERIES.equals(newValue) ? 2 : 0).execute();
             }
         }
     }
@@ -168,7 +167,6 @@ public class Movie extends DynamicMovieData {
         nfoPathProperty().addListener(nfoPathListener);
         imagePathProperty().addListener(imagePathListener);
 
-
         initWebSearchListener();
         initImageDataListener();
         initIdListener();
@@ -186,7 +184,7 @@ public class Movie extends DynamicMovieData {
         updateYearWarnings();
 //        new MediaFilesPresentTaskExecutor(this, executor, runningTasksList).execute();
 //        new SubdirsCheckTaskExecutor(this, executor, runningTasksList).execute();
-        new IsDirectoryTaskExecutor(this, executor, runningTasksList).execute();
+        new IsDirectoryMovieTaskExecutor(this, executor, runningTasksList).execute();
     }
 
     // Register Listeners //
@@ -332,11 +330,8 @@ public class Movie extends DynamicMovieData {
         log.error("Task {} failed: ", event.getSource(), event.getSource().getException());
     }
 
-    void executeReadNfoTask() {
-        Path path = getRenamingPath().getOldPath();
-        var task = new LoadNfoPathTask(path);
-        task.setOnSucceeded(event -> setNfoPath(QualifiedPath.from((Path) event.getSource().getValue())));
-        executeTask(task);
+    private void executeReadNfoTask() {
+        new LoadNfoMovieTaskExecutor(this, executor, runningTasksList).execute();
     }
 
 
