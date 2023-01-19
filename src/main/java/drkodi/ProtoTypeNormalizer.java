@@ -25,12 +25,12 @@ public abstract class ProtoTypeNormalizer {
             return null;
         String result = movieTitle;
         for(String ex : getConfiguration().getReplaceWithSpace()){
-            result = Pattern.compile(ex, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(result)
-                    .replaceAll(Matcher.quoteReplacement(" "));
+            result = Pattern.compile("(?!\\B\\w)"+Pattern.quote(ex)+"(?<!\\w\\B)",  Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(result)
+                    .replaceAll(" ");
         }
         for(String ex : getConfiguration().getDelete()){
-            result = Pattern.compile(ex, Pattern.LITERAL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(result)
-                    .replaceAll(Matcher.quoteReplacement(""));
+            result = Pattern.compile("(?!\\B\\w)"+Pattern.quote(ex)+"(?<!\\w\\B)",  Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(result)
+                    .replaceAll("");
 
         }
         // remove 'years', like '1998'

@@ -16,7 +16,7 @@ class TitleSearchNormalizerTest {
     @BeforeEach
     void setUp() {
         MovieTitleSearchNormalizerConfiguration config = new MovieTitleSearchNormalizerConfiguration();
-        config.setDelete(Arrays.asList("and"));
+        config.setDelete(Arrays.asList("AND"));
         normalizer = new TitleSearchNormalizer(config);
     }
 
@@ -24,14 +24,12 @@ class TitleSearchNormalizerTest {
     void tearDown() {
     }
 
-    @Disabled
     @Test
     void testDelete01() {
         String result = normalizer.normalize("Einfach Anders");
         assertEquals("Einfach Anders", result);
     }
 
-    @Disabled
     @Test
     void testDelete02() {
         String result = normalizer.normalize("Einfach and Anders");
