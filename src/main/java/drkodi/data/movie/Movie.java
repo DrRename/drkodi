@@ -123,6 +123,18 @@ public class Movie extends DynamicMovieData {
     }
     private final TypeListener typeListener;
 
+    class CheckMediaFilesListener implements ListChangeListener<RenamingPath> {
+
+        @Override
+        public void onChanged(Change<? extends RenamingPath> c) {
+            while (c.next()) {
+            }
+            log.debug("Media files changed, now {} registered", c.getList().size());
+
+        }
+    }
+    private final CheckMediaFilesListener checkMediaFilesListener;
+
     //
 
     private final MovieDbSearcher movieDbSearcher;
@@ -147,6 +159,7 @@ public class Movie extends DynamicMovieData {
         this.nfoPathListener = new NfoPathListener();
         this.imagePathListener = new ImagePathListener();
         this.typeListener = new TypeListener();
+        this.checkMediaFilesListener = new CheckMediaFilesListener();
         this.running = new SimpleBooleanProperty();
         this.runningTasksList = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
         init();
@@ -161,6 +174,7 @@ public class Movie extends DynamicMovieData {
             running.set(!c.getList().isEmpty());
         });
 
+        mediaFilesProperty().addListener(checkMediaFilesListener);
         typeProperty().addListener(typeListener);
         movieTitleProperty().addListener(movieTitleListener);
         nfoPathProperty().addListener(nfoPathListener);
