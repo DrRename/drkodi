@@ -38,6 +38,9 @@ public class NfoFileWriter {
         if(outFile == null){
             throw new NullPointerException("Path is null");
         }
+        if(data == null){
+            throw new NullPointerException("Data is null");
+        }
         log.debug("Writing NFO data ({}) to {}", data.getClass().getSimpleName(), outFile);
         XmlMapper xmlMapper = getXmlMapper();
 

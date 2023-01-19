@@ -89,7 +89,7 @@ public class KodiBox extends VBox {
         scrollPane.setContent(UiUtil.applyDebug(new TvSearchResultsAndTitleBox(kodiMovie, appConfig, kodiUiConfig), appConfig));
         scrollPane.setFitToHeight(true);
 
-        scrollPane.visibleProperty().bind(kodiMovie.movieSearchResultsProperty().emptyProperty().not());
+        scrollPane.visibleProperty().bind(kodiMovie.tvSearchResultsProperty().emptyProperty().not());
         scrollPane.managedProperty().bind(scrollPane.visibleProperty());
 
 //        scrollPane.getStyleClass().add("search-result-box");

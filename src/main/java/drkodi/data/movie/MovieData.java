@@ -236,6 +236,10 @@ public class MovieData {
     }
 
     protected void initEmptyNfoData() {
+        if(getType() == null){
+            log.warn("Unknown type, will not init empty NFO");
+            return;
+        }
         if(Type.MOVIE.equals(getType())) {
             NfoMovieRoot data = new NfoMovieRoot();
             data.setMovie(new NfoMovie());

@@ -55,6 +55,10 @@ public class ImageBox extends StackPane {
     }
 
     private void setTypeLabel(MovieData kodieMovie) {
+        if(kodieMovie.getType() == null){
+            log.warn("Unknown type, will not render type label");
+            return;
+        }
         HBox box = new HBox();
         box.setPadding(new Insets(8,8,8,8));
         Label label = new Label();

@@ -347,7 +347,7 @@ public class Movie extends DynamicMovieData {
             setType(task.getValue().type());
         });
         task.setOnFailed(event -> {
-            log.warn("Task failed", task.getException());
+            log.warn("Task failed: ", task.getException());
             setNfoData(QualifiedNfoData.from(null));
             getWarnings().add(new KodiWarning(KodiWarning.Type.NFO_NOT_READABLE));
         });
@@ -431,13 +431,17 @@ public class Movie extends DynamicMovieData {
     public void renameFolder() {
         log.debug("Renaming folder");
         var task = new RenameFolderToMovieTitleTask(this, movieTitleWriteNormalizer);
-        task.setOnSucceeded(event -> Renamer.commitRename(this.getRenamingPath(), task.getValue()));
+        task.setOnSucceeded(event -> {
+            Renamer.commitRename(this.getRenamingPath(), task.getValue());
+        });
         executeTask(task);
     }
 
     public void clearData() {
-        initEmptyNfoData();
-        executeNfoFileWriterTask();
+        if(getType() != null)
+            initEmptyNfoData();
+        if(getType() != null)
+            executeNfoFileWriterTask();
         setMovieTitle(null);
         setMovieDbId(null);
         setNfoData(null);
