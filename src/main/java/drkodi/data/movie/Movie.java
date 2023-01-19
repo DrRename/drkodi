@@ -117,7 +117,7 @@ public class Movie extends DynamicMovieData {
         @Override
         public void changed(ObservableValue<? extends Type> observable, Type oldValue, Type newValue) {
             if(newValue != null) {
-                new CollectMediaFilesMovieTaskExecutor(Movie.this, executor, runningTasksList, Type.TV_SERIES.equals(newValue) ? 2 : 0).execute();
+                new CollectMediaFilesMovieTaskExecutor(Movie.this, executor, runningTasksList, Type.TV_SERIES.equals(newValue) ? 1 : 0).execute();
             }
         }
     }
@@ -158,7 +158,6 @@ public class Movie extends DynamicMovieData {
             while(c.next()){
 
             }
-            log.debug("Running tasks now {}", c.getList().size());
             running.set(!c.getList().isEmpty());
         });
 
@@ -180,11 +179,14 @@ public class Movie extends DynamicMovieData {
 
     public void triggerChecks(){
         getWarnings().clear();
+
+        // simple folder name checks
         updateTitleWarnings(getMovieTitle());
         updateYearWarnings();
-//        new MediaFilesPresentTaskExecutor(this, executor, runningTasksList).execute();
-//        new SubdirsCheckTaskExecutor(this, executor, runningTasksList).execute();
+
+        //
         new IsDirectoryMovieTaskExecutor(this, executor, runningTasksList).execute();
+
     }
 
     // Register Listeners //

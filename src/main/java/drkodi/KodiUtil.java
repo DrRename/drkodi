@@ -131,7 +131,7 @@ public class KodiUtil {
         if (Files.isDirectory(directory)) {
             try (DirectoryStream<Path> ds = Files.newDirectoryStream(directory)) {
                 int depth = 0;
-                result.addAll(descend(ds,  ++depth, maxDepth));
+                result.addAll(descend(ds,  depth, maxDepth));
             }
         }
         return result;
@@ -150,7 +150,7 @@ public class KodiUtil {
                 if (mediaType.startsWith("video")) {
                     result.add(child);
                 }
-            } else if(Files.isDirectory(child) && ++currentDepth <= maxDepth){
+            } else if(Files.isDirectory(child) && currentDepth++ <= maxDepth){
                 try (DirectoryStream<Path> ds = Files.newDirectoryStream(child)) {
                     result.addAll(descend(ds,  currentDepth, maxDepth));
                 }
