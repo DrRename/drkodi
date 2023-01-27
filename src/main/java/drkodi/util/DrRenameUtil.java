@@ -20,7 +20,10 @@
 
 package drkodi.util;
 
-import drkodi.ui.CommandRunner;
+
+
+import com.github.ktools1000.CommandRunner;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +37,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class DrRenameUtil {
 
     public static <T> T[] concatenateArray(T[] a, T[] b) {
@@ -115,14 +119,26 @@ public class DrRenameUtil {
     }
 
     public static void runOpenFolderCommandMacOs(Path path) {
-        new CommandRunner().runCommand(new String[]{"open", "-R", path + File.separator});
+        try {
+            new CommandRunner().runCommand(new String[]{"open", "-R", path + File.separator});
+        } catch (IOException e) {
+            log.error("Failed execute command ", e);
+        }
     }
 
     public static void runOpenFolderCommandLinux(Path path) {
-        new CommandRunner().runCommand(new String[]{"xdg-open", path + File.separator});
+        try {
+            new CommandRunner().runCommand(new String[]{"xdg-open", path + File.separator});
+        } catch (IOException e) {
+            log.error("Failed execute command ", e);
+        }
     }
 
     public static void runOpenFolderCommandWindows(Path path) {
-        new CommandRunner().runCommand(new String[]{"explorer.exe", "/select", path + File.separator});
+        try {
+            new CommandRunner().runCommand(new String[]{"explorer.exe", "/select", path + File.separator});
+        } catch (IOException e) {
+            log.error("Failed execute command ", e);
+        }
     }
 }
