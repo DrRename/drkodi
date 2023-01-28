@@ -111,6 +111,8 @@ Download the latest `DrKodi.app.zip`, unpack it and double-click.
 
 **Note:** No Java installation required.
 
+**Note:** Dr.Kodi is not code-signed yet, so you might need to adjust Gatekeeper/ Security settings (See [here](https://support.apple.com/en-us/HT202491) for more info).
+
 Alternatively, download the latest `jar`, i.e., `drkodi-<version>-mac.jar`. Run it by double-clicking the `jar` file or executing `java -jar drkodi-<version>-mac.jar`.
 
 **Note:** Java 17 or higher needs to be installed. Verify with `java -version`.
