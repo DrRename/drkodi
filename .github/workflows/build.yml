@@ -132,7 +132,7 @@ jobs:
         uses: hmarr/debug-action@v2
 
       - name: Maven Deploy
-        run: mvn -B deploy -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
+        run: mvn -B deploy -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac -X
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
