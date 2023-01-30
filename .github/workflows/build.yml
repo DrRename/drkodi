@@ -116,8 +116,8 @@ jobs:
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          mkdir $RUNNER_TEMP/.private_keys
-          MAC_API_KEY_PATH=$RUNNER_TEMP/.private_keys/AuthKey_$MAC_API_KEY_ID.p8
+          mkdir $RUNNER_TEMP/private_keys
+          MAC_API_KEY_PATH=$RUNNER_TEMP/private_keys/AuthKey_$MAC_API_KEY_ID.p8
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
