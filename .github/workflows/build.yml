@@ -123,7 +123,7 @@ jobs:
 
           # import certificate and provisioning profile from secrets
           echo -n "$MAC_DEVELOPER_CERTIFICATE" | base64 --decode --output $CERTIFICATE_PATH
-          echo -n "$MAC_API_KEY" | base64 --decode --output $API_KEY_PATH
+          echo -n "$MAC_API_KEY" | base64 --decode --output $MAC_API_KEY_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
