@@ -87,6 +87,10 @@ jobs:
       MAC_DEVELOPER_CERTIFICATE: ${{ secrets.MAC_DEVELOPER_CERTIFICATE }}
       MAC_DEVELOPER_CERTIFICATE_PASSWORD: ${{ secrets.MAC_DEVELOPER_CERTIFICATE_PASSWORD }}
       KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      API_ISSUER_ID: ${{ secrets.MAC_API_ISSUER_ID }}
+      API_KEY_ID: ${{ secrets.MAC_API_KEY_ID }}
+      API_KEY: ${{ secrets.MAC_API_KEY }}
+
     runs-on: macos-latest
     if: startsWith(github.event.ref, 'refs/tags/drkodi-version-')
     steps:
@@ -116,11 +120,13 @@ jobs:
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          API_KEY_PATH=$RUNNER_TEMP/.private_keys/AuthKey_$API_KEY_ID.p8
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
           echo -n "$MAC_DEVELOPER_CERTIFICATE" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$API_KEY" | base64 --decode --output $API_KEY_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
