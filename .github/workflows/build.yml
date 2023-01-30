@@ -135,8 +135,12 @@ jobs:
           security import $CERTIFICATE_PATH -P "$MAC_DEVELOPER_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
-      - name: Maven Deploy
+      - name: Maven Deploy Debug
+        if: ${{ RUNNER_DEBUG }}
         run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac -X
+      - name: Maven Deploy
+        if: !${{ RUNNER_DEBUG }}
+        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
       - name: Publish Package
         run: mvn -B deploy
 
