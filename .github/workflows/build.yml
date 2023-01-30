@@ -112,8 +112,9 @@ jobs:
           key: ${{ runner.os }}-mvn-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-mvn-
-      - name: Install the Apple certificate and provisioning profile
+      - name: Print environment
         uses: hmarr/debug-action@v2
+      - name: Install the Apple certificate and provisioning profile
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
@@ -137,12 +138,10 @@ jobs:
 
       - name: Maven Deploy Debug
         if: ${{ RUNNER_DEBUG }}
-        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac -X
+        run: mvn -B deploy -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac -X
       - name: Maven Deploy
         if_false: ${{ RUNNER_DEBUG }}
-        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
-      - name: Publish Package
-        run: mvn -B deploy
+        run: mvn -B deploy -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
