@@ -139,7 +139,7 @@ jobs:
         if: ${{ RUNNER_DEBUG }}
         run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac -X
       - name: Maven Deploy
-        if: !${{ RUNNER_DEBUG }}
+        if_false: ${{ RUNNER_DEBUG }}
         run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
       - name: Publish Package
         run: mvn -B deploy
