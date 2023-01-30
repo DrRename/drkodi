@@ -113,6 +113,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mvn-
       - name: Install the Apple certificate and provisioning profile
+        uses: hmarr/debug-action@v2
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
