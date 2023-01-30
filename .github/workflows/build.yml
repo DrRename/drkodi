@@ -104,8 +104,6 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: 'maven'
           distribution: 'temurin'
-      - name: Print environment
-        uses: hmarr/debug-action@v2
       - name: Install the Apple certificate and provisioning profile
         run: |
           # create variables
@@ -127,6 +125,9 @@ jobs:
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$MAC_DEVELOPER_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
+
+      - name: Print environment
+        uses: hmarr/debug-action@v2
 
       - name: Maven Deploy
         run: mvn -B deploy -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
