@@ -137,10 +137,10 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
       - name: Maven Deploy Debug
-        if: ${{ core.isDebug }}
+        if: ${{ debug }}
         run: mvn -B deploy -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac -X
       - name: Maven Deploy
-        if_false: ${{ core.isDebug }}
+        if_false: ${{ debug }}
         run: mvn -B deploy -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
 
       - name: Upload artifacts
