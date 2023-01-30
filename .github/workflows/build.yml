@@ -113,10 +113,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mvn-
       - name: Install the Apple certificate and provisioning profile
-        env:
-          MAC_DEVELOPER_CERTIFICATE: ${{ secrets.MAC_DEVELOPER_CERTIFICATE }}
-          MAC_DEVELOPER_CERTIFICATE_PASSWORD: ${{ secrets.MAC_DEVELOPER_CERTIFICATE_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
