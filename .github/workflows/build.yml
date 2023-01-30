@@ -135,7 +135,7 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
 
       - name: Maven Deploy
-        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac
+        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Pmacosx-x86_64 -Djavafx.platform=mac -X
       - name: Publish Package
         run: mvn -B deploy
 
