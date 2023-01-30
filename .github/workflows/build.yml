@@ -80,7 +80,7 @@ jobs:
             target/drkodi-*-linux.tar.gz
             target/drkodi-linux.jar
   build_macos_x86_64:
-    name: Build MacOS x86_64  App
+    name: Build MacOS x86_64 App
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MAC_DEVELOPER_ID: ${{ secrets.MAC_DEVELOPER_ID }}
