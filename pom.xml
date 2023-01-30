@@ -8,7 +8,7 @@
     </parent>
     <groupId>app.drkodi</groupId>
     <artifactId>drkodi</artifactId>
-    <version>0.1.29</version>
+    <version>0.1.30-SNAPSHOT</version>
     <name>DrKodi</name>
     <description>Minimalistic Media Library Tool</description>
     <properties>
