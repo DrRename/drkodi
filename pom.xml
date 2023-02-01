@@ -266,7 +266,7 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
-                        <groupId>io.github.fvarrui</groupId>
+                        <groupId>io.github.kerner1000</groupId>
                         <artifactId>javapackager</artifactId>
                         <version>1.7.0-SNAPSHOT</version>
                         <executions>
@@ -317,7 +317,7 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
-                        <groupId>io.github.fvarrui</groupId>
+                        <groupId>io.github.kerner1000</groupId>
                         <artifactId>javapackager</artifactId>
                         <version>1.7.0-SNAPSHOT</version>
                         <executions>
@@ -368,7 +368,7 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
-                        <groupId>io.github.fvarrui</groupId>
+                        <groupId>io.github.kerner1000</groupId>
                         <artifactId>javapackager</artifactId>
                         <version>1.7.0-SNAPSHOT</version>
                         <executions>
@@ -413,7 +413,7 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
-                        <groupId>io.github.fvarrui</groupId>
+                        <groupId>io.github.kerner1000</groupId>
                         <artifactId>javapackager</artifactId>
                         <version>1.7.0-SNAPSHOT</version>
                         <executions>
