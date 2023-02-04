@@ -1,0 +1,32 @@
+open module drkodi {
+    requires javafx.base;
+    requires javafx.graphics;
+    requires javafx.controls;
+    requires drrename.commons;
+    requires lombok;
+    requires org.apache.commons.lang3;
+    requires spring.boot;
+    requires spring.context;
+    requires org.slf4j;
+    requires org.mapstruct;
+    requires com.fasterxml.jackson.dataformat.xml;
+    requires com.fasterxml.jackson.annotation;
+    requires spring.web;
+    requires spring.cloud.openfeign.core;
+    requires com.fasterxml.jackson.databind;
+    requires java.annotation;
+    requires javafx.fxml;
+    requires net.rgielen.fxweaver.core;
+    requires com.jthemedetector;
+    requires spring.beans;
+    requires spring.core;
+    requires org.apache.commons.io;
+    requires jodd.util;
+    requires org.apache.tika.core;
+    requires org.apache.commons.text;
+    requires net.rgielen.fxweaver.spring;
+    requires spring.boot.autoconfigure;
+    requires metadata.extractor;
+    requires tools1000;
+    exports drkodi;
+}
