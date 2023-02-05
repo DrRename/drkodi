@@ -173,7 +173,11 @@ public class DynamicMovieData extends MovieData {
     class MoviePathChangeListener implements ChangeListener<Path> {
         @Override
         public void changed(ObservableValue<? extends Path> observable, Path oldValue, Path newValue) {
-            applyNewFolderName(newValue.getFileName().toString());
+            if(newValue != null) {
+                applyNewFolderName(newValue.getFileName().toString());
+            } else {
+                log.debug("Not applying new name since new value is null");
+            }
         }
     }
     private final MoviePathChangeListener moviePathChangeListener;
