@@ -43,11 +43,16 @@
         </repository>
         <repository>
             <id>github</id>
-            <name>GitHub Packages</name>
+            <name>GitHub Packages DrRename Commons</name>
             <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages Code-sign Java</name>
+            <url>https://maven.pkg.github.com/drrename/codesignjava</url>
         </repository>
     </repositories>
     <pluginRepositories>
