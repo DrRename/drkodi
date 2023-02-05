@@ -49,20 +49,17 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>github-codesignjava</id>
-            <name>GitHub Packages Code-sign Java</name>
-            <url>https://maven.pkg.github.com/drrename/codesignjava</url>
-        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-                <id>github</id>
+                <id>github-javaPackager</id>
                 <name>GitHub Packages</name>
                 <url>https://maven.pkg.github.com/kerner1000/JavaPackager</url>
-                <snapshots>
-                    <enabled>true</enabled>
-                </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>github-codesign-java-for-mac</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/drrename/codesign-java-for-mac</url>
         </pluginRepository>
     </pluginRepositories>
     <build>
