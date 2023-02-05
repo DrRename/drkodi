@@ -41,7 +41,12 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -445,7 +450,13 @@ public class Movie extends DynamicMovieData {
         task.setOnSucceeded(event -> {
             Renamer.commitRename(this.getRenamingPath(), task.getValue());
         });
-        executeTask(task);
+        task.setOnFailed(event -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Rename failed with \n" + event.getSource().getException().getClass().getSimpleName() + " for\n" + event.getSource().getException().getLocalizedMessage(), ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.initStyle(StageStyle.UTILITY);
+            alert.showAndWait();
+        });
+        executeTask2(task);
     }
 
     public void clearData() {
