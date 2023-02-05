@@ -14,6 +14,8 @@ logging:
       ulisesbocchio: warn
   pattern:
     console: "%d{HH:mm:ss.SSS} %highlight(%-5level) %magenta([%thread]) %yellow(%logger{20}.%M\\(%class{0}.java:%line\\)) - %msg%throwable%n"
+  file:
+    name: ${app.settings.log-file}
 
 feign:
   client:
@@ -24,7 +26,12 @@ feign:
         loggerLevel: basic
 
 app:
+  name: drkodi
   debug: false
+  settings:
+    parent: ${user.home}
+    dir: ${app.settings.parent}/${app.name}
+    log-file: ${app.settings.dir}/${app.name}.log
   ui:
     appTitle: "Dr.Kodi"
     initialWidth: 800

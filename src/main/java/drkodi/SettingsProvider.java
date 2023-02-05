@@ -21,8 +21,8 @@
 package drkodi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -33,30 +33,23 @@ import java.nio.file.StandardCopyOption;
 import java.util.concurrent.Executor;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class SettingsProvider {
 
-    public static final String DEFAULT_SETTINGS_FILE_NAME = "drrename-settings.json";
-
-    public static final String DEFAULT_SETTINGS_DIR_PARENT = System.getProperty("user.home");
-
-    public static final String DEFAULT_SETTINGS_DIR = ".drrename";
-
-    public static final Path DEFAULT_SETTINGS_PATH;
-
-    static {
-        DEFAULT_SETTINGS_PATH = Paths.get(DEFAULT_SETTINGS_DIR_PARENT, DEFAULT_SETTINGS_DIR, DEFAULT_SETTINGS_FILE_NAME);
-    }
-
-    private static final Path settingsPath = DEFAULT_SETTINGS_PATH;
+    private final Path settingsDir;
 
     private final ObjectMapper objectMapper;
 
     private final Executor executor;
 
+    public SettingsProvider(@Value("${app.settings.dir}") String settingsDir, @Value("${app.name}") String appName, ObjectMapper objectMapper, Executor executor) {
+        this.settingsDir = Paths.get(settingsDir, appName + ".json");
+        this.objectMapper = objectMapper;
+        this.executor = executor;
+    }
+
     public Settings load() {
-        return doLoad(settingsPath);
+        return doLoad(settingsDir);
     }
 
     Settings doLoad(Path settingsPath) {
@@ -71,7 +64,7 @@ public class SettingsProvider {
     }
 
     public void save(Settings settings) {
-        executor.execute(() -> save(settings, settingsPath));
+        executor.execute(() -> save(settings, settingsDir));
     }
 
     void save(Settings settings, Path settingsPath) {
