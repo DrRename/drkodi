@@ -25,7 +25,7 @@ public abstract class ProtoTypeNormalizer {
             return null;
         String result = movieTitle;
         for(String ex : getConfiguration().getReplaceWithSpace()){
-            result = Pattern.compile("\\B"+Pattern.quote(ex)+"\\B",  Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(result)
+            result = Pattern.compile("(?!\\B\\w)"+Pattern.quote(ex)+"(?<!\\w\\B)",  Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(result)
                     .replaceAll(" ");
         }
         for(String ex : getConfiguration().getDelete()){
