@@ -16,11 +16,12 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <github-user>drrename</github-user>
         <github-repo>drkodi</github-repo>
-        <main-class>org.springframework.boot.loader.JarLauncher</main-class>
+        <main-class>drkodi.Launcher</main-class>
         <java.version>17</java.version>
         <javafx.version>19.0.2.1</javafx.version>
         <spring-boot.version>2.7.4</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
+        <modularGroupIds>org.openjfx</modularGroupIds>
     </properties>
     <scm>
         <connection>scm:git:https://github.com/${github-user}/${github-repo}.git</connection>
@@ -42,7 +43,7 @@
         </repository>
         <repository>
             <id>github</id>
-            <name>GitHub Packages</name>
+            <name>GitHub Packages DrRename Commons</name>
             <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
             <snapshots>
                 <enabled>true</enabled>
@@ -51,17 +52,22 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-                <id>github</id>
-                <name>GitHub Packages</name>
+                <id>github-javaPackager</id>
                 <url>https://maven.pkg.github.com/kerner1000/JavaPackager</url>
-                <snapshots>
-                    <enabled>true</enabled>
-                </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>github-codesign-java-for-mac</id>
+            <url>https://maven.pkg.github.com/drrename/codesign-java-for-mac</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </pluginRepository>
     </pluginRepositories>
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>${maven.compiler.source}</source>
@@ -87,6 +93,38 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-mods</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeScope>runtime</includeScope>
+                            <includeGroupIds>${modularGroupIds}</includeGroupIds>
+                            <outputDirectory>${project.build.directory}/mods</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-libs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeScope>runtime</includeScope>
+                            <excludeGroupIds>${modularGroupIds}</excludeGroupIds>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.0-M6</version>
                 <configuration>
@@ -105,23 +143,26 @@
                     <mainClass>${main-class}</mainClass>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>build-info</id>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.springframework.boot</groupId>-->
+            <!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            <goal>repackage</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                    <execution>-->
+            <!--                        <id>build-info</id>-->
+            <!--                        <goals>-->
+            <!--                            <goal>build-info</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--                <configuration>-->
+            <!--                    <mainClass>drkodi.Launcher</mainClass>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -163,8 +204,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -189,11 +229,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.kerner1000</groupId>
-            <artifactId>tools1000</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.drewnoakes</groupId>
@@ -245,16 +280,15 @@
             <version>3.8</version>
         </dependency>
         <dependency>
+            <groupId>com.github.kerner1000</groupId>
+            <artifactId>tools1000</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+        <dependency>
             <groupId>drrename</groupId>
             <artifactId>drrename-commons</artifactId>
             <version>0.0.1</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.github.fvarrui</groupId>-->
-<!--            <artifactId>javapackager</artifactId>-->
-<!--            <version>1.7.0-SNAPSHOT</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
     </dependencies>
     <profiles>
         <profile>
@@ -266,44 +300,32 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
-                        <groupId>io.github.kerner1000</groupId>
-                        <artifactId>javapackager</artifactId>
-                        <version>1.7.0-SNAPSHOT</version>
+                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>2.0.2-SNAPSHOT</version>
                         <executions>
                             <execution>
-                                <phase>package</phase>
+                                <id>default</id>
                                 <goals>
-                                    <goal>package</goal>
+                                    <goal>package-and-codesign</goal>
                                 </goals>
-                                <configuration>
-                                    <mainClass>${main-class}</mainClass>
-                                    <bundleJre>true</bundleJre>
-                                    <generateInstaller>true</generateInstaller>
-                                    <createTarball>true</createTarball>
-                                    <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
-                                    <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
-                                    <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
-                                    <generateInstaller>false</generateInstaller>
-                                    <administratorRequired>false</administratorRequired>
-                                    <copyDependencies>false</copyDependencies>
-                                    <name>DrKodi</name>
-                                    <assetsDir>assets</assetsDir>
-                                    <version>${project.version}</version>
-                                    <macConfig>
-                                        <customLauncher>src/main/resources/launcher-macosx-aarch64.sh</customLauncher>
-                                        <developerId>${MAC_DEVELOPER_ID}</developerId>
-                                        <appId>com.drkodi</appId>
-                                        <codesignApp>true</codesignApp>
-                                        <notarizeApp>true</notarizeApp>
-                                        <apiKey>${MAC_API_KEY_ID}</apiKey>
-                                        <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
-                                        <infoPlist>
-                                            <bundlePackageType>APPL</bundlePackageType>
-                                        </infoPlist>
-                                    </macConfig>
-                                </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls,javafx.fxml
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>DrKodi</moduleName>
+                            <packageIdentifier>com.drkodi</packageIdentifier>
+                            <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <developerId>${MAC_DEVELOPER_ID}</developerId>
+                            <apiKey>${MAC_API_KEY_ID}</apiKey>
+                            <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -317,44 +339,32 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
-                        <groupId>io.github.kerner1000</groupId>
-                        <artifactId>javapackager</artifactId>
-                        <version>1.7.0-SNAPSHOT</version>
+                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>2.0.2-SNAPSHOT</version>
                         <executions>
                             <execution>
-                                <phase>package</phase>
+                                <id>default</id>
                                 <goals>
-                                    <goal>package</goal>
+                                    <goal>package-and-codesign</goal>
                                 </goals>
-                                <configuration>
-                                    <mainClass>${main-class}</mainClass>
-                                    <bundleJre>true</bundleJre>
-                                    <generateInstaller>true</generateInstaller>
-                                    <createTarball>true</createTarball>
-                                    <tarballName>${project.artifactId}-${project.version}-${javafx.platform}</tarballName>
-                                    <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
-                                    <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
-                                    <generateInstaller>false</generateInstaller>
-                                    <administratorRequired>false</administratorRequired>
-                                    <copyDependencies>false</copyDependencies>
-                                    <name>DrKodi</name>
-                                    <assetsDir>assets</assetsDir>
-                                    <version>${project.version}</version>
-                                    <macConfig>
-                                        <customLauncher>src/main/resources/launcher-macosx-x86_64.sh</customLauncher>
-                                        <developerId>${MAC_DEVELOPER_ID}</developerId>
-                                        <appId>com.drkodi</appId>
-                                        <codesignApp>true</codesignApp>
-                                        <notarizeApp>true</notarizeApp>
-                                        <apiKey>${MAC_API_KEY_ID}</apiKey>
-                                        <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
-                                        <infoPlist>
-                                            <bundlePackageType>APPL</bundlePackageType>
-                                        </infoPlist>
-                                    </macConfig>
-                                </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls,javafx.fxml
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>DrKodi</moduleName>
+                            <packageIdentifier>com.drkodi</packageIdentifier>
+                            <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <developerId>${MAC_DEVELOPER_ID}</developerId>
+                            <apiKey>${MAC_API_KEY_ID}</apiKey>
+                            <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
