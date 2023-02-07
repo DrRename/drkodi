@@ -139,8 +139,8 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/drkodi-*-mac.tar.gz
-            target/drkodi-mac.jar
+            target/appdir.zip
+            target/drkodi-*.jar
   build_windows_x86_64:
     name: Build Windows x86_64 App
     env:
