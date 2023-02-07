@@ -42,7 +42,7 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>github-drrename-commons</id>
+            <id>github</id>
             <name>GitHub Packages DrRename Commons</name>
             <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
             <snapshots>
