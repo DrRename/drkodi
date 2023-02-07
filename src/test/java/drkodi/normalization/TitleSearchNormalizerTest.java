@@ -2,7 +2,6 @@ package drkodi.normalization;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -11,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TitleSearchNormalizerTest {
 
-    private TitleSearchNormalizer normalizer;
+    TitleSearchNormalizer normalizer;
+
+    MovieTitleSearchNormalizerConfiguration config;
 
     @BeforeEach
     void setUp() {
-        MovieTitleSearchNormalizerConfiguration config = new MovieTitleSearchNormalizerConfiguration();
-        config.setDelete(Arrays.asList("AND"));
-        normalizer = new TitleSearchNormalizer(config);
+        config = new MovieTitleSearchNormalizerConfiguration();
     }
 
     @AfterEach
@@ -25,15 +24,35 @@ class TitleSearchNormalizerTest {
     }
 
     @Test
-    void testDelete01() {
+    void testAndDelete01() {
+        config.setDelete(Arrays.asList("AND"));
+        normalizer = new TitleSearchNormalizer(config);
         String result = normalizer.normalize("Einfach Anders");
         assertEquals("Einfach Anders", result);
     }
 
     @Test
-    void testDelete02() {
+    void testAndDelete02() {
+        config.setDelete(Arrays.asList("AND"));
+        normalizer = new TitleSearchNormalizer(config);
         String result = normalizer.normalize("Einfach and Anders");
         assertEquals("Einfach Anders", result);
+    }
+
+    @Test
+    void testUnderscore01() {
+        config.setReplaceWithSpace(Arrays.asList("_"));
+        normalizer = new TitleSearchNormalizer(config);
+        String result = normalizer.normalize("Hans_Dampf");
+        assertEquals("Hans_Dampf", result);
+    }
+
+    @Test
+    void testMinus01() {
+        config.setReplaceWithSpace(Arrays.asList("-"));
+        normalizer = new TitleSearchNormalizer(config);
+        String result = normalizer.normalize("Hans-Dampf");
+        assertEquals("Hans Dampf", result);
     }
 
 
