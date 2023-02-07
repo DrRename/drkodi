@@ -52,12 +52,8 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-                <id>github-javaPackager</id>
-                <url>https://maven.pkg.github.com/kerner1000/JavaPackager</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>github-codesign-java-for-mac</id>
-            <url>https://maven.pkg.github.com/drrename/codesign-java-for-mac</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/kerner1000/JavaPackager</url>
         </pluginRepository>
         <pluginRepository>
             <id>ossrh</id>
