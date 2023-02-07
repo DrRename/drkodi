@@ -198,34 +198,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>io.github.drrename.codesignjava</groupId>
-                <artifactId>codesignjava-maven-plugin</artifactId>
-                <version>2.0.2-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <goals>
-                            <goal>package-and-codesign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
-                        java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                        javafx.controls,javafx.fxml
-                    </jreModuleNames>
-                    <jreModules>${project.build.directory}/mods</jreModules>
-                    <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                    <appVersion>1.0.0</appVersion>
-                    <moduleName>DrKodi</moduleName>
-                    <packageIdentifier>com.drkodi</packageIdentifier>
-                    <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
-                    <developerId>${MAC_DEVELOPER_ID}</developerId>
-                    <apiKey>${MAC_API_KEY_ID}</apiKey>
-                    <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -326,6 +298,36 @@
             </properties>
             <build>
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>2.0.2-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>package-and-codesign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls,javafx.fxml
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>DrKodi</moduleName>
+                            <packageIdentifier>com.drkodi</packageIdentifier>
+                            <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <developerId>${MAC_DEVELOPER_ID}</developerId>
+                            <apiKey>${MAC_API_KEY_ID}</apiKey>
+                            <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
+                        </configuration>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
         <profile>
@@ -335,6 +337,36 @@
             </properties>
             <build>
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>2.0.2-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>package-and-codesign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls,javafx.fxml
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>DrKodi</moduleName>
+                            <packageIdentifier>com.drkodi</packageIdentifier>
+                            <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <developerId>${MAC_DEVELOPER_ID}</developerId>
+                            <apiKey>${MAC_API_KEY_ID}</apiKey>
+                            <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
+                        </configuration>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
         <profile>
