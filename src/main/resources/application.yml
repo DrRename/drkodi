@@ -6,8 +6,8 @@ logging:
   level:
     root: info
 #    drkodi: debug
-#    drkodi.normalization: debug
-#    drkodi.themoviedb: debug
+    drkodi.normalization: debug
+    drkodi.themoviedb: debug
 #    drkodi.data.movie: debug
 #    drkodi.data.dynamic: debug
     com:
