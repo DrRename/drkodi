@@ -193,5 +193,5 @@ jobs:
         with:
           draft: true
           files: |
-            drkodi/drkodi/target/drkodi-*.zip
+            **/drkodi-*.zip
           fail_on_unmatched_files: true
