@@ -306,7 +306,7 @@
                         <configuration>
                             <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
                                 java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls,javafx.fxml
+                                javafx.controls,javafx.fxml, java.sql, java.naming
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
@@ -317,6 +317,7 @@
                             <developerId>${MAC_DEVELOPER_ID}</developerId>
                             <apiKey>${MAC_API_KEY_ID}</apiKey>
                             <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
+                            <zipName>${project.artifactId}-${javafx.platform}</zipName>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -356,6 +357,7 @@
                             <developerId>${MAC_DEVELOPER_ID}</developerId>
                             <apiKey>${MAC_API_KEY_ID}</apiKey>
                             <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
+                            <zipName>${project.artifactId}-${javafx.platform}</zipName>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -391,6 +393,7 @@
                             <appVersion>1.0.0</appVersion>
                             <moduleName>DrKodi</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <zipName>${project.artifactId}-${javafx.platform}</zipName>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -426,6 +429,7 @@
                             <appVersion>1.0.0</appVersion>
                             <moduleName>DrKodi</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <zipName>${project.artifactId}-${javafx.platform}</zipName>
                         </configuration>
                     </plugin>
                 </plugins>
