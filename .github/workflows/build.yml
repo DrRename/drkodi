@@ -191,4 +191,4 @@ jobs:
           draft: true
           files: |
             ./dist/*
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
