@@ -59,9 +59,6 @@ public class NfoFileParser2 {
             firstLine = stream.findFirst().orElse("");
         }catch (Exception e){
             log.debug("Cannot read file", e);
-            if(e.getCause() instanceof MalformedInputException || e.getCause() instanceof ClosedByInterruptException){
-                return null;
-            }
             throw new IOException(e);
         }
 
