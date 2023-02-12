@@ -77,6 +77,10 @@ app:
           - "Web"
           - "Qh264GDR"
           - "!"
+          - "HDTV"
+          - "x264NORETAiL"
+          - "DTS"
+          - "x264LeetHD"
         replace-with-space:
       compare:
         delete:
@@ -91,6 +95,10 @@ app:
           - "Web"
           - "h264GDR"
           - "!"
+          - "HDTV"
+          - "x264NORETAiL"
+          - "DTS"
+          - "x264LeetHD"
         replace-with-space:
           - "."
           - "_"
@@ -123,6 +131,10 @@ app:
           - "Web"
           - "h264GDR"
           - "!"
+          - "HDTV"
+          - "x264NORETAiL"
+          - "DTS"
+          - "x264LeetHD"
         replace-with-space:
           - "."
           - "_"
