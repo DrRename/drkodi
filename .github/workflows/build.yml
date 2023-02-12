@@ -190,5 +190,5 @@ jobs:
         with:
           draft: true
           files: |
-            ./dist/*
+            *
           fail_on_unmatched_files: false
