@@ -298,7 +298,7 @@
                     <plugin>
                         <groupId>io.github.drrename.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
-                        <version>2.0.4-SNAPSHOT</version>
+                        <version>2.0.5-SNAPSHOT</version>
                         <executions>
                             <execution>
                                 <id>default</id>
@@ -337,7 +337,7 @@
                     <plugin>
                         <groupId>io.github.drrename.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
-                        <version>2.0.4-SNAPSHOT</version>
+                        <version>2.0.5-SNAPSHOT</version>
                         <executions>
                             <execution>
                                 <id>default</id>
@@ -349,7 +349,7 @@
                         <configuration>
                             <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
                                 java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls,javafx.fxml
+                                javafx.controls, javafx.fxml, java.sql, java.naming
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
@@ -419,36 +419,28 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
-                        <groupId>io.github.kerner1000</groupId>
-                        <artifactId>javapackager</artifactId>
-                        <version>1.7.1-SNAPSHOT</version>
+                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>2.0.5-SNAPSHOT</version>
                         <executions>
                             <execution>
-                                <phase>package</phase>
+                                <id>default</id>
                                 <goals>
-                                    <goal>package</goal>
+                                    <goal>package-and-codesign</goal>
                                 </goals>
-                                <configuration>
-                                    <mainClass>${main-class}</mainClass>
-                                    <bundleJre>true</bundleJre>
-                                    <generateInstaller>true</generateInstaller>
-                                    <createZipball>true</createZipball>
-                                    <zipballName>${project.artifactId}-${project.version}-${javafx.platform}</zipballName>
-                                    <runnableJar>${project.build.directory}/${project.artifactId}-${javafx.platform}.jar</runnableJar>
-                                    <additionalModules>java.desktop,jdk.unsupported,java.scripting</additionalModules>
-                                    <generateInstaller>false</generateInstaller>
-                                    <administratorRequired>false</administratorRequired>
-                                    <copyDependencies>false</copyDependencies>
-                                    <platform>windows</platform>
-                                    <name>DrKodi</name>
-                                    <assetsDir>assets</assetsDir>
-                                    <version>${project.version}</version>
-                                    <winConfig>
-                                        <wrapJar>true</wrapJar>
-                                    </winConfig>
-                                </configuration>
                             </execution>
                         </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls, javafx.fxml, java.sql, java.naming
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>DrKodi</moduleName>
+                            <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
