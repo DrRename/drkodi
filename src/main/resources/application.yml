@@ -81,6 +81,7 @@ app:
           - "x264NORETAiL"
           - "DTS"
           - "x264LeetHD"
+          - "x264RWP"
         replace-with-space:
       compare:
         delete:
@@ -99,6 +100,7 @@ app:
           - "x264NORETAiL"
           - "DTS"
           - "x264LeetHD"
+          - "x264RWP"
         replace-with-space:
           - "."
           - "_"
@@ -135,6 +137,7 @@ app:
           - "x264NORETAiL"
           - "DTS"
           - "x264LeetHD"
+          - "x264RWP"
         replace-with-space:
           - "."
           - "_"
