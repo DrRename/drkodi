@@ -9,7 +9,7 @@
             fx:controller="drkodi.ui.StartDirectoryComponentController"
             >
     <padding>
-        <Insets top="4" right="4" bottom="4" left="4"/>
+        <Insets top="4" right="0" bottom="4" left="0"/>
     </padding>
     <center>
         <TextField fx:id="textFieldDirectory"
