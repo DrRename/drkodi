@@ -479,6 +479,8 @@ public class Movie extends DynamicMovieData {
         }
         else if(searchResult instanceof TvSearchResult) {
             createAndRunMovieDbTvDetailsTask(getMovieDbId());
+        } else {
+            log.warn("Search result not recognized {}", searchResult);
         }
     }
 

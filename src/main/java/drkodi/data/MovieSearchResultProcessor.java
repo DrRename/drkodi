@@ -28,7 +28,7 @@ public class MovieSearchResultProcessor {
                movie.getMovieSearchResults().add(searchResult);
 
                 if (translationDto != null) {
-                    SearchResult searchResultTranslated = new SearchResult(searchResult);
+                    SearchResult searchResultTranslated = new MovieSearchResult(searchResult);
 
                     if(StringUtils.isNotBlank(translationDto.getData().getTitle())) {
                         searchResultTranslated.setTitle(translationDto.getData().getTitle());

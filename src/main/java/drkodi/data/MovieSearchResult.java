@@ -21,4 +21,11 @@
 package drkodi.data;
 
 public class MovieSearchResult extends SearchResult {
+
+    public MovieSearchResult(SearchResult searchResult) {
+        super(searchResult);
+    }
+
+    public MovieSearchResult() {
+    }
 }

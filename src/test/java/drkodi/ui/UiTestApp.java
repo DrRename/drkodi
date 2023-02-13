@@ -103,7 +103,7 @@ public class UiTestApp extends Application {
 
     private List<SearchResult> buildSearchResults() throws Exception {
         List<SearchResult> result = new ArrayList<>();
-        SearchResult searchResult = new SearchResult();
+        SearchResult searchResult = new MovieSearchResult();
         searchResult.setTitle("Hans Dampf");
         searchResult.setReleaseDate(1111);
         searchResult.setPlot("hhhhhaasdasdasd ad aa sd as   lasdkd  asldksdklsd  saldk");

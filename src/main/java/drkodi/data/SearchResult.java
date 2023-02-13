@@ -26,7 +26,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.image.Image;
 
-public class SearchResult {
+public abstract class SearchResult {
 
     private final ObjectProperty<Number> id;
 
