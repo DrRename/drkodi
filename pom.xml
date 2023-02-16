@@ -21,6 +21,7 @@
         <javafx.version>19.0.2.1</javafx.version>
         <spring-boot.version>2.7.4</spring-boot.version>
         <spring-cloud.version>3.1.14</spring-cloud.version>
+        <codesignjava.version>3.0.0-SNAPSHOT</codesignjava.version>
         <modularGroupIds>org.openjfx</modularGroupIds>
     </properties>
     <scm>
@@ -294,47 +295,7 @@
                     <plugin>
                         <groupId>io.github.drrename.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
-                        <version>2.0.5-SNAPSHOT</version>
-                        <executions>
-                            <execution>
-                                <id>default</id>
-                                <goals>
-                                    <goal>package-and-codesign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
-                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
-                                javafx.controls,javafx.fxml, java.sql, java.naming
-                            </jreModuleNames>
-                            <jreModules>${project.build.directory}/mods</jreModules>
-                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
-                            <moduleName>DrKodi</moduleName>
-                            <packageIdentifier>com.drkodi</packageIdentifier>
-                            <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
-                            <developerId>${MAC_DEVELOPER_ID}</developerId>
-                            <apiKey>${MAC_API_KEY_ID}</apiKey>
-                            <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
-                            <zipName>${project.artifactId}-${javafx.platform}</zipName>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>macosx-x86_64</id>
-            <properties>
-                <javafx.platform>mac</javafx.platform>
-            </properties>
-            <build>
-                <finalName>${project.artifactId}-${javafx.platform}</finalName>
-                <plugins>
-                    <plugin>
-                        <groupId>io.github.drrename.codesignjava</groupId>
-                        <artifactId>codesignjava-maven-plugin</artifactId>
-                        <version>2.0.5-SNAPSHOT</version>
+                        <version>${codesignjava.version}</version>
                         <executions>
                             <execution>
                                 <id>default</id>
@@ -351,13 +312,49 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>1.0.0</appVersion>
-                            <moduleName>DrKodi</moduleName>
-                            <packageIdentifier>com.drkodi</packageIdentifier>
-                            <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <moduleName>DrRename</moduleName>
+                            <packageIdentifier>com.drrename</packageIdentifier>
+                            <moduleStarter>drrename/drrename.Launcher</moduleStarter>
                             <developerId>${MAC_DEVELOPER_ID}</developerId>
-                            <apiKey>${MAC_API_KEY_ID}</apiKey>
-                            <apiIssuer>${MAC_API_ISSUER_ID}</apiIssuer>
-                            <zipName>${project.artifactId}-${javafx.platform}</zipName>
+                            <keychainProfile>${MAC_KEYCHAIN_PROFILE}</keychainProfile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>macosx-x86_64</id>
+            <properties>
+                <javafx.platform>mac</javafx.platform>
+            </properties>
+            <build>
+                <finalName>${project.artifactId}-${javafx.platform}</finalName>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <artifactId>codesignjava-maven-plugin</artifactId>
+                        <version>${codesignjava.version}</version>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <goals>
+                                    <goal>package-and-codesign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jreModuleNames>java.desktop, java.base,java.logging, java.xml, java.scripting, java.compiler,
+                                java.instrument, jdk.unsupported, javafx.base, javafx.graphics,
+                                javafx.controls, javafx.fxml, java.sql, java.naming
+                            </jreModuleNames>
+                            <jreModules>${project.build.directory}/mods</jreModules>
+                            <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
+                            <appVersion>1.0.0</appVersion>
+                            <moduleName>DrRename</moduleName>
+                            <packageIdentifier>com.drrename</packageIdentifier>
+                            <moduleStarter>drrename/drrename.Launcher</moduleStarter>
+                            <developerId>${MAC_DEVELOPER_ID}</developerId>
+                            <keychainProfile>${MAC_KEYCHAIN_PROFILE}</keychainProfile>
                         </configuration>
                     </plugin>
                 </plugins>
