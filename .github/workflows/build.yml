@@ -107,7 +107,7 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/appdir/DrKodi-*.dmg
+            target/appdir/DrKodi*.dmg
 
   build_linux_x86_64:
     name: Build Linux x86_64 App
@@ -198,5 +198,5 @@ jobs:
           draft: true
           files: |
             drkodi*.zip
-            drkodi*.dmg
+            DrKodi*.dmg
           fail_on_unmatched_files: true
