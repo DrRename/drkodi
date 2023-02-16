@@ -312,7 +312,7 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>1.0.0</appVersion>
-                            <moduleName>DrKodi</moduleName>
+                            <moduleName>${finalName}-</moduleName>
                             <packageIdentifier>com.drkodi</packageIdentifier>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                             <developerId>${MAC_DEVELOPER_ID}</developerId>
