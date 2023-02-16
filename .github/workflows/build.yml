@@ -94,7 +94,7 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
           
           # set up notary
-          xcrun notarytool store-credentials notary-profile --key-id MAC_API_KEY_ID --issuer MAC_API_ISSUER_ID --key $MAC_API_KEY_PATH
+          xcrun notarytool store-credentials notary-profile --key-id "$MAC_API_KEY_ID" --issuer "$MAC_API_ISSUER_ID" --key "$MAC_API_KEY_PATH"
 
       - name: Print environment
         uses: hmarr/debug-action@v2
