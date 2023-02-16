@@ -107,7 +107,7 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/appdir/DrKodi*.dmg
+            target/appdir/drkodi*.dmg
 
   build_linux_x86_64:
     name: Build Linux x86_64 App
