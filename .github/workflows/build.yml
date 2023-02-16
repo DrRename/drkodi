@@ -179,7 +179,7 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/drkodi-*.zip
+            target/appdir/drkodi-*.msi
 
   draft_release:
     env:
@@ -199,4 +199,5 @@ jobs:
           files: |
             drkodi*.zip
             drkodi*.dmg
+            drkodi*.msi
           fail_on_unmatched_files: true
