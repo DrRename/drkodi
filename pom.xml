@@ -379,8 +379,8 @@
                             <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
                             <packageIdentifier>com.drkodi</packageIdentifier>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
-                            <developerId>${MAC_DEVELOPER_ID}</developerId>
-                            <keychainProfile>notary-profile</keychainProfile>
+                            <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
+                            <macKeychainProfile>notary-profile</macKeychainProfile>
                         </configuration>
                     </plugin>
                 </plugins>
