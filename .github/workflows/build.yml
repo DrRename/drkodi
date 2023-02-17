@@ -203,5 +203,4 @@ jobs:
             drkodi-*.dmg
             drkodi-*.msi
             drkodi-*.deb
-            drkodi-*.rpm
           fail_on_unmatched_files: true
