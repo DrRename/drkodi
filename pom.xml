@@ -328,8 +328,8 @@
                             <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
                             <packageIdentifier>com.drkodi</packageIdentifier>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
-                            <developerId>${MAC_DEVELOPER_ID}</developerId>
-                            <keychainProfile>notary-profile</keychainProfile>
+                            <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
+                            <macKeychainProfile>notary-profile</macKeychainProfile>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -477,6 +477,7 @@
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
                             <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <winUpgradeUuid>d99965e8-aed2-11ed-afa1-0242ac120002</winUpgradeUuid>
                         </configuration>
                     </plugin>
                 </plugins>
