@@ -143,7 +143,7 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/drkodi-*.zip
+            target/drkodi-*.AppImage
 
   build_windows_x86_64:
     name: Build Windows x86_64 App
@@ -197,7 +197,8 @@ jobs:
         with:
           draft: true
           files: |
-            drkodi*.zip
-            drkodi*.dmg
-            drkodi*.msi
+            drkodi-*.zip
+            drkodi-*.dmg
+            drkodi-*.msi
+            drkodi-*.AppImage
           fail_on_unmatched_files: true
