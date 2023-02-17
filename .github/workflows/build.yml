@@ -135,7 +135,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mvn-
       - name: Build
-        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Plinux-x86_64 -Djavafx.platform=linux
+        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true -Plinux-x86_64 -Djavafx.platform=linux -X
       - name: Publish Package
         run: mvn -B deploy
       - name: Upload artifacts
