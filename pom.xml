@@ -427,7 +427,7 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
-                            <moduleName>DrKodi</moduleName>
+                            <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                         </configuration>
                     </plugin>
