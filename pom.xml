@@ -8,7 +8,7 @@
     </parent>
     <groupId>app.drkodi</groupId>
     <artifactId>drkodi</artifactId>
-    <version>0.2.27-SNAPSHOT</version>
+    <version>1.0.11-SNAPSHOT</version>
     <name>DrKodi</name>
     <description>Minimalistic Media Library Tool</description>
     <properties>
@@ -293,6 +293,19 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>parse-version</id>
+                                <goals>
+                                    <goal>parse-version</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>io.github.drrename.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
                         <version>${codesignjava.version}</version>
@@ -311,7 +324,7 @@
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
+                            <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
                             <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
                             <packageIdentifier>com.drkodi</packageIdentifier>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
@@ -331,6 +344,19 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>parse-version</id>
+                                <goals>
+                                    <goal>parse-version</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>io.github.drrename.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
                         <version>${codesignjava.version}</version>
@@ -349,7 +375,7 @@
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
+                            <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
                             <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
                             <packageIdentifier>com.drkodi</packageIdentifier>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
@@ -369,6 +395,19 @@
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>parse-version</id>
+                                <goals>
+                                    <goal>parse-version</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>io.github.drrename.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
                         <version>2.0.5-SNAPSHOT</version>
@@ -387,7 +426,7 @@
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
+                            <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
                             <moduleName>DrKodi</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                             <zipName>${project.artifactId}-${javafx.platform}</zipName>
@@ -404,6 +443,19 @@
             <build>
                 <finalName>${project.artifactId}-${javafx.platform}</finalName>
                 <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>parse-version</id>
+                                <goals>
+                                    <goal>parse-version</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>io.github.drrename.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
@@ -423,10 +475,9 @@
                             </jreModuleNames>
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
-                            <appVersion>1.0.0</appVersion>
+                            <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
                             <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
-                            <zipName>${project.artifactId}-${javafx.platform}</zipName>
                         </configuration>
                     </plugin>
                 </plugins>
