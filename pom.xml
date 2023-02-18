@@ -8,7 +8,7 @@
     </parent>
     <groupId>app.drkodi</groupId>
     <artifactId>drkodi</artifactId>
-    <version>1.0.22-SNAPSHOT</version>
+    <version>1.0.22</version>
     <name>DrKodi</name>
     <description>Minimalistic Media Library Tool</description>
     <properties>
@@ -28,7 +28,7 @@
         <connection>scm:git:https://github.com/${github-user}/${github-repo}.git</connection>
         <developerConnection>scm:git:git@github.com:${github-user}/${github-repo}.git</developerConnection>
         <url>https://github.com/${github-user}/${github-repo}</url>
-        <tag>drkodi-version-0.1.49</tag>
+        <tag>drkodi-version-1.0.22</tag>
     </scm>
     <distributionManagement>
         <repository>
