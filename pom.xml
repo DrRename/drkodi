@@ -465,7 +465,7 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
-                            <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
+                            <moduleName>Dr.Kodi</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                         </configuration>
                     </plugin>
@@ -514,7 +514,7 @@
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
                             <icon>${basedir}/src/main/resources/drkodi.ico</icon>
-                            <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
+                            <moduleName>Dr.Kodi</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                             <winUpgradeUuid>d99965e8-aed2-11ed-afa1-0242ac120002</winUpgradeUuid>
                         </configuration>
