@@ -345,7 +345,7 @@
                                     <goal>copy</goal>
                                 </goals>
                                 <configuration>
-                                    <sourceFile>target/appdir/Dr.Kodi-1.0.15.dmg</sourceFile>
+                                    <sourceFile>target/appdir/Dr.Kodi-${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.dmg</sourceFile>
                                     <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.dmg</destinationFile>
                                 </configuration>
                             </execution>
