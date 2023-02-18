@@ -38,8 +38,15 @@ public class PrimaryStageInitializer {
             stage.setTitle(uiConfig.getAppTitle());
             stage.setScene(mainScene);
             stage.getIcons().setAll(SystemUtils.IS_OS_MAC ? List.of() : List.of(
+                    new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_16.png").toString()),
+                    new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_20.png").toString()),
+                    new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_24.png").toString()),
+                    new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_32.png").toString()),
+                    new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_40.png").toString()),
+                    new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_48.png").toString()),
                     new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_64.png").toString()),
                     new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_128.png").toString()),
+                    new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_256.png").toString()),
                     new Image(PrimaryStageInitializer.class.getResource("/img/drkodi_512.png").toString())));
             stage.show();
         });
