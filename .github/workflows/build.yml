@@ -143,8 +143,8 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/appdir/Dr.Kodi-*.deb
-            target/drkodi-*.zip
+            target/appdir/dr.kodi-*.deb
+            target/appdir/Dr.Kodi-*.zip
 
   build_windows_x86_64:
     name: Build Windows x86_64 App
@@ -198,7 +198,7 @@ jobs:
         with:
           draft: true
           files: |
-            drkodi-*.zip
+            Dr.Kodi-*.zip
             drkodi-*.dmg
             Dr.Kodi-*.msi
             Dr.Kodi-*.deb
