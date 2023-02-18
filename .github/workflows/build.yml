@@ -143,7 +143,6 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/appdir/drkodi-*.rpm
             target/appdir/drkodi-*.deb
             target/appdir/drkodi-*.zip
 
