@@ -325,12 +325,31 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
-                            <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
+                            <icon>${basedir}/src/main/resources/drkodi.icns</icon>
+                            <moduleName>Dr.Kodi</moduleName>
                             <packageIdentifier>com.drkodi</packageIdentifier>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                             <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
                             <macKeychainProfile>notary-profile</macKeychainProfile>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0</version>
+                        <executions>
+                            <execution>
+                                <id>rename-dmg</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceFile>target/appdir/Dr.Kodi-1.0.15.dmg</sourceFile>
+                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.dmg</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -376,12 +395,31 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
-                            <moduleName>${project.artifactId}-${javafx.platform}</moduleName>
+                            <icon>${basedir}/src/main/resources/drkodi.icns</icon>
+                            <moduleName>Dr.Kodi</moduleName>
                             <packageIdentifier>com.drkodi</packageIdentifier>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                             <macDeveloperId>${MAC_DEVELOPER_ID}</macDeveloperId>
                             <macKeychainProfile>notary-profile</macKeychainProfile>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.coderplus.maven.plugins</groupId>
+                        <artifactId>copy-rename-maven-plugin</artifactId>
+                        <version>1.0</version>
+                        <executions>
+                            <execution>
+                                <id>rename-dmg</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <sourceFile>target/appdir/Dr.Kodi-1.0.15.dmg</sourceFile>
+                                    <destinationFile>target/${project.artifactId}-${javafx.platform}-${project.version}.dmg</destinationFile>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
