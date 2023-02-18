@@ -144,7 +144,7 @@ jobs:
           if-no-files-found: error
           path: |
             target/appdir/Dr.Kodi-*.deb
-            target/appdir/Dr.Kodi-*.zip
+            target/drkodi-*.zip
 
   build_windows_x86_64:
     name: Build Windows x86_64 App
