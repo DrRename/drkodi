@@ -1,0 +1,11 @@
+Architecture: amd64
+Package: DrKodi
+Version: 1.0.23
+Section: utils
+Maintainer: kerner1000 <alexkerner1000@gmail.com>
+Priority: optional
+Provides: drkodi
+XB-AppName: Dr.Kodi
+XB-Category: Utility;Security;FileTools;
+Homepage: test
+Description: test

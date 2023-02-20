@@ -465,8 +465,11 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
-                            <moduleName>Dr.Kodi</moduleName>
+                            <moduleName>DrKodi</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
+                            <linuxDebMaintainer>alexkerner1000@gmail.com</linuxDebMaintainer>
+                            <linuxMenuGroup>Dr.Kodi</linuxMenuGroup>
+                            <resourceDir>${basedir}/dist/linux/debian</resourceDir>
                         </configuration>
                     </plugin>
                 </plugins>
