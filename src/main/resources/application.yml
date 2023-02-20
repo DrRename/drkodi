@@ -82,6 +82,7 @@ app:
           - "DTS"
           - "x264LeetHD"
           - "x264RWP"
+          - "x265FuN"
         replace-with-space:
       compare:
         delete:
@@ -101,6 +102,7 @@ app:
           - "DTS"
           - "x264LeetHD"
           - "x264RWP"
+          - "x265FuN"
         replace-with-space:
           - "."
           - "_"
@@ -138,6 +140,7 @@ app:
           - "DTS"
           - "x264LeetHD"
           - "x264RWP"
+          - "x265FuN"
         replace-with-space:
           - "."
           - "_"
