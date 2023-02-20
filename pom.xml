@@ -42,14 +42,6 @@
             <id>jitpack</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages DrRename Commons</name>
-            <url>https://maven.pkg.github.com/drrename/drrename-commons</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -278,9 +270,9 @@
             <version>1.0.5</version>
         </dependency>
         <dependency>
-            <groupId>drrename</groupId>
+            <groupId>io.github.drrename</groupId>
             <artifactId>drrename-commons</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.4</version>
         </dependency>
     </dependencies>
     <profiles>
@@ -516,7 +508,7 @@
                             <jreModules>${project.build.directory}/mods</jreModules>
                             <applicationModulesPath>${project.build.directory}/libs</applicationModulesPath>
                             <appVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</appVersion>
-                            <icon>${basedir}/src/main/resources/drkodi.icns</icon>
+                            <resourceDir>${basedir}/dist/windows</resourceDir>
                             <moduleName>Dr.Kodi</moduleName>
                             <moduleStarter>drkodi/drkodi.Launcher</moduleStarter>
                             <winUpgradeUuid>d99965e8-aed2-11ed-afa1-0242ac120002</winUpgradeUuid>
