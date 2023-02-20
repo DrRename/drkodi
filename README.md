@@ -94,32 +94,3 @@ _Folder year does not match_ warning is shown and a quick-fix is offered. Applyi
 ### themoviedb Lookup
 
 If data is incomplete, the [normalized](#title-normalization) movie title is used to query [theMovieDB](https://www.themoviedb.org/). Found results are displayed and the user might choose any of those suggestions to take over the according information. Localized titles are suggested depending on your [locale setting](link to locale).
-
-### Installation and running
-
-#### Windows
-
-Download the latest `jar`, i.e., `drkodi-<version>-win.jar`. Run it by double-clicking the `jar` file or executing `java -jar drkodi-<version>-win.jar`.
-
-**Note:** Java 17 or higher needs to be installed. Verify with `java -version`
-
-#### Linux
-
-Download the latest `jar`, i.e., `drkodi-<version>-linux.jar`. Run it by double-clicking the `jar` file or executing `java -jar drkodi-<version>-linux.jar`.
-
-**Note:** Java 17 or higher needs to be installed. Verify with `java -version`
-
-#### Mac
-
-Download the latest `DrKodi.app.zip`, unpack it and double-click.
-
-**Note:** No Java installation required.
-
-**Note:** Dr.Kodi is not code-signed yet, so you might need to adjust Gatekeeper/ Security settings (See [here](https://support.apple.com/en-us/HT202491) for more info).
-
-Alternatively, download the latest `jar`, i.e., `drkodi-<version>-mac.jar`. Run it by double-clicking the `jar` file or executing `java -jar drkodi-<version>-mac.jar`.
-
-**Note:** Java 17 or higher needs to be installed. Verify with `java -version`.
-
-
-
