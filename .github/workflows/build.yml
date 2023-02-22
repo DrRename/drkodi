@@ -148,8 +148,8 @@ jobs:
         with:
           if-no-files-found: error
           path: |
-            target/appdir/drkodi_*.deb
-            target/appdir/DrKodi-*.zip
+            target/appdir/drkodi*.deb
+            target/appdir/DrKodi*.zip
 
   build_windows_x86_64:
     name: Build Windows x86_64 App
@@ -203,8 +203,8 @@ jobs:
         with:
           draft: true
           files: |
-            DrKodi-*.zip
-            drkodi-*.dmg
-            Dr.Kodi-*.msi
-            drkodi_*.deb
+            DrKodi*.zip
+            drkodi*.dmg
+            Dr.Kodi*.msi
+            drkodi*.deb
           fail_on_unmatched_files: true
