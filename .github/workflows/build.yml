@@ -203,8 +203,8 @@ jobs:
         with:
           draft: true
           files: |
-            Dr.Kodi-*.zip
+            DrKodi-*.zip
             drkodi-*.dmg
             Dr.Kodi-*.msi
-            Dr.Kodi-*.deb
+            DrKodi-*.deb
           fail_on_unmatched_files: true
