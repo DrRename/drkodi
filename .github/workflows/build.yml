@@ -206,5 +206,5 @@ jobs:
             DrKodi-*.zip
             drkodi-*.dmg
             Dr.Kodi-*.msi
-            drkodi-*.deb
+            drkodi_*.deb
           fail_on_unmatched_files: true
