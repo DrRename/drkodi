@@ -202,7 +202,7 @@
             <version>3.8</version>
         </dependency>
         <dependency>
-            <groupId>com.github.kerner1000</groupId>
+            <groupId>com.github.tools1000</groupId>
             <artifactId>tools1000</artifactId>
             <version>1.0.5</version>
         </dependency>
