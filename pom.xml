@@ -14,7 +14,7 @@
     <properties>
         <maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <github-user>drrename</github-user>
+        <github-user>tools1000</github-user>
         <github-repo>drkodi</github-repo>
         <main-class>drkodi.Launcher</main-class>
         <java.version>17</java.version>
