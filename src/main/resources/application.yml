@@ -30,7 +30,7 @@ app:
   debug: false
   settings:
     parent: ${user.home}
-    dir: ${app.settings.parent}/${app.name}
+    dir: ${app.settings.parent}/.${app.name}
     log-file: ${app.settings.dir}/${app.name}.log
   ui:
     appTitle: "Dr.Kodi"
