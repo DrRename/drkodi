@@ -44,7 +44,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Maven Build, Sonarcloud analysis
-        run: mvn -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=tools1000 -Dsonar.projectKey=tools1000_drkodi -B -Pall verify jacoco:report sonar:sonar
+        run: mvn -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=tools1000 -Dsonar.projectKey=Tools1000_drkodi -B -Pall verify jacoco:report sonar:sonar
 
   build_macos_x86_64:
     needs: [compile_and_test]
