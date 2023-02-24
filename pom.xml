@@ -207,9 +207,9 @@
             <version>1.0.5</version>
         </dependency>
         <dependency>
-            <groupId>io.github.drrename</groupId>
+            <groupId>io.github.tools1000</groupId>
             <artifactId>drrename-commons</artifactId>
-            <version>0.0.4</version>
+            <version>0.0.5</version>
         </dependency>
     </dependencies>
     <profiles>
@@ -277,7 +277,7 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
                         <version>${codesignjava.version}</version>
                         <executions>
@@ -347,7 +347,7 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
                         <version>${codesignjava.version}</version>
                         <executions>
@@ -417,9 +417,9 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
-                        <version>3.0.0-SNAPSHOT</version>
+                        <version>${codesignjava.version}</version>
                         <executions>
                             <execution>
                                 <id>default</id>
@@ -468,9 +468,9 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>io.github.drrename.codesignjava</groupId>
+                        <groupId>io.github.tools1000.codesignjava</groupId>
                         <artifactId>codesignjava-maven-plugin</artifactId>
-                        <version>3.0.0-SNAPSHOT</version>
+                        <version>${codesignjava.version}</version>
                         <executions>
                             <execution>
                                 <id>default</id>
